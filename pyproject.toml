@@ -1,0 +1,66 @@
+[tool.poetry]
+name = "python-project-template"
+version = "0.0.1"
+description = "A template for python-based research project"
+authors = ["Haofei Yu <yuhaofei44@gmail.com>"]
+license = "Apache 2.0 License"
+readme = "README.md"
+
+
+[tool.poetry.dependencies]
+python = ">=3.8, <3.12"
+mypy = "^1.8.0"
+beartype = "*"
+pydantic = "^2.8.2"
+
+
+[tool.poetry.group.dev.dependencies]
+pre-commit = "*"
+nbmake = "*"
+types-setuptools = "*"
+
+[tool.poetry.group.test.dependencies]
+pytest = "*"
+pytest-asyncio = "*"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.mypy]
+ignore_missing_imports = true
+check_untyped_defs = true
+follow_imports = "normal"
+strict = true
+plugins = ["pydantic.mypy"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = "test_*.py"
+
+[tool.codespell]
+ignore-words-list = "dout, te, indicies, astroid"
+skip = ["data"]
+
+[tool.isort]
+profile = "black"
+use_parentheses = true
+skip_gitignore = true
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+line_length = 88
+
+[tool.black]
+line-length = 88
+target-version = ['py37', 'py38', 'py39', 'py310']
+
+[tool.ruff]
+line-length = 88
+fix = true
+target-version = "py310"
+
+[tool.ruff.format]
+quote-style = "single"
+indent-style = "space"
