@@ -1,0 +1,30 @@
+environment:
+  type: Minecraft
+  parameters:
+    world_seed: 12345
+
+agents:
+  - agent_id: agent_1
+    type: ReasoningAgent
+    llm:
+      type: OpenAI
+      api_key: 'your-api-key'
+      model: 'text-davinci-003'
+  - agent_id: agent_2
+    type: ReasoningAgent
+    llm:
+      type: OpenAI
+      api_key: 'your-api-key'
+      model: 'text-davinci-003'
+
+graph:
+  execution_mode: hierarchical
+  structure:
+    agent_1:
+      - agent_2
+
+memory:
+  type: SharedMemory
+
+metrics:
+  - TaskCompletion
