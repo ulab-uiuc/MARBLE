@@ -11,7 +11,7 @@ readme = "README.md"
 python = ">=3.8, <3.12"
 mypy = "^1.8.0"
 beartype = "*"
-pydantic = "^2.8.2"
+pydantic = "^2.9.2"
 
 
 [tool.poetry.group.dev.dependencies]
