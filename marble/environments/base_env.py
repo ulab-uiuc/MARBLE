@@ -48,7 +48,7 @@ class BaseEnvironment:
         """
         self.action_handlers[action_name] = handler
 
-    def execute_action(self, agent: AgentType, action: str, params: Dict[str, Any]) -> Any:
+    def apply_action(self, agent: AgentType, action: str, params: Dict[str, Any]) -> Any:
         """
         Execute an action in the environment.
 
