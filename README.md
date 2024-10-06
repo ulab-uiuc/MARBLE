@@ -165,3 +165,54 @@ Notice about the development:
 ## ❤️ Contribution
 
 I welcome all kinds of contributions, e.g. adding more tools, better practices, and discussion on trade-offs.
+
+# Installation Instructions
+
+## MineLand / MineFlayer
+
+This bench uses [MineLand](https://github.com/cocacola-lab/MineLand), which is based on [Mineflayer](https://github.com/PrismarineJS/mineflayer), for the multi-agent MineCraft environment. While we recommend installing according to the official instructions, you might also try out these solutions once you encounter issues.
+
+### 1. On python version
+You are advised to use `Python 3.11`. As python is part of the linux system, it is unadvised to alter the system python version. For newer releases, your default version should at least be 3.12. Instead, you might collect an additional `Python 3.11`:
+
+```bash
+sudo add-apt-repository ppa:deadsnakes/ppa
+sudo apt update
+sudo apt install python3.11 python3.11-venv 
+```
+
+Then, you can initialize a venv for this project using
+
+```bash
+python3.11 -m venv <your-venv-name>
+```
+
+If you fail to install `mineland` package to your (virtual) python environment following the steps above, instead of `pip install -e .`, use `python3 -m pip install -e .` instead.
+
+### 2. When `npm ci` or `pnpm install` fails
+Check if your `node.js` version is 18.18.0, as instructed by MineLand.
+
+### 3. When running `mineland`, shows up minecraft-data range error
+```bash
+[Mineflayer] RangeError: Version '1.20.3' not found in [23w43a ; 23w42a ; 23w41a ; 23w40a ; 1.20.2 ; 1.20.2-rc2 ; 1.20.2-rc1 ; 1.20.2-pre4 ; ...; 1.0] for pc
+```
+This implies that your MineCraft server version is in fact `'1.20.3'`. There might have been a typo in line `32` in `mineland/sim/bridge.py`, which should be 
+```python
+        minecraft_version: str = "1.19",
+```
+instead of
+```python
+        minecraft_version: str = 1.19,
+```
+which might have caused the server to be automatically collected as a newer version.  
+You might renew your environment, fix this code and re-initiate. Or, you might update `minecraft-data` to a newer version (although admittedly this is not a good solution):
+```bash
+npm install minecraft-data@3.69.0 --save
+```
+
+### 4. When encountering `ffmpeg` Warning
+```bash
+/directory-of-your-python-env/lib/python3.11/site-packages/pydub/utils.py:170: RuntimeWarning: Couldn't find ffmpeg or avconv - defaulting to ffmpeg, but may not work
+  warn("Couldn't find ffmpeg or avconv - defaulting to ffmpeg, but may not work", RuntimeWarning)
+```
+Install `ffmpeg`.
