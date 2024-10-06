@@ -172,11 +172,25 @@ I welcome all kinds of contributions, e.g. adding more tools, better practices, 
 
 This bench uses [MineLand](https://github.com/cocacola-lab/MineLand), which is based on [Mineflayer](https://github.com/PrismarineJS/mineflayer), for the multi-agent MineCraft environment. While we recommend installing according to the official instructions, you might also try out these solutions once you encounter issues.
 
-### 1. When `npm ci` or `pnpm install` fails
-Check if your `node.js` version is 18.18.0, as instructed by MineLand.
+### 1. On python version
+You are advised to use `Python 3.11`. As python is part of the linux system, it is unadvised to alter the system python version. For newer releases, your default version should at least be 3.12. Instead, you might collect an additional `Python 3.11`:
 
-### 2. Failed to install `mineland` package to your (virtual) python environment
-Instead of `pip install -e .`, use `python -m pip install -e .`.
+```bash
+sudo add-apt-repository ppa:deadsnakes/ppa
+sudo apt update
+sudo apt install python3.11 python3.11-venv 
+```
+
+Then, you can initialize a venv for this project using
+
+```bash
+python3.11 -m venv <your-venv-name>
+```
+
+If you fail to install `mineland` package to your (virtual) python environment following the steps above, instead of `pip install -e .`, use `python3 -m pip install -e .` instead.
+
+### 2. When `npm ci` or `pnpm install` fails
+Check if your `node.js` version is 18.18.0, as instructed by MineLand.
 
 ### 3. When running `mineland`, shows up minecraft-data range error
 ```bash
