@@ -2,7 +2,8 @@
 Agent graph module for representing agent structures and interactions.
 """
 
-from typing import Dict, List, Any
+from typing import Any, Dict, List
+
 from agents.base_agent import BaseAgent
 from utils.logger import get_logger
 

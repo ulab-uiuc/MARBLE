@@ -2,8 +2,10 @@
 Web search tool module.
 """
 
-import requests
 from typing import Any
+
+import requests
+
 
 class WebSearchTool:
     """

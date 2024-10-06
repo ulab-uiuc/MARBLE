@@ -2,13 +2,19 @@
 OpenAI LLM integration module.
 """
 
-import os
 import time
 from typing import Any, Dict, Generator
-from llms.base_llm import BaseLLM
-from utils.logger import get_logger
+
 import openai
-from openai.error import OpenAIError, RateLimitError, Timeout, APIError, APIConnectionError
+from llms.base_llm import BaseLLM
+from openai.error import (
+    APIConnectionError,
+    APIError,
+    OpenAIError,
+    RateLimitError,
+    Timeout,
+)
+from utils.logger import get_logger
 
 
 class OpenAILLM(BaseLLM):
@@ -142,7 +148,7 @@ class OpenAILLM(BaseLLM):
                 response = openai.Completion.create(**payload)
                 self.logger.debug("API call successful.")
                 return response
-            except (RateLimitError, APIConnectionError, APIError, Timeout) as e:
+            except (RateLimitError, APIConnectionError, APIError, Timeout):
                 wait_time = backoff_factor ** attempt
                 self.logger.warning(f"API call failed (attempt {attempt + 1}/{max_retries}). Retrying in {wait_time} seconds.")
                 time.sleep(wait_time)
