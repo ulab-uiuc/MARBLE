@@ -1,11 +1,10 @@
-# Open-Source Research Project in Python: A Template
+# Exploring the Essence of LLM Multi-agents Evaluation (MultiAgentBench)
 
-[![Python 3.10](https://img.shields.io/badge/python-3.10-blue.svg)](https://www.python.org/downloads/release/python-3109/)
+[![Python 3.11](https://img.shields.io/badge/python-3.11-blue.svg)](https://www.python.org/downloads/release/python-31110/)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://pre-commit.com/)
 <a href="https://github.com/psf/black"><img alt="Code style: black" src="https://img.shields.io/badge/code%20style-black-000000.svg"></a>
 [![Checked with mypy](https://www.mypy-lang.org/static/mypy_badge.svg)](https://mypy-lang.org/)
 [![bear-ified](https://raw.githubusercontent.com/beartype/beartype-assets/main/badge/bear-ified.svg)](https://beartype.readthedocs.io)
-[![Github Action](https://github.com/ulab-uiuc/python-project-template/actions/workflows/pytest.yml/badge.svg?branch=main)]()
 
 > [!NOTE]
 > This repo is continously updating with more tools. Any contribution is welcome.
@@ -19,57 +18,33 @@ To ensure high standards in engineering projects, we offer a standardized templa
 3. Seek to make rapid iterations with assurance that small code modifications won’t disrupt the overall project.
 4. Wish to reduce the frequency of frustrating runtime errors during experiments.
 
-## 🔨 Continuous Integration (CI) Workflow
+## 🔨 Get Started
 
-Here's a clearer and more straightforward guideline of the steps for working with your codebase. If working in a small group or working on a simple project, some of the steps can be skipped.
+You are required to use `Python` `3.11.x`, `Node.js` `18.18`, and `Java` `17`.  
 
-1. **Create Issue**
+To install python environment, you should use
+```bash
+poetry install
+```
 
-   Before starting, open a new issue in the repository detailing what you plan to implement. Assign the issue to yourself.
+To install `Mineflayer`, you should execute
+```bash
+cd env/MineLand/mineland/sim/mineflayer
+npm ci
+```
 
-2. **Sync Repo**
+or
 
-   Update your local repository to match the latest version of the remote repository.
+```bash
+cd env/MineLand/mineland/sim/mineflayer
+pnpm install
+```
 
-3. **Create Branch**
-
-   Create a new branch for your task. Name it appropriately based on the type of task, such as `feature/feature-name`, `bug/bug-name`, or `exp/exp-name`.
-
-4. **Implement Code**
-
-   Work on your task and make necessary changes to the codebase.
-
-5. **Test Locally**
-
-   Run tests using tools like mypy, pytest, and pre-commit. Ensure all tests pass before proceeding.
-
-6. **Change Commit**
-
-   Add and commit your changes to the branch, then push the branch to the repository.
-
-7. **Create PR**
-
-   Open a Pull Request (PR) for the branch you've pushed.
-
-8. **Link PR to Issue**
-
-   In your PR, include "Closes #ISSUE_NUM" to link it to the original issue.
-
-9. **Pass Continuous Integration**
-
-   Ensure all GitHub Actions checks pass. If they fail, revise your code based on the errors reported.
-
-10. **Review PR Checklist**
-
-    Verify that all items in the PR checklist are completed, such as updating documentation or adding package requirements.
-
-11. **Ask for Code Review**
-
-    Invite a colleague to review your PR. One approved, Use the "Squash and Merge" option to merge your PR, ensuring a clean commit history.
-
-12. **Troubleshooting**
-
-    If you break down the commit history or main branch, contact the repository owner for assistance with `rebase` or other needed actions.
+Besides, you also need `ffmpeg`:
+```bash
+sudo apt update
+sudo apt install ffmpeg
+```
 
 ## 💼 Template Structure
 
