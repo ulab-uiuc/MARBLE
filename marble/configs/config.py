@@ -2,10 +2,8 @@
 Configuration management module.
 """
 
-from typing import Any, Dict
-
 import yaml
-
+from typing import Any, Dict
 
 class Config:
     """

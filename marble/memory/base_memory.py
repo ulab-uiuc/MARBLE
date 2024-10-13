@@ -4,7 +4,6 @@ Base memory module for agents.
 
 from typing import Any, List
 
-
 class BaseMemory:
     """
     Base class for agent memory modules.

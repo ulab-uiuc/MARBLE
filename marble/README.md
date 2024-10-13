@@ -161,7 +161,6 @@ docker build -t multiagentbench .
 Run the Docker Container
 ```bash
 
-
 docker run -p 8080:8080 --env OPENAI_API_KEY=your-openai-api-key multiagentbench
 ```
 Configuration
@@ -170,7 +169,6 @@ The simulation behavior is controlled via the configs/config.yaml file.
 Example Configuration (configs/config.yaml):
 
 yaml
-
 environment:
   type: Minecraft
   parameters:
@@ -219,14 +217,12 @@ In hierarchical execution mode, agents are executed following a defined hierarch
 Graph Structure:
 
 
-
 agent_1
 └── agent_2
     └── agent_3
 Config Snippet:
 
 yaml
-
 
 graph:
   execution_mode: hierarchical
@@ -241,7 +237,6 @@ In cooperative execution mode, agents communicate via shared memory and coordina
 Config Snippet:
 
 yaml
-
 
 graph:
   execution_mode: cooperative
@@ -280,16 +275,13 @@ Fork the Repository
 Create a Feature Branch
 bash
 
-
 git checkout -b feature/your-feature
 Commit Your Changes
 bash
 
-
 git commit -m "Add your feature"
 Push to Your Fork
 bash
-
 
 git push origin feature/your-feature
 Create a Pull Request Submit your pull request for review.

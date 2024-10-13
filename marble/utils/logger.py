@@ -5,7 +5,6 @@ Logging utility module.
 import logging
 from logging.handlers import RotatingFileHandler
 
-
 def get_logger(name: str) -> logging.Logger:
     """
     Get a configured logger.

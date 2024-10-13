@@ -2,9 +2,8 @@
 Shared memory module allowing agents to communicate.
 """
 
-from threading import Lock
 from typing import Any, Dict
-
+from threading import Lock
 
 class SharedMemory:
     """

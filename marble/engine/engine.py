@@ -3,14 +3,12 @@ The core engine module that coordinates agents within the environment.
 """
 
 from typing import List
-
-from agents.base_agent import BaseAgent
 from configs.config import Config
+from agents.base_agent import BaseAgent
 from environments.base_env import BaseEnvironment
-from graphs.agent_graph import AgentGraph
 from metrics.evaluation import Evaluation
+from graphs.agent_graph import AgentGraph
 from utils.logger import get_logger
-
 
 class Engine:
     """
@@ -114,7 +112,7 @@ class Engine:
                     action = agent.act(perception)
                     self.environment.apply_action(agent.agent_id, action)
                 self.evaluator.update(self.environment, self.agents)
-        except Exception:
+        except Exception as e:
             self.logger.exception("An error occurred during simulation.")
             raise
         finally:
