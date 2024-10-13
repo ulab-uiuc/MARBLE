@@ -1,8 +1,8 @@
 [tool.poetry]
-name = "python-project-template"
+name = "marble"
 version = "0.0.1"
 description = "A template for python-based research project"
-authors = ["Haofei Yu <yuhaofei44@gmail.com>"]
+authors = ["Kunlun Zhu <kunlunz2@illinois.edu>"]
 license = "Apache 2.0 License"
 readme = "README.md"
 
@@ -12,6 +12,7 @@ python = ">=3.8, <3.12"
 mypy = "^1.11.2"
 beartype = "*"
 pydantic = "^2.9.2"
+litellm = "^1.49.2"
 
 
 [tool.poetry.group.dev.dependencies]
