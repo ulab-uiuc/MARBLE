@@ -3,8 +3,10 @@ Tests for the Engine and AgentGraph.
 """
 
 import unittest
-from engine.engine import Engine
+
 from configs.config import Config
+from engine.engine import Engine
+
 
 class TestEngine(unittest.TestCase):
     """

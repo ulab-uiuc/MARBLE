@@ -178,7 +178,7 @@ You are advised to use `Python 3.11`. As python is part of the linux system, it 
 ```bash
 sudo add-apt-repository ppa:deadsnakes/ppa
 sudo apt update
-sudo apt install python3.11 python3.11-venv 
+sudo apt install python3.11 python3.11-venv
 ```
 
 Then, you can initialize a venv for this project using
@@ -196,7 +196,7 @@ Check if your `node.js` version is 18.18.0, as instructed by MineLand.
 ```bash
 [Mineflayer] RangeError: Version '1.20.3' not found in [23w43a ; 23w42a ; 23w41a ; 23w40a ; 1.20.2 ; 1.20.2-rc2 ; 1.20.2-rc1 ; 1.20.2-pre4 ; ...; 1.0] for pc
 ```
-This implies that your MineCraft server version is in fact `'1.20.3'`. There might have been a typo in line `32` in `mineland/sim/bridge.py`, which should be 
+This implies that your MineCraft server version is in fact `'1.20.3'`. There might have been a typo in line `32` in `mineland/sim/bridge.py`, which should be
 ```python
         minecraft_version: str = "1.19",
 ```
@@ -204,7 +204,7 @@ instead of
 ```python
         minecraft_version: str = 1.19,
 ```
-which might have caused the server to be automatically collected as a newer version.  
+which might have caused the server to be automatically collected as a newer version.
 You might renew your environment, fix this code and re-initiate. Or, you might update `minecraft-data` to a newer version (although admittedly this is not a good solution):
 ```bash
 npm install minecraft-data@3.69.0 --save
