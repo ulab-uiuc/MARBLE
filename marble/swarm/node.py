@@ -2,10 +2,9 @@
 Node module for representing nodes in the swarm graph.
 """
 
-from typing import Any, List, Optional, Union
+from typing import Any, List
+
 from marble.agent.base_agent import BaseAgent
-from marble.memory.base_memory import BaseMemory
-from marble.memory.shared_memory import SharedMemory
 from marble.utils.logger import get_logger
 
 

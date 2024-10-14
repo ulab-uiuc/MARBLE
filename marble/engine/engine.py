@@ -8,10 +8,10 @@ from typing import Any, Dict, List, Union
 from marble.agent import BaseAgent, ReasoningAgent
 from marble.configs.config import Config
 from marble.environments import BaseEnvironment, WebEnvironment
-from marble.swarm.swarm_graph import SwarmGraph  # Updated import
+from marble.evaluator.evaluator import Evaluator
 from marble.memory.base_memory import BaseMemory
 from marble.memory.shared_memory import SharedMemory
-from marble.evaluator.evaluator import Evaluator
+from marble.swarm.swarm_graph import SwarmGraph  # Updated import
 from marble.utils.logger import get_logger
 
 EnvType = Union[BaseEnvironment, WebEnvironment]

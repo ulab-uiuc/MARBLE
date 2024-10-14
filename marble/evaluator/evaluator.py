@@ -2,10 +2,12 @@
 Evaluator module for tracking metrics and evaluating agent performance.
 """
 
-from typing import List, Dict, Any
+from typing import Any, Dict, List
+
 from marble.agent import BaseAgent
 from marble.environments import BaseEnvironment
 from marble.utils.logger import get_logger
+
 
 class Evaluator:
     """
