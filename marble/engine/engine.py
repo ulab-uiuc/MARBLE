@@ -2,13 +2,18 @@
 The core engine module that coordinates agents within the environment.
 """
 
-from typing import List
-from configs.config import Config
-from agents.base_agent import BaseAgent
-from environments.base_env import BaseEnvironment
-from metrics.evaluation import Evaluation
-from graphs.agent_graph import AgentGraph
-from utils.logger import get_logger
+from typing import List, Dict, Any, Union
+
+from marble.agents.base_agent import BaseAgent
+from marble.configs.config import Config
+from marble.environments import BaseEnvironment, WebEnvironment
+from marble.graphs.agent_graph import AgentGraph
+from marble.metrics.evaluation import Evaluation
+from marble.utils.logger import get_logger
+from marble.memory.base_memory import BaseMemory
+from marble.memory.shared_memory import SharedMemory
+
+EnvType = Union[BaseEnvironment, WebEnvironment]
 
 class Engine:
     """
@@ -31,7 +36,7 @@ class Engine:
         self.memory = self._initialize_memory(config.memory)
         self.logger.info("Engine initialized.")
 
-    def _initialize_environment(self, env_config: dict) -> BaseEnvironment:
+    def _initialize_environment(self, env_config: Dict[str, Any]) -> EnvType:
         """
         Initialize the environment.
 
@@ -45,18 +50,20 @@ class Engine:
             ValueError: If the environment type is not supported.
         """
         env_type = env_config.get("type")
-        if env_type == "Minecraft":
-            from environments.minecraft_env import MinecraftEnv
-            environment = MinecraftEnv(config=env_config)
-        elif env_type == "ResearchTown":
-            from environments.research_town_env import ResearchTownEnv
-            environment = ResearchTownEnv(config=env_config)
+        if env_type == "Web":
+            environment = WebEnvironment(name="Web Environment", config=env_config)
+        # elif env_type == "Minecraft":
+        #     from environments.minecraft_env import MinecraftEnv
+        #     environment = MinecraftEnv(config=env_config)
+        # elif env_type == "ResearchTown":
+        #     from environments.research_town_env import ResearchTownEnv
+        #     environment = ResearchTownEnv(config=env_config)
         else:
             raise ValueError(f"Unsupported environment type: {env_type}")
         self.logger.debug(f"Environment '{env_type}' initialized.")
         return environment
 
-    def _initialize_agents(self, agent_configs: List[dict]) -> List[BaseAgent]:
+    def _initialize_agents(self, agent_configs: List[Dict[str, Any]]) -> List[BaseAgent]:
         """
         Initialize agents based on configurations.
 
@@ -78,7 +85,7 @@ class Engine:
             self.logger.debug(f"Agent '{agent.agent_id}' of type '{agent_type}' initialized.")
         return agents
 
-    def _initialize_memory(self, memory_config: dict):
+    def _initialize_memory(self, memory_config: Dict[str, Any]) -> Union[SharedMemory, BaseMemory]:
         """
         Initialize the shared memory mechanism.
 
@@ -89,16 +96,15 @@ class Engine:
             BaseMemory: An instance of the memory module.
         """
         memory_type = memory_config.get("type", "SharedMemory")
+        memory: Union[BaseMemory, SharedMemory, None] = None
         if memory_type == "SharedMemory":
-            from memory.shared_memory import SharedMemory
             memory = SharedMemory()
         else:
-            from memory.base_memory import BaseMemory
             memory = BaseMemory()
         self.logger.debug(f"Memory of type '{memory_type}' initialized.")
         return memory
 
-    def start(self):
+    def start(self) -> None:
         """
         Start the engine to run the simulation.
         """
@@ -112,7 +118,7 @@ class Engine:
                     action = agent.act(perception)
                     self.environment.apply_action(agent.agent_id, action)
                 self.evaluator.update(self.environment, self.agents)
-        except Exception as e:
+        except Exception:
             self.logger.exception("An error occurred during simulation.")
             raise
         finally:

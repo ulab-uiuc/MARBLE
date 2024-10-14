@@ -13,6 +13,8 @@ mypy = "^1.11.2"
 beartype = "*"
 pydantic = "^2.9.2"
 litellm = "^1.49.2"
+types-pyyaml = "6.0.12.20240917"
+types-requests = "2.32.0.20240914"
 
 
 [tool.poetry.group.dev.dependencies]

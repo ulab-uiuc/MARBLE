@@ -2,17 +2,18 @@
 Reasoning agent module.
 """
 
-from typing import Any
-from agents.base_agent import BaseAgent
-from llms.base_llm import BaseLLM
-from memory.base_memory import BaseMemory
+from typing import Any, Dict, Union
+
+from marble.agent import BaseAgent
+from marble.memory.base_memory import BaseMemory
+
 
 class ReasoningAgent(BaseAgent):
     """
     Agent that uses reasoning strategies (Chain-of-Thought, ReAct, etc.).
     """
 
-    def __init__(self, config: dict):
+    def __init__(self, config: Dict[str, Union[Any, Dict[str, Any]]]):
         """
         Initialize the ReasoningAgent.
 
@@ -21,6 +22,7 @@ class ReasoningAgent(BaseAgent):
         """
         super().__init__(config)
         llm_config = config.get("llm")
+        assert llm_config is not None
         llm_type = llm_config.get("type")
         if llm_type == "OpenAI":
             from llms.openai_llm import OpenAILLM
@@ -39,7 +41,7 @@ class ReasoningAgent(BaseAgent):
         Returns:
             Any: Processed perception data.
         """
-        self.memory.update(state)
+        self.memory.update(self.agent_id, state)
         perception = self.memory.retrieve_latest()
         return perception
 

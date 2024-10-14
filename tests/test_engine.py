@@ -13,7 +13,7 @@ class TestEngine(unittest.TestCase):
     Test cases for the Engine class.
     """
 
-    def test_hierarchical_execution(self):
+    def test_hierarchical_execution(self) -> None:
         """
         Test the hierarchical execution mode in the Engine.
         """

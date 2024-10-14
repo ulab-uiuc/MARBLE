@@ -1,3 +1,4 @@
+"""
 from beartype import beartype
 from beartype.typing import Dict, List, Literal, Optional, Tuple
 
@@ -23,7 +24,7 @@ from ..utils.serializer import Serializer
 Role = Literal['reviewer', 'leader', 'member', 'chair'] | None
 
 
-class Agent(object):
+class ResearchAgent(object):
     def __init__(
         self,
         profile: Profile,
@@ -297,3 +298,4 @@ class Agent(object):
             q5=q5_result.get('q5', ''),
         )
         return rebuttal
+"""
