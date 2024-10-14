@@ -10,6 +10,7 @@ from marble.configs.config import Config
 from marble.engine.engine import Engine
 from marble.utils.logger import setup_logging
 
+
 def parse_args():
     """
     Parse command-line arguments.
@@ -49,7 +50,7 @@ def main():
     try:
         engine = Engine(config)
         engine.start()
-    except Exception as e:
+    except Exception:
         logging.exception("An error occurred while running the engine.")
         sys.exit(1)
 

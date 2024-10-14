@@ -3,12 +3,13 @@ Swarm graph module for representing agent structures and interactions.
 """
 
 import asyncio
-import shortuuid
-from typing import Any, Dict, List, Optional, Union
 from copy import deepcopy
+from typing import Any, Dict, List
 
-from marble.swarm.node import Node
+import shortuuid
+
 from marble.agent.base_agent import BaseAgent
+from marble.swarm.node import Node
 from marble.utils.logger import get_logger
 
 

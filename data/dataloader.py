@@ -2,9 +2,10 @@
 Data loader module for loading tasks or datasets.
 """
 
-from typing import List, Dict, Any
 import json
 import os
+from typing import Any, Dict, List
+
 
 class DataLoader:
     """

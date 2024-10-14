@@ -2,12 +2,12 @@
 FinalDecision operation node.
 """
 
-from typing import Any, List
 import random
+from typing import Any, List
 
+from marble.agent.base_agent import BaseAgent
 from marble.swarm.node import Node
 from marble.swarm.operation_registry import OperationRegistry
-from marble.llms.model_prompting import model_prompting
 from marble.utils.logger import get_logger
 
 

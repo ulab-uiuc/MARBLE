@@ -2,7 +2,7 @@
 Operation registry module for managing operation nodes.
 """
 
-from typing import Type, Dict
+from typing import Dict, Type
 
 from marble.swarm.node import Node
 

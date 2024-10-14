@@ -4,8 +4,8 @@ Base agent module.
 
 from typing import Any, Dict, Union
 
-from marble.memory import BaseMemory, SharedMemory
 from marble.llms.model_prompting import model_prompting
+from marble.memory import BaseMemory, SharedMemory
 from marble.utils.logger import get_logger
 
 
