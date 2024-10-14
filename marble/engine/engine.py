@@ -2,16 +2,16 @@
 The core engine module that coordinates agents within the environment.
 """
 
-from typing import Any, Dict, List, Sequence, Union
+import asyncio
+from typing import Any, Dict, List, Union
 
 from marble.agent import BaseAgent, ReasoningAgent
 from marble.configs.config import Config
 from marble.environments import BaseEnvironment, WebEnvironment
-from marble.graph.agent_graph import AgentGraph
+from marble.swarm.swarm_graph import SwarmGraph  # Updated import
 from marble.memory.base_memory import BaseMemory
 from marble.memory.shared_memory import SharedMemory
-
-# from marble.metrics.evaluation import Evaluation
+from marble.evaluator.evaluator import Evaluator
 from marble.utils.logger import get_logger
 
 EnvType = Union[BaseEnvironment, WebEnvironment]
@@ -33,9 +33,10 @@ class Engine:
         self.config = config
         self.environment = self._initialize_environment(config.environment)
         self.agents = self._initialize_agents(config.agents)
-        self.graph = AgentGraph(self.agents, config.graph)
-        ## self.evaluator = Evaluation(metrics=config.metrics)
+        self.swarm_graph = SwarmGraph(self.agents, config.graph)  # Use SwarmGraph
+        self.evaluator = Evaluator(metrics_config=config.metrics)
         self.memory = self._initialize_memory(config.memory)
+        self.max_iterations = config.simulation.get('max_iterations', 10)
         self.logger.info("Engine initialized.")
 
     def _initialize_environment(self, env_config: Dict[str, Any]) -> EnvType:
@@ -54,18 +55,12 @@ class Engine:
         env_type = env_config.get("type")
         if env_type == "Web":
             environment = WebEnvironment(name="Web Environment", config=env_config)
-        # elif env_type == "Minecraft":
-        #     from environments.minecraft_env import MinecraftEnv
-        #     environment = MinecraftEnv(config=env_config)
-        # elif env_type == "ResearchTown":
-        #     from environments.research_town_env import ResearchTownEnv
-        #     environment = ResearchTownEnv(config=env_config)
         else:
             raise ValueError(f"Unsupported environment type: {env_type}")
         self.logger.debug(f"Environment '{env_type}' initialized.")
         return environment
 
-    def _initialize_agents(self, agent_configs: List[Dict[str, Any]]) -> Sequence[BaseAgent]:
+    def _initialize_agents(self, agent_configs: List[Dict[str, Any]]) -> List[BaseAgent]:
         """
         Initialize agents based on configurations.
 
@@ -111,17 +106,30 @@ class Engine:
         """
         self.logger.info("Engine starting simulation.")
         try:
-            execution_order = self.graph.traverse()
+            loop = asyncio.get_event_loop()
+            iteration = 0
             while not self.environment.is_done():
-                for agent in execution_order:
-                    # Agents may need to share information; use shared memory if applicable
-                    perception = agent.perceive(self.environment.get_state())
-                    action = agent.act(perception)
-                    self.environment.apply_action(agent.agent_id, action)
-                ## self.evaluator.update(self.environment, self.agents)
+                iteration += 1
+                self.logger.info(f"Starting iteration {iteration}")
+                # Run the swarm graph
+                inputs = self.environment.get_state()
+                outputs = loop.run_until_complete(self.swarm_graph.run(inputs))
+                # Process outputs
+                for output in outputs:
+                    self.environment.apply_action(None, output)
+                self.evaluator.update(self.environment, self.agents)
+                # Check termination conditions
+                if self.environment.is_task_completed():
+                    self.logger.info("Task has been completed successfully.")
+                    break
+                if iteration >= self.max_iterations:
+                    self.logger.info("Maximum iterations reached.")
+                    break
+            else:
+                self.logger.info("Environment signaled done.")
         except Exception:
             self.logger.exception("An error occurred during simulation.")
             raise
         finally:
-            ## self.evaluator.finalize()
+            self.evaluator.finalize()
             self.logger.info("Simulation completed.")

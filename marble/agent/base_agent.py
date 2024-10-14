@@ -5,6 +5,7 @@ Base agent module.
 from typing import Any, Dict, Union
 
 from marble.memory import BaseMemory, SharedMemory
+from marble.llms.model_prompting import model_prompting
 from marble.utils.logger import get_logger
 
 
@@ -26,8 +27,10 @@ class BaseAgent:
         self.agent_id: str = agent_id
         self.memory = BaseMemory()
         self.shared_memory = shared_memory
+        self.relationships = {}
         self.logger = get_logger(self.__class__.__name__)
         self.logger.info(f"Agent '{self.agent_id}' initialized.")
+        self.token_usage = 0  # Initialize token usage
 
     def perceive(self, state: Any) -> Any:
         """
@@ -39,19 +42,57 @@ class BaseAgent:
         Returns:
             Any: Processed perception data.
         """
-        raise NotImplementedError("This method should be overridden by subclasses.")
+        # For simplicity, return the task description from the state
+        return state.get('task_description', '')
 
-    def act(self, perception: Any) -> Any:
+    def act(self, task: str) -> Any:
         """
         Agent decides on an action to take.
 
         Args:
-            perception (Any): Perception data processed by the agent.
+            task (str): The task to perform.
 
         Returns:
             Any: The action decided by the agent.
         """
-        raise NotImplementedError("This method should be overridden by subclasses.")
+        self.logger.info(f"Agent '{self.agent_id}' acting on task '{task}'.")
+        result = model_prompting(
+            llm_model="gpt-3-turbo",
+            messages=[{"content": task}],
+            return_num=1,
+            max_token_num=512,
+            temperature=0.0,
+            top_p=None,
+            stream=None
+        )
+        self.memory.update(self.agent_id, result)
+        self.token_usage += self._calculate_token_usage(task, result)
+        self.logger.info(f"Agent '{self.agent_id}' acted with result '{result}'.")
+        return result
+
+    def _calculate_token_usage(self, task: str, result: str) -> int:
+        """
+        Calculate token usage based on input and output lengths.
+
+        Args:
+            task (str): The input task.
+            result (str): The output result.
+
+        Returns:
+            int: The number of tokens used.
+        """
+        # Simplified token count: 1 token per 4 characters (approximation)
+        token_count = (len(task) + len(result)) // 4
+        return token_count
+
+    def get_token_usage(self) -> int:
+        """
+        Get the total token usage by the agent.
+
+        Returns:
+            int: The total tokens used by the agent.
+        """
+        return self.token_usage
 
     def communicate(self, message: Any) -> None:
         """
@@ -81,7 +122,7 @@ class BaseAgent:
         if self.shared_memory is not None:
             messages = self.shared_memory.retrieve_all()
             # Exclude self messages
-            messages.pop(self.agent_id)
+            messages.pop(self.agent_id, None)
             return messages
         else:
             raise NotImplementedError("Shared memory is not initialized for this agent.")
