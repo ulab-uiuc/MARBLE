@@ -1,0 +1,77 @@
+# Configuration file for the Marble engine
+
+environment:
+  type: 'Web'
+  description: 'A web environment for fetching and processing web content.'
+  task_description: 'Translate the following text from English to French: "Hello, how are you?"'
+  ground_truth: 'Bonjour, comment ça va?'
+  max_iterations: 10
+
+agents:
+  - agent_id: 'agent_root'
+    type: 'ReasoningAgent'
+    llm:
+      type: 'OpenAI'
+      api_key: 'your-api-key-here'
+      api_base: 'https://api.openai.com/v1'
+      model_name: 'gpt-3.5-turbo'
+  - agent_id: 'agent_child1'
+    type: 'ReasoningAgent'
+    llm:
+      type: 'OpenAI'
+      api_key: 'your-api-key-here'
+      api_base: 'https://api.openai.com/v1'
+      model_name: 'gpt-3.5-turbo'
+  - agent_id: 'agent_child2'
+    type: 'ReasoningAgent'
+    llm:
+      type: 'OpenAI'
+      api_key: 'your-api-key-here'
+      api_base: 'https://api.openai.com/v1'
+      model_name: 'gpt-3.5-turbo'
+
+graph:
+  execution_mode: 'swarm'
+  structure:
+    agent_root:
+      - 'agent_child1'
+      - 'agent_child2'
+    agent_child1:
+      - 'combine_answer_node'
+    agent_child2:
+      - 'combine_answer_node'
+    combine_answer_node:
+      - 'final_decision_node'
+
+operations:
+  combine_answer_node:
+    type: 'CombineAnswer'
+    agent_id: 'combine_agent'
+    agent:
+      type: 'ReasoningAgent'
+      llm:
+        type: 'OpenAI'
+        api_key: 'your-api-key-here'
+        api_base: 'https://api.openai.com/v1'
+        model_name: 'gpt-3.5-turbo'
+  final_decision_node:
+    type: 'FinalDecision'
+    agent_id: 'final_decision_agent'
+    agent:
+      type: 'ReasoningAgent'
+      llm:
+        type: 'OpenAI'
+        api_key: 'your-api-key-here'
+        api_base: 'https://api.openai.com/v1'
+        model_name: 'gpt-3.5-turbo'
+    strategy: 'majority_vote'
+
+memory:
+  type: 'SharedMemory'
+
+metrics:
+  task_completion: True
+  token_consumption: True
+
+simulation:
+  max_iterations: 10
