@@ -37,6 +37,7 @@ check_untyped_defs = true
 follow_imports = "normal"
 strict = true
 plugins = ["pydantic.mypy"]
+exclude=["marble/environments/db_env_docker/*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
