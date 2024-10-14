@@ -5,6 +5,7 @@ Reasoning agent module.
 from typing import Any, Dict, Union
 
 from marble.agent import BaseAgent
+from marble.llms import OpenAILLM
 from marble.memory.base_memory import BaseMemory
 
 
@@ -25,7 +26,6 @@ class ReasoningAgent(BaseAgent):
         assert llm_config is not None
         llm_type = llm_config.get("type")
         if llm_type == "OpenAI":
-            from llms.openai_llm import OpenAILLM
             self.llm = OpenAILLM(llm_config)
         else:
             raise ValueError(f"Unsupported LLM type: {llm_type}")
@@ -56,7 +56,7 @@ class ReasoningAgent(BaseAgent):
             Any: The action decided by the agent.
         """
         prompt = self._generate_prompt(perception)
-        action = self.llm.generate_response(prompt)
+        action = self.llm.generate_text(prompt)
         return action
 
     def _generate_prompt(self, perception: Any) -> str:

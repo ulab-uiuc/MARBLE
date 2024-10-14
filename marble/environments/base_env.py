@@ -4,7 +4,7 @@ Base environment module.
 
 from typing import Any, Callable, Dict, List, Union
 
-from marble.agents.reasoning_agent import ReasoningAgent
+from marble.agent.reasoning_agent import ReasoningAgent
 
 AgentType = Union[ReasoningAgent] # will expand to include other agent types
 

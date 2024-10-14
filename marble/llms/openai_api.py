@@ -5,17 +5,9 @@ OpenAI LLM integration module.
 import time
 from typing import Any, Dict, Generator
 
-import openai
-from openai import OpenAI
+from openai import APIConnectionError, APIError, OpenAI, OpenAIError, RateLimitError
 
 from marble.llms import BaseLLM
-from openai import (
-    APIConnectionError,
-    APIError,
-    OpenAIError,
-    RateLimitError,
-    Timeout,
-)
 from marble.utils.logger import get_logger
 
 
@@ -73,7 +65,7 @@ class OpenAILLM(BaseLLM):
         Raises:
             OpenAIError: If an error occurs with the OpenAI API.
         """
-        payload = self._build_payload(prompt, **kwargs)
+        payload = self._build_payload(prompt=prompt)
         response = self._call_api(payload)
         text = response.choices[0].text.strip()
         self.logger.debug(f"Generated text: {text}")
@@ -118,7 +110,7 @@ class OpenAILLM(BaseLLM):
             Dict[str, Any]: The payload dictionary.
         """
         payload = {
-            'engine': self.model_name,
+            'model': self.model_name,
             'prompt': prompt,
             'max_tokens': kwargs.get('max_tokens', self.max_tokens),
             'temperature': kwargs.get('temperature', self.temperature),

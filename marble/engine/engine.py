@@ -2,18 +2,20 @@
 The core engine module that coordinates agents within the environment.
 """
 
-from typing import List, Dict, Any, Union
+from typing import Any, Dict, List, Sequence, Union
 
-from marble.agents.base_agent import BaseAgent
+from marble.agent import BaseAgent, ReasoningAgent
 from marble.configs.config import Config
 from marble.environments import BaseEnvironment, WebEnvironment
-from marble.graphs.agent_graph import AgentGraph
-from marble.metrics.evaluation import Evaluation
-from marble.utils.logger import get_logger
+from marble.graph.agent_graph import AgentGraph
 from marble.memory.base_memory import BaseMemory
 from marble.memory.shared_memory import SharedMemory
 
+# from marble.metrics.evaluation import Evaluation
+from marble.utils.logger import get_logger
+
 EnvType = Union[BaseEnvironment, WebEnvironment]
+AgentType = Union[BaseAgent, ReasoningAgent]
 
 class Engine:
     """
@@ -32,7 +34,7 @@ class Engine:
         self.environment = self._initialize_environment(config.environment)
         self.agents = self._initialize_agents(config.agents)
         self.graph = AgentGraph(self.agents, config.graph)
-        self.evaluator = Evaluation(metrics=config.metrics)
+        ## self.evaluator = Evaluation(metrics=config.metrics)
         self.memory = self._initialize_memory(config.memory)
         self.logger.info("Engine initialized.")
 
@@ -63,7 +65,7 @@ class Engine:
         self.logger.debug(f"Environment '{env_type}' initialized.")
         return environment
 
-    def _initialize_agents(self, agent_configs: List[Dict[str, Any]]) -> List[BaseAgent]:
+    def _initialize_agents(self, agent_configs: List[Dict[str, Any]]) -> Sequence[BaseAgent]:
         """
         Initialize agents based on configurations.
 
@@ -77,7 +79,6 @@ class Engine:
         for agent_config in agent_configs:
             agent_type = agent_config.get("type")
             if agent_type == "ReasoningAgent":
-                from agents.reasoning_agent import ReasoningAgent
                 agent = ReasoningAgent(config=agent_config)
             else:
                 raise ValueError(f"Unsupported agent type: {agent_type}")
@@ -117,10 +118,10 @@ class Engine:
                     perception = agent.perceive(self.environment.get_state())
                     action = agent.act(perception)
                     self.environment.apply_action(agent.agent_id, action)
-                self.evaluator.update(self.environment, self.agents)
+                ## self.evaluator.update(self.environment, self.agents)
         except Exception:
             self.logger.exception("An error occurred during simulation.")
             raise
         finally:
-            self.evaluator.finalize()
+            ## self.evaluator.finalize()
             self.logger.info("Simulation completed.")

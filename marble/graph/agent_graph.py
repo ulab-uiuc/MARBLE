@@ -2,9 +2,9 @@
 Agent graph module for representing agent structures and interactions.
 """
 
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Sequence
 
-from marble.agents.base_agent import BaseAgent
+from marble.agent.base_agent import BaseAgent
 from marble.utils.logger import get_logger
 
 
@@ -18,7 +18,7 @@ class AgentGraph:
         adjacency_list (Dict[str, List[str]]): The graph represented as an adjacency list.
     """
 
-    def __init__(self, agents: List[BaseAgent], structure_config: Dict[str, Any]):
+    def __init__(self, agents: Sequence[BaseAgent], structure_config: Dict[str, Any]):
         """
         Initialize the AgentGraph with agents and structure configuration.
 

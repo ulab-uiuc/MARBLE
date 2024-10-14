@@ -1,17 +1,18 @@
-import requests
 import time
-import random
-from typing import List, Dict, Any, Callable, Union
-from marble.agents import ReasoningAgent, ResearchAgent
+from typing import Any, Dict, Union
+
+import requests
+
+from marble.agent import ReasoningAgent
 from marble.environments.base_env import BaseEnvironment
 
-AgentType = Union[ReasoningAgent, ResearchAgent]  # Will expand to include other agent types
+AgentType = Union[ReasoningAgent]  # Will expand to include other agent types
 
 class WebEnvironment(BaseEnvironment):
     def __init__(self, name: str, config: Dict[str, Any]):
         """
         Initialize the WebEnvironment.
-        
+
         Args:
             name (str): The name of the environment.
         """
@@ -19,17 +20,17 @@ class WebEnvironment(BaseEnvironment):
         self.last_visited_timestamp: float = 0
         self.last_visited_url: str = ""
         self.web_cache: Dict[str, str] = {}  # Cache for storing webpage content
-        
+
         # Register the fetch_webpage action
         self.register_action("fetch_webpage", self._fetch_webpage_handler)
 
     def _fetch_webpage_handler(self, params: Dict[str, Any]) -> Dict[str, Any]:
         """
         Action handler to fetch a webpage.
-        
+
         Args:
             params (Dict[str, Any]): Parameters for the action, including the 'url'.
-        
+
         Returns:
             Dict[str, Any]: The result of the action, including the webpage content.
         """
@@ -51,7 +52,7 @@ class WebEnvironment(BaseEnvironment):
 
             while time.time() - self.last_visited_timestamp < 1:
                 time.sleep(0.5)
-            
+
             try:
                 response = requests.get(url, headers=headers, timeout=5.0)  # 5 second timeout
                 response.raise_for_status()  # Raise an error for bad responses
@@ -64,7 +65,7 @@ class WebEnvironment(BaseEnvironment):
                     "success": False,
                     "error-msg": str(e)
                 }
-        
+
         return {
             "success": True,
             "error-msg": ""
@@ -80,6 +81,5 @@ class WebEnvironment(BaseEnvironment):
         """
         return {
             "url": self.last_visited_url,
-            "content": self.web_cache[self.last_visited_url]
+            "content": self.web_cache[self.last_visited_url] if self.last_visited_url else ""
         }
-    
