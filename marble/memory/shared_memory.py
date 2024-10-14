@@ -2,22 +2,23 @@
 Shared memory module allowing agents to communicate.
 """
 
-from typing import Any, Dict
 from threading import Lock
+from typing import Any, Dict
+
 
 class SharedMemory:
     """
     Shared memory accessible by multiple agents.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """
         Initialize the shared memory with thread-safe access.
         """
         self.storage: Dict[str, Any] = {}
         self.lock = Lock()
 
-    def update(self, key: str, information: Any):
+    def update(self, key: str, information: Any) -> None:
         """
         Update shared memory with new information.
 

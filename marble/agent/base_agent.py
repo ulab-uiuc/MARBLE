@@ -2,16 +2,18 @@
 Base agent module.
 """
 
-from typing import Any
-from memory.base_memory import BaseMemory
-from utils.logger import get_logger
+from typing import Any, Dict, Union
+
+from marble.memory import BaseMemory, SharedMemory
+from marble.utils.logger import get_logger
+
 
 class BaseAgent:
     """
     Base class for all agents.
     """
 
-    def __init__(self, config: dict, shared_memory: BaseMemory = None):
+    def __init__(self, config: Dict[str, Any], shared_memory: Union[SharedMemory, None] = None):
         """
         Initialize the agent.
 
@@ -19,7 +21,9 @@ class BaseAgent:
             config (dict): Configuration for the agent.
             shared_memory (BaseMemory, optional): Shared memory instance.
         """
-        self.agent_id = config.get("agent_id")
+        agent_id = config.get("agent_id")
+        assert isinstance(agent_id, str)
+        self.agent_id: str = agent_id
         self.memory = BaseMemory()
         self.shared_memory = shared_memory
         self.logger = get_logger(self.__class__.__name__)
@@ -49,7 +53,7 @@ class BaseAgent:
         """
         raise NotImplementedError("This method should be overridden by subclasses.")
 
-    def communicate(self, message: Any):
+    def communicate(self, message: Any) -> None:
         """
         Communicate with other agents via shared memory.
 
@@ -77,7 +81,7 @@ class BaseAgent:
         if self.shared_memory is not None:
             messages = self.shared_memory.retrieve_all()
             # Exclude self messages
-            messages.pop(self.agent_id, None)
+            messages.pop(self.agent_id)
             return messages
         else:
             raise NotImplementedError("Shared memory is not initialized for this agent.")

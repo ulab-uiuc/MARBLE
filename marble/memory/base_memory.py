@@ -4,22 +4,24 @@ Base memory module for agents.
 
 from typing import Any, List
 
+
 class BaseMemory:
     """
     Base class for agent memory modules.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """
         Initialize the memory module.
         """
         self.storage: List[Any] = []
 
-    def update(self, information: Any):
+    def update(self, key: str, information: Any) -> None:
         """
         Update memory with new information.
 
         Args:
+            key (str): Only here to keep the signature consistent with SharedMemory
             information (Any): Information to store.
         """
         self.storage.append(information)

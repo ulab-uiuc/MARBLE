@@ -30,7 +30,7 @@ class BaseLLM(ABC):
         self.timeout = config.get('timeout', 30)
 
     @abstractmethod
-    def generate_text(self, prompt: str, **kwargs) -> str:
+    def generate_text(self, prompt: str, **kwargs: Dict[str, Any]) -> str:
         """
         Generate text based on the input prompt.
 
@@ -47,7 +47,7 @@ class BaseLLM(ABC):
         pass
 
     @abstractmethod
-    def generate_stream(self, prompt: str, **kwargs) -> Any:
+    def generate_stream(self, prompt: str, **kwargs: Dict[str, Any]) -> Any:
         """
         Generate text as a stream based on the input prompt.
 

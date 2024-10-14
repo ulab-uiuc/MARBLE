@@ -2,13 +2,13 @@
 OpenAI LLM integration module.
 """
 
-import os
 import time
 from typing import Any, Dict, Generator
-from llms.base_llm import BaseLLM
-from utils.logger import get_logger
-import openai
-from openai.error import OpenAIError, RateLimitError, Timeout, APIError, APIConnectionError
+
+from openai import APIConnectionError, APIError, OpenAI, OpenAIError, RateLimitError
+
+from marble.llms import BaseLLM
+from marble.utils.logger import get_logger
 
 
 class OpenAILLM(BaseLLM):
@@ -31,7 +31,7 @@ class OpenAILLM(BaseLLM):
         self._validate_config()
         self._initialize_api()
 
-    def _validate_config(self):
+    def _validate_config(self) -> None:
         """
         Validate that all required configuration parameters are present.
 
@@ -43,16 +43,15 @@ class OpenAILLM(BaseLLM):
         if not self.model_name:
             raise ValueError("Model name is required for OpenAI LLM.")
 
-    def _initialize_api(self):
+    def _initialize_api(self) -> None:
         """
         Initialize the OpenAI API with the provided credentials.
         """
-        openai.api_key = self.api_key
         if self.api_base:
-            openai.api_base = self.api_base
+            self.client = OpenAI(api_key=self.api_key, base_url=self.api_base)
         self.logger.debug("OpenAI API initialized.")
 
-    def generate_text(self, prompt: str, **kwargs) -> str:
+    def generate_text(self, prompt: str, **kwargs: Dict[str, Any]) -> str:
         """
         Generate text based on the input prompt.
 
@@ -66,13 +65,14 @@ class OpenAILLM(BaseLLM):
         Raises:
             OpenAIError: If an error occurs with the OpenAI API.
         """
-        payload = self._build_payload(prompt, **kwargs)
+        payload = self._build_payload(prompt=prompt)
         response = self._call_api(payload)
-        text = response['choices'][0]['text'].strip()
+        text = response.choices[0].text.strip()
         self.logger.debug(f"Generated text: {text}")
+        assert isinstance(text, str)
         return text
 
-    def generate_stream(self, prompt: str, **kwargs) -> Generator[str, None, None]:
+    def generate_stream(self, prompt: str, **kwargs: Dict[str, Any]) -> Generator[str, None, None]:
         """
         Generate text as a stream based on the input prompt.
 
@@ -86,11 +86,11 @@ class OpenAILLM(BaseLLM):
         Raises:
             OpenAIError: If an error occurs with the OpenAI API.
         """
-        payload = self._build_payload(prompt, stream=True, **kwargs)
+        payload = self._build_payload(prompt, **kwargs)
         try:
-            response = openai.Completion.create(**payload)
+            response = self.client.completions.create(**payload)
             for chunk in response:
-                text = chunk['choices'][0].get('text', '')
+                text = chunk.choices[0].get('text', '')
                 if text:
                     self.logger.debug(f"Streaming text: {text}")
                     yield text
@@ -98,7 +98,7 @@ class OpenAILLM(BaseLLM):
             self.logger.error(f"Error during streaming generation: {e}")
             raise
 
-    def _build_payload(self, prompt: str, **kwargs) -> Dict[str, Any]:
+    def _build_payload(self, prompt: str, **kwargs: Dict[str, Any]) -> Dict[str, Any]:
         """
         Build the payload for the OpenAI API request.
 
@@ -110,7 +110,7 @@ class OpenAILLM(BaseLLM):
             Dict[str, Any]: The payload dictionary.
         """
         payload = {
-            'engine': self.model_name,
+            'model': self.model_name,
             'prompt': prompt,
             'max_tokens': kwargs.get('max_tokens', self.max_tokens),
             'temperature': kwargs.get('temperature', self.temperature),
@@ -139,10 +139,10 @@ class OpenAILLM(BaseLLM):
         backoff_factor = 2
         for attempt in range(max_retries):
             try:
-                response = openai.Completion.create(**payload)
+                response = self.client.completions.create(**payload)
                 self.logger.debug("API call successful.")
                 return response
-            except (RateLimitError, APIConnectionError, APIError, Timeout) as e:
+            except (RateLimitError, APIConnectionError, APIError): # Timeout?
                 wait_time = backoff_factor ** attempt
                 self.logger.warning(f"API call failed (attempt {attempt + 1}/{max_retries}). Retrying in {wait_time} seconds.")
                 time.sleep(wait_time)

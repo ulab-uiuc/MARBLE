@@ -2,8 +2,10 @@
 Configuration management module.
 """
 
-import yaml
 from typing import Any, Dict
+
+import yaml
+
 
 class Config:
     """
@@ -24,6 +26,8 @@ class Config:
         self.tools = data.get('tools', {})
         self.logger = data.get('logger', {})
         self.parallel = data.get('parallel', {})
+        self.graph = data.get('graph', {})
+        self.memory = data.get('memory', {})
 
     @staticmethod
     def load(file_path: str) -> 'Config':
