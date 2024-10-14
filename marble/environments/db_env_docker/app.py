@@ -1,15 +1,13 @@
 import json
+import logging
 import os
 import threading
-import logging
+from datetime import datetime
 
 import uvicorn
 from fastapi import FastAPI, Request
-from datetime import datetime
-
-from prometheus_abnormal_metric import obtain_exceptions_in_times
 from get_slow_queries import obtain_slow_queries
-
+from prometheus_abnormal_metric import obtain_exceptions_in_times
 
 app = FastAPI()
 

@@ -226,7 +226,7 @@ groups:
 
       # lag in bytes from sender's view (accurate)
       - record: pg:ins:lag_bytes
-        expr: | 
+        expr: |
           max without (address, appname, usename, pid) (
             label_replace(pg_repl_replay_diff{appname!~'walreceiver|pg_receivewal'}, "ins", "$1", "appname", "(.+)")
           )
@@ -405,7 +405,7 @@ groups:
         expr: sum without(datname) (pg:db:wlock_count)
       - record: pg:cls:wlock_count
         expr: sum by (job, cls) (pg:ins:wlock)
-        
+
       # exclusive category lock
       - record: pg:db:xlock_count
         expr: sum without (mode) (pg_lock_count{mode!~"AccessShareLock|RowShareLock|RowExclusiveLock"})
@@ -460,7 +460,7 @@ groups:
       - record: pg:env:active_time_rate1m
         expr: sum by (job) (pg:cls:active_time_rate1m)
 
-      # active_time_rate5m 
+      # active_time_rate5m
       - record: pg:db:active_time_rate5m
         expr: rate(pg_db_active_time[5m])
       - record: pg:ins:active_time_rate5m
@@ -470,7 +470,7 @@ groups:
       - record: pg:env:active_time_rate5m
         expr: sum by (job) (pg:cls:active_time_rate5m)
 
-      # active_time_rate1m 
+      # active_time_rate1m
       - record: pg:db:active_time_rate15m
         expr: rate(pg_db_active_time[15m])
       - record: pg:ins:active_time_rate15m
@@ -1362,7 +1362,7 @@ groups:
           summary: "CRIT PatroniFailSafeActive {{ $value }}"
           description: |
             sum(patroni_failsafe_mode_is_active{}) > 0
-            http://g.pigsty/d/pgsql-overview  
+            http://g.pigsty/d/pgsql-overview
 
 
       #==============================================================#
@@ -1546,6 +1546,3 @@ groups:
           summary: "Info PostgresIdleInXact: {{ $labels.ins }}@{{ $labels.instance }} [{{ $labels.datname }}]"
           description: |
             pg:db:ixact_backends[ins={{ $labels.ins }}, instance={{ $labels.instance }}, datname={{ $labels.datname }}] = {{ $value | printf "%.0f" }} > 1
-
-
-

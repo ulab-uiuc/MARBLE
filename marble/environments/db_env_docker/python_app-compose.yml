@@ -8,4 +8,3 @@ services:
       - .:/app
     ports:
       - 8023:8023
-

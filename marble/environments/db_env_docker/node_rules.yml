@@ -107,7 +107,7 @@ groups:
       - record: node:cpu:time_irate1m
         expr: irate(node_cpu_seconds_total[1m])
 
-      # {cpu} total time spent per second on single cpu 
+      # {cpu} total time spent per second on single cpu
       - record: node:cpu:total_time_irate1m
         expr: sum without (mode) (node:cpu:time_irate1m)
 
@@ -255,7 +255,7 @@ groups:
           node_memory_HardwareCorrupted_bytes +
           node_memory_PageTables_bytes +
           node_memory_Slab_bytes +
-          node_memory_PageTables_bytes) - 
+          node_memory_PageTables_bytes) -
           node_memory_Buffers_bytes -
           (node_memory_Hugepagesize_bytes * node_memory_HugePages_Total) -
           (node_memory_Cached_bytes - node_memory_Mapped_bytes ) -
@@ -515,7 +515,7 @@ groups:
       # # max     : at most 4 years (1460 days) (avoid useless Inf)
       # - record: node:fs:space_exhaust
       #   expr: clamp(node:fs:avail_bytes / - node:fs:space_deriv1h, -1, 126230400)
-      # 报错 暂时隐藏 node_rules.yml: 700:15: group "node-rules", rule 117, "node:fs:space_exhaust": could not parse expression: 1:1: parse error: unknown function with name "clamp" 
+      # 报错 暂时隐藏 node_rules.yml: 700:15: group "node-rules", rule 117, "node:fs:space_exhaust": could not parse expression: 1:1: parse error: unknown function with name "clamp"
       # predict free-space 1d later according to last 1h's activity
       - record: node:fs:space_predict_1d
         expr: predict_linear(node:fs:avail_bytes[1h], 86400)
@@ -740,7 +740,7 @@ groups:
           description: |
             node_up[ins={{ $labels.ins }}, instance={{ $labels.instance }}] = {{ $value }} < 1
             http://g.pigsty/d/node-instance?var-ins={{ $labels.ins }}
-      
+
       # haproxy the load balancer
       - alert: HaproxyDown
         expr: haproxy_up < 1
@@ -785,7 +785,7 @@ groups:
             keepalived_up[ins={{ $labels.ins }}, instance={{ $labels.instance }}] = {{ $value }} < 1
             http://g.pigsty/d/node-instance?var-ins={{ $labels.ins }}
 
-  
+
 
       #==============================================================#
       #                          Node : CPU                          #
@@ -959,4 +959,3 @@ groups:
           summary: 'WARN NodeTimeDrift {{ $labels.ins }}@{{ $labels.instance }}'
           description: |
             abs(node_timex_offset_seconds)[ins={{ $labels.ins }}]) = {{ $value | printf "%.6f" }} > 64ms
-

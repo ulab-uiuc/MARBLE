@@ -1,6 +1,7 @@
-import paramiko
-from datetime import datetime
 import re
+from datetime import datetime
+
+import paramiko
 
 SERVER_CONFIG = {
     "server_address": "",

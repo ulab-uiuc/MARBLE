@@ -1,9 +1,10 @@
 import json
+import os
 import threading
 import time
 import warnings
-import os
 from datetime import datetime
+
 import numpy as np
 import requests
 from yaml_utils import read_prometheus_metrics_yaml
