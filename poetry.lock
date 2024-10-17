@@ -1190,13 +1190,13 @@ test = ["ipykernel", "pre-commit", "pytest (<8)", "pytest-cov", "pytest-timeout"
 
 [[package]]
 name = "litellm"
-version = "1.49.2"
+version = "1.49.5"
 description = "Library to easily interface with LLM API providers"
 optional = false
 python-versions = "!=2.7.*,!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,!=3.5.*,!=3.6.*,!=3.7.*,>=3.8"
 files = [
-    {file = "litellm-1.49.2-py3-none-any.whl", hash = "sha256:fa098963bb95fbe61fe3af24bfd020dd318b5483184ff8bd9c26b7938a47e298"},
-    {file = "litellm-1.49.2.tar.gz", hash = "sha256:f3a493264aae492fc292bb86c88b0c929c0b13267162272183727ce4a99e3859"},
+    {file = "litellm-1.49.5-py3-none-any.whl", hash = "sha256:9cd246221c1d922edb7614f29b5b5618b9da588f0ac04612965dbd8afeaa130f"},
+    {file = "litellm-1.49.5.tar.gz", hash = "sha256:f45667d723d77d235dc3cc3b056338012eb2ffbfd46d7beb7abea927f49358e0"},
 ]
 
 [package.dependencies]
@@ -2998,4 +2998,4 @@ test = ["big-O", "importlib-resources", "jaraco.functools", "jaraco.itertools", 
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.8, <3.12"
-content-hash = "105bcc06d3d83afacbf4c91d928a2581047f6bda89207e5c707bb04d37db49f2"
+content-hash = "85ec7c97e6d36a219632e0acad2c57b3a764bce443f19e4e22240851d2388173"
