@@ -1,3 +1,6 @@
+# MARBLE
+
+**M**ulti-**A**gent Coo**R**dination **B**enchmark with **L**LM **E**valuation
 
 **MultiAgentBench** is a modular and extensible framework designed to facilitate the development, testing, and evaluation of multi-agent systems leveraging Large Language Models (LLMs). It provides a structured environment where agents can interact within various simulated environments, utilizing cognitive abilities and communication mechanisms to perform tasks collaboratively or competitively.
 
