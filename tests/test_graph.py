@@ -1,17 +1,21 @@
 import unittest
 
+from typing import List, Dict, Any
+
 from marble.agent.base_agent import BaseAgent
+from marble.environments import BaseEnvironment
 from marble.graph.agent_graph import AgentGraph
 from marble.memory import SharedMemory
 
 
 class TestAgentGraph(unittest.TestCase):
     def setUp(self)->None:
+        self.placebo_env = BaseEnvironment(name="foobar", config={})
         # Initialize shared memory
         self.shared_memory = SharedMemory()
 
         # Define agent configurations
-        self.agent_configs = [
+        self.agent_configs: List[Dict[str, Any]] = [
             {"agent_id": "agent_1"},
             {"agent_id": "agent_2"},
             {"agent_id": "agent_3"},
@@ -19,7 +23,7 @@ class TestAgentGraph(unittest.TestCase):
         ]
 
         # Create BaseAgent instances
-        self.agents = [BaseAgent(config) for config in self.agent_configs]
+        self.agents = [BaseAgent(config=config, env=self.placebo_env) for config in self.agent_configs]
 
         # Define structure configuration
         self.structure_config = {
@@ -76,7 +80,7 @@ class TestAgentGraph(unittest.TestCase):
         self.assertListEqual(traversal_ids, expected_order)
 
     def test_add_agent(self)->None:
-        new_agent = BaseAgent({"agent_id": "agent_5"})
+        new_agent = BaseAgent({"agent_id": "agent_5"}, env=self.placebo_env)
         self.graph.add_agent(new_agent)
         self.assertIn("agent_5", self.graph.agents)
         self.assertListEqual(self.graph.adjacency_list["agent_5"], [])
@@ -111,7 +115,7 @@ class TestAgentGraph(unittest.TestCase):
 
     def test_invalid_add_agent(self)->None:
         with self.assertRaises(ValueError):
-            duplicate_agent = BaseAgent({"agent_id": "agent_1"})
+            duplicate_agent = BaseAgent({"agent_id": "agent_1"}, env=self.placebo_env)
             self.graph.add_agent(duplicate_agent)
 
     def test_invalid_remove_agent(self)->None:
