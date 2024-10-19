@@ -1,4 +1,5 @@
 import unittest
+
 from marble.agent.base_agent import BaseAgent
 from marble.graph.agent_graph import AgentGraph
 from marble.memory import SharedMemory
@@ -18,7 +19,7 @@ class TestAgentGraph(unittest.TestCase):
         ]
 
         # Create BaseAgent instances
-        self.agents = [BaseAgent(config, self.shared_memory) for config in self.agent_configs]
+        self.agents = [BaseAgent(config) for config in self.agent_configs]
 
         # Define structure configuration
         self.structure_config = {
@@ -75,7 +76,7 @@ class TestAgentGraph(unittest.TestCase):
         self.assertListEqual(traversal_ids, expected_order)
 
     def test_add_agent(self)->None:
-        new_agent = BaseAgent({"agent_id": "agent_5"}, self.shared_memory)
+        new_agent = BaseAgent({"agent_id": "agent_5"})
         self.graph.add_agent(new_agent)
         self.assertIn("agent_5", self.graph.agents)
         self.assertListEqual(self.graph.adjacency_list["agent_5"], [])
@@ -110,7 +111,7 @@ class TestAgentGraph(unittest.TestCase):
 
     def test_invalid_add_agent(self)->None:
         with self.assertRaises(ValueError):
-            duplicate_agent = BaseAgent({"agent_id": "agent_1"}, self.shared_memory)
+            duplicate_agent = BaseAgent({"agent_id": "agent_1"})
             self.graph.add_agent(duplicate_agent)
 
     def test_invalid_remove_agent(self)->None:

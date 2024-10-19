@@ -19,22 +19,6 @@ class AgentGraph:
         relationships (List[Tuple[str, str, str]]): List of relationships as triples.
     """
 
-    # def __init__(self, agents: Sequence[BaseAgent], structure_config: Dict[str, Any]):
-    #     """
-    #     Initialize the AgentGraph with agents and structure configuration.
-
-    #     Args:
-    #         agents (List[BaseAgent]): List of agent instances.
-    #         structure_config (Dict[str, Any]): Configuration defining the graph structure.
-    #     """
-    #     self.logger = get_logger(self.__class__.__name__)
-    #     self.agents = {agent.agent_id: agent for agent in agents}
-    #     self.adjacency_list: Dict[str, List[str]] = {}
-    #     self.relationships: List[Tuple[str, str, str]] = []
-    #     self.execution_mode = structure_config.get('execution_mode', 'parallel')
-    #     self.logger.info(f"AgentGraph initialized with execution mode '{self.execution_mode}'.")
-    #     self._build_graph(structure_config.get('structure', {}))
-    #     self._initialize_relationships(structure_config.get('relationships', []))
     def __init__(self, agents: Sequence[BaseAgent], structure_config: Dict[str, Any]):
         """
         Initialize the AgentGraph with agents and structure configuration.
@@ -44,13 +28,20 @@ class AgentGraph:
             structure_config (Dict[str, Any]): Configuration defining the graph structure.
                 Expected keys:
                     - execution_mode: 'parallel', 'hierarchical', or 'cooperative'
+                    - structure: Dict[str, List[str]] defining parent to child relationships
                     - relationships: List of triples [node1, node2, relationship]
         """
         self.logger = get_logger(self.__class__.__name__)
         self.agents = {agent.agent_id: agent for agent in agents}
+        self.adjacency_list: Dict[str, List[str]] = {}  # Initialize adjacency_list
         self.relationships: List[Tuple[str, str, str]] = []
         self.execution_mode = structure_config.get('execution_mode', 'parallel')
         self.logger.info(f"AgentGraph initialized with execution mode '{self.execution_mode}'.")
+
+        # Build the adjacency list from the structure
+        self._build_graph(structure_config.get('structure', {}))
+
+        # Initialize relationships
         relationships = structure_config.get('relationships', [])
         for rel in relationships:
             if len(rel) != 3:
@@ -76,29 +67,9 @@ class AgentGraph:
                     raise ValueError(f"Child agent '{child_id}' not found among agents.")
             self.adjacency_list[parent_id] = child_ids
             self.logger.debug(f"Agent '{parent_id}' connected to children {child_ids}.")
-
-    def _initialize_relationships(self, relationships: List[Dict[str, str]]) -> None:
-        """
-        Initialize relationships between agents.
-
-        Args:
-            relationships (List[Dict[str, str]]): List of relationship dictionaries with 'source', 'target', and 'type'.
-
-        Raises:
-            ValueError: If any referenced agent is unknown.
-        """
-        for rel in relationships:
-            source = rel.get('source')
-            target = rel.get('target')
-            rel_type = rel.get('type', 'related_to')
-            if source not in self.agents:
-                raise ValueError(f"Source agent '{source}' not found among agents.")
-            if target not in self.agents:
-                raise ValueError(f"Target agent '{target}' not found among agents.")
-            self.relationships.append((source, target, rel_type))
-            # Assign relationship to agents
-            self.agents[source].relationships[target] = rel_type
-            self.logger.debug(f"Relationship added: {source} --[{rel_type}]--> {target}")
+        # Ensure all agents are in the adjacency list
+        for agent_id in self.agents:
+            self.adjacency_list.setdefault(agent_id, [])
 
     # CRUD Operations
 
@@ -138,6 +109,9 @@ class AgentGraph:
                 children.remove(agent_id)
         # Remove relationships
         self.relationships = [rel for rel in self.relationships if rel[0] != agent_id and rel[1] != agent_id]
+        # Remove relationships from agents
+        for agent in self.agents.values():
+            agent.relationships.pop(agent_id, None)
         # Remove from agents
         del self.agents[agent_id]
         self.logger.info(f"Agent '{agent_id}' removed from the graph.")
@@ -327,7 +301,7 @@ class AgentGraph:
         for agent_id, agent in self.agents.items():
             profiles[agent_id] = {
                 "agent_id": agent.agent_id,
-                "relationships": agent.get_relationships(),
+                "relationships": agent.relationships,  # Fixed from agent.get_relationships()
                 "token_usage": agent.get_token_usage(),
                 # Add other relevant profile information if needed
             }

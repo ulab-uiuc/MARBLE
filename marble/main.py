@@ -8,10 +8,9 @@ import sys
 
 from marble.configs.config import Config
 from marble.engine.engine import Engine
-from marble.utils.logger import setup_logging
 
 
-def parse_args():
+def parse_args()->argparse.Namespace:
     """
     Parse command-line arguments.
 
@@ -27,18 +26,15 @@ def parse_args():
     )
     return parser.parse_args()
 
-def main():
+def main()->None:
     """
     Main function to run the simulation.
     """
     args = parse_args()
 
-    # Setup logging
-    setup_logging(log_level=logging.INFO)
-
     # Load configuration
     try:
-        config = Config.load_from_file(args.config)
+        config = Config.load(args.config)
     except FileNotFoundError:
         logging.error(f"Configuration file not found at path: {args.config}")
         sys.exit(1)
