@@ -2,7 +2,7 @@
 Base agent module.
 """
 
-from typing import Any, Dict, Union
+from typing import Any, Dict
 
 from marble.llms.model_prompting import model_prompting
 from marble.memory import BaseMemory, SharedMemory
@@ -14,7 +14,7 @@ class BaseAgent:
     Base class for all agents.
     """
 
-    def __init__(self, config: Dict[str, Any], shared_memory: Union[SharedMemory, None] = None):
+    def __init__(self, config: Dict[str, Any]):
         """
         Initialize the agent.
 
@@ -26,7 +26,7 @@ class BaseAgent:
         assert isinstance(agent_id, str), "agent_id must be a string."
         self.agent_id: str = agent_id
         self.memory = BaseMemory()
-        self.shared_memory = shared_memory
+        self.shared_memory = SharedMemory()
         self.relationships: Dict[str, str] = {}  # key: target_agent_id, value: relationship type
         self.logger = get_logger(self.__class__.__name__)
         self.logger.info(f"Agent '{self.agent_id}' initialized.")

@@ -11,7 +11,7 @@ def load_config(config_path: str) -> Config:
         config_dict = yaml.safe_load(f)
     return Config(**config_dict)
 
-def main():
+def main()->None:
     # Load configuration
     config = load_config('config.yaml')
 

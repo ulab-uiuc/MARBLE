@@ -13,7 +13,6 @@ from marble.evaluator.evaluator import Evaluator
 from marble.graph.agent_graph import AgentGraph
 from marble.memory.base_memory import BaseMemory
 from marble.memory.shared_memory import SharedMemory
-
 from marble.utils.logger import get_logger
 
 EnvType = Union[BaseEnvironment, WebEnvironment]
@@ -33,15 +32,12 @@ class Engine:
         """
         self.logger = get_logger(self.__class__.__name__)
         self.config = config
-
-        # Initialize Memory
-        self.memory = self._initialize_memory(config.memory)
-
         # Initialize Agents
         self.agents = self._initialize_agents(config.agents)
         # Initialize AgentGraph
         self.graph = AgentGraph(self.agents, config.graph)
-
+        # Initialize Memory
+        self.memory = self._initialize_memory(config.memory)
         # Initialize Environment
         self.environment = self._initialize_environment(config.environment)
 
@@ -76,7 +72,7 @@ class Engine:
         self.logger.debug(f"Environment '{env_type}' initialized.")
         return environment
 
-    def _initialize_agents(self, agent_configs: List[Dict[str, Any]]) -> List[BaseAgent]:
+    def _initialize_agents(self, agent_configs: List[Dict[str, Any]]) -> Union[List[BaseAgent], List[ReasoningAgent]]:
         """
         Initialize agents based on configurations.
 
@@ -90,9 +86,9 @@ class Engine:
         for agent_config in agent_configs:
             agent_type = agent_config.get("type")
             if agent_type == "ReasoningAgent":
-                agent = ReasoningAgent(config=agent_config, shared_memory=self.memory)
+                agent:Union[ReasoningAgent, BaseAgent] = ReasoningAgent(config=agent_config)
             else:
-                agent = BaseAgent(config=agent_config, shared_memory=self.memory)
+                agent = BaseAgent(config=agent_config)
             agents.append(agent)
             self.logger.debug(f"Agent '{agent.agent_id}' of type '{agent_type}' initialized.")
         return agents
