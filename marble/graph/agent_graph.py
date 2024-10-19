@@ -19,6 +19,22 @@ class AgentGraph:
         relationships (List[Tuple[str, str, str]]): List of relationships as triples.
     """
 
+    # def __init__(self, agents: Sequence[BaseAgent], structure_config: Dict[str, Any]):
+    #     """
+    #     Initialize the AgentGraph with agents and structure configuration.
+
+    #     Args:
+    #         agents (List[BaseAgent]): List of agent instances.
+    #         structure_config (Dict[str, Any]): Configuration defining the graph structure.
+    #     """
+    #     self.logger = get_logger(self.__class__.__name__)
+    #     self.agents = {agent.agent_id: agent for agent in agents}
+    #     self.adjacency_list: Dict[str, List[str]] = {}
+    #     self.relationships: List[Tuple[str, str, str]] = []
+    #     self.execution_mode = structure_config.get('execution_mode', 'parallel')
+    #     self.logger.info(f"AgentGraph initialized with execution mode '{self.execution_mode}'.")
+    #     self._build_graph(structure_config.get('structure', {}))
+    #     self._initialize_relationships(structure_config.get('relationships', []))
     def __init__(self, agents: Sequence[BaseAgent], structure_config: Dict[str, Any]):
         """
         Initialize the AgentGraph with agents and structure configuration.
@@ -26,15 +42,21 @@ class AgentGraph:
         Args:
             agents (List[BaseAgent]): List of agent instances.
             structure_config (Dict[str, Any]): Configuration defining the graph structure.
+                Expected keys:
+                    - execution_mode: 'parallel', 'hierarchical', or 'cooperative'
+                    - relationships: List of triples [node1, node2, relationship]
         """
         self.logger = get_logger(self.__class__.__name__)
         self.agents = {agent.agent_id: agent for agent in agents}
-        self.adjacency_list: Dict[str, List[str]] = {}
         self.relationships: List[Tuple[str, str, str]] = []
         self.execution_mode = structure_config.get('execution_mode', 'parallel')
         self.logger.info(f"AgentGraph initialized with execution mode '{self.execution_mode}'.")
-        self._build_graph(structure_config.get('structure', {}))
-        self._initialize_relationships(structure_config.get('relationships', []))
+        relationships = structure_config.get('relationships', [])
+        for rel in relationships:
+            if len(rel) != 3:
+                raise ValueError(f"Invalid relationship format: {rel}. Expected 3 elements.")
+            node1, node2, relationship = rel
+            self.add_relationship(node1, node2, relationship)
 
     def _build_graph(self, structure: Dict[str, List[str]]) -> None:
         """
@@ -293,3 +315,20 @@ class AgentGraph:
         # In cooperative mode, agents may need to communicate; return all agents.
         self.logger.debug("Preparing agents for cooperative execution.")
         return list(self.agents.values())
+
+    def get_agent_profiles(self) -> Dict[str, Dict[str, Any]]:
+        """
+        Get profiles of all agents in the graph.
+
+        Returns:
+            Dict[str, Dict[str, Any]]: A dictionary mapping agent IDs to their profiles.
+        """
+        profiles = {}
+        for agent_id, agent in self.agents.items():
+            profiles[agent_id] = {
+                "agent_id": agent.agent_id,
+                "relationships": agent.get_relationships(),
+                "token_usage": agent.get_token_usage(),
+                # Add other relevant profile information if needed
+            }
+        return profiles
