@@ -1,0 +1,12 @@
+[
+    {
+        "task_id": "task1",
+        "description": "Translate the following text from English to French: 'Hello, how are you?'",
+        "ground_truth": "Bonjour, comment ça va?"
+    },
+    {
+        "task_id": "task2",
+        "description": "Summarize the following text: 'Artificial intelligence is transforming the world.'",
+        "ground_truth": "AI is changing the world."
+    }
+]

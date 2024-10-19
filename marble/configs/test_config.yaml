@@ -1,0 +1,55 @@
+# Configuration file for the Marble engine
+
+environment:
+  type: 'Web'
+  description: 'A web environment for fetching and processing web content.'
+  task_description: 'Translate the following text from English to French: "Hello, how are you?"'
+  ground_truth: 'Bonjour, comment ça va?'
+  max_iterations: 10
+
+agents:
+  - agent_id: 'agent_root'
+    type: 'ReasoningAgent'
+    llm:
+      type: 'OpenAI'
+      api_key: 'your-api-key-here'
+      api_base: 'https://api.openai.com/v1'
+      model_name: 'gpt-3.5-turbo'
+  - agent_id: 'agent_child1'
+    type: 'ReasoningAgent'
+    llm:
+      type: 'OpenAI'
+      api_key: 'your-api-key-here'
+      api_base: 'https://api.openai.com/v1'
+      model_name: 'gpt-3.5-turbo'
+  - agent_id: 'agent_child2'
+    type: 'ReasoningAgent'
+    llm:
+      type: 'OpenAI'
+      api_key: 'your-api-key-here'
+      api_base: 'https://api.openai.com/v1'
+      model_name: 'gpt-3.5-turbo'
+
+structure:
+  agent_1:
+    - agent_2
+    - agent_3
+  agent_2:
+    - agent_4
+relationships:
+  - source: agent_1
+    target: agent_3
+    type: collaborates_with
+  - source: agent_2
+    target: agent_4
+    type: supervises
+
+memory:
+  type: 'SharedMemory'
+
+metrics:
+  task_completion: True
+  token_consumption: True
+
+simulation:
+  max_iterations: 10
