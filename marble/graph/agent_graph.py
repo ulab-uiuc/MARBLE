@@ -58,8 +58,6 @@ class AgentGraph:
             node1, node2, relationship = rel
             self.add_relationship(node1, node2, relationship)
 
-
-
     def _build_graph(self, structure: Dict[str, List[str]]) -> None:
         """
         Build the adjacency list based on the structure configuration.

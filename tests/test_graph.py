@@ -1,5 +1,4 @@
 import unittest
-
 from marble.agent.base_agent import BaseAgent
 from marble.graph.agent_graph import AgentGraph
 from marble.memory import SharedMemory

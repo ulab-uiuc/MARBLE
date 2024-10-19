@@ -3,7 +3,6 @@
 """
 The core engine module that coordinates agents within the environment.
 """
-
 from typing import Any, Dict, List, Union
 
 from marble.agent import BaseAgent, ReasoningAgent
@@ -14,6 +13,7 @@ from marble.evaluator.evaluator import Evaluator
 from marble.graph.agent_graph import AgentGraph
 from marble.memory.base_memory import BaseMemory
 from marble.memory.shared_memory import SharedMemory
+
 from marble.utils.logger import get_logger
 
 EnvType = Union[BaseEnvironment, WebEnvironment]
@@ -39,7 +39,6 @@ class Engine:
 
         # Initialize Agents
         self.agents = self._initialize_agents(config.agents)
-
         # Initialize AgentGraph
         self.graph = AgentGraph(self.agents, config.graph)
 
@@ -169,6 +168,7 @@ class Engine:
                     break
 
             self.logger.info("Engine simulation loop completed.")
+
         except Exception:
             self.logger.exception("An error occurred during simulation.")
             raise
