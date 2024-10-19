@@ -23,11 +23,11 @@ class BaseAgent:
             shared_memory (BaseMemory, optional): Shared memory instance.
         """
         agent_id = config.get("agent_id")
-        assert isinstance(agent_id, str)
+        assert isinstance(agent_id, str), "agent_id must be a string."
         self.agent_id: str = agent_id
         self.memory = BaseMemory()
         self.shared_memory = shared_memory
-        self.relationships = {}
+        self.relationships: Dict[str, str] = {}  # key: target_agent_id, value: relationship type
         self.logger = get_logger(self.__class__.__name__)
         self.logger.info(f"Agent '{self.agent_id}' initialized.")
         self.token_usage = 0  # Initialize token usage

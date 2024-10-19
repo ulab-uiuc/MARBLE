@@ -30,42 +30,20 @@ agents:
       api_base: 'https://api.openai.com/v1'
       model_name: 'gpt-3.5-turbo'
 
-graph:
-  execution_mode: 'swarm'
-  structure:
-    agent_root:
-      - 'agent_child1'
-      - 'agent_child2'
-    agent_child1:
-      - 'combine_answer_node'
-    agent_child2:
-      - 'combine_answer_node'
-    combine_answer_node:
-      - 'final_decision_node'
-
-operations:
-  combine_answer_node:
-    type: 'CombineAnswer'
-    agent_id: 'combine_agent'
-    agent:
-      type: 'ReasoningAgent'
-      llm:
-        type: 'OpenAI'
-        api_key: 'your-api-key-here'
-        api_base: 'https://api.openai.com/v1'
-        model_name: 'gpt-3.5-turbo'
-  final_decision_node:
-    type: 'FinalDecision'
-    agent_id: 'final_decision_agent'
-    agent:
-      type: 'ReasoningAgent'
-      llm:
-        type: 'OpenAI'
-        api_key: 'your-api-key-here'
-        api_base: 'https://api.openai.com/v1'
-        model_name: 'gpt-3.5-turbo'
-    strategy: 'majority_vote'
-
+structure:
+  agent_1:
+    - agent_2
+    - agent_3
+  agent_2:
+    - agent_4
+relationships:
+  - source: agent_1
+    target: agent_3
+    type: collaborates_with
+  - source: agent_2
+    target: agent_4
+    type: supervises
+    
 memory:
   type: 'SharedMemory'
 
