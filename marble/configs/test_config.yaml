@@ -1,55 +1,40 @@
-# Configuration file for the Marble engine
+execution_mode: hierarchical
+relationships:
+  - [agent1, agent2, "reports_to"]
+  - [agent1, agent3, "manages"]
+  - [agent2, agent4, "supports"]
+  - [agent3, agent4, "collaborates_with"]
 
 environment:
-  type: 'Web'
-  description: 'A web environment for fetching and processing web content.'
-  task_description: 'Translate the following text from English to French: "Hello, how are you?"'
-  ground_truth: 'Bonjour, comment ça va?'
-  max_iterations: 10
+  type: Web
+  name: "Web Simulation Environment"
+  max_iterations: 20
+  # Add other environment-specific configurations here
 
 agents:
-  - agent_id: 'agent_root'
-    type: 'ReasoningAgent'
-    llm:
-      type: 'OpenAI'
-      api_key: 'your-api-key-here'
-      api_base: 'https://api.openai.com/v1'
-      model_name: 'gpt-3.5-turbo'
-  - agent_id: 'agent_child1'
-    type: 'ReasoningAgent'
-    llm:
-      type: 'OpenAI'
-      api_key: 'your-api-key-here'
-      api_base: 'https://api.openai.com/v1'
-      model_name: 'gpt-3.5-turbo'
-  - agent_id: 'agent_child2'
-    type: 'ReasoningAgent'
-    llm:
-      type: 'OpenAI'
-      api_key: 'your-api-key-here'
-      api_base: 'https://api.openai.com/v1'
-      model_name: 'gpt-3.5-turbo'
-
-structure:
-  agent_1:
-    - agent_2
-    - agent_3
-  agent_2:
-    - agent_4
-relationships:
-  - source: agent_1
-    target: agent_3
-    type: collaborates_with
-  - source: agent_2
-    target: agent_4
-    type: supervises
+  - type: BaseAgent
+    agent_id: agent1
+    # Additional agent-specific configurations
+  - type: BaseAgent
+    agent_id: agent2
+    # Additional agent-specific configurations
+  - type: ReasoningAgent
+    agent_id: agent3
+    # Additional agent-specific configurations
+  - type: BaseAgent
+    agent_id: agent4
+    # Additional agent-specific configurations
 
 memory:
-  type: 'SharedMemory'
+  type: SharedMemory
+  # Additional memory configurations if needed
 
 metrics:
-  task_completion: True
-  token_consumption: True
+  # Define metrics configurations for the Evaluator
+  # Example:
+  # accuracy: true
+  # response_time: true
 
-simulation:
-  max_iterations: 10
+engine_planner:
+  initial_progress: "Starting the simulation."
+  # Additional engine planner configurations if needed
