@@ -2,12 +2,12 @@
 Base agent module.
 """
 
-from typing import Any, Dict, Union, List
+from typing import Any, Dict, List, Union
 
+from marble.environments import BaseEnvironment, WebEnvironment
 from marble.llms.model_prompting import model_prompting
 from marble.memory import BaseMemory, SharedMemory
 from marble.utils.logger import get_logger
-from marble.environments import BaseEnvironment, WebEnvironment
 
 EnvType = Union[BaseEnvironment, WebEnvironment]
 

@@ -1,6 +1,5 @@
 import unittest
-
-from typing import List, Dict, Any
+from typing import Any, Dict, List
 
 from marble.agent.base_agent import BaseAgent
 from marble.environments import BaseEnvironment

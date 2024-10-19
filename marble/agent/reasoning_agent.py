@@ -5,9 +5,9 @@ Reasoning agent module.
 from typing import Any, Dict, Union
 
 from marble.agent import BaseAgent
+from marble.environments import BaseEnvironment, WebEnvironment
 from marble.llms import OpenAILLM
 from marble.memory import BaseMemory, SharedMemory
-from marble.environments import BaseEnvironment, WebEnvironment
 
 EnvType = Union[BaseEnvironment, WebEnvironment]
 

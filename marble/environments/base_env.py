@@ -20,7 +20,7 @@ class BaseEnvironment:
         self.name = name
         self.agents: List[AgentType] = []
         self.state: Dict[str, Any] = {}
-        self._action_handlers: Dict[str, Callable[..., Dict[str, Any]]] = {} # private to avoid direct calls from outside 
+        self._action_handlers: Dict[str, Callable[..., Dict[str, Any]]] = {} # private to avoid direct calls from outside
         self.action_handler_descriptions: Dict[str, Any] = {} # in openai format
         self.done = False
         self.description: str = config.get("description", "")

@@ -112,49 +112,49 @@ MultiAgentBench/
 
 ## Key Components
 
-- **Agents Module (`marble/agent/`):**  
+- **Agents Module (`marble/agent/`):**
   Contains agent implementations, such as `BaseAgent` and `ReasoningAgent`, which utilize LLMs for decision-making and may include cognitive modules.
 
-- **LLMs Module (`marble/llms/`):**  
+- **LLMs Module (`marble/llms/`):**
   Interfaces with various language models, providing a unified API for agent interaction.
 
-- **Memory Module (`marble/memory/`):**  
+- **Memory Module (`marble/memory/`):**
   Implements memory mechanisms for agents, including shared memory for inter-agent communication.
 
-- **Environments Module (`marble/environments/`):**  
+- **Environments Module (`marble/environments/`):**
   Abstracts different simulation environments where agents operate, such as web-based environments.
 
-- **Graphs Module (`marble/graph/`):**  
+- **Graphs Module (`marble/graph/`):**
   Manages the agent network graph, supporting execution modes like hierarchical and cooperative, and handles agent relationships.
 
-- **Engine Module (`marble/engine/`):**  
+- **Engine Module (`marble/engine/`):**
   The core orchestrator that initializes components and runs the simulation loop.
 
-- **Evaluator Module (`marble/evaluator/`):**  
+- **Evaluator Module (`marble/evaluator/`):**
   Provides evaluation metrics to assess agent performance.
 
-- **Tools Module (`marble/tools/`):**  
+- **Tools Module (`marble/tools/`):**
   Includes utilities that agents can leverage, such as web search functionality.
 
-- **Utils Module (`marble/utils/`):**  
+- **Utils Module (`marble/utils/`):**
   Contains utility functions like logging and configuration loading.
 
-- **Configurations (`marble/configs/`):**  
+- **Configurations (`marble/configs/`):**
   Manages configuration files for the system and LLMs.
 
-- **Tests (`tests/`):**  
+- **Tests (`tests/`):**
   Contains unit and integration tests to validate system functionality.
 
-- **Main Entry Point (`marble/main.py`):**  
+- **Main Entry Point (`marble/main.py`):**
   The starting script to run the simulation.
 
-- **Scripts (`scripts/`):**  
+- **Scripts (`scripts/`):**
   Contains auxiliary scripts for tasks like data processing or setup.
 
-- **Assets and Data (`assets/`, `data/`):**  
+- **Assets and Data (`assets/`, `data/`):**
   Include any additional resources or datasets required for simulations.
 
-- **Examples (`examples/`):**  
+- **Examples (`examples/`):**
   Provides example configurations and documentation to help users get started.
 
 ## Installation
@@ -252,4 +252,3 @@ Run `poetry run pytest` to make sure all tests pass (this will ensure dynamic ty
 #### Check github action result
 
 Check the github action result to make sure all tests pass. If not, fix the errors and push again.
-
