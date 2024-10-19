@@ -22,7 +22,7 @@ class Evaluator:
         """
         self.logger = get_logger(self.__class__.__name__)
         self.metrics_config = metrics_config
-        self.metrics = {
+        self.metrics:Dict[str, Any] = {
             "task_completion": [],
             "token_consumption": []
         }

@@ -64,7 +64,7 @@ class BaseAgent:
             temperature=0.0,
             top_p=None,
             stream=None
-        )
+        )[0]
         self.memory.update(self.agent_id, result)
         self.token_usage += self._calculate_token_usage(task, result)
         self.logger.info(f"Agent '{self.agent_id}' acted with result '{result}'.")

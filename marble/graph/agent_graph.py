@@ -61,7 +61,7 @@ class AgentGraph:
 
         Args:
             relationships (List[Dict[str, str]]): List of relationship dictionaries with 'source', 'target', and 'type'.
-        
+
         Raises:
             ValueError: If any referenced agent is unknown.
         """
@@ -86,7 +86,7 @@ class AgentGraph:
 
         Args:
             agent (BaseAgent): The agent instance to add.
-        
+
         Raises:
             ValueError: If agent_id already exists.
         """
@@ -102,7 +102,7 @@ class AgentGraph:
 
         Args:
             agent_id (str): The ID of the agent to remove.
-        
+
         Raises:
             ValueError: If agent_id does not exist.
         """
@@ -120,14 +120,14 @@ class AgentGraph:
         del self.agents[agent_id]
         self.logger.info(f"Agent '{agent_id}' removed from the graph.")
 
-    def update_agent(self, agent_id: str, **kwargs) -> None:
+    def update_agent(self, agent_id: str, **kwargs: Any) -> None:
         """
         Update an agent's configuration.
 
         Args:
             agent_id (str): The ID of the agent to update.
             **kwargs: Attributes to update on the agent.
-        
+
         Raises:
             ValueError: If agent_id does not exist.
         """
@@ -147,10 +147,10 @@ class AgentGraph:
 
         Args:
             agent_id (str): The ID of the agent to retrieve.
-        
+
         Raises:
             ValueError: If agent_id does not exist.
-        
+
         Returns:
             BaseAgent: The requested agent instance.
         """
@@ -166,7 +166,7 @@ class AgentGraph:
             source (str): Source agent ID.
             target (str): Target agent ID.
             rel_type (str): Type of relationship.
-        
+
         Raises:
             ValueError: If either agent does not exist.
         """
@@ -185,7 +185,7 @@ class AgentGraph:
         Args:
             source (str): Source agent ID.
             target (str): Target agent ID.
-        
+
         Raises:
             ValueError: If the relationship does not exist.
         """
@@ -208,7 +208,7 @@ class AgentGraph:
             source (str): Source agent ID.
             target (str): Target agent ID.
             new_type (str): New relationship type.
-        
+
         Raises:
             ValueError: If the relationship does not exist.
         """

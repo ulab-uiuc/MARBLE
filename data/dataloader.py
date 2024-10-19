@@ -4,7 +4,7 @@ Data loader module for loading tasks or datasets.
 
 import json
 import os
-from typing import Any, Dict, List
+from typing import Any
 
 
 class DataLoader:
@@ -20,7 +20,7 @@ class DataLoader:
         """
         self.data_path = data_path
 
-    def load_data(self) -> List[Dict[str, Any]]:
+    def load_data(self) -> Any:
         """
         Load data from the data file.
 

@@ -43,7 +43,7 @@ relationships:
   - source: agent_2
     target: agent_4
     type: supervises
-    
+
 memory:
   type: 'SharedMemory'
 
