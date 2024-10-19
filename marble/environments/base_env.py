@@ -4,9 +4,9 @@ Base environment module.
 
 from typing import Any, Callable, Dict, List, Union
 
-from marble.agent.reasoning_agent import ReasoningAgent
+# from marble.agent.reasoning_agent import ReasoningAgent
 
-AgentType = Union[ReasoningAgent]  # will expand to include other agent types
+# AgentType = Union[ReasoningAgent]  # will expand to include other agent types
 
 class BaseEnvironment:
     def __init__(self, name: str, config: Dict[str, Any]):
@@ -18,7 +18,7 @@ class BaseEnvironment:
             config (Dict[str, Any]): Configuration for the environment.
         """
         self.name = name
-        self.agents: List[AgentType] = []
+        self.agents: List[Any] = []
         self.state: Dict[str, Any] = {}
         self._action_handlers: Dict[str, Callable[..., Dict[str, Any]]] = {} # private to avoid direct calls from outside
         self.action_handler_descriptions: Dict[str, Any] = {} # in openai format

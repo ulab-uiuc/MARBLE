@@ -1,12 +1,12 @@
 import time
-from typing import Any, Dict, Union
+from typing import Any, Dict
 
 import requests
 
-from marble.agent import ReasoningAgent
+# from marble.agent import ReasoningAgent
 from marble.environments.base_env import BaseEnvironment
 
-AgentType = Union[ReasoningAgent]  # Will expand to include other agent types
+# AgentType = Union[ReasoningAgent]  # Will expand to include other agent types
 
 class WebEnvironment(BaseEnvironment):
     def __init__(self, name: str, config: Dict[str, Any]):
