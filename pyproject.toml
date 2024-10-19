@@ -42,6 +42,9 @@ exclude=["marble/environments/db_env_docker/*"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 python_files = "test_*.py"
+pythonpath = [
+  "."
+]
 
 [tool.codespell]
 ignore-words-list = "dout, te, indicies, astroid"
