@@ -22,19 +22,36 @@ class WebEnvironment(BaseEnvironment):
         self.web_cache: Dict[str, str] = {}  # Cache for storing webpage content
 
         # Register the fetch_webpage action
-        self.register_action("fetch_webpage", self._fetch_webpage_handler)
+        fetch_webpage_description = {
+            "type": "function",
+            "function": {
+                "name": "fetch_webpage",
+                "description": "Fetches the content of a webpage from a given URL. The function includes rate limiting and caching to avoid excessive requests.",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "url": {
+                            "type": "string",
+                            "description": "The URL of the webpage to fetch. Must be a valid HTTP/HTTPS URL.",
+                        }
+                    },
+                    "required": ["url"],
+                    "additionalProperties": False
+                }
+            }
+        }
+        self.register_action("fetch_webpage", handler=self._fetch_webpage_handler, description=fetch_webpage_description)
 
-    def _fetch_webpage_handler(self, params: Dict[str, Any]) -> Dict[str, Any]:
+    def _fetch_webpage_handler(self, url: str = "") -> Dict[str, Any]:
         """
         Action handler to fetch a webpage.
 
         Args:
-            params (Dict[str, Any]): Parameters for the action, including the 'url'.
+            url (str): url to fetch
 
         Returns:
             Dict[str, Any]: The result of the action, including the webpage content.
         """
-        url = params.get('url')
         if not url:
             return {
                 "success": False,

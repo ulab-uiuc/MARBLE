@@ -20,7 +20,8 @@ class BaseEnvironment:
         self.name = name
         self.agents: List[AgentType] = []
         self.state: Dict[str, Any] = {}
-        self.action_handlers: Dict[str, Callable[[Dict[str, Any]], Dict[str, Any]]] = {}
+        self._action_handlers: Dict[str, Callable[..., Dict[str, Any]]] = {} # private to avoid direct calls from outside 
+        self.action_handler_descriptions: Dict[str, Any] = {} # in openai format
         self.done = False
         self.description: str = config.get("description", "")
         self.task_description: str = config.get("task_description", "")
@@ -47,26 +48,32 @@ class BaseEnvironment:
     def get_description(self) -> str:
         return self.description
 
-    def register_action(self, action_name: str, handler: Callable[[Dict[str, Any]], Dict[str, Any]]) -> None:
+    def register_action(self, action_name: str, handler: Callable[..., Dict[str, Any]], description: Dict[str, Any]) -> None:
         """
         Register an action handler for the environment.
 
         Args:
             action_name (str): The name of the action.
+            description (dict): Discription of action (in openai "function calling" format).
             handler (Callable): The handler function for the action.
         """
-        self.action_handlers[action_name] = handler
+        self._action_handlers[action_name] = handler
+        self.action_handler_descriptions[action_name] = description
 
-    def apply_action(self, agent_id: Union[str, None], action: Any) -> Dict[str, Any]:
+    def apply_action(self, agent_id: Union[str, None], action_name: str, arguments: Dict[str, Any]) -> Dict[str, Any]:
         """
         Execute an action in the environment.
 
         Args:
             agent_id (str): The ID of the agent performing the action.
-            action (Any): The action to execute.
+            action_name (str): The action to execute. Action name is used to retrieve the handler.
+            arguments (dict): Arguments for the action handler.
         """
+        # Execution
+        action_result = self._action_handlers[action_name](**arguments)
+
         # Update the state with the action result
-        self.state['last_action_result'] = action
+        self.state['last_action_result'] = action_result
 
         # Increment iteration count
         self.current_iteration += 1
