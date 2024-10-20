@@ -1,7 +1,5 @@
-from .base_llms import BaseLLM
-from .openai_api import OpenAILLM
+from .model_prompting import model_prompting
 
 __all__ = [
-    'BaseLLM',
-    'OpenAILLM',
+    'model_prompting',
 ]

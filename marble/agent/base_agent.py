@@ -29,12 +29,7 @@ class BaseAgent:
         assert isinstance(agent_id, str), "agent_id must be a string."
         assert env is not None, "agent must has an environment."
         self.env: EnvType = env
-        actions = config.get("actions")
-        assert isinstance(actions, list)
-        for action in actions:
-            assert isinstance(action, str)
-            assert action in self.env.action_handler_descriptions, f"action {action} not found in environment."
-        self.actions: List[str] = actions
+        self.actions: List[str] = []
         self.agent_id: str = agent_id
         self.memory = BaseMemory()
         self.shared_memory = SharedMemory()

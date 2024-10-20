@@ -8,7 +8,7 @@ relationships:
 environment:
   type: Web
   name: "Web Simulation Environment"
-  max_iterations: 20
+  max_iterations: 1
   # Add other environment-specific configurations here
 
 agents:
@@ -18,7 +18,7 @@ agents:
   - type: BaseAgent
     agent_id: agent2
     # Additional agent-specific configurations
-  - type: ReasoningAgent
+  - type: BaseAgent
     agent_id: agent3
     # Additional agent-specific configurations
   - type: BaseAgent
