@@ -86,9 +86,9 @@ class Engine:
         for agent_config in agent_configs:
             agent_type = agent_config.get("type")
             if agent_type == "ReasoningAgent":
-                agent:Union[ReasoningAgent, BaseAgent] = ReasoningAgent(config=agent_config)
+                agent:Union[ReasoningAgent, BaseAgent] = ReasoningAgent(config=agent_config, env=self.environment)
             else:
-                agent = BaseAgent(config=agent_config)
+                agent = BaseAgent(config=agent_config, env=self.environment)
             agents.append(agent)
             self.logger.debug(f"Agent '{agent.agent_id}' of type '{agent_type}' initialized.")
         return agents
