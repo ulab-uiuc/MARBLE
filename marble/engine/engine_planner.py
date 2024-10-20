@@ -86,7 +86,7 @@ class EnginePlanner:
         )
 
         try:
-            assignment:Dict[str, Any] = json.loads(response[0])
+            assignment:Dict[str, Any] = json.loads(response[0].content if response[0].content else "")
             self.logger.debug(f"Received task assignment: {assignment}")
             return assignment
         except json.JSONDecodeError as e:
@@ -139,7 +139,7 @@ class EnginePlanner:
         )
 
         try:
-            decision = json.loads(response[0])
+            decision = json.loads(response[0].content if response[0].content else "")
             self.logger.debug(f"Received continuation decision: {decision}")
             bool_decision:bool = decision.get("continue", False)
             return bool_decision
