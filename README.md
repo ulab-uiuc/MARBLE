@@ -65,7 +65,6 @@ MultiAgentBench/
 │   ├── agent/
 │   │   ├── __init__.py
 │   │   ├── base_agent.py
-│   │   └── reasoning_agent.py
 │   ├── configs/
 │   │   ├── __init__.py
 │   │   ├── config.py
@@ -113,7 +112,7 @@ MultiAgentBench/
 ## Key Components
 
 - **Agents Module (`marble/agent/`):**
-  Contains agent implementations, such as `BaseAgent` and `ReasoningAgent`, which utilize LLMs for decision-making and may include cognitive modules.
+  Contains agent implementations, such as `BaseAgent`, which utilize LLMs for decision-making and may include cognitive modules.
 
 - **LLMs Module (`marble/llms/`):**
   Interfaces with various language models, providing a unified API for agent interaction.

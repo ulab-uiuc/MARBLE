@@ -2,9 +2,9 @@
 Evaluator module for tracking metrics and evaluating agent performance.
 """
 
-from typing import Any, Dict, List, Union
+from typing import Any, Dict, List
 
-from marble.agent import BaseAgent, ReasoningAgent
+from marble.agent import BaseAgent
 from marble.environments import BaseEnvironment
 from marble.utils.logger import get_logger
 
@@ -27,7 +27,7 @@ class Evaluator:
             "token_consumption": []
         }
 
-    def update(self, environment: BaseEnvironment, agents: Union[List[BaseAgent], List[ReasoningAgent]]) -> None:
+    def update(self, environment: BaseEnvironment, agents: List[BaseAgent]) -> None:
         """
         Update the metrics based on the current state of the environment and agents.
 
