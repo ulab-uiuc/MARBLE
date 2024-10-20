@@ -31,6 +31,7 @@ class BaseAgent:
         self.env: EnvType = env
         self.actions: List[str] = []
         self.agent_id: str = agent_id
+        self.profile = config.get("profile", '')
         self.memory = BaseMemory()
         self.shared_memory = SharedMemory()
         self.relationships: Dict[str, str] = {}  # key: target_agent_id, value: relationship type
@@ -132,3 +133,12 @@ class BaseAgent:
             return messages
         else:
             raise NotImplementedError("Shared memory is not initialized for this agent.")
+
+    def get_profile(self) -> Union[str, Any]:
+        """
+        Get the agent's profile.
+
+        Returns:
+            str: The agent's profile.
+        """
+        return self.profile

@@ -42,10 +42,9 @@ class Engine:
         self.memory = self._initialize_memory(config.memory)
         # Initialize Evaluator
         self.evaluator = Evaluator(metrics_config=config.metrics)
-
+        self.task = config.task.get('content', '')
         # Initialize EnginePlanner
-        self.planner = EnginePlanner(agent_graph=self.graph, memory=self.memory, config=config.engine_planner)
-
+        self.planner = EnginePlanner(agent_graph=self.graph, memory=self.memory, config=config.engine_planner, task=self.task)
         self.max_iterations = config.environment.get('max_iterations', 10)
         self.current_iteration = 0
         self.logger.info("Engine initialized.")
@@ -139,6 +138,7 @@ class Engine:
 
                 # Update progress based on agents' results
                 summary = self._summarize_results(agents_results)
+                self.logger.info(summary)
                 self.planner.update_progress(summary)
 
                 # Evaluate the current state
