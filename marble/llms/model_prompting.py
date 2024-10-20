@@ -8,6 +8,8 @@ from .error_handler import api_calling_error_exponential_backoff
 
 @beartype
 @api_calling_error_exponential_backoff(retries=5, base_wait_time=1)
+
+
 def model_prompting(
     llm_model: str,
     messages: List[Dict[str, str]],
@@ -23,6 +25,7 @@ def model_prompting(
     """
     Select model via router in LiteLLM with support for function calling.
     """
+    # litellm.set_verbose=True
     completion = litellm.completion(
         model=llm_model,
         messages=messages,

@@ -77,7 +77,7 @@ class EnginePlanner:
         prompt = self.create_prompt()
         messages = [{"role": "system", "content": prompt}]
         response = model_prompting(
-            llm_model="gpt-3-turbo",
+            llm_model="gpt-3.5-turbo",
             messages=messages,
             return_num=1,
             max_token_num=1024,
@@ -130,7 +130,7 @@ class EnginePlanner:
 
         messages = [{"role": "system", "content": prompt}]
         response = model_prompting(
-            llm_model="gpt-3-turbo",
+            llm_model="gpt-3.5-turbo",
             messages=messages,
             return_num=1,
             max_token_num=256,

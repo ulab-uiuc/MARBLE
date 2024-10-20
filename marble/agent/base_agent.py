@@ -63,8 +63,8 @@ class BaseAgent:
         """
         self.logger.info(f"Agent '{self.agent_id}' acting on task '{task}'.")
         result = model_prompting(
-            llm_model="gpt-3-turbo",
-            messages=[{"content": task}],
+            llm_model="gpt-3.5-turbo",
+            messages=[{"role":"user", "content": task}],
             return_num=1,
             max_token_num=512,
             temperature=0.0,
