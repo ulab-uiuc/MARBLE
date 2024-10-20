@@ -302,7 +302,7 @@ class AgentGraph:
             profiles[agent_id] = {
                 "agent_id": agent.agent_id,
                 "relationships": agent.relationships,  # Fixed from agent.get_relationships()
-                "token_usage": agent.get_token_usage(),
+                "profile": agent.get_profile()
                 # Add other relevant profile information if needed
             }
         return profiles

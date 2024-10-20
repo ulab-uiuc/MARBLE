@@ -17,7 +17,7 @@ class EnginePlanner:
     The EnginePlanner class handles task assignment and scheduling for agents.
     """
 
-    def __init__(self, agent_graph: AgentGraph, memory: Any, config: Dict[str, Any]):
+    def __init__(self, agent_graph: AgentGraph, memory: Any, config: Dict[str, Any], task:str):
         """
         Initialize the EnginePlanner.
 
@@ -31,6 +31,7 @@ class EnginePlanner:
         self.logger = get_logger(self.__class__.__name__)
         self.config = config
         self.current_progress = config.get('initial_progress', '')
+        self.task = task
         self.logger.info("EnginePlanner initialized.")
 
     def create_prompt(self) -> str:
@@ -42,14 +43,15 @@ class EnginePlanner:
         """
         agent_profiles = self.agent_graph.get_agent_profiles()
         prompt = (
-            "You are an orchestrator assigning tasks to a group of agents based on their profiles and current progress.\n\n"
+            "You are an orchestrator assigning tasks to a group of agents based on their profiles and current progress and task description.\n\n"
+            f"Task Description:\n{self.task}\n\n"
             f"Current Progress: {self.current_progress}\n\n"
             "Agent Profiles:\n"
         )
         for agent_id, profile in agent_profiles.items():
             prompt += f"- Agent ID: {agent_id}\n"
             prompt += f"  Relationships: {profile['relationships']}\n"
-            prompt += f"  Token Usage: {profile['token_usage']}\n\n"
+            prompt += f"  Profile: {profile['profile']}\n"
 
         prompt += (
             "Based on the current progress and agent profiles, assign the next task to each agent that needs to perform an action.\n"

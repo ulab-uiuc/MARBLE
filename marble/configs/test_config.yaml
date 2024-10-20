@@ -11,18 +11,25 @@ environment:
   max_iterations: 1
   # Add other environment-specific configurations here
 
+task:
+  content: "Find new about the latest trends in AI."
+
 agents:
   - type: BaseAgent
     agent_id: agent1
+    profile: "You are a helpful and supportive team leader. You will use bing to search results for the task."
     # Additional agent-specific configurations
   - type: BaseAgent
     agent_id: agent2
+    profile: "You are a curious and ambitious team member. You will use google to search results for the task."
     # Additional agent-specific configurations
   - type: BaseAgent
     agent_id: agent3
+    profile: "You are a diligent and hardworking team member. You will use wikipedia to search results for the task."
     # Additional agent-specific configurations
   - type: BaseAgent
     agent_id: agent4
+    profile: "You are a creative and innovative team member. You will use twitter to search results for the task."
     # Additional agent-specific configurations
 
 memory:
