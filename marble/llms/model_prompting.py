@@ -1,6 +1,7 @@
 import litellm
 from beartype import beartype
-from beartype.typing import Dict, List, Optional
+from beartype.typing import Any, Dict, List, Optional
+from litellm.types.utils import Message
 
 from .error_handler import api_calling_error_exponential_backoff
 
@@ -16,20 +17,24 @@ def model_prompting(
     top_p: Optional[float] = None,
     stream: Optional[bool] = None,
     mode: Optional[str] = None,
-) -> List[str]:
+    tools: Optional[List[Dict[str, Any]]] = None,
+    tool_choice: Optional[str] = None,
+) -> List[Message]:
     """
-    Select model via router in LiteLLM.
+    Select model via router in LiteLLM with support for function calling.
     """
     completion = litellm.completion(
         model=llm_model,
         messages=messages,
         max_tokens=max_token_num,
-        # for some models, 'n'(The number of chat completion choices ) is not supported.
         n=return_num,
         top_p=top_p,
         temperature=temperature,
         stream=stream,
+        tools=tools,
+        tool_choice=tool_choice
     )
-    content = completion.choices[0].message.content
-    content_l = [content]
-    return content_l
+    message_0: Message = completion.choices[0].message
+    assert message_0 is not None
+    assert isinstance(message_0, Message)
+    return [message_0]
