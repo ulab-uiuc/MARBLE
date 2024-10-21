@@ -78,12 +78,14 @@ class WebEnvironment(BaseEnvironment):
             except requests.RequestException as e:
                 return {
                     "success": False,
-                    "error-msg": str(e)
+                    "error-msg": str(e),
                 }
 
         return {
             "success": True,
-            "error-msg": ""
+            "error-msg": "",
+            "url": self.last_visited_url,
+            "content": self.web_cache[self.last_visited_url] if self.last_visited_url else ""
         }
 
 
