@@ -2,7 +2,8 @@
 Communication structures for agents in a multi-agent system.
 """
 
-from typing import Any, Dict
+from typing import Any, Dict, List, Optional
+
 from marble.agent.base_agent import BaseAgent
 from marble.environments.base_env import BaseEnvironment
 from marble.graph.agent_graph import AgentGraph
@@ -10,7 +11,7 @@ from marble.memory import SharedMemory
 
 
 class CommunicationAgent(BaseAgent):
-    def __init__(self, agent_id, env, central_agent=None, shared_memory=None, message=None):
+    def __init__(self, agent_id: str, env: BaseEnvironment, central_agent: Optional['CommunicationAgent'] = None, shared_memory: Optional[SharedMemory] = None, message: Optional[Any] = None) -> None:
         super().__init__(agent_id, env)
         self.inbox: Dict[str, Any] = {}  # Inbox stores received messages with {from_agent_id: message}
         self.outbox: Dict[str, Any] = {}  # Outbox stores sent messages with {target_agent_id: message}
@@ -18,7 +19,7 @@ class CommunicationAgent(BaseAgent):
         self.shared_memory = shared_memory  # Shared memory for communication
         self.message = message  # Message to send
 
-    def receive_message(self, from_agent, message):
+    def receive_message(self, from_agent: 'CommunicationAgent', message: Any) -> None:
         """
         Store the received message in the inbox.
         Args:
@@ -32,7 +33,7 @@ class CommunicationAgent(BaseAgent):
             self.inbox[from_agent_id] = message
             self.logger.info(f"Agent {self.agent_id} received message from {from_agent_id}: {message}")
 
-    def send_message(self, target_agent):
+    def send_message(self, target_agent: 'CommunicationAgent') -> None:
         """
         Send a message directly to the target agent's inbox and store in outbox.
         Args:
@@ -48,7 +49,7 @@ class CommunicationAgent(BaseAgent):
         else:
             self.logger.info(f"Agent {self.agent_id} has no message to send.")
 
-    def act_on_task_and_communicate(self, task: str, target_agent):
+    def act_on_task_and_communicate(self, task: str, target_agent: 'CommunicationAgent') -> None:
         """
         Use LLM to act on a task and send the result to another agent.
         """
@@ -58,7 +59,7 @@ class CommunicationAgent(BaseAgent):
         # Send the result to the target agent
         self.send_message(target_agent)
 
-    def process_inbox(self, target_agent):
+    def process_inbox(self, target_agent: 'CommunicationAgent') -> None:
         """
         Process all messages in the inbox.
         """
@@ -71,14 +72,14 @@ class CommunicationAgent(BaseAgent):
 
 
 class CommunicationAgentGraph(AgentGraph):
-    def __init__(self, agents, structure_config, central_agent=None, shared_memory=None, central_agent_initiates=True):
+    def __init__(self, agents: List['CommunicationAgent'], structure_config: Dict[str, Any], central_agent: Optional['CommunicationAgent'] = None, shared_memory: Optional[SharedMemory] = None, central_agent_initiates=True):
         super().__init__(agents, structure_config)
         self.central_agent = central_agent  # Central agent for centralized communication
         self.structure_config = structure_config
         self.shared_memory = shared_memory
         self.central_agent_initiates = central_agent_initiates # Whether the central agent initiates communication
 
-    def execute(self):
+    def execute(self) -> None:
         """
         Execute agents based on the selected communication structure.
         """
@@ -94,7 +95,7 @@ class CommunicationAgentGraph(AgentGraph):
             raise ValueError(f"Unknown execution mode: {self.execution_mode}")
 
     # 1. Layered Communication
-    def _layered_execution(self):
+    def _layered_execution(self) -> None:
         """
         In Layered mode, each layer sends messages to the next layer.
         """
@@ -105,7 +106,7 @@ class CommunicationAgentGraph(AgentGraph):
                 for next_agent in next_layer:
                     agent.process_inbox(next_agent)  # Process any messages they received
 
-    def get_layers(self):
+    def get_layers(self) -> List[List['CommunicationAgent']]:
         """
         Return agents grouped by layers.
         """
@@ -124,14 +125,14 @@ class CommunicationAgentGraph(AgentGraph):
             queue = next_queue
         return layers
 
-    def get_next_layer(self, agent_id):
+    def get_next_layer(self, agent_id: str) -> List['CommunicationAgent']:
         """
         Get the next layer of agents for a given agent.
         """
         return self.get_children(agent_id)
 
     # 2. Decentralized Communication
-    def _decentralized_execution(self):
+    def _decentralized_execution(self) -> None:
         """
         In Decentralized mode, every agent communicates with every other agent.
         """
@@ -141,7 +142,7 @@ class CommunicationAgentGraph(AgentGraph):
                     agent.process_inbox(other_agent)
 
     # 3. Centralized Communication
-    def _centralized_execution(self):
+    def _centralized_execution(self) -> None:
             """
             In Centralized mode, all agents send messages to the central agent.
             """
@@ -172,23 +173,23 @@ class CommunicationAgentGraph(AgentGraph):
 
 
     # 4. Shared Message Pool Communication
-    def _shared_message_pool_execution(self):
+    def _shared_message_pool_execution(self) -> None:
         """
         In Shared Message Pool mode, agents communicate via a shared message pool.
         """
-        for agent in self.agents.values():
-            # Agent sends message to shared memory
-            if agent.message:
-                agent.communicate(agent.message)
-        for agent in self.agents.values():
-            # Agent receives messages from shared memory
-            retrieved_messages = agent.receive_communication()
+        # for agent in self.agents.values():
+        #     # Agent sends message to shared memory
+        #     if agent.message:
+        #         agent.communicate(agent.message)
+        # for agent in self.agents.values():
+        #     # Agent receives messages from shared memory
+        #     retrieved_messages = agent.receive_communication()
             # for from_agent_id, message in retrieved_messages.items():
             #     # Process the received messages into the inbox
             #     from_agent = self.agents[from_agent_id]
             #     agent.receive_message(from_agent, message)
             # agent.process_inbox()
-            pass
+        pass
 
 
 

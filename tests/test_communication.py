@@ -1,7 +1,8 @@
 import pytest
 
-from marble.graph.communications import CommunicationAgent, CommunicationAgentGraph
 from marble.environments import BaseEnvironment
+from marble.graph.communications import CommunicationAgent, CommunicationAgentGraph
+
 
 @pytest.fixture
 def environment():
@@ -43,12 +44,12 @@ def test_process_inbox(agent_a, agent_b):
     agent_a.message = "Process Test Message"
     agent_a.send_message(agent_b)
     agent_b.process_inbox(agent_a)
-    assert agent_b.message == f"Result (B) of acting on task: Process Test Message"
+    assert agent_b.message == "Result (B) of acting on task: Process Test Message"
 
 # Test centralized communication
 def test_centralized_communication(agent_graph, agent_a, agent_b, agent_c):
     agent_a.message = "Task from A"
-    
+
     # Central agent starts communication
     agent_graph.execute()
 
