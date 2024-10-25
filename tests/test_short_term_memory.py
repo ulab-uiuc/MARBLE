@@ -1,8 +1,10 @@
 import unittest
 from collections import deque
+
 from litellm.types.utils import Message
 
 from marble.memory.short_term_memory import ShortTermMemory
+
 
 class TestLongTermMemory(unittest.TestCase):
     def setUp(self) -> None:

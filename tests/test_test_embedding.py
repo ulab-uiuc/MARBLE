@@ -2,6 +2,7 @@ import unittest
 
 from marble.llms.text_embedding import text_embedding
 
+
 class TestTextEmbedding(unittest.TestCase):
     def test_text_embedding(self) -> None:
         content = "This is a test sentence."

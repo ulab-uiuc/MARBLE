@@ -1,9 +1,10 @@
-from typing import List, Dict, Union
-from litellm.types.utils import Message
 from collections import deque
+from typing import Dict, List, Union
 
-from marble.memory.base_memory import BaseMemory
+from litellm.types.utils import Message
+
 from marble.llms.model_prompting import model_prompting
+from marble.memory.base_memory import BaseMemory
 
 
 class ShortTermMemory(BaseMemory):

@@ -1,8 +1,10 @@
 import unittest
+
 from litellm.types.utils import Message
 from numpy import ndarray
 
 from marble.memory.long_term_memory import LongTermMemory
+
 
 class TestLongTermMemory(unittest.TestCase):
     def setUp(self) -> None:

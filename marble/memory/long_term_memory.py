@@ -1,12 +1,13 @@
-from typing import List, Any, Union, Dict
+import warnings
+from typing import Any, Dict, List, Union
+
+import numpy as np
 from litellm.types.utils import Message
 from sklearn.metrics.pairwise import cosine_similarity
-import numpy as np
-import warnings
 
-from marble.memory.base_memory import BaseMemory
-from marble.llms.text_embedding import text_embedding
 from marble.llms.model_prompting import model_prompting
+from marble.llms.text_embedding import text_embedding
+from marble.memory.base_memory import BaseMemory
 
 
 class LongTermMemory(BaseMemory):
