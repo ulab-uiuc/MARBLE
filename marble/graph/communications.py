@@ -2,21 +2,23 @@
 Communication structures for agents in a multi-agent system.
 """
 
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Union
 
 from marble.agent.base_agent import BaseAgent
-from marble.environments.base_env import BaseEnvironment
+from marble.environments import BaseEnvironment, WebEnvironment
 from marble.graph.agent_graph import AgentGraph
 from marble.memory import SharedMemory
 
+EnvType = Union[BaseEnvironment, WebEnvironment]
+AgentType = Union[BaseAgent, 'CommunicationAgent']
+
 
 class CommunicationAgent(BaseAgent):
-    def __init__(self, agent_id: str, env: BaseEnvironment, central_agent: Optional['CommunicationAgent'] = None, shared_memory: Optional[SharedMemory] = None, message: Optional[Any] = None) -> None:
-        super().__init__(agent_id, env)
+    def __init__(self, config: Dict[str, Union[Any, Dict[str, Any]]], env: EnvType, central_agent: Optional['CommunicationAgent'] = None, shared_memory: Optional[SharedMemory] = None, message: Optional[Any] = None) -> None:
+        super().__init__(config, env, shared_memory)
         self.inbox: Dict[str, Any] = {}  # Inbox stores received messages with {from_agent_id: message}
         self.outbox: Dict[str, Any] = {}  # Outbox stores sent messages with {target_agent_id: message}
         self.central_agent = central_agent  # Central agent for centralized communication
-        self.shared_memory = shared_memory  # Shared memory for communication
         self.message = message  # Message to send
 
     def receive_message(self, from_agent: 'CommunicationAgent', message: Any) -> None:
@@ -72,7 +74,7 @@ class CommunicationAgent(BaseAgent):
 
 
 class CommunicationAgentGraph(AgentGraph):
-    def __init__(self, agents: List['CommunicationAgent'], structure_config: Dict[str, Any], central_agent: Optional['CommunicationAgent'] = None, shared_memory: Optional[SharedMemory] = None, central_agent_initiates=True):
+    def __init__(self, agents: List['CommunicationAgent'], structure_config: Dict[str, Any], central_agent: Optional['CommunicationAgent'] = None, shared_memory: Optional[SharedMemory] = None, central_agent_initiates: bool = True):
         super().__init__(agents, structure_config)
         self.central_agent = central_agent  # Central agent for centralized communication
         self.structure_config = structure_config
