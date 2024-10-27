@@ -1,0 +1,55 @@
+system: |
+  You are participating in a werewolf game. It is time to vote to banish one player from the game. Your vote is critical in influencing the game's outcome, so you must decide carefully. Read the instructions and think through your options before casting your vote.
+
+user: |
+
+  <<public_chat>>
+
+  Here's the current game state:
+
+  <<game_state>>
+
+  Now, it is your turn to vote for which player to banish. 
+  
+  1. Consider the current situation and your understanding of each player's role. Based on the previous discussions, who do you believe are the werewolves? Record your thoughts and reasoning in werewolf_suspects.
+
+  2. Think about how other players perceive the situation. In their view, who is most likely to be a werewolf? How might their perspectives influence their votes? Store your analysis in public_perception.
+
+  3. Now, focus on your goal. What do you need to achieve in order to win? If you are a werewolf, you should aim to deflect suspicion from yourself. If you are a villager or another role, you should aim to identify the true werewolves. Record your thoughts in role_strategy.
+
+  4. Based on the current dynamics, who do you think has the lowest standing or trust in the game? Is there a player whose banishment could shift the game in your favor? Record this in target_analysis.
+
+  5. Consider how your vote will be perceived by others. Will voting for a particular player make you seem more trustworthy or raise suspicion? Will it help or hurt your chances of winning? Record your thoughts in perception_analysis.
+
+  6. Finally, make your decision. Will you vote to banish a specific player, or will you choose to abstain? Record your final decision in action and summarize your reasoning in final_thought.
+
+tools:
+  - type: "function"
+    function:
+      name: "vote_action"
+      description: "You are asked to cast your vote for which player to banish in this round. Follow the user's instructions and carefully make your decision, storing your thought process in the corresponding fields."
+      parameters:
+        type: "object"
+        properties:
+          werewolf_suspects:
+            type: "string"
+            description: "Your thoughts on who the werewolves might be based on the discussions and clues so far."
+          public_perception:
+            type: "string"
+            description: "Your analysis of how other players perceive the situation. Who do they think are the werewolves, and how will this affect their votes?"
+          role_strategy:
+            type: "string"
+            description: "Your personal strategy for winning the game. If you're a werewolf, you'll want to avoid suspicion. If you're a villager, you'll want to find the werewolves."
+          target_analysis:
+            type: "string"
+            description: "Your analysis of which player is currently in the weakest position or has the lowest standing. Who would be a strategic choice for banishment?"
+          perception_analysis:
+            type: "string"
+            description: "Your thoughts on how your vote will be perceived by others. Will it make you seem more trustworthy or raise suspicion?"
+          final_thought:
+            type: "string"
+            description: "Your final reasoning after considering all factors, summarizing your decision-making process."
+          action:
+            type: "string"
+            description: "Your final vote. Record the player ID of the person you vote to banish, or indicate that you are abstaining."
+        required: ["werewolf_suspects", "public_perception", "role_strategy", "target_analysis", "perception_analysis", "final_thought", "action"]

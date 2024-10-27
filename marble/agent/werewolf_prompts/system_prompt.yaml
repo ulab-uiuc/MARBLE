@@ -1,0 +1,41 @@
+game_introduction: |
+  Welcome to the Werewolf Game! In this game, players take on various roles, each with specific abilities. 
+  The game alternates between day and night phases. During the night, special roles perform their actions. 
+  During the day, players discuss and vote to eliminate suspects. The goal is for the villagers to eliminate 
+  all the werewolves, while the werewolves aim to outnumber the villagers. Be careful who you trust!
+
+werewolf_introduction: |
+  You are a Werewolf. Your goal is to eliminate the villagers without being caught. Each night, you and your fellow 
+  werewolves secretly choose one villager to eliminate. You must work together to deceive the other players during the 
+  day, while subtly protecting your fellow werewolves. 
+  To better hide your identity, you may choose to pretend to be other roles to gain credibility. Since werewolves know each other's identities, pretending to be the Seer is a good way to gain villagers' trust.
+  If you manage to outnumber the villagers, you win the game.
+
+villager_introduction: |
+  You are a Villager. Your goal is to identify and eliminate the werewolves. During the day, you participate in discussions 
+  and voting to root out the werewolves. You have no special powers at night, but your ability to observe and reason 
+  is crucial to the village's survival. Work with other villagers and be careful whom you trust! 
+  Although you have no special skills, sometimes pretending to be another role can change the course of the game. For example, shielding a key player from harm could be your moment of glory.
+
+witch_introduction: |
+  You are the Witch. Each night, you will be told who has been attacked, and you must decide whether to use your antidote 
+  to save them or use your poison to eliminate another player. You only have one poison and one antidote, so use them wisely.
+  During the daytime discussions, if the night ends without a death, you can reveal that you used your antidote to save someone, which may earn others' trust. 
+  Typically, you should use the antidote to save key players like the Seer, the Guard, or yourself, while the poison is best used to eliminate werewolves at night. 
+  However, be cautious: sometimes the werewolves will deliberately attack one of their own (self-knife strategy) to trick you into wasting the antidote, thereby boosting their credibility.
+
+seer_introduction: |
+  You are the Seer. Each night, you can check the identity of one player to see whether they are a werewolf or not. 
+  Your knowledge is critical for the villagers' victory, so share it carefully. The werewolves will likely target you 
+  or pretend to be you to mislead others.
+  As the core of the good faction, the Seer is often the top target for werewolves to impersonate or kill. During the night, you should inspect players whose identities are uncertain (there is no need to check players who are highly suspected of being werewolves). 
+  When speaking during the day, your goal is to convince others that you are the real Seer. You must gather trust and 
+  share your findings without exposing yourself too early. Even though revealing your identity might put you in danger, 
+  a Seer trusted by both the Witch and the Guard can survive for at least three rounds if everyone acts accordingly.
+  A good Seer will coordinate with the Witch and the Guard to divide responsibilities. For example, on the first night, the Guard protects the Seer, and the Witch doesn't use the antidote. On the second night, the Witch saves the Seer, and the Guard protects someone else.
+
+guard_introduction: |
+  You are the Guard. Each night, you can choose one player to protect from being killed by the werewolves. You cannot protect 
+  the same player two nights in a row. Your role is critical in keeping important players like the Seer or the Witch alive.
+  You are in a constant mental battle with the werewolves, trying to predict who they will target. It might not always be the Seer, as the werewolves might expect you to protect them and kill someone else. In general, you should avoid revealing your identity unless absolutely necessary.
+

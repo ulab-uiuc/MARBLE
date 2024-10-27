@@ -1,0 +1,44 @@
+system: |
+  Currently you are playing a werewolf game. Currently you receive the message from the judge, and it is your turn to take action. Read instructions and game history from the user carefully, and decide your instruction.
+
+user: |
+
+  <<public_chat>>
+
+  Here's the current game state:
+
+  <<game_state>>
+  
+  Now, as the seer, it is your turn to take action. 
+  Here is the history of your previous checks:
+  <<night info>>
+  Here's the list of people alive:
+  <<player_alive_info>>
+  You can check one player tonight to verify if they are a werewolf or not. Follow these steps to decide your action:
+
+  1. Reflect on your previous checks and the current game state. Who do you think is most suspicious or valuable to check tonight? Consider the behavior of the players and their interactions so far. Record your reasoning in check_target_thought.
+  2. Based on your suspicion or strategy, decide which player to check tonight. Consider how this information might impact the game going forward and how you can best use it to benefit the good team. Record your thoughts in action_check.
+  3. Finally, summarize your overall reasoning for tonight’s action. Store this in final_thought.
+
+tools:
+  - type: "function"
+    function:
+      name: "seer_action"
+      description: "You are asked to make a checking decision as the seer during this werewolf game. Follow the user's instructions and carefully decide who to check, storing your thought process in the appropriate fields."
+      parameters:
+        type: "object"
+        properties:
+          check_target_thought:
+            type: "string"
+            description: "Your reasoning on who you believe might be a werewolf and why they should be checked tonight."
+          final_thought:
+            type: "string"
+            description: "Your final reasoning and conclusion after considering the checking options, summarizing your decision-making process."
+          action:
+            type: "object"
+            properties:
+              check_target:
+                type: "string"
+                description: "The player ID of the person you decide to check tonight to verify if they are a werewolf or not."
+            required: ["check_target"]
+        required: ["check_target_thought", "final_thought", "action"]

@@ -1,0 +1,56 @@
+system: |
+  Currently you are playing a werewolf game. You are being asked to vote for who should become the sheriff. Read through the candidate speeches and game history carefully, and decide your vote.
+
+user: |
+
+  <<public_chat>>
+
+  Here's the current game state:
+
+  <<game_state>>
+
+  Here are the candidates running for sheriff:
+
+  <<candidate_list>>
+
+  Here is the election log, which includes speeches, withdrawals, and other relevant election events:
+
+  <<election_log>>
+
+  Now, it is time for you to vote for one of the candidates, or you may choose to abstain. The sheriff holds significant power in the game, with a 1.5x vote weight during voting rounds, giving them greater influence over decisions. The sheriff also has the authority to decide the speaking order, which can influence how information is revealed during the game. If the sheriff dies, they may either appoint a successor or choose to tear up the badge, leaving the game without a sheriff for the remainder of the match. 
+
+  Please consider the following points carefully:
+
+  1. Based on the speeches and behavior so far, who do you think is the most credible candidate? Consider the roles you suspect the candidates have and the overall dynamics of the game. Record your thoughts in candidate_analysis.
+  2. Reflect on the impact your vote will have. How might this vote affect the game? Will it shift the balance of trust towards or away from you? Record your reasoning in vote_impact.
+  3. Think about how other players will perceive your vote. Voting for a particular candidate might increase or decrease your credibility in the eyes of other players. Record your thoughts in perception_analysis.
+  4. Finally, decide who you will vote for, or if you will abstain. Summarize your decision and reasoning in final_thought and record your vote in action_vote.
+
+tools:
+  - type: "function"
+    function:
+      name: "vote_for_sheriff"
+      description: "You are asked to make a voting decision during the werewolf game. You need to evaluate the candidates for sheriff and make your vote based on the analysis. Store your thoughts and final decision in the corresponding fields."
+      parameters:
+        type: "object"
+        properties:
+          candidate_analysis:
+            type: "string"
+            description: "Your analysis of the candidates running for sheriff, including their credibility, behavior, and suspected roles."
+          vote_impact:
+            type: "string"
+            description: "Your thought process regarding the impact your vote will have on the game, including how it will affect the dynamics of the game."
+          perception_analysis:
+            type: "string"
+            description: "Your thoughts on how other players will perceive your vote, and how your vote may affect your credibility."
+          final_thought:
+            type: "string"
+            description: "Your final reasoning after considering the candidate analysis, vote impact, and perception analysis."
+          action:
+            type: "object"
+            properties:
+              action_vote:
+                type: "string"
+                description: "The player ID of the candidate you are voting for. If you choose to abstain, record 'abstain'."
+            required: ["action_vote"]
+        required: ["candidate_analysis", "vote_impact", "perception_analysis", "final_thought", "action"]
