@@ -21,9 +21,9 @@ class LongTermMemory(BaseMemory):
         Initialize the memory module.
         """
         super().__init__()
-        self.storage: List[tuple[Any]] = []
+        self.storage: List[tuple[Any, ...]] = []
 
-    def update(self, key: str, information: Dict[str, Union[str, Message]]) -> None:
+    def update(self, key: str, information: Dict[str, Any]) -> None:
         """
         Update memory with new information.
 
@@ -38,7 +38,7 @@ class LongTermMemory(BaseMemory):
         embedding = np.array(embedding)
         self.storage.append((information, embedding))
 
-    def retrieve_latest(self) -> Dict[str, Union[str, Message]]:
+    def retrieve_latest(self) -> Any:
         """
         Retrieve the most recent information from memory.
 
@@ -46,8 +46,8 @@ class LongTermMemory(BaseMemory):
             Dict[str, Union[str, Message]]: The most recently stored information, or None if empty.
         """
         return self.storage[-1][0] if self.storage else None
-    
-    def retrieve_most_relevant(self, information: Dict[str, Union[str, Message]], n: int = 1, summarize: bool = False) -> Union[List[Dict[str, Union[str, Message]]], Message]:
+
+    def retrieve_most_relevant(self, information: Dict[str, Union[str, Message]], n: int = 1, summarize: bool = False) -> Any:
         """
         Retrieve the most relevant information from memory.
 
@@ -65,10 +65,11 @@ class LongTermMemory(BaseMemory):
             model="text-embedding-3-small",
             input=str(information),
         )
-        embedding = np.array(embedding)
+        embedding_array:np.ndarray = np.array(embedding)
         retrieval_scores = []
         for stored_information in self.storage:
-            similarity = cosine_similarity(stored_information[1].reshape((1, -1)), embedding.reshape((1, -1)))[0][0]
+            stored_embedding:np.ndarray = np.array(stored_information[1])
+            similarity = cosine_similarity(stored_embedding.reshape((1, -1)), embedding_array.reshape((1, -1)))[0][0]
             retrieval_scores.append((stored_information[0], similarity))
         retrieval_scores = sorted(retrieval_scores, key=lambda score: score[1], reverse=True)[:n]
         if summarize:
@@ -77,7 +78,7 @@ class LongTermMemory(BaseMemory):
         else:
             return [information[0] for information in retrieval_scores]
 
-    def summarize(self, memory: List[Dict[str, Union[str, Message]]] = None) -> Message:
+    def summarize(self, memory: List[Dict[str, Union[str, Message]]]) -> Message:
         """
         Summarize the input memory.
 

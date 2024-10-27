@@ -1,4 +1,4 @@
-from typing import Dict, List, Union
+from typing import Any, Dict, List, Optional, Union
 
 from litellm.types.utils import Message
 
@@ -22,7 +22,7 @@ class ShortTermMemory(BaseMemory):
         self.memory_limit: int = memory_limit
         self.storage: List[Dict[str, Union[str, Message]]] = []
 
-    def update(self, key: str, information: Dict[str, Union[str, Message]]) -> None:
+    def update(self, key: str, information: Dict[str, Any]) -> None:
         """
         Update memory with new information.
 
@@ -48,7 +48,7 @@ class ShortTermMemory(BaseMemory):
                 })
         self.storage.append(information)
 
-    def summarize(self, memory: List[Dict[str, Union[str, Message]]] = None) -> Message:
+    def summarize(self, memory: List[Dict[str, Union[str, Message]]]) -> Message:
         """
         Summarize the input memory.
 
@@ -78,7 +78,7 @@ class ShortTermMemory(BaseMemory):
         )[0]
         return summary
 
-    def retrieve_latest(self) -> Dict[str, Union[str, Message]]:
+    def retrieve_latest(self) -> Optional[Dict[str, Union[str, Message]]]:
         """
         Retrieve the most recent information from memory.
 
