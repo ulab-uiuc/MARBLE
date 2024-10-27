@@ -21,7 +21,7 @@ class LongTermMemory(BaseMemory):
         Initialize the memory module.
         """
         super().__init__()
-        self.storage: List[tuple[Any, ...]] = []
+        self.storage: List[tuple[Any, Any]] = []
 
     def update(self, key: str, information: Dict[str, Any]) -> None:
         """
@@ -35,8 +35,8 @@ class LongTermMemory(BaseMemory):
             model="text-embedding-3-small",
             input=str(information),
         )
-        embedding = np.array(embedding)
-        self.storage.append((information, embedding))
+        embedding_array:np.ndarray = np.array(embedding)
+        self.storage.append((information, embedding_array))
 
     def retrieve_latest(self) -> Any:
         """
@@ -68,8 +68,7 @@ class LongTermMemory(BaseMemory):
         embedding_array:np.ndarray = np.array(embedding)
         retrieval_scores = []
         for stored_information in self.storage:
-            stored_embedding:np.ndarray = np.array(stored_information[1])
-            similarity = cosine_similarity(stored_embedding.reshape((1, -1)), embedding_array.reshape((1, -1)))[0][0]
+            similarity = cosine_similarity(stored_information[1].reshape((1, -1)), embedding_array.reshape((1, -1)))[0][0]
             retrieval_scores.append((stored_information[0], similarity))
         retrieval_scores = sorted(retrieval_scores, key=lambda score: score[1], reverse=True)[:n]
         if summarize:
