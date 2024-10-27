@@ -66,7 +66,7 @@ class LongTermMemory(BaseMemory):
             model="text-embedding-3-small",
             input=str(information),
         )
-        embedding_array:NDArray[Any]= np.array(embedding)
+        embedding_array:NDArray[Any] = np.array(embedding)
         retrieval_scores = []
         for stored_information in self.storage:
             similarity = cosine_similarity(stored_information[1].reshape((1, -1)), embedding_array.reshape((1, -1)))[0][0]
