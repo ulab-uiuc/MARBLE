@@ -68,6 +68,7 @@ class BaseAgent:
             Any: The action decided by the agent.
         """
         self.logger.info(f"Agent '{self.agent_id}' acting on task '{task}'.")
+        tools = [self.env.action_handler_descriptions[name] for name in self.env.action_handler_descriptions]
         result = model_prompting(
             llm_model="gpt-3.5-turbo",
             messages=[{"role":"user", "content": task}],
@@ -75,12 +76,36 @@ class BaseAgent:
             max_token_num=512,
             temperature=0.0,
             top_p=None,
-            stream=None
+            stream=None,
+            tools=tools,
+            tool_choice="auto"
         )[0]
-        self.memory.update(self.agent_id, result)
+        if result.tool_calls:
+            function_call = result.tool_calls[0]
+            function_name = function_call.function.name
+            assert function_name is not None
+            function_args = json.loads(function_call.function.arguments)
+            result_from_function = self.env.apply_action(agent_id=self.agent_id, action_name=function_name, arguments=function_args)
+            self.memory.update(self.agent_id, {
+                    "type": "action_function_call",
+                    "action_name": function_name,
+                    "args": function_args,
+                    "result": result_from_function
+                }
+            )
+            self.logger.info(f"Agent '{self.agent_id}' called '{function_name}' with args '{function_args}'.")
+            self.logger.info(f"Agent '{self.agent_id}' obtained result '{result_from_function}'.")
+
+        else:
+            self.memory.update(self.agent_id, {
+                    "type": "action_response",
+                    "result": result
+                }
+            )
+            self.logger.info(f"Agent '{self.agent_id}' acted with result '{result}'.")
         result_content = result.content if result.content else ""
         self.token_usage += self._calculate_token_usage(task, result_content)
-        self.logger.info(f"Agent '{self.agent_id}' acted with result '{result}'.")
+
         return result
 
     def _calculate_token_usage(self, task: str, result: str) -> int:
