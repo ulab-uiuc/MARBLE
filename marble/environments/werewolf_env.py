@@ -180,3 +180,248 @@ class WerewolfEnv:
             message (str): 玩家发言内容。
         """
         print(f"{Fore.BLUE}[{player_id}]: {message}{Style.RESET_ALL}")
+
+    def start(self) -> None:
+        """
+        Start the werewolf game environment and run the simulation in a day-night cycle.
+        """
+        start_message = "Werewolf game starting. Initializing day-night cycle."
+        self._log_system(start_message)
+        self.log_event(is_private=False, agent_id="system", content=start_message)
+
+        try:
+            while not self.should_terminate():
+                # Start a new day-night cycle
+                self.shared_memory["public_state"]["days"] += 1
+                current_day = self.shared_memory["public_state"]["days"]
+                day_start_message = f"SYSTEM: Starting day-night cycle for Day {current_day}"
+                self._log_system(day_start_message)
+                self.log_event(is_private=False, agent_id="system", content=day_start_message)
+
+                # Night Phase
+                self.shared_memory["public_state"]["day/night"] = "night"
+                night_start_message = f"SYSTEM: Night {current_day} begins. Werewolves and special roles take actions."
+                self._log_event(night_start_message)
+                self.log_event(is_private=False, agent_id="system", content=night_start_message)
+                self.night()
+                
+                # Check termination condition after night phase
+                if self.should_terminate():
+                    termination_message = "SYSTEM: Game termination condition met after night phase."
+                    self._log_system(termination_message)
+                    self.log_event(is_private=False, agent_id="system", content=termination_message)
+                    break
+
+                # Day Phase
+                self.shared_memory["public_state"]["day/night"] = "day"
+                day_start_message = f"SYSTEM: Day {current_day} begins. Players discuss and vote on potential suspects."
+                self._log_event(day_start_message)
+                self.log_event(is_private=False, agent_id="system", content=day_start_message)
+                self.day()
+                
+                # Check termination condition after day phase
+                if self.should_terminate():
+                    termination_message = "SYSTEM: Game termination condition met after day phase."
+                    self._log_system(termination_message)
+                    self.log_event(is_private=False, agent_id="system", content=termination_message)
+                    break
+
+            game_complete_message = "SYSTEM: Werewolf game completed."
+            self._log_system(game_complete_message)
+            self.log_event(is_private=False, agent_id="system", content=game_complete_message)
+
+        except Exception as e:
+            error_message = f"An error occurred during the game cycle: {e}"
+            self._log_system(error_message)
+            self.log_event(is_private=True, agent_id="system", content=error_message)
+            raise
+
+
+    def night(self) -> None:
+        """
+        Executes the night phase of the game. Werewolves select a target, and special 
+        roles (witch, seer, guard) may take actions.
+        """
+        self._log_system("Night phase begins. Werewolves and special roles take actions.")
+
+        # 守卫行动
+        self._log_event("Guard action starts.")
+        self.guard_action()
+        self.log_event(is_private=False, agent_id="system", content="Guard has chosen to protect a player.")
+
+        # 狼人行动
+        self._log_event("Werewolves are selecting a target.")
+        self.werewolf_action()
+        self.log_event(is_private=False, agent_id="system", content="Werewolves have chosen their target.")
+
+        # 预言家行动
+        self._log_event("Seer is performing their action.")
+        self.seer_action()
+        self.log_event(is_private=False, agent_id="system", content="Seer has checked a player's identity.")
+
+        # 女巫行动
+        self._log_event("Witch is deciding on antidote and poison usage.")
+        self.witch_action()
+        self.log_event(is_private=False, agent_id="system", content="Witch has made her decision on potion use.")
+
+        self._log_system("Night phase actions are completed.")
+
+    def day(self) -> None:
+        """
+        Executes the day phase of the game. Players discuss and vote on a player to eliminate.
+        """
+        self._log_system("Day phase begins. Players discuss and vote on potential suspects.")
+
+        # 判断是否为第一天
+        current_day = self.shared_memory["public_state"]["days"]
+        if current_day == 1:
+            # 第一日的特殊行动流程
+            self._log_event("First day: Sheriff election begins.")
+            
+            # 竞选警长
+            self.run_for_sheriff()
+
+            # 获取第一夜死者信息并调用遗言
+            deceased = self.get_night_deceased()
+            if deceased:
+                self._log_event(f"{deceased} has died. Calling last words.")
+                self.last_words(deceased)
+
+            # 警长决定发言顺序
+            self._log_event("Sheriff is deciding the speech order.")
+            speech_order = self.sheriff_decide_speech_order()
+
+            # 发言环节
+            self._log_event("Players begin speeches.")
+            self.player_speeches(speech_order)
+
+            # 投票放逐
+            self._log_event("Players are voting to exile a suspect.")
+            exiled_player = self.exile_vote()
+            if exiled_player:
+                self.log_event(is_private=False, agent_id="system", content=f"{exiled_player} has been exiled.")
+
+                # 放逐者遗言
+                self._log_event(f"{exiled_player} is giving their last words after being exiled.")
+                self.last_words(exiled_player)
+                self.log_event(is_private=False, agent_id="system", content=f"{exiled_player} gave their last words.")
+
+        else:
+            # 非第一天的正常白天流程
+            # 获取前夜死者信息并调用遗言
+            deceased = self.get_night_deceased()
+            if deceased:
+                self._log_event(f"{deceased} has died. Calling last words.")
+                self.last_words(deceased)
+                self.log_event(is_private=False, agent_id="system", content=f"{deceased} gave their last words.")
+
+            # 警长决定发言顺序
+            self._log_event("Sheriff is deciding the speech order.")
+            self.sheriff_decide_speech_order()
+            self.log_event(is_private=False, agent_id="system", content="Sheriff decided the speech order.")
+
+            # 发言环节
+            self._log_event("Players begin speeches.")
+            self.player_speeches()
+            self.log_event(is_private=False, agent_id="system", content="Player speeches completed.")
+
+            # 投票放逐
+            self._log_event("Players are voting to exile a suspect.")
+            exiled_player = self.exile_vote()
+            if exiled_player:
+                self.log_event(is_private=False, agent_id="system", content=f"{exiled_player} has been exiled.")
+
+                # 放逐者遗言
+                self._log_event(f"{exiled_player} is giving their last words after being exiled.")
+                self.last_words(exiled_player)
+                self.log_event(is_private=False, agent_id="system", content=f"{exiled_player} gave their last words.")
+
+    def should_terminate(self) -> bool:
+        """
+        Checks if the game should terminate based on the number of remaining players
+        and their roles. The game ends if the number of werewolves is greater than or equal
+        to half of the remaining players, rounded up.
+
+        Returns:
+            bool: True if the game should end, otherwise False.
+        """
+        self._log_system("Checking if the game should terminate.")
+        
+        # 获取存活玩家和狼人数量
+        alive_players = self.shared_memory["public_state"]["alive_players"]
+        remaining_players = len(alive_players)
+        werewolf_count = sum(1 for agent_id in alive_players 
+                            if self.shared_memory["private_state"]["players"][agent_id]["role"] == "wolf")
+        
+        # 计算终止条件
+        majority_threshold = -(-remaining_players // 2)  # 向上取整计算一半以上
+        if werewolf_count >= majority_threshold:
+            termination_message = (
+                f"Game should terminate: Werewolves ({werewolf_count}) have reached or exceeded "
+                f"half of the remaining players ({remaining_players})."
+            )
+            self._log_system(termination_message)
+            self.log_event(is_private=False, agent_id="system", content=termination_message)
+            return True
+        
+        # 如果未满足终止条件
+        self._log_system("Game continues: Werewolves have not yet reached the majority.")
+        return False
+
+    
+    def log_event(self, is_private: bool, agent_id: str, content: str) -> None:
+        """
+        Adds an event to the appropriate logs based on privacy and agent type.
+
+        Args:
+            is_private (bool): If True, the event is only logged in the specified private logs.
+                            If False, it will be logged in the public, private, and each agent's personal logs.
+            agent_id (str): The ID of the agent performing the action. Use "system" for system messages.
+            content (str): The content to be logged.
+        """
+        if agent_id == "system":
+            # Handle system messages
+            if is_private:
+                # Private system message: only log in private event log
+                private_log = self.shared_memory["private_event_log"]
+                self.shared_memory["private_event_log"] = f"{private_log}\n{content}"
+                self._log_event(f"SYSTEM: {content}")
+            else:
+                # Public system message: log in all logs
+                public_log = self.shared_memory["public_event_log"]
+                private_log = self.shared_memory["private_event_log"]
+                
+                self.shared_memory["public_event_log"] = f"{public_log}\n{content}"
+                self.shared_memory["private_event_log"] = f"{private_log}\n{content}"
+
+                # Log in each agent's personal event log
+                for agent in self.shared_memory["private_state"]["players"]:
+                    personal_log = self.shared_memory["private_state"]["players"][agent]["personal_event_log"]
+                    self.shared_memory["private_state"]["players"][agent]["personal_event_log"] = f"{personal_log}\n{content}"
+                
+                self._log_event(f"SYSTEM: {content}")
+        else:
+            # Handle regular agent messages
+            # Log in the specified agent's personal event log
+            if agent_id in self.shared_memory["private_state"]["players"]:
+                player_log = self.shared_memory["private_state"]["players"][agent_id]["personal_event_log"]
+                self.shared_memory["private_state"]["players"][agent_id]["personal_event_log"] = f"{player_log}\n{content}"
+
+            if is_private:
+                # Only log in private event log for private agent messages
+                private_log = self.shared_memory["private_event_log"]
+                self.shared_memory["private_event_log"] = f"{private_log}\n{content}"
+                self._log_player(f"{agent_id}: {content}")
+            else:
+                # Log in both public and private event logs for public agent messages
+                public_log = self.shared_memory["public_event_log"]
+                private_log = self.shared_memory["private_event_log"]
+                
+                self.shared_memory["public_event_log"] = f"{public_log}\n{content}"
+                self.shared_memory["private_event_log"] = f"{private_log}\n{content}"
+
+                # Log in each agent's personal event log
+                for agent in self.shared_memory["private_state"]["players"]:
+                    personal_log = self.shared_memory["private_state"]["players"][agent]["personal_event_log"]
+                    self.shared_memory["private_state"]["players"][agent]["personal_event_log"] = f"{personal_log}\n{content}"
+                self._log_player(f"{agent_id}: {content}")

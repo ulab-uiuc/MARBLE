@@ -169,6 +169,11 @@ class WerewolfAgent:
 
         event_type = event.get("event_type")
 
+        # 针对狼人事件的特殊处理
+        if event_type in ["werewolf_action", "werewolf_discussion"]:
+            self._wolf_action(event)
+            return  # 已处理狼人事件，退出函数
+
         # 针对警长的特殊事件，确保 agent 持有警徽才能执行
         if event_type == "decide_speech_order" or event_type == "decide_badge_flow":
             if self.status.get("badge_count", 0) != 1:
@@ -179,6 +184,7 @@ class WerewolfAgent:
         
         # 发布动作
         self._publish_action(action)
+
 
     def _publish_action(self, action: str) -> None:
         """
@@ -212,20 +218,102 @@ class WerewolfAgent:
                 
 
     # 示例中的角色行为方法
-    def _wolf_action(self, game_state: Dict[str, Any]) -> Dict[str, Any]:
+    def _wolf_action(self, event: Dict[str, Any]) -> Dict[str, Any]:
         """
-        Wolf's action: choose a target to kill.
+        Process werewolf-specific actions based on the event type (werewolf_action or werewolf_discussion).
         
         Args:
-            game_state (Dict[str, Any]): The current state of the game.
-            
-        Returns:
-            Dict[str, Any]: A dictionary containing the action and the selected target.
+            event (Dict[str, Any]): The event data received (with event_type "werewolf_action" or "werewolf_discussion").
         """
-        # 逻辑可以通过其他狼人商议来选择目标
-        target = game_state.get("suggested_target", "unknown_player")
-        self.logger.info(f"Wolf {self.agent_id} decided to kill {target}")
-        return {"action": "kill", "target": target}
+        # Step 1: 获取事件类型
+        event_type = event.get("event_type", "")
+
+        # Step 2: 定义 YAML 模板路径
+        yaml_paths = {
+            "werewolf_action": "werewolf_prompts/werewolf_action.yaml",
+            "werewolf_discussion": "werewolf_prompts/werewolf_discussion.yaml"
+        }
+        yaml_path = yaml_paths.get(event_type, None)
+        if not yaml_path:
+            self.logger.error(f"Invalid event type for werewolf action: {event_type}")
+            return {"action": "no_action", "target": None}
+
+        # Step 3: 加载 YAML 模板
+        try:
+            with open(yaml_path, 'r') as f:
+                action_template = yaml.safe_load(f)
+            prompt_template = action_template.get('user', '')
+            tools = action_template.get('tools', [])
+        except Exception as e:
+            self.logger.error(f"Failed to load prompt template for {event_type}: {e}")
+            return {"action": "no_action", "target": None}
+
+        # Step 4: 读取共享内存中的游戏状态
+        try:
+            with open(self.shared_memory, 'r') as f:
+                shared_memory = json.load(f)
+                
+            public_state = shared_memory.get("public_state", {})
+            private_state = shared_memory.get("private_state", {}).get("players", {}).get(self.agent_id, {})
+            personal_event_log = private_state.get("personal_event_log", "")
+
+            # 构建游戏状态（从 public_state 中）
+            game_state = {
+                "days": public_state.get("days", 0),
+                "day/night": public_state.get("day/night", "night"),
+                "alive_players": public_state.get("alive_players", []),
+                "sheriff": public_state.get("sheriff", None)
+            }
+
+            # 使用个人事件日志作为狼人讨论内容的基础
+            public_chat = personal_event_log
+        except Exception as e:
+            self.logger.error(f"Error retrieving game state or personal event log from shared memory: {e}")
+            return {"action": "no_action", "target": None}
+
+        # Step 5: 针对 werewolf_action 和 werewolf_discussion 分别填充 prompt
+        filled_prompt = ""
+        
+            # Werewolf Action: 第一次选择目标
+        if event_type == "werewolf_action":
+            # 获取当前夜晚的存活玩家信息
+            alive_players = public_state.get("alive_players", [])
+            alive_players_str = ", ".join(alive_players)
+
+            # 填充狼人行动的特定信息
+            filled_prompt = prompt_template.replace("<<public_chat>>", public_chat)
+            filled_prompt = filled_prompt.replace("<<game_state>>", json.dumps(game_state, indent=2))
+            filled_prompt = filled_prompt.replace("<<player_alive_info>>", alive_players_str)
+
+        # Werewolf Discussion: 统一目标
+        elif event_type == "werewolf_discussion":
+            # 获取其他狼人同伴的选择和思考内容
+            ally1_info = event.get("content", {}).get("ally1_info", "")
+            ally2_info = event.get("content", {}).get("ally2_info", "")
+            rounds_remaining = event.get("content", {}).get("rounds_remaining", "4")  # 假设默认5轮
+
+            # 填充狼人讨论的特定信息
+            filled_prompt = prompt_template.replace("<<public_chat>>", public_chat)
+            filled_prompt = filled_prompt.replace("<<game_state>>", json.dumps(game_state, indent=2))
+            filled_prompt = filled_prompt.replace("<<ally1_target_info>>", ally1_info)
+            filled_prompt = filled_prompt.replace("<<ally2_target_info>>", ally2_info)
+            filled_prompt = filled_prompt.replace("<<rounds_remaining>>", str(rounds_remaining))
+
+
+        # Step 6: 准备传递给工具的消息内容
+        messages = [
+            {'role': 'system', 'content': action_template.get('system', '')},
+            {'role': 'user', 'content': filled_prompt}
+        ]
+
+        # Step 7: 调用 GPT 工具来决定行动
+        try:
+            tool_calls = self.gpt_tool_call(messages, tools)
+            return tool_calls
+        except Exception as e:
+            self.logger.error(f"Error during {event_type}'s tool call: {e}")
+            return {"action": "no_action", "target": None}
+
 
     def _perform_action(self, action: Dict[str, Any]) -> Dict[str, Any]:
         """
