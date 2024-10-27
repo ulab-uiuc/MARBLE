@@ -21,7 +21,7 @@ class BaseMemory:
         Update memory with new information.
 
         Args:
-            key (str): Only here to keep the signature consistent with SharedMemory
+            key (str): Only here to keep the signature consistent with SharedMemory.
             information (Any): Information to store.
         """
         self.storage.append(information)
