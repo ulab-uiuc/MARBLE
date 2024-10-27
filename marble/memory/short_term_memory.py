@@ -1,4 +1,3 @@
-from collections import deque
 from typing import Dict, List, Union
 
 from litellm.types.utils import Message
@@ -9,7 +8,7 @@ from marble.memory.base_memory import BaseMemory
 
 class ShortTermMemory(BaseMemory):
     """
-    Short term momery class that automatically summarizes old information.
+    Short term memory class that automatically summarizes old information.
     """
 
     def __init__(self, memory_limit: int = 10) -> None:
@@ -21,7 +20,7 @@ class ShortTermMemory(BaseMemory):
         """
         super().__init__()
         self.memory_limit: int = memory_limit
-        self.storage: deque = deque(maxlen=self.memory_limit)
+        self.storage: List[Dict[str, Union[str, Message]]] = []
 
     def update(self, key: str, information: Dict[str, Union[str, Message]]) -> None:
         """
@@ -31,14 +30,22 @@ class ShortTermMemory(BaseMemory):
             key (str): Only here to keep the signature consistent with SharedMemory.
             information (Dict[str, Union[str, Message]]): Information to store.
         """
-        if len(self.storage) == self.memory_limit:
-            oldest_event = self.storage.popleft()
-            sec_oldest_event = self.storage.popleft()
-            summary = self.summarize([oldest_event, sec_oldest_event])
-            self.storage.appendleft({
-                "type": "old_memory_summary",
-                "result": summary
-            })
+        if len(self.storage) >= self.memory_limit:
+            if len(self.storage) >= 2:
+                oldest_event = self.storage.pop(0)
+                sec_oldest_event = self.storage.pop(0)
+                summary = self.summarize([oldest_event, sec_oldest_event])
+                self.storage.insert(0, {
+                    "type": "old_memory_summary",
+                    "result": summary
+                })
+            elif len(self.storage) == 1:
+                oldest_event = self.storage.pop(0)
+                summary = self.summarize([oldest_event])
+                self.storage.insert(0, {
+                    "type": "old_memory_summary",
+                    "result": summary
+                })
         self.storage.append(information)
 
     def summarize(self, memory: List[Dict[str, Union[str, Message]]] = None) -> Message:
@@ -62,7 +69,7 @@ class ShortTermMemory(BaseMemory):
 
         summary = model_prompting(
             llm_model="gpt-3.5-turbo",
-            messages=[{"role":"system", "content": prompt}],
+            messages=[{"role": "system", "content": prompt}],
             return_num=1,
             max_token_num=512,
             temperature=0.0,
@@ -70,7 +77,7 @@ class ShortTermMemory(BaseMemory):
             stream=None
         )[0]
         return summary
-    
+
     def retrieve_latest(self) -> Dict[str, Union[str, Message]]:
         """
         Retrieve the most recent information from memory.
@@ -87,4 +94,4 @@ class ShortTermMemory(BaseMemory):
         Returns:
             List[Dict[str, Union[str, Message]]]: All stored information.
         """
-        return list(self.storage)
+        return self.storage.copy()
