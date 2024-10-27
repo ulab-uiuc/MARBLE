@@ -28,6 +28,8 @@ class Config:
         self.parallel = data.get('parallel', {})
         self.graph = data.get('graph', {})
         self.memory = data.get('memory', {})
+        self.engine_planner = data.get('engine_planner', {})
+        self.task = data.get('task', {})
 
     @staticmethod
     def load(file_path: str) -> 'Config':
