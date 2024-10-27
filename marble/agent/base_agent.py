@@ -2,7 +2,8 @@
 Base agent module.
 """
 
-from typing import Any, Dict, List, Union
+from collections import defaultdict
+from typing import Any, Dict, List, Tuple, TypeVar, Union
 
 from marble.environments import BaseEnvironment, WebEnvironment
 from marble.llms.model_prompting import model_prompting
@@ -10,6 +11,7 @@ from marble.memory import BaseMemory, SharedMemory
 from marble.utils.logger import get_logger
 
 EnvType = Union[BaseEnvironment, WebEnvironment]
+AgentType = TypeVar('AgentType', bound='BaseAgent')
 
 class BaseAgent:
     """
@@ -38,6 +40,9 @@ class BaseAgent:
         self.logger = get_logger(self.__class__.__name__)
         self.logger.info(f"Agent '{self.agent_id}' initialized.")
         self.token_usage = 0  # Initialize token usage
+        self.msg_box: Dict[str, Dict[str, List[Tuple[int, str]]]] = defaultdict(lambda: defaultdict(list))
+        self.FORWARD_TO = 0
+        self.RECV_FROM = 1
 
     def perceive(self, state: Any) -> Any:
         """
@@ -102,38 +107,36 @@ class BaseAgent:
         """
         return self.token_usage
 
-    def communicate(self, message: Any) -> None:
-        """
-        Communicate with other agents via shared memory.
+    def send_message(self, session_id: str, target_agent: AgentType, message: str) -> None:
+        """Send a message to the target agent within the specified session.
 
         Args:
-            message (Any): The message or data to share.
-
-        Raises:
-            NotImplementedError: If the method is not implemented.
+            session_id (str): The identifier for the current session.
+            target_agent (BaseAgent): The agent to whom the message is being sent.
+            message (str): The message content to be sent.
         """
-        if self.shared_memory is not None:
-            self.shared_memory.update(self.agent_id, message)
-        else:
-            raise NotImplementedError("Shared memory is not initialized for this agent.")
+        # Store the outgoing message in the message box for the target agent.
+        self.msg_box[session_id][target_agent.agent_id].append((self.FORWARD_TO, message))
 
-    def receive_communication(self) -> Any:
+        # Log the action of sending the message to the target agent.
+        self.logger.info(f"Agent {self.agent_id} sent message to {target_agent.agent_id}: {message}")
+
+        # Notify the target agent that a message has been sent.
+        target_agent.receive_message(session_id, self, message)
+
+    def receive_message(self, session_id: str, from_agent: AgentType, message: str) -> None:
+        """Receive a message from another agent within the specified session.
+
+        Args:
+            session_id (str): The identifier for the current session.
+            from_agent (BaseAgent): The agent sending the message.
+            message (str): The content of the received message.
         """
-        Receive communication from other agents via shared memory.
+        # Store the received message in the message box for the sending agent.
+        self.msg_box[session_id][from_agent.agent_id].append((self.RECV_FROM, message))
 
-        Returns:
-            Any: Messages or data from other agents.
-
-        Raises:
-            NotImplementedError: If the method is not implemented.
-        """
-        if self.shared_memory is not None:
-            messages = self.shared_memory.retrieve_all()
-            # Exclude self messages
-            messages.pop(self.agent_id, None)
-            return messages
-        else:
-            raise NotImplementedError("Shared memory is not initialized for this agent.")
+        # Log the action of receiving the message from the sender agent.
+        self.logger.info(f"Agent {self.agent_id} received message from {from_agent.agent_id}: {message}")
 
     def get_profile(self) -> Union[str, Any]:
         """
