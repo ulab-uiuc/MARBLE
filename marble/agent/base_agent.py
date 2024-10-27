@@ -2,6 +2,7 @@
 Base agent module.
 """
 
+import json
 from collections import defaultdict
 from typing import Any, Dict, List, Tuple, TypeVar, Union
 
