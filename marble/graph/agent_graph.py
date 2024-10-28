@@ -46,7 +46,9 @@ class AgentGraph:
         for rel in relationships:
             if len(rel) != 3:
                 raise ValueError(f"Invalid relationship format: {rel}. Expected 3 elements.")
-            node1, node2, relationship = rel
+            node1 = rel['source']
+            node2 = rel['target']
+            relationship = rel['type']
             self.add_relationship(node1, node2, relationship)
 
     def _build_graph(self, structure: Dict[str, List[str]]) -> None:
