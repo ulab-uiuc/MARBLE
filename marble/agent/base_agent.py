@@ -172,3 +172,117 @@ class BaseAgent:
             str: The agent's profile.
         """
         return self.profile
+
+    def plan_task(self) -> str:
+        """
+        Plan the next task based on the initial task input and the agent's memory.
+
+        Returns:
+            str: The next task description.
+        """
+        self.logger.info(f"Agent '{self.agent_id}' is planning the next task.")
+
+        # Retrieve all memory entries for this agent
+        memory_entries = self.memory.get_memory_str()
+
+        if not memory_entries:
+            self.logger.info(f"Agent '{self.agent_id}' has no prior memory. Returning initial task.")
+            return self.env.get_initial_task()  # Assumes the environment can provide the initial task
+
+        # Analyze the last memory entry to decide the next task
+        last_entry = memory_entries[-1]
+        self.logger.debug(f"Agent '{self.agent_id}' last memory entry: {last_entry}")
+
+        if last_entry['type'] == 'action_function_call':
+            # If the last action was a function call, decide next task based on the result
+            result = last_entry['result']
+            if self._is_task_completed(result):
+                self.logger.info(f"Agent '{self.agent_id}' determined that the task is completed.")
+                return "Task Completed"  # Or some signal to indicate completion
+            else:
+                # Define the next task based on the result
+                next_task = self._define_next_task_based_on_result(result)
+                self.logger.info(f"Agent '{self.agent_id}' plans next task: {next_task}")
+                return next_task
+
+        elif last_entry['type'] == 'action_response':
+            # If the last action was a direct response, decide next task based on the response
+            response = last_entry['result']
+            if self._is_response_satisfactory(response):
+                self.logger.info(f"Agent '{self.agent_id}' found the response satisfactory. Task might be completed.")
+                return "Task Completed"  # Or some signal to indicate completion
+            else:
+                # Define the next task based on the unsatisfactory response
+                next_task = self._define_next_task_based_on_response(response)
+                self.logger.info(f"Agent '{self.agent_id}' plans next task: {next_task}")
+                return next_task
+
+        else:
+            self.logger.warning(f"Agent '{self.agent_id}' encountered unknown memory entry type: {last_entry['type']}")
+            return "Awaiting Instructions"
+
+    def _is_task_completed(self, result: Any) -> bool:
+        """
+        Determine if the task is completed based on the result of the last action.
+
+        Args:
+            result (Any): The result from the last action.
+
+        Returns:
+            bool: True if task is completed, False otherwise.
+        """
+        # Placeholder logic; implement actual completion criteria
+        if isinstance(result, str):
+            return "completed" in result.lower()
+        return False
+
+    def _define_next_task_based_on_result(self, result: Any) -> str:
+        """
+        Define the next task based on the result of the last action.
+
+        Args:
+            result (Any): The result from the last action.
+
+        Returns:
+            str: The next task description.
+        """
+        # Placeholder logic; implement actual task definition
+        if isinstance(result, str):
+            if "error" in result.lower():
+                return "Retry the previous action."
+            else:
+                return "Proceed to the next step based on the result."
+        return "Analyze the result and determine the next task."
+
+    def _is_response_satisfactory(self, response: Any) -> bool:
+        """
+        Determine if the response is satisfactory.
+
+        Args:
+            response (Any): The response from the last action.
+
+        Returns:
+            bool: True if satisfactory, False otherwise.
+        """
+        # Placeholder logic; implement actual response evaluation
+        if isinstance(response, str):
+            return "success" in response.lower()
+        return False
+
+    def _define_next_task_based_on_response(self, response: Any) -> str:
+        """
+        Define the next task based on the response of the last action.
+
+        Args:
+            response (Any): The response from the last action.
+
+        Returns:
+            str: The next task description.
+        """
+        # Placeholder logic; implement actual task definition
+        if isinstance(response, str):
+            if "need more information" in response.lower():
+                return "Gather additional information required to proceed."
+            else:
+                return "Address the issues identified in the response."
+        return "Review the response and determine the next steps."
