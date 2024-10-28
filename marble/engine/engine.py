@@ -43,6 +43,7 @@ class Engine:
         # Initialize Evaluator
         self.evaluator = Evaluator(metrics_config=config.metrics)
         self.task = config.task.get('content', '')
+        self.coordinate_mode = config.get('coordinate_mode', 'centralized')
         # Initialize EnginePlanner
         self.planner = EnginePlanner(agent_graph=self.graph, memory=self.memory, config=config.engine_planner, task=self.task)
         self.max_iterations = config.environment.get('max_iterations', 10)
@@ -107,11 +108,10 @@ class Engine:
         self.logger.debug(f"Memory of type '{memory_type}' initialized.")
         return memory
 
-    def start(self) -> None:
+    def centralized_coordinate(self) -> None:
         """
-        Start the engine to run the simulation.
+        Centralized coordination mode.
         """
-        self.logger.info("Engine starting simulation.")
         try:
             while not self._should_terminate():
                 self.current_iteration += 1
@@ -167,6 +167,102 @@ class Engine:
         finally:
             self.evaluator.finalize()
             self.logger.info("Simulation completed.")
+
+    def graph_coordinate(self) -> None:
+        """
+        Graph-based coordination mode.
+        """
+        try:
+            # Initial assignment: Distribute the overall task to each agent
+            self.logger.info("Initial task distribution to all agents.")
+            initial_tasks = {agent.agent_id: self.task for agent in self.get_all_agents()}
+            agents_results = {}
+            for agent_id, task in initial_tasks.items():
+                try:
+                    agent = self.graph.get_agent(agent_id)
+                    self.logger.info(f"Assigning initial task to {agent_id}: {task}")
+                    result = agent.act(task)
+                    agents_results[agent_id] = result
+                    self.logger.debug(f"Agent '{agent_id}' completed initial task with result: {result}")
+                except KeyError:
+                    self.logger.error(f"Agent '{agent_id}' not found in the graph.")
+                except Exception as e:
+                    self.logger.error(f"Error while executing initial task for agent '{agent_id}': {e}")
+
+            # Update progress based on initial results
+            summary = self._summarize_results(agents_results)
+            self.logger.info(f"Initial Summary:\n{summary}")
+            self.planner.update_progress(summary)
+
+            # Evaluate the initial state
+            self.evaluator.update(self.environment, self.agents)
+
+            # Begin iterative coordination
+            while self.current_iteration < self.max_iterations:
+                self.current_iteration += 1
+                self.logger.info(f"Starting iteration {self.current_iteration}")
+
+                current_agents = self.get_all_agents()
+                current_tasks = {}
+                agents_results = {}
+
+                for agent in current_agents:
+                    try:
+                        # Each agent plans its own task
+                        task = agent.plan_task()
+                        current_tasks[agent.agent_id] = task
+                        self.logger.info(f"Agent '{agent.agent_id}' planned task: {task}")
+
+                        # Agent acts on the planned task
+                        result = agent.act(task)
+                        agents_results[agent.agent_id] = result
+                        self.logger.debug(f"Agent '{agent.agent_id}' executed task with result: {result}")
+                    except Exception as e:
+                        self.logger.error(f"Error in agent '{agent.agent_id}' during planning or action: {e}")
+
+                # Summarize outputs and update planner
+                summary = self._summarize_results(agents_results)
+                self.logger.info(f"Iteration {self.current_iteration} Summary:\n{summary}")
+                self.planner.summarize_output(summary)
+
+                # Evaluate the current state
+                self.evaluator.update(self.environment, self.agents)
+
+                # Decide whether to continue or terminate
+                continue_simulation = self.planner.decide_next_step(agents_results)
+                if not continue_simulation:
+                    self.logger.info("EnginePlanner decided to terminate the simulation.")
+                    break
+
+                # Check if task is completed within the environment
+                if self.environment.is_task_completed():
+                    self.logger.info("Task has been completed successfully.")
+                    break
+
+            self.logger.info("Engine graph-based coordination loop completed.")
+
+        except Exception:
+            self.logger.exception("An error occurred during graph-based coordination.")
+            raise
+        finally:
+            self.evaluator.finalize()
+            self.logger.info("Graph-based coordination simulation completed.")
+
+    def start(self) -> None:
+        """
+        Start the engine to run the simulation.
+        """
+        self.logger.info("Engine starting simulation.")
+        if self.coordinate_mode == "centralized":
+            self.logger.info("Running in centralized coordination mode.")
+            self.centralized_coordinate()
+        elif self.coordinate_mode == "graph":
+            self.logger.info("Running in graph-based coordination mode.")
+            self.graph_coordinate()
+        else:
+            self.logger.error(f"Unsupported coordinate mode: {self.coordinate_mode}")
+            raise ValueError(f"Unsupported coordinate mode: {self.coordinate_mode}")
+
 
     def _should_terminate(self) -> bool:
         """
