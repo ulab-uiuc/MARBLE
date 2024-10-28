@@ -20,6 +20,7 @@ class Config:
             data (Dict[str, Any]): Configuration data.
         """
         self.environment = data.get('environment', {})
+        self.relationships = data.get('relationships', [])
         self.agents = data.get('agents', [])
         self.metrics = data.get('metrics', {})
         self.llm = data.get('llm', {})

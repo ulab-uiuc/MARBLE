@@ -13,6 +13,7 @@ from marble.utils.logger import get_logger
 
 EnvType = Union[BaseEnvironment, WebEnvironment]
 AgentType = TypeVar('AgentType', bound='BaseAgent')
+AgentGraphType = TypeVar('AgentGraphType', bound='AgentGraph')
 
 class BaseAgent:
     """
@@ -34,6 +35,7 @@ class BaseAgent:
         self.env: EnvType = env
         self.actions: List[str] = []
         self.agent_id: str = agent_id
+        self.agent_graph: Union[None, Dict[str, str]] = None
         self.profile = config.get("profile", '')
         self.memory = BaseMemory()
         self.shared_memory = SharedMemory()
@@ -44,6 +46,9 @@ class BaseAgent:
         self.msg_box: Dict[str, Dict[str, List[Tuple[int, str]]]] = defaultdict(lambda: defaultdict(list))
         self.FORWARD_TO = 0
         self.RECV_FROM = 1
+
+    def set_agent_graph(self, agent_graph: AgentGraphType) -> None:
+        self.agent_graph = agent_graph
 
     def perceive(self, state: Any) -> Any:
         """
@@ -70,9 +75,64 @@ class BaseAgent:
         """
         self.logger.info(f"Agent '{self.agent_id}' acting on task '{task}'.")
         tools = [self.env.action_handler_descriptions[name] for name in self.env.action_handler_descriptions]
+        available_agents = {}
+        for agent_id_1, agent_id_2, relationship in self.agent_graph.relationships:
+            if agent_id_1 != self.agent_id and agent_id_2 != self.agent_id:
+                continue
+            else:
+                if agent_id_1 == self.agent_id:
+                    profile = self.agent_graph.agents[agent_id_2].get_profile()
+                    agent_id = agent_id_2
+                elif agent_id_2 == self.agent_id:
+                    profile = self.agent_graph.agents[agent_id_1].get_profile()
+                    agent_id = agent_id_1
+                available_agents[agent_id] = {
+                    "profile": profile,
+                    "role": f"{agent_id_1} {relationship} {agent_id_2}"
+                }
+        self.available_agents = available_agents
+        # Create the enum description with detailed information about each agent
+        agent_descriptions = [
+            f"{agent_id} ({info['role']} - {info['profile']})"
+            for agent_id, info in available_agents.items()
+        ]
+        # Add communicate_to function description
+        communicate_to_description = {
+            "type": "function",
+            "function": {
+                "name": "communicate_to",
+                "description": "Send a message to a specific target agent based on existing relationships",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "target_agent_id": {
+                            "type": "string",
+                            "description": "The ID of the target agent to communicate with. Available agents:\n" + "\n".join([f"- {desc}" for desc in agent_descriptions]),
+                            "enum": list(self.relationships.keys())  # Dynamically list available target agents
+                        },
+                        "message": {
+                            "type": "string",
+                            "description": "The message to send to the target agent"
+                        },
+                        "session_id": {
+                            "type": "string",
+                            "description": "The session ID for the communication. You should use its default valye.",
+                            "default": "default_session"
+                        }
+                    },
+                    "required": ["target_agent_id", "message"],
+                    "additionalProperties": False
+                }
+            }
+        }
+
+        tools.append(communicate_to_description)
+        system_message = f"These are your memory: {self.memory}\n" \
+                          "These are your chat history: {self.seralize_message()}\n" \
+                          "Answering questions from other agents has higher priority than assigned task."
         result = model_prompting(
             llm_model="gpt-3.5-turbo",
-            messages=[{"role":"user", "content": task}],
+            messages=[{"role": "system", "content": system_message}, {"role":"user", "content": task + "Answer messages has higher priority than any task!!"}],
             return_num=1,
             max_token_num=512,
             temperature=0.0,
@@ -81,12 +141,19 @@ class BaseAgent:
             tools=tools,
             tool_choice="auto"
         )[0]
+        import pdb; pdb.set_trace()
         if result.tool_calls:
             function_call = result.tool_calls[0]
             function_name = function_call.function.name
             assert function_name is not None
             function_args = json.loads(function_call.function.arguments)
-            result_from_function = self.env.apply_action(agent_id=self.agent_id, action_name=function_name, arguments=function_args)
+            if function_name != "communicate_to":
+                result_from_function = self.env.apply_action(agent_id=self.agent_id, action_name=function_name, arguments=function_args)
+            else:
+                target_agent_id = function_args["target_agent_id"]
+                message = function_args["message"]
+                session_id = function_args.get("session_id", "default_session")
+                result_from_function = self._handle_communicate_to(target_agent_id=target_agent_id, message=message, session_id=session_id)
             self.memory.update(self.agent_id, {
                     "type": "action_function_call",
                     "action_name": function_name,
@@ -94,6 +161,7 @@ class BaseAgent:
                     "result": result_from_function
                 }
             )
+
             self.logger.info(f"Agent '{self.agent_id}' called '{function_name}' with args '{function_args}'.")
             self.logger.info(f"Agent '{self.agent_id}' obtained result '{result_from_function}'.")
 
@@ -164,6 +232,21 @@ class BaseAgent:
         # Log the action of receiving the message from the sender agent.
         self.logger.info(f"Agent {self.agent_id} received message from {from_agent.agent_id}: {message}")
 
+    def seralize_message(self) -> str:
+        seralized_msg = ""
+        for session_id in self.msg_box:
+            seralized_msg += f"In Session {session_id} \n"
+            session_msg = self.msg_box[session_id]
+            for target_agent_id in session_msg:
+                msg_list = session_msg[target_agent_id]
+                for direction, msg_content in msg_list:
+                    if direction == self.FORWARD_TO:
+                        seralized_msg += f"From {self.agent_id} to {target_agent_id}: "
+                    else:
+                        seralized_msg += f"From {target_agent_id} to {self.agent_id}: "
+                    seralized_msg += msg_content + "\n"
+        return seralized_msg
+
     def get_profile(self) -> Union[str, Any]:
         """
         Get the agent's profile.
@@ -172,3 +255,46 @@ class BaseAgent:
             str: The agent's profile.
         """
         return self.profile
+
+
+    def _handle_communicate_to(self, target_agent_id: str, message: str, session_id: str = "default_session") -> Dict[str, Any]:
+        """
+        Handler for the communicate_to function.
+
+        Args:
+            target_agent_id (str): The ID of the target agent
+            message (str): The message to send
+            session_id (str): The session ID for the communication
+
+        Returns:
+            Dict[str, Any]: Result of the communication attempt
+        """
+        try:
+            if not self.agent_graph or target_agent_id not in self.relationships:
+                import pdb; pdb.set_trace()
+                return {
+                    "success": False,
+                    "error": f"No relationship found with agent {target_agent_id}"
+                }
+
+            target_agent = self.agent_graph.agents.get(target_agent_id)
+            if not target_agent:
+                return {
+                    "success": False,
+                    "error": f"Target agent {target_agent_id} not found in agent graph"
+                }
+
+            # Send the message using the existing send_message method
+            self.send_message(session_id, target_agent, message)
+
+            return {
+                "success": True,
+                "message": f"Successfully sent message to agent {target_agent_id}",
+                "session_id": session_id
+            }
+
+        except Exception as e:
+            return {
+                "success": False,
+                "error": f"Error sending message: {str(e)}"
+            }

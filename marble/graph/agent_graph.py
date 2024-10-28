@@ -46,9 +46,7 @@ class AgentGraph:
         for rel in relationships:
             if len(rel) != 3:
                 raise ValueError(f"Invalid relationship format: {rel}. Expected 3 elements.")
-            node1 = rel['source']
-            node2 = rel['target']
-            relationship = rel['type']
+            node1, node2, relationship = rel
             self.add_relationship(node1, node2, relationship)
 
     def _build_graph(self, structure: Dict[str, List[str]]) -> None:
@@ -174,6 +172,7 @@ class AgentGraph:
             raise ValueError(f"Target agent '{target}' does not exist.")
         self.relationships.append((source, target, rel_type))
         self.agents[source].relationships[target] = rel_type
+        self.agents[target].relationships[source] = "R_" + rel_type
         self.logger.info(f"Relationship added: {source} --[{rel_type}]--> {target}")
 
     def remove_relationship(self, source: str, target: str) -> None:

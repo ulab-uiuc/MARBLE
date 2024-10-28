@@ -1,0 +1,46 @@
+execution_mode: hierarchical
+relationships:
+  - [agent2, agent1, "reports_to"]
+  - [agent3, agent1, "reports_to"]
+  - [agent4, agent1, "reports_to"]
+
+environment:
+  type: Web
+  name: "Web Simulation Environment"
+  max_iterations: 2 
+  # Add other environment-specific configurations here
+
+task:
+  content: "Find new about the latest trends in AI."
+
+agents:
+  - type: BaseAgent
+    agent_id: agent1
+    profile: "You are a helpful and supportive team leader. You are not allowed to use the internet. You must ask other agents for an answer in this task."
+    # Additional agent-specific configurations
+  - type: BaseAgent
+    agent_id: agent2
+    profile: "You are a curious and ambitious team member. You will use google to search results for the task."
+    # Additional agent-specific configurations
+  - type: BaseAgent
+    agent_id: agent3
+    profile: "You are a diligent and hardworking team member. You will use wikipedia to search results for the task."
+    # Additional agent-specific configurations
+  - type: BaseAgent
+    agent_id: agent4
+    profile: "You are a creative and innovative team member. You will use twitter to search results for the task."
+    # Additional agent-specific configurations
+
+memory:
+  type: SharedMemory
+  # Additional memory configurations if needed
+
+metrics:
+  # Define metrics configurations for the Evaluator
+  # Example:
+  # accuracy: true
+  # response_time: true
+
+engine_planner:
+  initial_progress: "Starting the simulation."
+  # Additional engine planner configurations if needed
