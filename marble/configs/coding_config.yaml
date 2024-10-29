@@ -1,15 +1,16 @@
 execution_mode: hierarchical
 relationships:
   - [analyst1, coder1, "delegates_to"]
+  - [coder1, testor1, "delegates_to"]
 
 environment:
   type: Coding
   name: "Coding Environment"
-  max_iterations: 2
-  workspace_path: "/home/zhe36/MARBLE/marble/workspace"
+  max_iterations: 3
+  workspace_path: "workspace"  
 
 task:
-  content: "Implement a Red-Black Tree data structure in Python with the following operations: insert, delete, search, and traversal methods. The implementation should maintain all Red-Black Tree properties and handle recoloring and rotations appropriately."
+  content: "Implement a merge sort algorithm in Python. The implementation should include the main merge sort function and a helper function for merging two sorted arrays. The function should be able to sort a list of numbers in ascending order."  
 
 agents:
   - type: AnalystAgent
@@ -20,6 +21,10 @@ agents:
     agent_id: coder1
     profile: "Expert programmer responsible for implementing solutions based on analyst's suggestions"
 
+  - type: TestorAgent
+    agent_id: testor1
+    profile: "Test engineer responsible for analyzing and implementing test cases"
+
 memory:
   type: SharedMemory
 
@@ -28,4 +33,4 @@ metrics:
   documentation_quality: true
 
 engine_planner:
-  initial_progress: "Starting the Red-Black Tree implementation analysis."
+  initial_progress: "Starting the merge sort implementation analysis."
