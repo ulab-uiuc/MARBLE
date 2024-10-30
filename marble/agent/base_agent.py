@@ -3,6 +3,7 @@ Base agent module.
 """
 
 import json
+import yaml
 from collections import defaultdict
 from typing import Any, Dict, List, Tuple, TypeVar, Union
 
@@ -37,13 +38,19 @@ class BaseAgent:
         self.profile = config.get("profile", '')
         self.memory = BaseMemory()
         self.shared_memory = SharedMemory()
-        self.relationships: Dict[str, str] = {}  # key: target_agent_id, value: relationship type
+        self.relationships: Dict[str, str] = {}
         self.logger = get_logger(self.__class__.__name__)
         self.logger.info(f"Agent '{self.agent_id}' initialized.")
-        self.token_usage = 0  # Initialize token usage
+        self.token_usage = 0
         self.msg_box: Dict[str, Dict[str, List[Tuple[int, str]]]] = defaultdict(lambda: defaultdict(list))
         self.FORWARD_TO = 0
         self.RECV_FROM = 1
+        # self.strategy = config.get("strategy", "default")
+        # self.prompt_config = self._load_prompt_config()
+
+    # def _load_prompt_config(self) -> Dict[str, Any]:
+    #     with open("configs/prompt_config.yaml", "r") as f:
+    #         return yaml.safe_load(f)["prompts"]
 
     def perceive(self, state: Any) -> Any:
         """
@@ -55,7 +62,6 @@ class BaseAgent:
         Returns:
             Any: Processed perception data.
         """
-        # For simplicity, return the task description from the state
         return state.get('task_description', '')
 
     def act(self, task: str) -> Any:
@@ -70,6 +76,20 @@ class BaseAgent:
         """
         self.logger.info(f"Agent '{self.agent_id}' acting on task '{task}'.")
         tools = [self.env.action_handler_descriptions[name] for name in self.env.action_handler_descriptions]
+        
+        # messages = self._create_strategy_messages(task)
+        
+        # result = model_prompting(
+        #     llm_model="gpt-3.5-turbo",
+        #     messages=messages,
+        #     return_num=1,
+        #     max_token_num=512,
+        #     temperature=0.0,
+        #     top_p=None,
+        #     stream=None,
+        #     tools=tools,
+        #     tool_choice="auto"
+        # )[0]
         result = model_prompting(
             llm_model="gpt-3.5-turbo",
             messages=[{"role":"user", "content": task}],
@@ -81,6 +101,7 @@ class BaseAgent:
             tools=tools,
             tool_choice="auto"
         )[0]
+
         if result.tool_calls:
             function_call = result.tool_calls[0]
             function_name = function_call.function.name
@@ -109,6 +130,49 @@ class BaseAgent:
 
         return result
 
+    # def _create_strategy_messages(self, task: str) -> List[Dict[str, str]]:
+    #     if self.strategy == "cot":
+    #         return self._create_cot_messages(task)
+    #     elif self.strategy == "reflexion":
+    #         return self._create_reflexion_messages(task)
+    #     elif self.strategy == "react":
+    #         return self._create_react_messages(task)
+    #     else:
+    #         return [{"role": "user", "content": task}]
+
+    # def _create_cot_messages(self, task: str) -> List[Dict[str, str]]:
+    #     config = self.prompt_config["cot"]
+    #     messages = [
+    #         {"role": "system", "content": config["sys_prompt"]},
+    #         {"role": "user", "content": config["template"].format(
+    #             problem_description=task,
+    #             additional_data=f"Agent Profile: {self.profile}"
+    #         )}
+    #     ]
+    #     return messages
+
+    # def _create_reflexion_messages(self, task: str) -> List[Dict[str, str]]:
+    #     config = self.prompt_config["reflexion"]
+    #     messages = [
+    #         {"role": "system", "content": config["sys_prompt"]},
+    #         {"role": "user", "content": config["template"].format(
+    #             problem_description=task,
+    #             additional_data=f"Agent Profile: {self.profile}"
+    #         )}
+    #     ]
+    #     return messages
+
+    # def _create_react_messages(self, task: str) -> List[Dict[str, str]]:
+    #     config = self.prompt_config["react"]
+    #     messages = [
+    #         {"role": "system", "content": config["sys_prompt"]},
+    #         {"role": "user", "content": config["template"].format(
+    #             problem_description=task,
+    #             additional_data=f"Agent Profile: {self.profile}"
+    #         )}
+    #     ]
+    #     return messages
+
     def _calculate_token_usage(self, task: str, result: str) -> int:
         """
         Calculate token usage based on input and output lengths.
@@ -120,7 +184,6 @@ class BaseAgent:
         Returns:
             int: The number of tokens used.
         """
-        # Simplified token count: 1 token per 4 characters (approximation)
         token_count = (len(task) + len(result)) // 4
         return token_count
 
@@ -141,13 +204,10 @@ class BaseAgent:
             target_agent (BaseAgent): The agent to whom the message is being sent.
             message (str): The message content to be sent.
         """
-        # Store the outgoing message in the message box for the target agent.
         self.msg_box[session_id][target_agent.agent_id].append((self.FORWARD_TO, message))
 
-        # Log the action of sending the message to the target agent.
         self.logger.info(f"Agent {self.agent_id} sent message to {target_agent.agent_id}: {message}")
 
-        # Notify the target agent that a message has been sent.
         target_agent.receive_message(session_id, self, message)
 
     def receive_message(self, session_id: str, from_agent: AgentType, message: str) -> None:
@@ -158,10 +218,7 @@ class BaseAgent:
             from_agent (BaseAgent): The agent sending the message.
             message (str): The content of the received message.
         """
-        # Store the received message in the message box for the sending agent.
         self.msg_box[session_id][from_agent.agent_id].append((self.RECV_FROM, message))
-
-        # Log the action of receiving the message from the sender agent.
         self.logger.info(f"Agent {self.agent_id} received message from {from_agent.agent_id}: {message}")
 
     def get_profile(self) -> Union[str, Any]:
