@@ -108,7 +108,7 @@ class Engine:
         self.logger.debug(f"Memory of type '{memory_type}' initialized.")
         return memory
 
-    def centralized_coordinate(self) -> None:
+    def star_coordinate(self) -> None:
         """
         Centralized coordination mode.
         """
@@ -248,17 +248,35 @@ class Engine:
             self.evaluator.finalize()
             self.logger.info("Graph-based coordination simulation completed.")
 
+    def chain_coordinate(self) -> None:
+        """
+        Chain-based coordination mode.
+        """
+        pass
+
+    def tree_coordinate(self) -> None:
+        """
+        Tree-based coordination mode.
+        """
+        pass
+
     def start(self) -> None:
         """
         Start the engine to run the simulation.
         """
         self.logger.info("Engine starting simulation.")
-        if self.coordinate_mode == "centralized":
+        if self.coordinate_mode == "star":
             self.logger.info("Running in centralized coordination mode.")
-            self.centralized_coordinate()
+            self.star_coordinate()
         elif self.coordinate_mode == "graph":
             self.logger.info("Running in graph-based coordination mode.")
             self.graph_coordinate()
+        elif self.coordinate_mode == "chain":
+            self.logger.info("Running in chain-based coordination mode.")
+            self.chain_coordinate()
+        elif self.coordinate_mode == "tree":
+            self.logger.info("Running in tree-based coordination mode.")
+            self.tree_coordinate()
         else:
             self.logger.error(f"Unsupported coordinate mode: {self.coordinate_mode}")
             raise ValueError(f"Unsupported coordinate mode: {self.coordinate_mode}")
