@@ -254,8 +254,6 @@ class AgentGraph:
         """
         if self.execution_mode == 'hierarchical':
             return self._hierarchical_traversal()
-        elif self.execution_mode == 'cooperative':
-            return self._cooperative_traversal()
         else:  # Default to parallel execution
             return list(self.agents.values())
 
@@ -281,7 +279,7 @@ class AgentGraph:
                 self.logger.debug(f"Agent '{agent_id}' added to execution order.")
         return execution_order
 
-    def _cooperative_traversal(self) -> List[BaseAgent]:
+    def _traversal(self) -> List[BaseAgent]:
         """
         Prepare agents for cooperative execution.
 
@@ -290,6 +288,15 @@ class AgentGraph:
         """
         # In cooperative mode, agents may need to communicate; return all agents.
         self.logger.debug("Preparing agents for cooperative execution.")
+        return list(self.agents.values())
+
+    def get_all_agents(self) -> List[BaseAgent]:
+        """
+        Get all agents in the graph.
+
+        Returns:
+            List[BaseAgent]: List of all agents in the graph.
+        """
         return list(self.agents.values())
 
     def get_agent_profiles(self) -> Dict[str, Dict[str, Any]]:

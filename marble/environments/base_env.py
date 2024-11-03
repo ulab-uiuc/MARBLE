@@ -37,12 +37,11 @@ class BaseEnvironment:
         last_action_result = self.state.get('last_action_result', '')
         return self._compare_to_ground_truth(last_action_result, self.ground_truth)
 
-    def _compare_to_ground_truth(self, result: Dict[str, Any], ground_truth: str) -> bool:
+    def _compare_to_ground_truth(self, result: str, ground_truth: str) -> bool:
         # Implement a method to compare result to ground truth
         # For simplicity, check if result matches ground_truth exactly
-        result_str: str = result.get("result", "")
-        if result_str:
-            return result_str.strip().lower() == ground_truth.strip().lower()
+        if result:
+            return result.strip().lower() == ground_truth.strip().lower()
         else:
             return False
 

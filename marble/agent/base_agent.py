@@ -4,7 +4,7 @@ Base agent module.
 
 import json
 from collections import defaultdict
-from typing import Any, Dict, List, Tuple, TypeVar, Union
+from typing import Any, Dict, List, Optional, Tuple, TypeVar, Union
 
 from marble.environments import BaseEnvironment, WebEnvironment
 from marble.llms.model_prompting import model_prompting
@@ -41,6 +41,7 @@ class BaseAgent:
         self.logger = get_logger(self.__class__.__name__)
         self.logger.info(f"Agent '{self.agent_id}' initialized.")
         self.token_usage = 0
+        self.task_history: List[str] = []
         self.msg_box: Dict[str, Dict[str, List[Tuple[int, str]]]] = defaultdict(lambda: defaultdict(list))
         self.FORWARD_TO = 0
         self.RECV_FROM = 1
@@ -67,33 +68,31 @@ class BaseAgent:
         Returns:
             Any: The action decided by the agent.
         """
+        self.task_history.append(task)
         self.logger.info(f"Agent '{self.agent_id}' acting on task '{task}'.")
         tools = [self.env.action_handler_descriptions[name] for name in self.env.action_handler_descriptions]
-
-        # messages = self._create_strategy_messages(task)
-
-        # result = model_prompting(
-        #     llm_model="gpt-3.5-turbo",
-        #     messages=messages,
-        #     return_num=1,
-        #     max_token_num=512,
-        #     temperature=0.0,
-        #     top_p=None,
-        #     stream=None,
-        #     tools=tools,
-        #     tool_choice="auto"
-        # )[0]
-        result = model_prompting(
-            llm_model="gpt-3.5-turbo",
-            messages=[{"role":"user", "content": task}],
-            return_num=1,
-            max_token_num=512,
-            temperature=0.0,
-            top_p=None,
-            stream=None,
-            tools=tools,
-            tool_choice="auto"
-        )[0]
+        if len(tools) == 0:
+            result = model_prompting(
+                llm_model="gpt-3.5-turbo",
+                messages=[{"role":"user", "content": task}],
+                return_num=1,
+                max_token_num=512,
+                temperature=0.0,
+                top_p=None,
+                stream=None,
+            )[0]
+        else:
+            result = model_prompting(
+                llm_model="gpt-3.5-turbo",
+                messages=[{"role":"user", "content": task}],
+                return_num=1,
+                max_token_num=512,
+                temperature=0.0,
+                top_p=None,
+                stream=None,
+                tools=tools,
+                tool_choice="auto"
+            )[0]
 
         if result.tool_calls:
             function_call = result.tool_calls[0]
@@ -179,3 +178,102 @@ class BaseAgent:
             str: The agent's profile.
         """
         return self.profile
+
+    def plan_task(self) -> Optional[str]:
+        """
+        Plan the next task based on the original tasks input, the agent's memory, task history, and its profile/persona.
+
+        Returns:
+            str: The next task description.
+        """
+        self.logger.info(f"Agent '{self.agent_id}' is planning the next task.")
+
+        # Retrieve all memory entries for this agent
+        memory_str = self.memory.get_memory_str()
+        task_history_str = ", ".join(self.task_history)
+
+        # Incorporate agent's profile/persona in decision making
+        persona = self.get_profile()
+
+        # Use memory entries, persona, and task history to determine the next task
+        next_task = model_prompting(
+            llm_model="gpt-3.5-turbo",
+            messages=[{"role": "user", "content": f"Agent '{self.agent_id}' should prioritize tasks that align with their role: {persona}. Based on the task history: {task_history_str}, and memory: {memory_str}, what should be the next task?"}],
+            return_num=1,
+            max_token_num=512,
+            temperature=0.0,
+            top_p=None,
+            stream=None,
+            tools=[],
+            tool_choice="auto"
+        )[0].content
+        self.logger.info(f"Agent '{self.agent_id}' plans next task based on persona: {next_task}")
+
+        return next_task
+
+
+    def _is_task_completed(self, result: Any) -> bool:
+        """
+        Determine if the task is completed based on the result of the last action.
+
+        Args:
+            result (Any): The result from the last action.
+
+        Returns:
+            bool: True if task is completed, False otherwise.
+        """
+        # Placeholder logic; implement actual completion criteria
+        if isinstance(result, str):
+            return "completed" in result.lower()
+        return False
+
+    def _define_next_task_based_on_result(self, result: Any) -> str:
+        """
+        Define the next task based on the result of the last action.
+
+        Args:
+            result (Any): The result from the last action.
+
+        Returns:
+            str: The next task description.
+        """
+        # Placeholder logic; implement actual task definition
+        if isinstance(result, str):
+            if "error" in result.lower():
+                return "Retry the previous action."
+            else:
+                return "Proceed to the next step based on the result."
+        return "Analyze the result and determine the next task."
+
+    def _is_response_satisfactory(self, response: Any) -> bool:
+        """
+        Determine if the response is satisfactory.
+
+        Args:
+            response (Any): The response from the last action.
+
+        Returns:
+            bool: True if satisfactory, False otherwise.
+        """
+        # Placeholder logic; implement actual response evaluation
+        if isinstance(response, str):
+            return "success" in response.lower()
+        return False
+
+    def _define_next_task_based_on_response(self, response: Any) -> str:
+        """
+        Define the next task based on the response of the last action.
+
+        Args:
+            response (Any): The response from the last action.
+
+        Returns:
+            str: The next task description.
+        """
+        # Placeholder logic; implement actual task definition
+        if isinstance(response, str):
+            if "need more information" in response.lower():
+                return "Gather additional information required to proceed."
+            else:
+                return "Address the issues identified in the response."
+        return "Review the response and determine the next steps."

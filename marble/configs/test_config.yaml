@@ -1,4 +1,4 @@
-execution_mode: hierarchical
+coordinate_mode: graph
 relationships:
   - [agent1, agent2, "reports_to"]
   - [agent1, agent3, "manages"]
