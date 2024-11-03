@@ -1,30 +1,26 @@
-# README.md
+# Implementation Overview
 
-## Implementation Overview
-This implementation provides the Python code for a merge sort algorithm. The merge sort algorithm is a divide and conquer algorithm that divides a list into halves, sorts them and then merges them. This implementation contains two functions: `merge_sort` and `merge`.
+This Python script employs the merge sort technique to sort a list of integers in ascending order. The merge sort technique is a divide and conquer algorithm that involves recursively splitting the list into two halves until each subset has only one element and then merging those subsets in a manner which results in a sorted list.
 
-The `merge_sort` function is the main function that takes in a list of integers and returns the sorted list. It recursively divides the input list into two halves until we reach the base case where the list contains only one or zero elements. Then, it calls the `merge` function to merge the sorted halves. 
+The script is composed of two main functions - `mergeSort()` and `merge()`. The `mergeSort()` function is responsible for recursively dividing the input list into two halves. The `merge()` function is then invoked to take care of the actual process of merging the halves into a sorted list.
 
-The `merge` function merges two sorted lists into one sorted list. It does so by comparing the smallest elements of the two lists and pushing the smallest one into the result list. This is done until all elements of the two lists are in the result list.
+# Function Signature
 
-## Function Signature
-```python
-def merge_sort(array: List[int]) -> List[int]:
-    # function body
+1. `mergeSort(arr: List[int]) -> List[int]`
+2. `merge(arr: List[int], left_half: List[int], right_half: List[int]) -> List[int]`
 
-def merge(left: List[int], right: List[int]) -> List[int]:
-    # function body
-```
+# Parameters
 
-## Parameters
-1. `merge_sort` function:
-    - `array`: The list of integers to be sorted.
-2. `merge` function:
-    - `left`: The left half of the list.
-    - `right`: The right half of the list.
+1. `mergeSort(arr: List[int]) -> List[int]`
 
-## Return Value
-1. `merge_sort` function:
-    - Returns the sorted list.
-2. `merge` function:
-    - Returns the merged sorted list.
+- arr: A list of integers that is to be sorted.
+
+2. `merge(arr: List[int], left_half: List[int], right_half: List[int]) -> List[int]`
+
+- arr: A list of integers that is to be sorted.
+- left_half: The left half of the 'arr' list.
+- right_half: The right half of the 'arr' list.
+
+# Return Value
+
+Both the `mergeSort()` and `merge()` functions return the sorted list of integers. The `merge()` function also modifies the original 'arr' list in-place.

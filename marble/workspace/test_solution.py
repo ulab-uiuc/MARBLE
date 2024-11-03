@@ -1,30 +1,49 @@
-Test Implementation:
 ```python
 import pytest
-from merge_sort import merge_sort
+from typing import List
+from random import randint
+from coder1 import mergeSort
 
-# Positive Test Cases
-def test_merge_sort_positive():
-    assert merge_sort([3, 2, 5, 1, 4]) == [1, 2, 3, 4, 5]
-    assert merge_sort([-5, -2, -1, -4, -3]) == [-5, -4, -3, -2, -1]
+def test_mergeSort():
+    # Functional tests
+    arr = [3, 2, 1, 7, 8, 5]
+    assert mergeSort(arr) == sorted(arr)
 
-# Edge Cases
-def test_merge_sort_edge():
-    assert merge_sort([]) == []
-    assert merge_sort([1]) == [1]
-    assert merge_sort([1000000, 100000, 10000]) == [10000, 100000, 1000000]
-    assert merge_sort([5, 5, 3, 3, 1, 1]) == [1, 1, 3, 3, 5, 5]
+    arr = [-3, -2, -1, -7, -8, -5]
+    assert mergeSort(arr) == sorted(arr)
 
-# Performance Test Cases
-def test_merge_sort_performance():
-    assert merge_sort(list(range(1000000))) == list(range(1000000))
-    assert merge_sort(list(range(1000000, 0, -1))) == list(range(1, 1000001))
+    arr = [3.5, 2.1, 1.6, 7.8, 8.2, 5.7]
+    assert mergeSort(arr) == sorted(arr)
 
-# Error Handling Cases
-def test_merge_sort_error():
+    arr = []
+    assert mergeSort(arr) == sorted(arr)
+
+    arr = [3, 2, 2, 7, 8, 8, 5, 5]
+    assert mergeSort(arr) == sorted(arr)
+
+    # Edge cases
+    arr = [1]
+    assert mergeSort(arr) == sorted(arr)
+
+    arr = [randint(0, 100) for _ in range(10000)]
+    assert mergeSort(arr) == sorted(arr)
+
+    arr = [i for i in range(10, 0, -1)]
+    assert mergeSort(arr) == sorted(arr)
+
+    arr = [i for i in range(10)]
+    assert mergeSort(arr) == sorted(arr)
+
+    # Error handling
+    arr = ['a', 'b', 'c', 'd', 'e']
     with pytest.raises(TypeError):
-        merge_sort("not an array")
-        merge_sort([1, 2, "not an integer"])
-        merge_sort(None)
+        mergeSort(arr)
+
+    arr = None
+    with pytest.raises(TypeError):
+        mergeSort(arr)
+
+    arr = [1, 2, 3, 'a', 'b', 'c']
+    with pytest.raises(TypeError):
+        mergeSort(arr)
 ```
-In the above test cases, `pytest` is used as the testing framework. Each test function follows the `test_` naming convention that `pytest` uses to automatically identify test cases. The `assert` statement is used to verify the results of the function calls. For error handling cases, the `pytest.raises` context manager is used to check that the function raises the expected exceptions when given invalid inputs.

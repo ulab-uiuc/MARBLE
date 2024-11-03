@@ -1,26 +1,38 @@
 from typing import List
 
-def merge_sort(array: List[int]) -> List[int]:
-    if len(array) <= 1:
-        return array
-    mid = len(array) // 2
-    left = merge_sort(array[:mid])
-    right = merge_sort(array[mid:])
-    return merge(left, right)
+def mergeSort(arr: List[int]) -> List[int]:
+    if len(arr) > 1:
+        mid = len(arr) // 2
+        left_half = arr[:mid]
+        right_half = arr[mid:]
 
-def merge(left: List[int], right: List[int]) -> List[int]:
-    merged = []
-    left_index = 0
-    right_index = 0
-    while left_index < len(left) and right_index < len(right):
-        if left[left_index] <= right[right_index]:
-            merged.append(left[left_index])
-            left_index += 1
+        mergeSort(left_half)
+        mergeSort(right_half)
+        
+        merge(arr, left_half, right_half)
+        
+    return arr
+
+def merge(arr: List[int], left_half: List[int], right_half: List[int]) -> List[int]:
+    i = j = k = 0
+    
+    while i < len(left_half) and j < len(right_half):
+        if left_half[i] < right_half[j]:
+            arr[k] = left_half[i]
+            i += 1
         else:
-            merged.append(right[right_index])
-            right_index += 1
-    if left:
-        merged.extend(left[left_index:])
-    if right:
-        merged.extend(right[right_index:])
-    return merged
+            arr[k] = right_half[j]
+            j += 1
+        k += 1
+
+    while i < len(left_half):
+        arr[k] = left_half[i]
+        i += 1
+        k += 1
+
+    while j < len(right_half):
+        arr[k] = right_half[j]
+        j += 1
+        k += 1
+
+    return arr

@@ -151,8 +151,7 @@ class TestorAgent(BaseAgent):
             llm_model="gpt-4",
             messages=[{
                 "role": "system",
-                "content": """You are a test engineer. Implement comprehensive test cases based on the analysis and implementation.
-                Include unit tests for all main functionalities and edge cases. Use pytest framework."""
+                "content": """You are a test engineer. Implement comprehensive test cases based on the analysis and implementation.Include unit tests for all main functionalities and edge cases. Use pytest framework. Return ONLY the implementation test code, no explanations or markdown."""
             }, {
                 "role": "user",
                 "content": f"Task: {task}\nImplementation:\n{implementation_code}\nAnalysis:\n{task_analysis}\nTest Analysis:\n{test_analysis}"
