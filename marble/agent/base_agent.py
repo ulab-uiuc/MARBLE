@@ -4,7 +4,7 @@ Base agent module.
 
 import json
 from collections import defaultdict
-from typing import Any, Dict, List, Tuple, TypeVar, Union
+from typing import Any, Dict, List, Optional, Tuple, TypeVar, Union
 
 from marble.environments import BaseEnvironment, WebEnvironment
 from marble.llms.model_prompting import model_prompting
@@ -41,6 +41,7 @@ class BaseAgent:
         self.logger = get_logger(self.__class__.__name__)
         self.logger.info(f"Agent '{self.agent_id}' initialized.")
         self.token_usage = 0
+        self.task_history: List[str] = []
         self.msg_box: Dict[str, Dict[str, List[Tuple[int, str]]]] = defaultdict(lambda: defaultdict(list))
         self.FORWARD_TO = 0
         self.RECV_FROM = 1
@@ -67,33 +68,31 @@ class BaseAgent:
         Returns:
             Any: The action decided by the agent.
         """
+        self.task_history.append(task)
         self.logger.info(f"Agent '{self.agent_id}' acting on task '{task}'.")
         tools = [self.env.action_handler_descriptions[name] for name in self.env.action_handler_descriptions]
-
-        # messages = self._create_strategy_messages(task)
-
-        # result = model_prompting(
-        #     llm_model="gpt-3.5-turbo",
-        #     messages=messages,
-        #     return_num=1,
-        #     max_token_num=512,
-        #     temperature=0.0,
-        #     top_p=None,
-        #     stream=None,
-        #     tools=tools,
-        #     tool_choice="auto"
-        # )[0]
-        result = model_prompting(
-            llm_model="gpt-3.5-turbo",
-            messages=[{"role":"user", "content": task}],
-            return_num=1,
-            max_token_num=512,
-            temperature=0.0,
-            top_p=None,
-            stream=None,
-            tools=tools,
-            tool_choice="auto"
-        )[0]
+        if len(tools) == 0:
+            result = model_prompting(
+                llm_model="gpt-3.5-turbo",
+                messages=[{"role":"user", "content": task}],
+                return_num=1,
+                max_token_num=512,
+                temperature=0.0,
+                top_p=None,
+                stream=None,
+            )[0]
+        else:
+            result = model_prompting(
+                llm_model="gpt-3.5-turbo",
+                messages=[{"role":"user", "content": task}],
+                return_num=1,
+                max_token_num=512,
+                temperature=0.0,
+                top_p=None,
+                stream=None,
+                tools=tools,
+                tool_choice="auto"
+            )[0]
 
         if result.tool_calls:
             function_call = result.tool_calls[0]
@@ -180,9 +179,9 @@ class BaseAgent:
         """
         return self.profile
 
-    def plan_task(self) -> str:
+    def plan_task(self) -> Optional[str]:
         """
-        Plan the next task based on the initial task input and the agent's memory.
+        Plan the next task based on the original tasks input, the agent's memory, task history, and its profile/persona.
 
         Returns:
             str: The next task description.
@@ -190,43 +189,28 @@ class BaseAgent:
         self.logger.info(f"Agent '{self.agent_id}' is planning the next task.")
 
         # Retrieve all memory entries for this agent
-        memory_entries = self.memory.get_memory_str()
+        memory_str = self.memory.get_memory_str()
+        task_history_str = ", ".join(self.task_history)
 
-        if not memory_entries:
-            self.logger.info(f"Agent '{self.agent_id}' has no prior memory. Returning initial task.")
-            return self.env.get_initial_task()  # Assumes the environment can provide the initial task
+        # Incorporate agent's profile/persona in decision making
+        persona = self.get_profile()
 
-        # Analyze the last memory entry to decide the next task
-        last_entry = memory_entries[-1]
-        self.logger.debug(f"Agent '{self.agent_id}' last memory entry: {last_entry}")
+        # Use memory entries, persona, and task history to determine the next task
+        next_task = model_prompting(
+            llm_model="gpt-3.5-turbo",
+            messages=[{"role": "user", "content": f"Agent '{self.agent_id}' should prioritize tasks that align with their role: {persona}. Based on the task history: {task_history_str}, and memory: {memory_str}, what should be the next task?"}],
+            return_num=1,
+            max_token_num=512,
+            temperature=0.0,
+            top_p=None,
+            stream=None,
+            tools=[],
+            tool_choice="auto"
+        )[0].content
+        self.logger.info(f"Agent '{self.agent_id}' plans next task based on persona: {next_task}")
 
-        if last_entry['type'] == 'action_function_call':
-            # If the last action was a function call, decide next task based on the result
-            result = last_entry['result']
-            if self._is_task_completed(result):
-                self.logger.info(f"Agent '{self.agent_id}' determined that the task is completed.")
-                return "Task Completed"  # Or some signal to indicate completion
-            else:
-                # Define the next task based on the result
-                next_task = self._define_next_task_based_on_result(result)
-                self.logger.info(f"Agent '{self.agent_id}' plans next task: {next_task}")
-                return next_task
+        return next_task
 
-        elif last_entry['type'] == 'action_response':
-            # If the last action was a direct response, decide next task based on the response
-            response = last_entry['result']
-            if self._is_response_satisfactory(response):
-                self.logger.info(f"Agent '{self.agent_id}' found the response satisfactory. Task might be completed.")
-                return "Task Completed"  # Or some signal to indicate completion
-            else:
-                # Define the next task based on the unsatisfactory response
-                next_task = self._define_next_task_based_on_response(response)
-                self.logger.info(f"Agent '{self.agent_id}' plans next task: {next_task}")
-                return next_task
-
-        else:
-            self.logger.warning(f"Agent '{self.agent_id}' encountered unknown memory entry type: {last_entry['type']}")
-            return "Awaiting Instructions"
 
     def _is_task_completed(self, result: Any) -> bool:
         """

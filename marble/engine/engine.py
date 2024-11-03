@@ -43,7 +43,7 @@ class Engine:
         # Initialize Evaluator
         self.evaluator = Evaluator(metrics_config=config.metrics)
         self.task = config.task.get('content', '')
-        self.coordinate_mode = config.get('coordinate_mode', 'centralized')
+        self.coordinate_mode = config.coordination_mode
         # Initialize EnginePlanner
         self.planner = EnginePlanner(agent_graph=self.graph, memory=self.memory, config=config.engine_planner, task=self.task)
         self.max_iterations = config.environment.get('max_iterations', 10)
@@ -66,6 +66,8 @@ class Engine:
         env_type = env_config.get("type")
         if env_type == "Web":
             environment = WebEnvironment(name="Web Environment", config=env_config)
+        elif env_type == "Base":
+            environment = BaseEnvironment(name="Base Environment", config=env_config)
         else:
             raise ValueError(f"Unsupported environment type: {env_type}")
         self.logger.debug(f"Environment '{env_type}' initialized.")
@@ -175,7 +177,7 @@ class Engine:
         try:
             # Initial assignment: Distribute the overall task to each agent
             self.logger.info("Initial task distribution to all agents.")
-            initial_tasks = {agent.agent_id: self.task for agent in self.get_all_agents()}
+            initial_tasks = {agent.agent_id: self.task for agent in self.graph.get_all_agents()}
             agents_results = {}
             for agent_id, task in initial_tasks.items():
                 try:
@@ -202,7 +204,7 @@ class Engine:
                 self.current_iteration += 1
                 self.logger.info(f"Starting iteration {self.current_iteration}")
 
-                current_agents = self.get_all_agents()
+                current_agents = self.graph.get_all_agents()
                 current_tasks = {}
                 agents_results = {}
 
@@ -223,7 +225,7 @@ class Engine:
                 # Summarize outputs and update planner
                 summary = self._summarize_results(agents_results)
                 self.logger.info(f"Iteration {self.current_iteration} Summary:\n{summary}")
-                self.planner.summarize_output(summary)
+                self.planner.summarize_output(summary, self.task)
 
                 # Evaluate the current state
                 self.evaluator.update(self.environment, self.agents)

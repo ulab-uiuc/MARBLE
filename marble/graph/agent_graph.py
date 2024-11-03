@@ -254,8 +254,6 @@ class AgentGraph:
         """
         if self.execution_mode == 'hierarchical':
             return self._hierarchical_traversal()
-        elif self.execution_mode == 'cooperative':
-            return self._cooperative_traversal()
         else:  # Default to parallel execution
             return list(self.agents.values())
 
