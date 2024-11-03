@@ -3,7 +3,6 @@ Base agent module.
 """
 
 import json
-import yaml
 from collections import defaultdict
 from typing import Any, Dict, List, Tuple, TypeVar, Union
 
@@ -45,12 +44,6 @@ class BaseAgent:
         self.msg_box: Dict[str, Dict[str, List[Tuple[int, str]]]] = defaultdict(lambda: defaultdict(list))
         self.FORWARD_TO = 0
         self.RECV_FROM = 1
-        # self.strategy = config.get("strategy", "default")
-        # self.prompt_config = self._load_prompt_config()
-
-    # def _load_prompt_config(self) -> Dict[str, Any]:
-    #     with open("configs/prompt_config.yaml", "r") as f:
-    #         return yaml.safe_load(f)["prompts"]
 
     def perceive(self, state: Any) -> Any:
         """
@@ -76,9 +69,9 @@ class BaseAgent:
         """
         self.logger.info(f"Agent '{self.agent_id}' acting on task '{task}'.")
         tools = [self.env.action_handler_descriptions[name] for name in self.env.action_handler_descriptions]
-        
+
         # messages = self._create_strategy_messages(task)
-        
+
         # result = model_prompting(
         #     llm_model="gpt-3.5-turbo",
         #     messages=messages,
@@ -129,49 +122,6 @@ class BaseAgent:
         self.token_usage += self._calculate_token_usage(task, result_content)
 
         return result
-
-    # def _create_strategy_messages(self, task: str) -> List[Dict[str, str]]:
-    #     if self.strategy == "cot":
-    #         return self._create_cot_messages(task)
-    #     elif self.strategy == "reflexion":
-    #         return self._create_reflexion_messages(task)
-    #     elif self.strategy == "react":
-    #         return self._create_react_messages(task)
-    #     else:
-    #         return [{"role": "user", "content": task}]
-
-    # def _create_cot_messages(self, task: str) -> List[Dict[str, str]]:
-    #     config = self.prompt_config["cot"]
-    #     messages = [
-    #         {"role": "system", "content": config["sys_prompt"]},
-    #         {"role": "user", "content": config["template"].format(
-    #             problem_description=task,
-    #             additional_data=f"Agent Profile: {self.profile}"
-    #         )}
-    #     ]
-    #     return messages
-
-    # def _create_reflexion_messages(self, task: str) -> List[Dict[str, str]]:
-    #     config = self.prompt_config["reflexion"]
-    #     messages = [
-    #         {"role": "system", "content": config["sys_prompt"]},
-    #         {"role": "user", "content": config["template"].format(
-    #             problem_description=task,
-    #             additional_data=f"Agent Profile: {self.profile}"
-    #         )}
-    #     ]
-    #     return messages
-
-    # def _create_react_messages(self, task: str) -> List[Dict[str, str]]:
-    #     config = self.prompt_config["react"]
-    #     messages = [
-    #         {"role": "system", "content": config["sys_prompt"]},
-    #         {"role": "user", "content": config["template"].format(
-    #             problem_description=task,
-    #             additional_data=f"Agent Profile: {self.profile}"
-    #         )}
-    #     ]
-    #     return messages
 
     def _calculate_token_usage(self, task: str, result: str) -> int:
         """

@@ -73,7 +73,7 @@ prompts:
       For each question or problem, follow the ReAct (Reasoning and Action) framework to carefully observe, think, and act.
 
       The process you should follow includes three steps:
-      
+
       1. **Observation**: Begin by observing and extracting relevant information from the provided idea and external data.
       2. **Thought**: Think through the answer step by step, reasoning about how the observed information addresses the question.
       3. **Action**: Decide whether you need more information or if you can provide the final answer. If more information is needed, ask for it. If ready, proceed to provide the final answer, clearly labeled as [Question X] or [Final Answer].
@@ -105,9 +105,9 @@ prompts:
       For each question, please follow the multi-step ReAct framework:
 
       **Observation**: Start by observing and extracting key information from the provided data relevant to the problem.
-      
+
       **Thought**: Think through the problem step by step, reasoning about how the observed information addresses the question.
-      
+
       **Action**: Decide whether you need more information or if you can provide the final answer. If more information is needed, ask for it. If you are ready, provide the final answer, clearly labeled in the format: [Question X] or [Final Answer].
 
       For example:
