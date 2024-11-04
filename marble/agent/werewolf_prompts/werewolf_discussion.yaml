@@ -9,10 +9,9 @@ user: |
   <<game_state>>
 
   Now, as a werewolf, it is your turn to make a kill decision.
-  <<ally1_target_info>>
-  <<ally2_target_info>>
+  <<allies_target_info>>
   
-  You must come to a consensus within <<rounds_remaining>> rounds. Follow these steps to evaluate and update your decision:
+  You must come to a consensus within <<rounds_remaining>> rounds(include this one, which means 1 round remaining means last round). Follow these steps to evaluate and update your decision:
 
   1. Review the choices and reasoning of the other werewolves. Read the target selections and thought processes provided by your fellow werewolves. Analyze their choice of target and rationale, such as whether they believe the target is a high-value role like the seer, witch, or guard. Note your understanding and level of agreement with their perspective in `ally_assessment`.
   2. Reevaluate the current game situation. Based on your own analysis and the perspectives from your allies, reconsider the game state. Does your original target choice still align with the best interests of the werewolf team, or is a different target more suitable? Write your updated evaluation in `updated_game_assessment`.

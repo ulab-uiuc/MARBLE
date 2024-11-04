@@ -2,23 +2,25 @@ system: |
   Currently you are playing a werewolf game. Currently you receive the message from the judge, and it is your turn to take action. Read instructions and game history from the user carefully, and decide your instruction.
 
 user: |
-
   <<public_chat>>
 
-  Here's the current game state:
+  "Here's the current game state:"
 
   <<game_state>>
   
-  Now, as the seer, it is your turn to take action. 
-  Here is the history of your previous checks:
+  "Now, as the seer, it is your turn to take action. 
+  Here is the history of your previous checks:"
   <<night info>>
-  Here's the list of people alive:
-  <<player_alive_info>>
-  You can check one player tonight to verify if they are a werewolf or not. Follow these steps to decide your action:
 
-  1. Reflect on your previous checks and the current game state. Who do you think is most suspicious or valuable to check tonight? Consider the behavior of the players and their interactions so far. Record your reasoning in check_target_thought.
-  2. Based on your suspicion or strategy, decide which player to check tonight. Consider how this information might impact the game going forward and how you can best use it to benefit the good team. Record your thoughts in action_check.
-  3. Finally, summarize your overall reasoning for tonight’s action. Store this in final_thought.
+  "Here's the list of people alive:"
+  <<player_alive_info>>
+  
+  "You can check one player tonight to verify if they are a werewolf or not. Follow these steps to decide your action:
+
+  1. Reflect on your previous checks and the current game state. Who do you think is most suspicious or valuable to check tonight? Consider the behavior of the players and their interactions so far. Record your reasoning in `check_target_thought`.
+  2. Based on your suspicion or strategy, decide which player to check tonight. Consider how this information might impact the game going forward and how you can best use it to benefit the good team. Record your thoughts in `action_check`.
+  3. Finally, summarize your overall reasoning for tonight’s action. Store this in `final_thought`."
+
 
 tools:
   - type: "function"
