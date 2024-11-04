@@ -37,7 +37,7 @@ class Engine:
         # Initialize Agents
         self.agents = self._initialize_agents(config.agents)
         # Initialize AgentGraph
-        self.graph = AgentGraph(self.agents, config.graph)
+        self.graph = AgentGraph(self.agents, config)
         # Initialize Memory
         self.memory = self._initialize_memory(config.memory)
         # Initialize Evaluator
@@ -65,13 +65,14 @@ class Engine:
         """
         env_type = env_config.get("type")
         if env_type == "Web":
-            environment = WebEnvironment(name="Web Environment", config=env_config)
+            env1 = WebEnvironment(name="Web Environment", config=env_config)
+            return env1
         elif env_type == "Base":
-            environment = BaseEnvironment(name="Base Environment", config=env_config)
+            env2 = BaseEnvironment(name="Base Environment", config=env_config)
+            return env2
         else:
             raise ValueError(f"Unsupported environment type: {env_type}")
-        self.logger.debug(f"Environment '{env_type}' initialized.")
-        return environment
+
 
     def _initialize_agents(self, agent_configs: List[Dict[str, Any]]) -> List[BaseAgent]:
         """
@@ -250,15 +251,87 @@ class Engine:
             self.evaluator.finalize()
             self.logger.info("Graph-based coordination simulation completed.")
 
-    def chain_coordinate(self) -> None:
-        """
-        Chain-based coordination mode.
-        """
-        pass
-
     def tree_coordinate(self) -> None:
         """
         Tree-based coordination mode.
+        """
+        try:
+            self.logger.info("Starting tree-based coordination.")
+            root_agent = self.graph.get_root_agent()
+            if not root_agent:
+                self.logger.error("No root agent found in the tree.")
+                return
+
+            # Start the coordination from the root agent
+            while self.current_iteration < self.max_iterations:
+                self.current_iteration += 1
+                self.logger.info(f"Starting iteration {self.current_iteration}")
+
+                result = self._execute_agent_task_recursive(root_agent, self.task)
+
+                # Update progress
+                summary = self._summarize_results({'root_agent': result})
+                self.logger.info(f"Iteration {self.current_iteration} Summary:\n{summary}")
+                self.planner.update_progress(summary)
+
+                # Evaluate the current state
+                self.evaluator.update(self.environment, self.agents)
+
+                # Decide whether to continue or terminate
+                continue_simulation = self.planner.decide_next_step({'root_agent': result})
+                if not continue_simulation:
+                    self.logger.info("EnginePlanner decided to terminate the simulation.")
+                    break
+
+                # Check if task is completed within the environment
+                if self.environment.is_task_completed():
+                    self.logger.info("Task has been completed successfully.")
+                    break
+
+            self.logger.info("Tree-based coordination simulation completed.")
+
+        except Exception:
+            self.logger.exception("An error occurred during tree-based coordination.")
+            raise
+        finally:
+            self.evaluator.finalize()
+            self.logger.info("Tree-based coordination simulation completed.")
+
+    def _execute_agent_task_recursive(self, agent: BaseAgent, task: str) -> Any:
+        """
+        Recursively execute tasks starting from the given agent.
+
+        Args:
+            agent (BaseAgent): The agent to execute task.
+            task (str): The task to execute.
+
+        Returns:
+            Any: The result of the agent's execution.
+        """
+        self.logger.info(f"Agent '{agent.agent_id}' is executing task.")
+
+        if agent.children:
+            # Agent assigns tasks to children
+            tasks_for_children = agent.plan_tasks_for_children(task)
+            children_results = {}
+            for child in agent.children:
+                child_task = tasks_for_children.get(child.agent_id, "")
+                if child_task:
+                    child_result = self._execute_agent_task_recursive(child, child_task)
+                    children_results[child.agent_id] = child_result
+            # Agent may also act itself
+            own_result = agent.act(task)
+            # Combine results
+            combined_result = agent.summarize_results(children_results, own_result)
+            return combined_result
+        else:
+            # Agent directly acts on the task
+            result = agent.act(task)
+            return result
+
+    def chain_coordinate(self) -> None:
+        """
+        Chain-based coordination mode.
         """
         pass
 
