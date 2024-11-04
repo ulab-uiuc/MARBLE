@@ -58,8 +58,8 @@ class EnginePlanner:
             "Provide the assignments in the following JSON format:\n\n"
             "{\n"
             '  "tasks": {\n'
-            '    "agent1": "Task description for agent1",\n'
-            '    "agent2": "Task description for agent2"\n'
+            '    "agent1": "...", \n'
+            '    "agent2": "...", \n'
             '    // Add more agents as needed\n'
             '  },\n'
             '  "continue": true // Set to false if the task is completed\n'
@@ -77,7 +77,12 @@ class EnginePlanner:
             Dict[str, Any]: The task assignments and continuation flag.
         """
         prompt = self.create_prompt()
-        messages = [{"role": "system", "content": prompt}]
+        system_message = (
+            f"You are a task assignment system for multiple AI agents based on their profiles and current progress.\n"
+            f"Your task is to analyze the current state and assign the next task to each agent that requires an action.\n"
+            f"Don't ask agents to assign tasks to other agents.\n"
+        )
+        messages = [{"role": "system", "content": system_message}, {"role": "user", "content": prompt}]
         response = model_prompting(
             llm_model="gpt-3.5-turbo",
             messages=messages,

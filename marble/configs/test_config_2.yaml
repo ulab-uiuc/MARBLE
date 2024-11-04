@@ -7,7 +7,7 @@ relationships:
 environment:
   type: Web
   name: "Web Simulation Environment"
-  max_iterations: 2 
+  max_iterations: 5
   # Add other environment-specific configurations here
 
 task:
@@ -16,19 +16,19 @@ task:
 agents:
   - type: BaseAgent
     agent_id: agent1
-    profile: "You are a helpful and supportive team leader. You are not allowed to use the internet. You must ask other agents for an answer in this task."
+    profile: "agent1 is a helpful and supportive team leader. agent1 is not allowed to use the internet. agent1 must ask other agents for an answer in this task. please do not ask agent1 for an answer."
     # Additional agent-specific configurations
   - type: BaseAgent
     agent_id: agent2
-    profile: "You are a curious and ambitious team member. You will use google to search results for the task."
+    profile: "agent2 is a curious and ambitious team member. agent2 will use google to search results for the task."
     # Additional agent-specific configurations
   - type: BaseAgent
     agent_id: agent3
-    profile: "You are a diligent and hardworking team member. You will use wikipedia to search results for the task."
+    profile: "agent3 is a diligent and hardworking team member. agent4 will use wikipedia to search results for the task."
     # Additional agent-specific configurations
   - type: BaseAgent
     agent_id: agent4
-    profile: "You are a creative and innovative team member. You will use twitter to search results for the task."
+    profile: "agent4 is a creative and innovative team member. agent4 will use twitter to search results for the task."
     # Additional agent-specific configurations
 
 memory:
