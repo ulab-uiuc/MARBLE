@@ -6,7 +6,7 @@ import json
 import uuid
 from litellm.utils import trim_messages
 from collections import defaultdict
-from typing import Any, Dict, List, Tuple, TypeVar, Union
+from typing import Any, Dict, List, Optional, Tuple, TypeVar, Union
 
 from marble.environments import BaseEnvironment, WebEnvironment
 from marble.llms.model_prompting import model_prompting
@@ -51,11 +51,14 @@ class BaseAgent:
         )
         self.memory = BaseMemory()
         self.shared_memory = SharedMemory()
-        self.relationships: Dict[str, str] = {}  # key: target_agent_id, value: relationship type
+        self.relationships: Dict[str, str] = {}
         self.logger = get_logger(self.__class__.__name__)
         self.logger.info(f"Agent '{self.agent_id}' initialized.")
-        self.token_usage = 0  # Initialize token usage
+        self.token_usage = 0
+        self.task_history: List[str] = []
         self.msg_box: Dict[str, Dict[str, List[Tuple[int, str]]]] = defaultdict(lambda: defaultdict(list))
+        self.children: List[BaseAgent] = []
+        self.parent: Optional[BaseAgent] = None
         self.FORWARD_TO = 0
         self.RECV_FROM = 1
         self.session_id: str = ''
@@ -73,7 +76,6 @@ class BaseAgent:
         Returns:
             Any: Processed perception data.
         """
-        # For simplicity, return the task description from the state
         return state.get('task_description', '')
 
     def act(self, task: str) -> Any:
@@ -86,6 +88,7 @@ class BaseAgent:
         Returns:
             Any: The action decided by the agent.
         """
+        self.task_history.append(task)
         self.logger.info(f"Agent '{self.agent_id}' acting on task '{task}'.")
         tools = [self.env.action_handler_descriptions[name] for name in self.env.action_handler_descriptions]
         available_agents = {}
@@ -144,17 +147,29 @@ class BaseAgent:
             f"But you do not have to communcate with other agents.\n"
             f"You can also solve the task by calling other functions to solve it by yourself.\n"
         )
-        result = model_prompting(
-            llm_model="gpt-4o-mini",
-            messages=[{"role": "system", "content": self.system_message}, {"role":"user", "content": act_task}],
-            return_num=1,
-            max_token_num=512,
-            temperature=0.0,
-            top_p=None,
-            stream=None,
-            tools=tools,
-            tool_choice="auto"
-        )[0]
+        if len(tools) == 0:
+            result = model_prompting(
+                llm_model="gpt-3.5-turbo",
+                messages=[{"role":"user", "content": task}],
+                return_num=1,
+                max_token_num=512,
+                temperature=0.0,
+                top_p=None,
+                stream=None,
+            )[0]
+        else:
+            result = model_prompting(
+                llm_model="gpt-3.5-turbo",
+                messages=[{"role":"user", "content": task}],
+                return_num=1,
+                max_token_num=512,
+                temperature=0.0,
+                top_p=None,
+                stream=None,
+                tools=tools,
+                tool_choice="auto"
+            )[0]
+
         if result.tool_calls:
             function_call = result.tool_calls[0]
             function_name = function_call.function.name
@@ -201,7 +216,6 @@ class BaseAgent:
         Returns:
             int: The number of tokens used.
         """
-        # Simplified token count: 1 token per 4 characters (approximation)
         token_count = (len(task) + len(result)) // 4
         return token_count
 
@@ -222,13 +236,10 @@ class BaseAgent:
             target_agent (BaseAgent): The agent to whom the message is being sent.
             message (str): The message content to be sent.
         """
-        # Store the outgoing message in the message box for the target agent.
         self.msg_box[session_id][target_agent.agent_id].append((self.FORWARD_TO, message))
 
-        # Log the action of sending the message to the target agent.
         self.logger.info(f"Agent {self.agent_id} sent message to {target_agent.agent_id}: {message}")
 
-        # Notify the target agent that a message has been sent.
         target_agent.receive_message(session_id, self, message)
 
     def receive_message(self, session_id: str, from_agent: AgentType, message: str) -> None:
@@ -243,8 +254,6 @@ class BaseAgent:
         
         # Store the received message in the message box for the sending agent.
         self.msg_box[session_id][from_agent.agent_id].append((self.RECV_FROM, message))
-
-        # Log the action of receiving the message from the sender agent.
         self.logger.info(f"Agent {self.agent_id} received message from {from_agent.agent_id}: {message}")
 
     def seralize_message(self, session_id: str = "") -> str:
@@ -282,7 +291,6 @@ class BaseAgent:
             str: The agent's profile.
         """
         return self.profile
-
 
     def _handle_new_communication_session(self, target_agent_id: str, message: str, session_id: str, task: str, turns: int = 5) -> Dict[str, Any]:
         """
@@ -386,12 +394,12 @@ class BaseAgent:
         )
         result = model_prompting(
             llm_model="gpt-4o-mini",
-            messages=[{"role": "system", "content": system_message_summary}, {"role":"user", "content": summary_task}],
+            messages=[{"role": "system", "content": system_message_summary}, {"role":"user", "content": summary_task}],          
             return_num=1,
             max_token_num=512,
             temperature=0.0,
             top_p=None,
-            stream=None,
+            stream=None,          
         )[0]
         self.memory.update(self.agent_id, {
                 "type": "action_communicate",
@@ -450,4 +458,153 @@ class BaseAgent:
                 "success": False,
                 "error": f"Error sending message: {str(e)}"
             }
+    def plan_task(self) -> Optional[str]:
+        """
+        Plan the next task based on the original tasks input, the agent's memory, task history, and its profile/persona.
 
+        Returns:
+            str: The next task description.
+        """
+        self.logger.info(f"Agent '{self.agent_id}' is planning the next task.")
+
+        # Retrieve all memory entries for this agent
+        memory_str = self.memory.get_memory_str()
+        task_history_str = ", ".join(self.task_history)
+
+        # Incorporate agent's profile/persona in decision making
+        persona = self.get_profile()
+
+        # Use memory entries, persona, and task history to determine the next task
+        next_task = model_prompting(
+            llm_model="gpt-3.5-turbo",
+            messages=[{"role": "user", "content": f"Agent '{self.agent_id}' should prioritize tasks that align with their role: {persona}. Based on the task history: {task_history_str}, and memory: {memory_str}, what should be the next task?"}],
+            return_num=1,
+            max_token_num=512,
+            temperature=0.0,
+            top_p=None,
+            stream=None,
+            tools=[],
+            tool_choice="auto"
+        )[0].content
+        self.logger.info(f"Agent '{self.agent_id}' plans next task based on persona: {next_task}")
+
+        return next_task
+
+
+    def _is_task_completed(self, result: Any) -> bool:
+        """
+        Determine if the task is completed based on the result of the last action.
+
+        Args:
+            result (Any): The result from the last action.
+
+        Returns:
+            bool: True if task is completed, False otherwise.
+        """
+        # Placeholder logic; implement actual completion criteria
+        if isinstance(result, str):
+            return "completed" in result.lower()
+        return False
+
+    def _define_next_task_based_on_result(self, result: Any) -> str:
+        """
+        Define the next task based on the result of the last action.
+
+        Args:
+            result (Any): The result from the last action.
+
+        Returns:
+            str: The next task description.
+        """
+        # Placeholder logic; implement actual task definition
+        if isinstance(result, str):
+            if "error" in result.lower():
+                return "Retry the previous action."
+            else:
+                return "Proceed to the next step based on the result."
+        return "Analyze the result and determine the next task."
+
+    def _is_response_satisfactory(self, response: Any) -> bool:
+        """
+        Determine if the response is satisfactory.
+
+        Args:
+            response (Any): The response from the last action.
+
+        Returns:
+            bool: True if satisfactory, False otherwise.
+        """
+        # Placeholder logic; implement actual response evaluation
+        if isinstance(response, str):
+            return "success" in response.lower()
+        return False
+
+    def _define_next_task_based_on_response(self, response: Any) -> str:
+        """
+        Define the next task based on the response of the last action.
+
+        Args:
+            response (Any): The response from the last action.
+
+        Returns:
+            str: The next task description.
+        """
+        # Placeholder logic; implement actual task definition
+        if isinstance(response, str):
+            if "need more information" in response.lower():
+                return "Gather additional information required to proceed."
+            else:
+                return "Address the issues identified in the response."
+        return "Review the response and determine the next steps."
+
+    def plan_tasks_for_children(self, task: str) -> Dict[str, Any]:
+        """
+        Plan tasks for children agents based on the given task and children's profiles.
+        """
+        self.logger.info(f"Agent '{self.agent_id}' is planning tasks for children.")
+        children_profiles = {child.agent_id: child.get_profile() for child in self.children}
+        prompt = (
+            f"You are agent '{self.agent_id}'. Based on the overall task:\n{task}\n\n"
+            f"And your children's profiles:\n"
+        )
+        for child_id, profile in children_profiles.items():
+            prompt += f"- {child_id}: {profile}\n"
+        prompt += "\nAssign specific tasks to your children agents to help accomplish the overall task. Provide the assignments in JSON format:\n\n"
+        prompt += "{\n"
+        '  "child_agent_id": "Task description",\n'
+        '  "another_child_agent_id": "Task description"\n'
+        "}\n"
+        response = model_prompting(
+            llm_model="gpt-3.5-turbo",
+            messages=[{"role": "system", "content": prompt}],
+            return_num=1,
+            max_token_num=512,
+            temperature=0.7,
+            top_p=1.0
+        )[0]
+        try:
+            tasks_for_children:Dict[str, Any] = json.loads(response.content if response.content else "{}")
+            self.logger.info(f"Agent '{self.agent_id}' assigned tasks to children: {tasks_for_children}")
+            return tasks_for_children
+        except json.JSONDecodeError as e:
+            self.logger.error(f"Failed to parse tasks for children: {e}")
+            return {}
+
+    def process_children_results(self, children_results: Dict[str, Any]) -> Any:
+        """
+        Process the results from children agents.
+        """
+        self.logger.info(f"Agent '{self.agent_id}' is processing children's results.")
+        combined_results = ""
+        for child_id, result in children_results.items():
+            combined_results += f"Result from {child_id}: {result}\n"
+        return combined_results
+
+    def summarize_results(self, children_results: Dict[str, Any], own_result: Any) -> Any:
+        """
+        Summarize the results from children agents and own result.
+        """
+        self.logger.info(f"Agent '{self.agent_id}' is summarizing results.")
+        summary = self.process_children_results(children_results)
+        summary += f"\nOwn result: {own_result}"
+        return summary

@@ -7,6 +7,8 @@ Engine Planner module responsible for task assignment and scheduling.
 import json
 from typing import Any, Dict
 
+from litellm.types.utils import Message
+
 from marble.graph.agent_graph import AgentGraph
 from marble.llms.model_prompting import model_prompting
 from marble.utils.logger import get_logger
@@ -109,6 +111,27 @@ class EnginePlanner:
         """
         self.current_progress += f"\n{summary}"
         self.logger.debug(f"Updated progress: {self.current_progress}")
+
+    def summarize_output(self, summary:str, task:str) -> Message:
+        """
+        Summarize the output of the agents.
+
+        Args:
+            summary (str): Summary of the latest iteration.
+
+        Returns:
+            str: The summarized output.
+        """
+        response = model_prompting(
+            llm_model="gpt-3.5-turbo",
+            messages=[{"role": "user", "content": f"Summarize the output of the agents for the task: {task}\n\nNow here is some result of thr agent: {summary}, please summarize it."}],
+            return_num=1,
+            max_token_num=1024,
+            temperature=0.0,
+            top_p=None,
+            stream=None
+        )[0]
+        return response
 
     def decide_next_step(self, agents_results: Dict[str, Any]) -> bool:
         """

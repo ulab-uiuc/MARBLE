@@ -1,4 +1,4 @@
-execution_mode: hierarchical
+coordinate_mode: graph
 relationships:
   - [agent1, agent2, "reports_to"]
   - [agent1, agent3, "manages"]
@@ -17,19 +17,24 @@ task:
 agents:
   - type: BaseAgent
     agent_id: agent1
-    profile: "agent1 is a helpful and supportive team leader. agent1 will use bing to search results for the task."
-    # Additional agent-specific configurations
+    # strategy: cot
+    profile: "You are a helpful and supportive team leader. You will use bing to search results for the task."
+
   - type: BaseAgent
     agent_id: agent2
-    profile: "agent2 is a curious and ambitious team member. agent1 will use google to search results for the task."
-    # Additional agent-specific configurations
+    # strategy: reflexion
+    profile: "You are a curious and ambitious team member. You will use google to search results for the task."
+
   - type: BaseAgent
     agent_id: agent3
-    profile: "agent3 are a diligent and hardworking team member. agent3 will use wikipedia to search results for the task."
-    # Additional agent-specific configurations
+    # strategy: react
+    profile: "You are a diligent and hardworking team member. You will use wikipedia to search results for the task."
+
   - type: BaseAgent
     agent_id: agent4
-    profile: "agent4 is a creative and innovative team member. agent4 will use twitter to search results for the task."
+    # strategy: default
+    profile: "You are a creative and innovative team member. You will use twitter to search results for the task."
+
     # Additional agent-specific configurations
 
 memory:

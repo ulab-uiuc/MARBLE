@@ -1,0 +1,123 @@
+prompts:
+  cot:
+    sys_prompt: >
+      You are a highly skilled assistant with extensive experience in problem-solving and reasoning.
+      Your task is to solve the given problem by thinking through each aspect step by step, carefully analyzing and reasoning about the key points before providing your final answers.
+      For each question or problem, provide detailed reasoning to show your thought process as a chain of thought, which leads to your final answer.
+      Each answer should be well-reasoned, clear, and directly address the problem at hand.
+
+      Here is the multi-step process you should follow:
+      1. Think through the problem step by step, reasoning about the key points.
+      2. Provide the final answer clearly labeled as [Question X] or [Final Answer], where X corresponds to the question number.
+
+    few-shot-examples:
+      - |
+        Here is the problem:
+        How can we optimize task scheduling in distributed systems to improve efficiency?
+
+        Chain of Thought for [Question 1]: Task scheduling optimization is crucial for improving the overall system performance. One of the key challenges is reducing latency while ensuring balanced load distribution across nodes.
+
+        Final Answer for [Question 1]: The key problem is optimizing task scheduling to reduce latency and achieve load balancing across the nodes in a distributed system.
+
+      - |
+        Here is the problem:
+        How do we enhance user data privacy in online platforms while maintaining usability?
+
+        Chain of Thought for [Question 2]: Enhancing privacy requires finding a balance between data security and user experience. Implementing stronger encryption can improve privacy, but it may also introduce latency and reduce platform performance.
+
+        Final Answer for [Question 2]: Enhancing data privacy can be achieved by integrating advanced encryption techniques while optimizing performance to maintain user experience.
+
+    template: |
+      Here is the problem: {problem_description}
+
+      Here is the additional information: {additional_data}
+
+      For each question, think through the problem step by step, using reasoning to analyze the key points and generate a chain of thought. Then, provide your final answer, clearly labeled in the format: [Question X] or [Final Answer], where X is the question number.
+
+
+  reflexion:
+    sys_prompt: >
+      You are a highly skilled assistant with deep expertise in solving complex problems.
+      Your task is to carefully analyze the provided information, solve the problem, and improve upon your solution through a reflection and revision process.
+
+      For each problem-solving step, follow this multi-step process:
+
+      Initial Answer: Draft your initial response to the question.
+      Reflection: Review the initial answer for clarity, completeness, and whether it follows the guidelines.
+      Revision: Make necessary revisions based on your reflection to improve your answer.
+      Final Answer: Present the final, revised answer clearly labeled in the format [Question X] or [Final Answer], depending on the context.
+
+    few-shot-examples:
+      - |
+        Initial Answer for Question 1: The problem is about optimizing task scheduling in a distributed system.
+        Reflection for Question 1: The initial answer is somewhat vague and lacks specific details about the challenges in the system. I should mention key performance bottlenecks.
+        Revision for Question 1: Revised to focus on latency and load balancing as critical issues.
+        Final Answer for Question 1: The key problem is optimizing task scheduling in a distributed system with a focus on reducing latency and improving load balancing.
+
+    template: |
+      Here is the problem: {problem_description}
+
+      Here is the additional information you may need: {additional_data}
+
+      For each question, please follow this multi-step process:
+
+      Initial Answer: Draft your initial response to the question.
+      Reflection: Review the initial answer for clarity, completeness, and whether it adheres to the guidelines.
+      Revision: Make necessary revisions based on your reflection to improve the answer.
+      Final Answer: Present the final, refined answer, clearly labeled as [Question X] or [Final Answer].
+
+
+  react:
+    sys_prompt: >
+      You are a highly skilled assistant with expertise in solving complex problems.
+      For each question or problem, follow the ReAct (Reasoning and Action) framework to carefully observe, think, and act.
+
+      The process you should follow includes three steps:
+
+      1. **Observation**: Begin by observing and extracting relevant information from the provided idea and external data.
+      2. **Thought**: Think through the answer step by step, reasoning about how the observed information addresses the question.
+      3. **Action**: Decide whether you need more information or if you can provide the final answer. If more information is needed, ask for it. If ready, proceed to provide the final answer, clearly labeled as [Question X] or [Final Answer].
+
+    few-shot-examples:
+      - |
+        Here is the problem:
+        How can we optimize task scheduling in distributed systems?
+
+        Observation for Question 1: Extract relevant information on task scheduling challenges, such as latency and resource allocation.
+        Thought for Question 1: Analyze how latency issues and resource balancing can impact distributed systems performance.
+        Action: Provide the final answer, focusing on reducing latency and ensuring balanced resource distribution.
+        [Question 1]: The main problem is optimizing task scheduling to reduce latency and ensure load balancing in distributed systems.
+
+      - |
+        Here is the problem:
+        How can we enhance user data privacy in online platforms?
+
+        Observation for Question 2: Review relevant data on privacy challenges, such as encryption and user experience trade-offs.
+        Thought for Question 2: Consider how stronger encryption might affect user experience and system performance.
+        Action: Provide the final answer, balancing privacy enhancements and usability.
+        [Question 2]: Enhancing data privacy requires integrating encryption without compromising user experience.
+
+    template: |
+      Here is the problem: {problem_description}
+
+      Here is the additional information: {additional_data}
+
+      For each question, please follow the multi-step ReAct framework:
+
+      **Observation**: Start by observing and extracting key information from the provided data relevant to the problem.
+
+      **Thought**: Think through the problem step by step, reasoning about how the observed information addresses the question.
+
+      **Action**: Decide whether you need more information or if you can provide the final answer. If more information is needed, ask for it. If you are ready, provide the final answer, clearly labeled in the format: [Question X] or [Final Answer].
+
+      For example:
+
+      Observation for Question 1:
+      Summarize key points from the data that are relevant to the question.
+
+      Thought for Question 1:
+      Analyze how this information helps in forming an answer to the question.
+
+      Action:
+      Provide the final answer if sufficient information is available.
+      [Question 1]: Provide the final answer.

@@ -30,7 +30,9 @@ class Config:
         self.graph = data.get('graph', {})
         self.memory = data.get('memory', {})
         self.engine_planner = data.get('engine_planner', {})
-        self.task = data.get('task', {})
+        self.task:Dict[str, Any] = data.get('task', {})
+        self.coordination_mode = data.get('coordinate_mode', 'centralized')
+        self.relationships = data.get('relationships', [])
 
     @staticmethod
     def load(file_path: str) -> 'Config':
