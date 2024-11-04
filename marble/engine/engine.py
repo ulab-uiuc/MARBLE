@@ -6,7 +6,6 @@ The core engine module that coordinates agents within the environment.
 from typing import Any, Dict, List, Union
 
 from marble.agent import BaseAgent
-from marble.agent.coding_agents import AnalystAgent, CoderAgent, TestorAgent
 from marble.configs.config import Config
 from marble.engine.engine_planner import EnginePlanner
 from marble.environments import BaseEnvironment, WebEnvironment, CodingEnvironment
@@ -16,8 +15,8 @@ from marble.memory.base_memory import BaseMemory
 from marble.memory.shared_memory import SharedMemory
 from marble.utils.logger import get_logger
 
-EnvType = Union[BaseEnvironment, WebEnvironment, CodingEnvironment]
-AgentType = Union[BaseAgent, AnalystAgent, CoderAgent, TestorAgent]
+EnvType = Union[BaseEnvironment, WebEnvironment]
+AgentType = Union[BaseAgent]
 
 class Engine:
     """
@@ -86,14 +85,7 @@ class Engine:
         agents = []
         for agent_config in agent_configs:
             agent_type = agent_config.get("type")
-            if agent_type == "AnalystAgent":
-                agent = AnalystAgent(config=agent_config, env=self.environment)
-            elif agent_type == "CoderAgent":
-                agent = CoderAgent(config=agent_config, env=self.environment)
-            elif agent_type == "TestorAgent":
-                agent = TestorAgent(config=agent_config, env=self.environment)
-            else:
-                agent = BaseAgent(config=agent_config, env=self.environment)
+            agent = BaseAgent(config=agent_config, env=self.environment)
             agents.append(agent)
             self.logger.debug(f"Agent '{agent.agent_id}' of type '{agent_type}' initialized.")
         return agents

@@ -1,36 +1,44 @@
 execution_mode: hierarchical
 relationships:
-  - [analyst1, coder1, "delegates_to"]
-  - [coder1, testor1, "delegates_to"]
+  - [analyst, coder1, "assigns_to"]
+  - [analyst, coder2, "assigns_to"]
+  - [coder1, tester, "submits_to"]
+  - [coder2, tester, "submits_to"]
+  - [tester, analyst, "reports_to"]
 
 environment:
   type: Coding
-  name: "Coding Environment"
-  max_iterations: 3
-  workspace_path: "workspace"  
+  name: "Code Development Environment"
+  workspace_path: "/home/zhe36/MARBLE/marble/workspace"
+  max_iterations: 5
 
 task:
-  content: "Implement a merge sort algorithm in Python. The implementation should include the main merge sort function and a helper function for merging two sorted arrays. The function should be able to sort a list of numbers in ascending order."  
+  content: "Create a Python function that implements a snake game."
 
 agents:
-  - type: AnalystAgent
-    agent_id: analyst1
-    profile: "Senior software analyst responsible for analyzing coding tasks and providing implementation suggestions"
+  - type: BaseAgent
+    agent_id: analyst
+    profile: "You are a senior software analyst. Your role is to analyze coding tasks, break them down into manageable pieces, and provide clear specifications and requirements. You should also review feedback from testers and provide guidance for improvements."
 
-  - type: CoderAgent
+  - type: BaseAgent
     agent_id: coder1
-    profile: "Expert programmer responsible for implementing solutions based on analyst's suggestions"
+    profile: "You are an experienced Python developer. Your role is to implement code based on the analyst's specifications. Focus on writing clean, efficient, and well-documented code."
 
-  - type: TestorAgent
-    agent_id: testor1
-    profile: "Test engineer responsible for analyzing and implementing test cases"
+  - type: BaseAgent
+    agent_id: coder2
+    profile: "You are an experienced Python developer. Your role is to implement code based on the analyst's specifications, with a focus on alternative implementations and optimizations."
+
+  - type: BaseAgent
+    agent_id: tester
+    profile: "You are a QA engineer specializing in Python testing. Your role is to write and execute comprehensive test cases, verify code functionality, and provide detailed feedback on any issues found."
 
 memory:
   type: SharedMemory
 
 metrics:
   code_quality: true
-  documentation_quality: true
+  test_coverage: true
+  execution_time: true
 
 engine_planner:
-  initial_progress: "Starting the merge sort implementation analysis."
+  initial_progress: "Starting the coding task."

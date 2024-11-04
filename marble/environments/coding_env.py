@@ -1,188 +1,187 @@
 import os
 from typing import Any, Dict
+
 from marble.environments.base_env import BaseEnvironment
 
 
 class CodingEnvironment(BaseEnvironment):
-    def __init__(self, config: Dict[str, Any], name: str="CodingEnv"):
+    def __init__(self, config: Dict[str, Any], name: str = "CodingEnv"):
+        """
+        Initialize the CodingEnvironment.
+
+        Args:
+            name (str): The name of the environment.
+            config (Dict[str, Any]): Configuration for the environment.
+        """
         super().__init__(name, config)
-        self.workspace_path = config.get("workspace_path", "workspace")
-        self._ensure_workspace_exists()
+        self.workspace_path = config.get("workspace_path", "/home/zhe36/MARBLE/marble/workspace")
+        os.makedirs(self.workspace_path, exist_ok=True)
         
-        analyze_task_description = {
+        # Register actions
+        self._register_actions()
+
+    def _register_actions(self) -> None:
+        """Register all available actions for the coding environment."""
+        
+        # Action for writing code to file
+        write_code_description = {
             "type": "function",
             "function": {
-                "name": "analyze_task",
-                "description": "Analyzes the coding task and provides implementation suggestions",
+                "name": "write_code",
+                "description": "Writes code to a file in the workspace.",
                 "parameters": {
                     "type": "object",
                     "properties": {
-                        "task": {
+                        "filename": {
                             "type": "string",
-                            "description": "The coding task to analyze",
+                            "description": "Name of the file to write code to",
                         },
-                        "analysis": {
-                            "type": "string",
-                            "description": "The analysis and implementation suggestions in markdown format",
-                        }
-                    },
-                    "required": ["task", "analysis"],
-                    "additionalProperties": False
-                }
-            }
-        }
-        
-        implement_code_description = {
-            "type": "function",
-            "function": {
-                "name": "implement_code",
-                "description": "Implements the code based on analysis",
-                "parameters": {
-                    "type": "object",
-                    "properties": {
                         "code": {
                             "type": "string",
-                            "description": "The pure implementation code",
-                        },
-                        "documentation": {
-                            "type": "string",
-                            "description": "The documentation in markdown format",
+                            "description": "The code content to write",
                         }
                     },
-                    "required": ["code", "documentation"],
-                    "additionalProperties": False
+                    "required": ["filename", "code"],
                 }
             }
         }
+        self.register_action("write_code", self._write_code_handler, write_code_description)
 
-        test_analysis_description = {
+        # Action for reading code from file
+        read_code_description = {
             "type": "function",
             "function": {
-                "name": "update_analysis_with_test",
-                "description": "Updates analysis with test cases strategy",
+                "name": "read_code",
+                "description": "Reads code from a file in the workspace.",
                 "parameters": {
                     "type": "object",
                     "properties": {
-                        "test_analysis": {
+                        "filename": {
                             "type": "string",
-                            "description": "The test cases analysis in markdown format",
+                            "description": "Name of the file to read",
                         }
                     },
-                    "required": ["test_analysis"],
-                    "additionalProperties": False
+                    "required": ["filename"],
                 }
             }
         }
-        
-        implement_test_description = {
+        self.register_action("read_code", self._read_code_handler, read_code_description)
+
+        # Action for running tests
+        run_test_description = {
             "type": "function",
             "function": {
-                "name": "implement_test",
-                "description": "Implements test cases based on analysis",
+                "name": "run_test",
+                "description": "Runs test cases on the code.",
                 "parameters": {
                     "type": "object",
                     "properties": {
                         "test_code": {
                             "type": "string",
-                            "description": "The test implementation code",
+                            "description": "The test code to execute",
                         }
                     },
                     "required": ["test_code"],
-                    "additionalProperties": False
                 }
             }
         }
-        
-        self.register_action("analyze_task", self._analyze_task_handler, analyze_task_description)
-        self.register_action("implement_code", self._implement_code_handler, implement_code_description)
-        self.register_action("update_analysis_with_test", self._update_analysis_handler, test_analysis_description)
-        self.register_action("implement_test", self._implement_test_handler, implement_test_description)
+        self.register_action("run_test", self._run_test_handler, run_test_description)
 
-    def _analyze_task_handler(self, task: str, analysis: str) -> Dict[str, Any]:
-        try:
-            with open(os.path.join(self.workspace_path, "analysis.md"), "w") as f:
-                f.write(analysis)
-            
-            self.state["task_analysis"] = analysis
-            return {
-                "success": True,
-                "analysis": analysis
-            }
-        except Exception as e:
-            return {
-                "success": False,
-                "error": str(e)
-            }
+    def _write_code_handler(self, filename: str, code: str) -> Dict[str, Any]:
+        """
+        Handles writing code to a file.
 
-    def _implement_code_handler(self, code: str, documentation: str) -> Dict[str, Any]:
+        Args:
+            filename (str): Name of the file to write to.
+            code (str): Code content to write.
+
+        Returns:
+            Dict[str, Any]: Result of the operation.
+        """
         try:
-            with open(os.path.join(self.workspace_path, "solution.py"), "w") as f:
+            file_path = os.path.join(self.workspace_path, filename)
+            with open(file_path, 'w') as f:
                 f.write(code)
-            
-
-            with open(os.path.join(self.workspace_path, "README.md"), "w") as f:
-                f.write(documentation)
-            
-            self.state["implementation_code"] = code
-            self.state["documentation"] = documentation
-                
             return {
                 "success": True,
-                "message": "Code and documentation written successfully"
+                "message": f"Code written to {filename}",
+                "file_path": file_path
             }
         except Exception as e:
             return {
                 "success": False,
-                "error": str(e)
+                "error-msg": str(e)
             }
 
-    def _update_analysis_handler(self, test_analysis: str) -> Dict[str, Any]:
+    def _read_code_handler(self, filename: str) -> Dict[str, Any]:
+        """
+        Handles reading code from a file.
+
+        Args:
+            filename (str): Name of the file to read from.
+
+        Returns:
+            Dict[str, Any]: Result of the operation including the code content.
+        """
         try:
-            with open(os.path.join(self.workspace_path, "analysis.md"), "r") as f:
-                current_analysis = f.read()
-            
-            updated_analysis = current_analysis + "\n\n## Test Strategy\n" + test_analysis
-            
-            with open(os.path.join(self.workspace_path, "analysis.md"), "w") as f:
-                f.write(updated_analysis)
-            
-            self.state["test_analysis"] = test_analysis
+            file_path = os.path.join(self.workspace_path, filename)
+            with open(file_path, 'r') as f:
+                content = f.read()
             return {
                 "success": True,
-                "analysis": updated_analysis
+                "content": content,
+                "file_path": file_path
             }
         except Exception as e:
             return {
                 "success": False,
-                "error": str(e)
+                "error-msg": str(e)
             }
 
-    def _implement_test_handler(self, test_code: str) -> Dict[str, Any]:
+    def _run_test_handler(self, test_code: str) -> Dict[str, Any]:
+        """
+        Handles running test cases.
+
+        Args:
+            test_code (str): Test code to execute.
+
+        Returns:
+            Dict[str, Any]: Result of the test execution.
+        """
         try:
-            with open(os.path.join(self.workspace_path, "test_solution.py"), "w") as f:
+            test_file = os.path.join(self.workspace_path, "_temp_test.py")
+            with open(test_file, 'w') as f:
                 f.write(test_code)
             
-            self.state["test_code"] = test_code
+            # Execute test in a controlled environment
+            import subprocess
+            result = subprocess.run(['python', test_file], 
+                                 capture_output=True, 
+                                 text=True)
+            
+            os.remove(test_file)  # Clean up
+            
             return {
                 "success": True,
-                "message": "Test code written successfully"
+                "output": result.stdout,
+                "errors": result.stderr,
+                "return_code": result.returncode
             }
         except Exception as e:
             return {
                 "success": False,
-                "error": str(e)
+                "error-msg": str(e)
             }
 
-    def _ensure_workspace_exists(self) -> None:
-        if not os.path.exists(self.workspace_path):
-            os.makedirs(self.workspace_path)
-
     def get_state(self) -> Dict[str, Any]:
+        """
+        Get the current environment state.
+
+        Returns:
+            Dict[str, Any]: The current environment state.
+        """
+        files = os.listdir(self.workspace_path)
         return {
-            "task_analysis": self.state.get("task_analysis", ""),
-            "implementation_code": self.state.get("implementation_code", ""),
-            "documentation": self.state.get("documentation", ""),
-            "test_analysis": self.state.get("test_analysis", ""),
-            "test_code": self.state.get("test_code", ""),
-            "workspace_path": self.workspace_path
+            "workspace_path": self.workspace_path,
+            "files": files
         }
