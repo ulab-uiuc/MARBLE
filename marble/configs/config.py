@@ -31,6 +31,7 @@ class Config:
         self.engine_planner = data.get('engine_planner', {})
         self.task:Dict[str, Any] = data.get('task', {})
         self.coordination_mode = data.get('coordinate_mode', 'centralized')
+        self.relationships = data.get('relationships', [])
 
     @staticmethod
     def load(file_path: str) -> 'Config':

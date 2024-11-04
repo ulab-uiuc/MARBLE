@@ -43,6 +43,8 @@ class BaseAgent:
         self.token_usage = 0
         self.task_history: List[str] = []
         self.msg_box: Dict[str, Dict[str, List[Tuple[int, str]]]] = defaultdict(lambda: defaultdict(list))
+        self.children: List[BaseAgent] = []
+        self.parent: Optional[BaseAgent] = None
         self.FORWARD_TO = 0
         self.RECV_FROM = 1
 
@@ -277,3 +279,55 @@ class BaseAgent:
             else:
                 return "Address the issues identified in the response."
         return "Review the response and determine the next steps."
+
+    def plan_tasks_for_children(self, task: str) -> Dict[str, Any]:
+        """
+        Plan tasks for children agents based on the given task and children's profiles.
+        """
+        self.logger.info(f"Agent '{self.agent_id}' is planning tasks for children.")
+        children_profiles = {child.agent_id: child.get_profile() for child in self.children}
+        prompt = (
+            f"You are agent '{self.agent_id}'. Based on the overall task:\n{task}\n\n"
+            f"And your children's profiles:\n"
+        )
+        for child_id, profile in children_profiles.items():
+            prompt += f"- {child_id}: {profile}\n"
+        prompt += "\nAssign specific tasks to your children agents to help accomplish the overall task. Provide the assignments in JSON format:\n\n"
+        prompt += "{\n"
+        '  "child_agent_id": "Task description",\n'
+        '  "another_child_agent_id": "Task description"\n'
+        "}\n"
+        response = model_prompting(
+            llm_model="gpt-3.5-turbo",
+            messages=[{"role": "system", "content": prompt}],
+            return_num=1,
+            max_token_num=512,
+            temperature=0.7,
+            top_p=1.0
+        )[0]
+        try:
+            tasks_for_children:Dict[str, Any] = json.loads(response.content if response.content else "{}")
+            self.logger.info(f"Agent '{self.agent_id}' assigned tasks to children: {tasks_for_children}")
+            return tasks_for_children
+        except json.JSONDecodeError as e:
+            self.logger.error(f"Failed to parse tasks for children: {e}")
+            return {}
+
+    def process_children_results(self, children_results: Dict[str, Any]) -> Any:
+        """
+        Process the results from children agents.
+        """
+        self.logger.info(f"Agent '{self.agent_id}' is processing children's results.")
+        combined_results = ""
+        for child_id, result in children_results.items():
+            combined_results += f"Result from {child_id}: {result}\n"
+        return combined_results
+
+    def summarize_results(self, children_results: Dict[str, Any], own_result: Any) -> Any:
+        """
+        Summarize the results from children agents and own result.
+        """
+        self.logger.info(f"Agent '{self.agent_id}' is summarizing results.")
+        summary = self.process_children_results(children_results)
+        summary += f"\nOwn result: {own_result}"
+        return summary

@@ -2,9 +2,10 @@
 Agent graph module for representing agent structures and interactions.
 """
 
-from typing import Any, Dict, List, Sequence, Tuple
+from typing import Any, Dict, List, Optional, Sequence, Tuple
 
 from marble.agent.base_agent import BaseAgent
+from marble.configs.config import Config
 from marble.utils.logger import get_logger
 
 
@@ -19,7 +20,7 @@ class AgentGraph:
         relationships (List[Tuple[str, str, str]]): List of relationships as triples.
     """
 
-    def __init__(self, agents: Sequence[BaseAgent], structure_config: Dict[str, Any]):
+    def __init__(self, agents: Sequence[BaseAgent], structure_config: Config) -> None:
         """
         Initialize the AgentGraph with agents and structure configuration.
 
@@ -35,43 +36,42 @@ class AgentGraph:
         self.agents = {agent.agent_id: agent for agent in agents}
         self.adjacency_list: Dict[str, List[str]] = {}  # Initialize adjacency_list
         self.relationships: List[Tuple[str, str, str]] = []
-        self.execution_mode = structure_config.get('execution_mode', 'parallel')
-        self.logger.info(f"AgentGraph initialized with execution mode '{self.execution_mode}'.")
+        self.coordination_mode = structure_config.coordination_mode
+        self.logger.info(f"AgentGraph initialized with execution mode '{self.coordination_mode}'.")
 
         # Build the adjacency list from the structure
-        self._build_graph(structure_config.get('structure', {}))
+        # self._build_graph(structure_config.structure)
 
         # Initialize relationships
-        relationships = structure_config.get('relationships', [])
+        relationships = structure_config.relationships
         for rel in relationships:
             if len(rel) != 3:
                 raise ValueError(f"Invalid relationship format: {rel}. Expected 3 elements.")
-            node1 = rel['source']
-            node2 = rel['target']
-            relationship = rel['type']
+            node1, node2, relationship = rel  # Correctly unpacking the list
             self.add_relationship(node1, node2, relationship)
 
-    def _build_graph(self, structure: Dict[str, List[str]]) -> None:
-        """
-        Build the adjacency list based on the structure configuration.
 
-        Args:
-            structure (Dict[str, List[str]]): Dictionary defining parent to child relationships.
+    # def _build_graph(self, structure: Dict[str, List[str]]) -> None:
+    #     """
+    #     Build the adjacency list based on the structure configuration.
 
-        Raises:
-            ValueError: If the structure references unknown agents.
-        """
-        for parent_id, child_ids in structure.items():
-            if parent_id not in self.agents:
-                raise ValueError(f"Parent agent '{parent_id}' not found among agents.")
-            for child_id in child_ids:
-                if child_id not in self.agents:
-                    raise ValueError(f"Child agent '{child_id}' not found among agents.")
-            self.adjacency_list[parent_id] = child_ids
-            self.logger.debug(f"Agent '{parent_id}' connected to children {child_ids}.")
-        # Ensure all agents are in the adjacency list
-        for agent_id in self.agents:
-            self.adjacency_list.setdefault(agent_id, [])
+    #     Args:
+    #         structure (Dict[str, List[str]]): Dictionary defining parent to child relationships.
+
+    #     Raises:
+    #         ValueError: If the structure references unknown agents.
+    #     """
+    #     for parent_id, child_ids in structure.items():
+    #         if parent_id not in self.agents:
+    #             raise ValueError(f"Parent agent '{parent_id}' not found among agents.")
+    #         for child_id in child_ids:
+    #             if child_id not in self.agents:
+    #                 raise ValueError(f"Child agent '{child_id}' not found among agents.")
+    #         self.adjacency_list[parent_id] = child_ids
+    #         self.logger.debug(f"Agent '{parent_id}' connected to children {child_ids}.")
+    #     # Ensure all agents are in the adjacency list
+    #     for agent_id in self.agents:
+    #         self.adjacency_list.setdefault(agent_id, [])
 
     # CRUD Operations
 
@@ -174,7 +174,13 @@ class AgentGraph:
             raise ValueError(f"Target agent '{target}' does not exist.")
         self.relationships.append((source, target, rel_type))
         self.agents[source].relationships[target] = rel_type
+        if rel_type == 'parent':
+            parent_agent = self.agents[source]
+            child_agent = self.agents[target]
+            parent_agent.children.append(child_agent)
+            child_agent.parent = parent_agent
         self.logger.info(f"Relationship added: {source} --[{rel_type}]--> {target}")
+
 
     def remove_relationship(self, source: str, target: str) -> None:
         """
@@ -233,52 +239,6 @@ class AgentGraph:
         child_ids = self.adjacency_list.get(agent_id, [])
         return [self.agents[child_id] for child_id in child_ids]
 
-    def get_roots(self) -> List[BaseAgent]:
-        """
-        Get the root agents (agents with no parents).
-
-        Returns:
-            List[BaseAgent]: List of root agent instances.
-        """
-        all_children = {child_id for children in self.adjacency_list.values() for child_id in children}
-        root_ids = [agent_id for agent_id in self.agents.keys() if agent_id not in all_children]
-        self.logger.debug(f"Root agents: {root_ids}")
-        return [self.agents[agent_id] for agent_id in root_ids]
-
-    def traverse(self) -> List[BaseAgent]:
-        """
-        Traverse the graph based on the execution_mode and return agents in execution order.
-
-        Returns:
-            List[BaseAgent]: Ordered list of agents to execute.
-        """
-        if self.execution_mode == 'hierarchical':
-            return self._hierarchical_traversal()
-        else:  # Default to parallel execution
-            return list(self.agents.values())
-
-    def _hierarchical_traversal(self) -> List[BaseAgent]:
-        """
-        Perform a hierarchical traversal (e.g., BFS) of the agent graph.
-
-        Returns:
-            List[BaseAgent]: Ordered list of agents for hierarchical execution.
-        """
-        visited = set()
-        queue = self.get_roots()
-        execution_order = []
-
-        while queue:
-            current_agent = queue.pop(0)
-            agent_id = current_agent.agent_id
-            if agent_id not in visited:
-                visited.add(agent_id)
-                execution_order.append(current_agent)
-                children = self.get_children(agent_id)
-                queue.extend(children)
-                self.logger.debug(f"Agent '{agent_id}' added to execution order.")
-        return execution_order
-
     def _traversal(self) -> List[BaseAgent]:
         """
         Prepare agents for cooperative execution.
@@ -315,3 +275,33 @@ class AgentGraph:
                 # Add other relevant profile information if needed
             }
         return profiles
+
+    def get_roots(self) -> List[BaseAgent]:
+        """
+        Get the root agents (agents with no parents).
+
+        Returns:
+            List[BaseAgent]: List of root agent instances.
+        """
+
+        root_agents = [agent for agent in self.agents.values() if agent.parent is None]
+        root_ids = [agent.agent_id for agent in root_agents]
+        self.logger.debug(f"Root agents: {root_ids}")
+        return root_agents
+
+    def get_root_agent(self) -> Optional[BaseAgent]:
+        """
+        Get the single root agent (agent with no parents).
+
+        Returns:
+            Optional[BaseAgent]: The root agent, or None if multiple or no roots are found.
+        """
+        roots = self.get_roots()
+        if len(roots) == 1:
+            return roots[0]
+        elif len(roots) == 0:
+            self.logger.error("No root agents found in the graph.")
+            return None
+        else:
+            self.logger.error("Multiple root agents found in the graph.")
+            return None
