@@ -126,13 +126,13 @@ class Engine:
                 self.logger.info(f"Assigned tasks: {tasks}")
 
                 # Assign tasks to agents
-                agents_results = {}
+                agents_results = []
                 for agent_id, task in tasks.items():
                     try:
                         agent = self.graph.get_agent(agent_id)
                         self.logger.info(f"Assigning task to {agent_id}: {task}")
                         result = agent.act(task)
-                        agents_results[agent_id] = result
+                        agents_results.append({agent_id: result})
                         self.logger.debug(f"Agent '{agent_id}' completed task with result: {result}")
                     except KeyError:
                         self.logger.error(f"Agent '{agent_id}' not found in the graph.")
@@ -179,13 +179,13 @@ class Engine:
             # Initial assignment: Distribute the overall task to each agent
             self.logger.info("Initial task distribution to all agents.")
             initial_tasks = {agent.agent_id: self.task for agent in self.graph.get_all_agents()}
-            agents_results = {}
+            agents_results = []
             for agent_id, task in initial_tasks.items():
                 try:
                     agent = self.graph.get_agent(agent_id)
                     self.logger.info(f"Assigning initial task to {agent_id}: {task}")
                     result = agent.act(task)
-                    agents_results[agent_id] = result
+                    agents_results.append({agent_id: result})
                     self.logger.debug(f"Agent '{agent_id}' completed initial task with result: {result}")
                 except KeyError:
                     self.logger.error(f"Agent '{agent_id}' not found in the graph.")
@@ -207,7 +207,7 @@ class Engine:
 
                 current_agents = self.graph.get_all_agents()
                 current_tasks = {}
-                agents_results = {}
+                agents_results = []
 
                 for agent in current_agents:
                     try:
@@ -218,7 +218,7 @@ class Engine:
 
                         # Agent acts on the planned task
                         result = agent.act(task)
-                        agents_results[agent.agent_id] = result
+                        agents_results.append({agent.agent_id: result})
                         self.logger.debug(f"Agent '{agent.agent_id}' executed task with result: {result}")
                     except Exception as e:
                         self.logger.error(f"Error in agent '{agent.agent_id}' during planning or action: {e}")
@@ -270,7 +270,7 @@ class Engine:
                 result = self._execute_agent_task_recursive(root_agent, self.task)
 
                 # Update progress
-                summary = self._summarize_results({'root_agent': result})
+                summary = self._summarize_results([{'root_agent': result}])
                 self.logger.info(f"Iteration {self.current_iteration} Summary:\n{summary}")
                 self.planner.update_progress(summary)
 
@@ -278,14 +278,9 @@ class Engine:
                 self.evaluator.update(self.environment, self.agents)
 
                 # Decide whether to continue or terminate
-                continue_simulation = self.planner.decide_next_step({'root_agent': result})
+                continue_simulation = self.planner.decide_next_step([{'root_agent': result}])
                 if not continue_simulation:
                     self.logger.info("EnginePlanner decided to terminate the simulation.")
-                    break
-
-                # Check if task is completed within the environment
-                if self.environment.is_task_completed():
-                    self.logger.info("Task has been completed successfully.")
                     break
 
             self.logger.info("Tree-based coordination simulation completed.")
@@ -345,19 +340,14 @@ class Engine:
             chain_length = 0
 
             task = self.task
-            agents_results = {}
+            agents_results = []
             visited_agents = set()
 
             while current_agent and chain_length < max_chain_length:
                 self.logger.info(f"Agent '{current_agent.agent_id}' is executing task.")
                 result = current_agent.act(task)
-                agents_results[current_agent.agent_id] = result
+                agents_results.append({current_agent.agent_id: result})
                 self.logger.info(f"Agent '{current_agent.agent_id}' completed task with result: {result}")
-
-                # Decide whether to continue or terminate
-                if self.environment.is_task_completed():
-                    self.logger.info("Task has been completed successfully.")
-                    break
 
                 # Prevent loops
                 visited_agents.add(current_agent.agent_id)
@@ -365,25 +355,21 @@ class Engine:
                 # Get profiles of other agents
                 agent_profiles = self.graph.get_agent_profiles()
                 # Current agent chooses the next agent
-                next_agent_id = current_agent.choose_next_agent(result, agent_profiles)
-
-                if next_agent_id and next_agent_id not in visited_agents:
-                    current_agent = self.graph.get_agent(next_agent_id)
-                    # Update task for next agent
-                    task = result.content if hasattr(result, 'content') else str(result)
-                else:
-                    self.logger.info("No valid next agent selected or agent has already been visited.")
-                    break
-
+                next_agent_id, plan = current_agent.plan_next_agent(result, agent_profiles)
+                current_agent = self.graph.get_agent(next_agent_id)
+                task = plan
                 chain_length += 1
+                self.planner.update_progress(result)
+                continue_simulation = self.planner.decide_next_step([{'root_agent': result}])
+                if not continue_simulation:
+                    self.logger.info("EnginePlanner decided to terminate the simulation.")
+                    break
 
             # Update progress
             summary = self._summarize_results(agents_results)
             self.logger.info(f"Chain execution Summary:\n{summary}")
             self.planner.update_progress(summary)
 
-            # Evaluate the current state
-            self.evaluator.update(self.environment, self.agents)
 
             self.logger.info("Chain-based coordination simulation completed.")
 
@@ -445,7 +431,7 @@ class Engine:
         # Placeholder for any additional termination conditions
         return False
 
-    def _summarize_results(self, agents_results: Dict[str, Any]) -> str:
+    def _summarize_results(self, agents_results: List[Dict[str, Any]]) -> str:
         """
         Summarize the agents' results into a string.
 
@@ -456,7 +442,10 @@ class Engine:
             str: The summary string.
         """
         summary = "Agents' Results Summary:\n"
-        for agent_id, result in agents_results.items():
-            summary += f"- {agent_id}: {result}\n"
+        # for agent_id, result in agents_results.items():
+        #     summary += f"- {agent_id}: {result}\n"
+        for result in agents_results:
+            summary += f"- {result}\n"
+
         self.logger.debug(f"Summarized agents' results:\n{summary}")
         return summary
