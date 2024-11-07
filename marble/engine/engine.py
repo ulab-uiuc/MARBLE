@@ -3,7 +3,7 @@
 """
 The core engine module that coordinates agents within the environment.
 """
-from typing import Any, Dict, List, Union
+from typing import Any, Dict, List, Optional, Union
 
 from marble.agent import BaseAgent
 from marble.configs.config import Config
@@ -333,7 +333,85 @@ class Engine:
         """
         Chain-based coordination mode.
         """
-        pass
+        try:
+            self.logger.info("Starting chain-based coordination.")
+            # Start with the initial agent
+            current_agent = self._select_initial_agent()
+            if not current_agent:
+                self.logger.error("No initial agent found for chain.")
+                return
+
+            max_chain_length = self.max_iterations  # Or define a separate chain length limit
+            chain_length = 0
+
+            task = self.task
+            agents_results = {}
+            visited_agents = set()
+
+            while current_agent and chain_length < max_chain_length:
+                self.logger.info(f"Agent '{current_agent.agent_id}' is executing task.")
+                result = current_agent.act(task)
+                agents_results[current_agent.agent_id] = result
+                self.logger.info(f"Agent '{current_agent.agent_id}' completed task with result: {result}")
+
+                # Decide whether to continue or terminate
+                if self.environment.is_task_completed():
+                    self.logger.info("Task has been completed successfully.")
+                    break
+
+                # Prevent loops
+                visited_agents.add(current_agent.agent_id)
+
+                # Get profiles of other agents
+                agent_profiles = self.graph.get_agent_profiles()
+                # Current agent chooses the next agent
+                next_agent_id = current_agent.choose_next_agent(result, agent_profiles)
+
+                if next_agent_id and next_agent_id not in visited_agents:
+                    current_agent = self.graph.get_agent(next_agent_id)
+                    # Update task for next agent
+                    task = result.content if hasattr(result, 'content') else str(result)
+                else:
+                    self.logger.info("No valid next agent selected or agent has already been visited.")
+                    break
+
+                chain_length += 1
+
+            # Update progress
+            summary = self._summarize_results(agents_results)
+            self.logger.info(f"Chain execution Summary:\n{summary}")
+            self.planner.update_progress(summary)
+
+            # Evaluate the current state
+            self.evaluator.update(self.environment, self.agents)
+
+            self.logger.info("Chain-based coordination simulation completed.")
+
+        except Exception:
+            self.logger.exception("An error occurred during chain-based coordination.")
+            raise
+        finally:
+            self.evaluator.finalize()
+            self.logger.info("Chain-based coordination simulation completed.")
+
+    def _select_initial_agent(self) -> Optional[BaseAgent]:
+        """
+        Select the initial agent to start the chain.
+
+        Returns:
+            Optional[BaseAgent]: The initial agent, or None if not found.
+        """
+        # For simplicity, select an agent based on some criteria.
+        # Here, we'll select the agent with the highest priority or a predefined agent.
+        # Alternatively, we could prompt the LLM to select the starting agent.
+
+        # Example: Select agent1 as the starting agent
+        starting_agent_id = 'agent1'
+        if starting_agent_id in [agent.agent_id for agent in self.agents]:
+            return self.graph.get_agent(starting_agent_id)
+        else:
+            self.logger.error(f"Starting agent '{starting_agent_id}' not found.")
+            return None
 
     def start(self) -> None:
         """
