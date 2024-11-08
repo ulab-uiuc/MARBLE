@@ -1,4 +1,4 @@
-coordinate_mode: graph
+coordinate_mode: chain
 relationships:
   - [agent1, agent2, "reports_to"]
   - [agent1, agent3, "manages"]
@@ -8,7 +8,7 @@ relationships:
 environment:
   type: Web
   name: "Web Simulation Environment"
-  max_iterations: 1
+  max_iterations: 5
   # Add other environment-specific configurations here
 
 task:

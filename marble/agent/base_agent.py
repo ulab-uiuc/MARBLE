@@ -589,16 +589,6 @@ class BaseAgent:
             self.logger.error(f"Failed to parse tasks for children: {e}")
             return {}
 
-    def process_children_results(self, children_results: Dict[str, Any]) -> Any:
-        """
-        Process the results from children agents.
-        """
-        self.logger.info(f"Agent '{self.agent_id}' is processing children's results.")
-        combined_results = ""
-        for child_id, result in children_results.items():
-            combined_results += f"Result from {child_id}: {result}\n"
-        return combined_results
-
     def summarize_results(self, children_results: Dict[str, Any], own_result: Any) -> Any:
         """
         Summarize the results from children agents and own result.
@@ -607,3 +597,79 @@ class BaseAgent:
         summary = self.process_children_results(children_results)
         summary += f"\nOwn result: {own_result}"
         return summary
+
+    def process_children_results(self, children_results: Dict[str, Any]) -> str:
+        """
+        Process the results from children agents using model prompting.
+        """
+        prompt = "Summarize the results from children agents:\n"
+        for agent_id, result in children_results.items():
+            prompt += f"- Agent '{agent_id}': {result}\n"
+        response = model_prompting(
+            llm_model="gpt-3.5-turbo",
+            messages=[{"role": "system", "content": prompt}],
+            return_num=1,
+            max_token_num=512,
+            temperature=0.7,
+            top_p=1.0
+        )[0]
+        summary = response.content if response.content else ""
+        return summary
+
+
+    def plan_next_agent(self, result: Any, agent_profiles: Dict[str, Dict[str, Any]]) -> Tuple[Optional[str], Optional[str]]:
+        """
+        Choose the next agent to pass the task to and provide a planning task, based on the result and profiles of other agents.
+
+        Args:
+            result (Any): The result from the agent's action.
+            agent_profiles (Dict[str, Dict[str, Any]]): Profiles of all other agents.
+
+        Returns:
+            Tuple[Optional[str], Optional[str]]: The agent_id of the next agent and the planning task, or (None, None) if no suitable agent is found.
+        """
+        self.logger.info(f"Agent '{self.agent_id}' is planning the next step.")
+
+        # Prepare the prompt for the LLM
+        prompt = (
+            f"As Agent '{self.agent_id}' with profile: {self.profile}, "
+            f"you have completed your part of the task with the result:\n{result}\n\n"
+            "Here are the profiles of other available agents:\n"
+        )
+        for agent_id, profile_info in agent_profiles.items():
+            if agent_id != self.agent_id:  # Exclude self
+                prompt += f"- Agent ID: {agent_id}\n"
+                prompt += f"  Profile: {profile_info['profile']}\n"
+        prompt += (
+            "\nBased on the result and the agent profiles provided, select the most suitable agent to continue the task and provide a brief plan for the next agent to execute. "
+            "Respond in the following format:\n"
+            "{\"agent_id\": \"<next_agent_id>\", \"planning_task\": \"<description of the next planning task>\"}"
+        )
+
+        # Use the LLM to select the next agent and create a planning task
+        response = model_prompting(
+            llm_model="gpt-3.5-turbo",
+            messages=[{"role": "system", "content": prompt}],
+            return_num=1,
+            max_token_num=256,
+            temperature=0.7,
+            top_p=1.0
+        )[0].content
+
+        # Parse the response to extract the agent ID and planning task
+        next_agent_id: Optional[str] = None
+        planning_task: Optional[str] = None
+
+        try:
+            response_data: Dict[str, Any] = json.loads(response)
+            next_agent_id = response_data.get("agent_id")
+            planning_task = response_data.get("planning_task")
+        except (json.JSONDecodeError, KeyError):
+            self.logger.warning(f"Agent '{self.agent_id}' received an invalid response format from the LLM.")
+
+        if next_agent_id in agent_profiles and next_agent_id != self.agent_id:
+            self.logger.info(f"Agent '{self.agent_id}' selected '{next_agent_id}' as the next agent with plan: '{planning_task}'.")
+            return next_agent_id, planning_task
+        else:
+            self.logger.warning(f"Agent '{self.agent_id}' did not select a valid next agent.")
+            return None, None

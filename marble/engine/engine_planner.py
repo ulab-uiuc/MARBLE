@@ -5,7 +5,7 @@ Engine Planner module responsible for task assignment and scheduling.
 """
 
 import json
-from typing import Any, Dict
+from typing import Any, Dict, List
 
 from litellm.types.utils import Message
 
@@ -133,7 +133,7 @@ class EnginePlanner:
         )[0]
         return response
 
-    def decide_next_step(self, agents_results: Dict[str, Any]) -> bool:
+    def decide_next_step(self, agents_results: List[Dict[str, Any]]) -> bool:
         """
         Decide whether to continue or terminate the simulation based on agents' results.
 
@@ -147,8 +147,8 @@ class EnginePlanner:
             "Based on the following agents' results, determine whether the overall task is completed.\n\n"
             "Agents' Results:\n"
         )
-        for agent_id, result in agents_results.items():
-            prompt += f"- {agent_id}: {result}\n"
+        for result in agents_results:
+            prompt += f"- {result}\n"
 
         prompt += (
             "\nRespond with a JSON object containing a single key 'continue' set to true or false.\n"
