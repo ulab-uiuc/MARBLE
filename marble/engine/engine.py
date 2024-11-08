@@ -38,6 +38,8 @@ class Engine:
         self.agents = self._initialize_agents(config.agents)
         # Initialize AgentGraph
         self.graph = AgentGraph(self.agents, config)
+        for agent in self.agents:
+            agent.set_agent_graph(self.graph)
         # Initialize Memory
         self.memory = self._initialize_memory(config.memory)
         # Initialize Evaluator

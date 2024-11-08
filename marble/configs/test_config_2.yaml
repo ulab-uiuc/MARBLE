@@ -1,4 +1,4 @@
-execution_mode: hierarchical
+coordinate_mode: star
 relationships:
   - [agent2, agent1, "reports_to"]
   - [agent3, agent1, "reports_to"]
@@ -11,7 +11,7 @@ environment:
   # Add other environment-specific configurations here
 
 task:
-  content: "Find new about the latest trends in AI."
+  content: "Find new about the latest trends in AI and share them by talking to each other."
 
 agents:
   - type: BaseAgent

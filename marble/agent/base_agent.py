@@ -37,7 +37,7 @@ class BaseAgent:
         self.env: EnvType = env
         self.actions: List[str] = []
         self.agent_id: str = agent_id
-        self.agent_graph: Union[None, Dict[str, str]] = None
+        self.agent_graph: AgentGraphType = None
         self.profile = config.get("profile", '')
         self.system_message = (
             f"You are \"{self.agent_id}\": \"{self.profile}\"\n"
@@ -140,7 +140,7 @@ class BaseAgent:
         tools.append(new_communication_session_description)
         act_task = (
             f"You are {self.agent_id}: {self.profile}\n"
-            f"These are your memory: {self.memory}\n" 
+            f"These are your memory: {self.memory}\n"
             f"This is your task: {task}\n"
             f"These are the ids and profiles of other agents you can interact with:\n"
             f"{agent_descriptions}"
@@ -251,14 +251,14 @@ class BaseAgent:
             message (str): The content of the received message.
         """
         self.session_id = session_id
-        
+
         # Store the received message in the message box for the sending agent.
         self.msg_box[session_id][from_agent.agent_id].append((self.RECV_FROM, message))
-        self.logger.info(f"Agent {self.agent_id} received message from {from_agent.agent_id}: {message}")
+        self.logger.info(f"Agent {self.agent_id} received message from {from_agent.agent_id}: {message[:10]}...")
 
     def seralize_message(self, session_id: str = "") -> str:
         seralized_msg = ""
-        
+
         # Check if session_id is provided
         if session_id:
             # Serialize messages for a specific session
@@ -266,11 +266,11 @@ class BaseAgent:
         else:
             # Serialize messages for all sessions
             session_ids = self.msg_box.keys()
-        
+
         for sid in session_ids:
             seralized_msg += f"In Session {sid} \n"
             session_msg = self.msg_box[sid]
-            
+
             for target_agent_id in session_msg:
                 msg_list = session_msg[target_agent_id]
                 for direction, msg_content in msg_list:
@@ -279,7 +279,7 @@ class BaseAgent:
                     else:
                         seralized_msg += f"From {target_agent_id} to {self.agent_id}: "
                     seralized_msg += msg_content + "\n"
-        
+
         return seralized_msg
 
 
@@ -312,12 +312,11 @@ class BaseAgent:
             return initial_communication
         agents = [self.agent_graph.agents.get(target_agent_id), self]
         for t in range(turns):
-            import pdb; pdb.set_trace()
             session_current_agent = agents[t % 2]
             session_current_agent_id = session_current_agent.agent_id
             session_other_agent = agents[(t + 1) % 2]
             session_other_agent_id = session_other_agent.agent_id
-                
+
             agent_descriptions = [
                 f"{session_other_agent_id} (session_other_agent.profile)"
             ]
@@ -339,7 +338,7 @@ class BaseAgent:
                     }
                 }
             }
-            
+
             communicate_task = (
                 f"These are your memory: {session_current_agent.memory}\n"
                 f"The task is: {task}. \n"
@@ -350,8 +349,6 @@ class BaseAgent:
                 f"You are talking to {session_other_agent_id}. You cannot talk with anyone else.\n"
                 f"From {session_current_agent_id} to {session_other_agent_id}:"
             )
-            print("Prompt:")
-            print([{"role": "system", "content": session_current_agent.system_message}, {"role":"user", "content": communicate_task}])
             result = model_prompting(
                 llm_model="gpt-4o-mini",
                 messages=[{"role": "system", "content": session_current_agent.system_message}, {"role":"user", "content": communicate_task}],
@@ -373,7 +370,6 @@ class BaseAgent:
                     print(message)
                     result_from_function = session_current_agent._handle_communicate_to(target_agent_id=session_other_agent_id, message=message, session_id=session_current_agent.session_id)
                     if "<end-of-session>" in message:
-                        import pdb; pdb.set_trace()
                         break
 
         # summarize chat history
@@ -389,17 +385,17 @@ class BaseAgent:
             "When composing the summary, maintain clarity, coherence, and logical organization. Your goal is to provide a comprehensive yet succinct overview that enables users to understand the essence of the multi-agent dialogue at a glance."
         )
         summary_task = (
-            f"These are an chat history: {session_current_agent.seralize_message(session_id=self.session_id)}\n" 
+            f"These are an chat history: {session_current_agent.seralize_message(session_id=self.session_id)}\n"
             f"Please summarize information in the chat history relevant to the task: {task}."
         )
         result = model_prompting(
             llm_model="gpt-4o-mini",
-            messages=[{"role": "system", "content": system_message_summary}, {"role":"user", "content": summary_task}],          
+            messages=[{"role": "system", "content": system_message_summary}, {"role":"user", "content": summary_task}],
             return_num=1,
             max_token_num=512,
             temperature=0.0,
             top_p=None,
-            stream=None,          
+            stream=None,
         )[0]
         self.memory.update(self.agent_id, {
                 "type": "action_communicate",
@@ -413,10 +409,10 @@ class BaseAgent:
             "message": f"Successfully completed session {session_id}",
             "session_id": result.content if result.content else ""
         }
-            
+
     def _handle_communicate_to(self, target_agent_id: str, message: str, session_id: str) -> Dict[str, Any]:
         """
-        Handler for the communicate_to function. 
+        Handler for the communicate_to function.
 
         Args:
             target_agent_id (str): The ID of the target agent
@@ -429,8 +425,13 @@ class BaseAgent:
         old_session_id = self.session_id
         try:
             self.session_id = session_id
-            if not self.agent_graph or target_agent_id not in self.relationships:
-                import pdb; pdb.set_trace()
+            linked_by_graph = False
+            for a1_id, a2_id, rel in self.agent_graph.relationships:
+                if a1_id == self.agent_id or a2_id == self.agent_id:
+                    linked_by_graph = True
+                    break
+
+            if not self.agent_graph or not linked_by_graph:
                 return {
                     "success": False,
                     "error": f"No relationship found with agent {target_agent_id}"
@@ -483,8 +484,6 @@ class BaseAgent:
             temperature=0.0,
             top_p=None,
             stream=None,
-            tools=[],
-            tool_choice="auto"
         )[0].content
         self.logger.info(f"Agent '{self.agent_id}' plans next task based on persona: {next_task}")
 
