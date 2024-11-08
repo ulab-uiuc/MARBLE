@@ -3,6 +3,8 @@ Base agent module.
 """
 
 import json
+import uuid
+from litellm.utils import trim_messages
 from collections import defaultdict
 from typing import Any, Dict, List, Optional, Tuple, TypeVar, Union
 
@@ -13,6 +15,7 @@ from marble.utils.logger import get_logger
 
 EnvType = Union[BaseEnvironment, WebEnvironment]
 AgentType = TypeVar('AgentType', bound='BaseAgent')
+AgentGraphType = TypeVar('AgentGraphType', bound='AgentGraph')
 
 class BaseAgent:
     """
@@ -34,7 +37,18 @@ class BaseAgent:
         self.env: EnvType = env
         self.actions: List[str] = []
         self.agent_id: str = agent_id
+        self.agent_graph: AgentGraphType = None
         self.profile = config.get("profile", '')
+        self.system_message = (
+            f"You are \"{self.agent_id}\": \"{self.profile}\"\n"
+            f"As a role-playing agent, you embody a dynamic character with unique traits, motivations, and skills. "
+            f"Your goal is to engage not only with users but also with other agents in the environment. "
+            f"Collaborate, compete, or form alliances as you navigate through immersive storytelling and challenges. "
+            f"Interact meaningfully with fellow agents, contributing to the evolving narrative and responding creatively "
+            f"to their actions. Maintain consistency with your character's background and personality, and be prepared to adapt "
+            f"to the evolving dynamics of the scenario. Remember, your responses should enhance the experience and encourage "
+            f"user engagement while enriching interactions with other agents."
+        )
         self.memory = BaseMemory()
         self.shared_memory = SharedMemory()
         self.relationships: Dict[str, str] = {}
@@ -47,6 +61,10 @@ class BaseAgent:
         self.parent: Optional[BaseAgent] = None
         self.FORWARD_TO = 0
         self.RECV_FROM = 1
+        self.session_id: str = ''
+
+    def set_agent_graph(self, agent_graph: AgentGraphType) -> None:
+        self.agent_graph = agent_graph
 
     def perceive(self, state: Any) -> Any:
         """
@@ -73,6 +91,62 @@ class BaseAgent:
         self.task_history.append(task)
         self.logger.info(f"Agent '{self.agent_id}' acting on task '{task}'.")
         tools = [self.env.action_handler_descriptions[name] for name in self.env.action_handler_descriptions]
+        available_agents = {}
+        for agent_id_1, agent_id_2, relationship in self.agent_graph.relationships:
+            if agent_id_1 != self.agent_id and agent_id_2 != self.agent_id:
+                continue
+            else:
+                if agent_id_1 == self.agent_id:
+                    profile = self.agent_graph.agents[agent_id_2].get_profile()
+                    agent_id = agent_id_2
+                elif agent_id_2 == self.agent_id:
+                    profile = self.agent_graph.agents[agent_id_1].get_profile()
+                    agent_id = agent_id_1
+                available_agents[agent_id] = {
+                    "profile": profile,
+                    "role": f"{agent_id_1} {relationship} {agent_id_2}"
+                }
+        self.available_agents = available_agents
+        # Create the enum description with detailed information about each agent
+        agent_descriptions = [
+            f"{agent_id} ({info['role']} - {info['profile']})"
+            for agent_id, info in available_agents.items()
+        ]
+        # Add communicate_to function description
+        new_communication_session_description = {
+            "type": "function",
+            "function": {
+                "name": "new_communication_session",
+                "description": "Send a message to a specific target agent based on existing relationships, and begin communication",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "target_agent_id": {
+                            "type": "string",
+                            "description": "The ID of the target agent to communicate with. Available agents:\n" + "\n".join([f"- {desc}" for desc in agent_descriptions]),
+                            "enum": list(self.relationships.keys())  # Dynamically list available target agents
+                        },
+                        "message": {
+                            "type": "string",
+                            "description": "The initial message to send to the target agent"
+                        },
+                    },
+                    "required": ["target_agent_id", "message"],
+                    "additionalProperties": False
+                }
+            }
+        }
+
+        tools.append(new_communication_session_description)
+        act_task = (
+            f"You are {self.agent_id}: {self.profile}\n"
+            f"These are your memory: {self.memory}\n"
+            f"This is your task: {task}\n"
+            f"These are the ids and profiles of other agents you can interact with:\n"
+            f"{agent_descriptions}"
+            f"But you do not have to communcate with other agents.\n"
+            f"You can also solve the task by calling other functions to solve it by yourself.\n"
+        )
         if len(tools) == 0:
             result = model_prompting(
                 llm_model="gpt-3.5-turbo",
@@ -101,7 +175,13 @@ class BaseAgent:
             function_name = function_call.function.name
             assert function_name is not None
             function_args = json.loads(function_call.function.arguments)
-            result_from_function = self.env.apply_action(agent_id=self.agent_id, action_name=function_name, arguments=function_args)
+            if function_name != "new_communication_session":
+                result_from_function = self.env.apply_action(agent_id=self.agent_id, action_name=function_name, arguments=function_args)
+            else: # function_name == "new_communication_session"
+                self.session_id = uuid.uuid4() # new session id
+                target_agent_id = function_args["target_agent_id"]
+                message = function_args["message"]
+                result_from_function = self._handle_new_communication_session(target_agent_id=target_agent_id, message=message, session_id=self.session_id, task=task, turns=5)
             self.memory.update(self.agent_id, {
                     "type": "action_function_call",
                     "action_name": function_name,
@@ -109,6 +189,7 @@ class BaseAgent:
                     "result": result_from_function
                 }
             )
+
             self.logger.info(f"Agent '{self.agent_id}' called '{function_name}' with args '{function_args}'.")
             self.logger.info(f"Agent '{self.agent_id}' obtained result '{result_from_function}'.")
 
@@ -169,8 +250,38 @@ class BaseAgent:
             from_agent (BaseAgent): The agent sending the message.
             message (str): The content of the received message.
         """
+        self.session_id = session_id
+
+        # Store the received message in the message box for the sending agent.
         self.msg_box[session_id][from_agent.agent_id].append((self.RECV_FROM, message))
-        self.logger.info(f"Agent {self.agent_id} received message from {from_agent.agent_id}: {message}")
+        self.logger.info(f"Agent {self.agent_id} received message from {from_agent.agent_id}: {message[:10]}...")
+
+    def seralize_message(self, session_id: str = "") -> str:
+        seralized_msg = ""
+
+        # Check if session_id is provided
+        if session_id:
+            # Serialize messages for a specific session
+            session_ids = [session_id] if session_id in self.msg_box else []
+        else:
+            # Serialize messages for all sessions
+            session_ids = self.msg_box.keys()
+
+        for sid in session_ids:
+            seralized_msg += f"In Session {sid} \n"
+            session_msg = self.msg_box[sid]
+
+            for target_agent_id in session_msg:
+                msg_list = session_msg[target_agent_id]
+                for direction, msg_content in msg_list:
+                    if direction == self.FORWARD_TO:
+                        seralized_msg += f"From {self.agent_id} to {target_agent_id}: "
+                    else:
+                        seralized_msg += f"From {target_agent_id} to {self.agent_id}: "
+                    seralized_msg += msg_content + "\n"
+
+        return seralized_msg
+
 
     def get_profile(self) -> Union[str, Any]:
         """
@@ -181,6 +292,173 @@ class BaseAgent:
         """
         return self.profile
 
+    def _handle_new_communication_session(self, target_agent_id: str, message: str, session_id: str, task: str, turns: int = 5) -> Dict[str, Any]:
+        """
+        Handler for the new communication function. This will start a session using a random uuid
+        and arrage communication between two agents until matter is resolved.
+
+        Args:
+            target_agent_id (str): The ID of the target agent
+            message (str): The message to send
+            session_id (str): Session ID of chat between two agents
+            task (str): Task of source agent
+            turns (int): Maximum number of allowed turns of communication
+
+        Returns:
+            Dict[str, Any]: Result of the communication attempt
+        """
+        initial_communication = self._handle_communicate_to(target_agent_id, message, session_id)
+        if not initial_communication["success"]:
+            return initial_communication
+        agents = [self.agent_graph.agents.get(target_agent_id), self]
+        for t in range(turns):
+            session_current_agent = agents[t % 2]
+            session_current_agent_id = session_current_agent.agent_id
+            session_other_agent = agents[(t + 1) % 2]
+            session_other_agent_id = session_other_agent.agent_id
+
+            agent_descriptions = [
+                f"{session_other_agent_id} (session_other_agent.profile)"
+            ]
+            communicate_to_description = {
+                "type": "function",
+                "function": {
+                    "name": "communicate_to",
+                    "description": f"Send a message to a specific target agent:" + "\n".join([f"- {desc}" for desc in agent_descriptions]),
+                    "parameters": {
+                        "type": "object",
+                        "properties": {
+                            "message": {
+                                "type": "string",
+                                "description": "The initial message to send to the target agent"
+                            },
+                        },
+                        "required": ["target_agent_id", "message"],
+                        "additionalProperties": False
+                    }
+                }
+            }
+
+            communicate_task = (
+                f"These are your memory: {session_current_agent.memory}\n"
+                f"The task is: {task}. \n"
+                f"Please respond to {session_other_agent_id}({session_other_agent.profile}). \n"
+                f"Your previous chat history: {session_current_agent.seralize_message(session_id=self.session_id)}.\n"
+                f"You should answer to this question {session_current_agent.msg_box[self.session_id][session_other_agent_id][-1][1]} using your memory, and other relevant context. \n"
+                f"Return <end-of-session> if you cannot answer using information you have right now. \n"
+                f"You are talking to {session_other_agent_id}. You cannot talk with anyone else.\n"
+                f"From {session_current_agent_id} to {session_other_agent_id}:"
+            )
+            result = model_prompting(
+                llm_model="gpt-4o-mini",
+                messages=[{"role": "system", "content": session_current_agent.system_message}, {"role":"user", "content": communicate_task}],
+                return_num=1,
+                max_token_num=512,
+                temperature=0.0,
+                top_p=None,
+                stream=None,
+                tools=[communicate_to_description],
+                tool_choice="required"
+            )[0]
+            if result.tool_calls:
+                function_call = result.tool_calls[0]
+                function_name = function_call.function.name
+                assert function_name is not None
+                function_args = json.loads(function_call.function.arguments)
+                if function_name == "communicate_to":
+                    message = function_args["message"]
+                    print(message)
+                    result_from_function = session_current_agent._handle_communicate_to(target_agent_id=session_other_agent_id, message=message, session_id=session_current_agent.session_id)
+                    if "<end-of-session>" in message:
+                        break
+
+        # summarize chat history
+        system_message_summary = (
+            "You are an advanced summarizer agent designed to condense and clarify the history of conversations between multiple agents. "
+            "Your task is to analyze dialogues from various participants and generate a cohesive summary that captures the key points, themes, and decisions made throughout the interactions.\n\n"
+            "Your primary objectives are:\n\n"
+            "1. Contextual Analysis: Carefully review the entire conversation history to understand the context, including the roles of different agents and the progression of discussions.\n\n"
+            "2. Identify Key Themes: Extract the main themes, topics, and significant moments in the dialogue, noting any recurring issues or points of contention.\n\n"
+            "3. Summarize Conversations: Create a clear and concise summary that outlines the conversation's flow, important exchanges, decisions made, and any action items that emerged. Ensure that the summary reflects the contributions of each agent without losing the overall narrative.\n\n"
+            "4. Highlight Outcomes: Emphasize any conclusions reached or actions agreed upon by the agents, providing a sense of closure to the summarized conversation.\n\n"
+            "5. Engage with User Input: If the user has specific interests or focuses within the conversation, inquire to tailor the summary accordingly, ensuring it meets their needs.\n\n"
+            "When composing the summary, maintain clarity, coherence, and logical organization. Your goal is to provide a comprehensive yet succinct overview that enables users to understand the essence of the multi-agent dialogue at a glance."
+        )
+        summary_task = (
+            f"These are an chat history: {session_current_agent.seralize_message(session_id=self.session_id)}\n"
+            f"Please summarize information in the chat history relevant to the task: {task}."
+        )
+        result = model_prompting(
+            llm_model="gpt-4o-mini",
+            messages=[{"role": "system", "content": system_message_summary}, {"role":"user", "content": summary_task}],
+            return_num=1,
+            max_token_num=512,
+            temperature=0.0,
+            top_p=None,
+            stream=None,
+        )[0]
+        self.memory.update(self.agent_id, {
+                "type": "action_communicate",
+                "action_name": "communicate_to",
+                # "args": function_args,
+                "result": result.content if result.content else ""
+            }
+        )
+        return {
+            "success": True,
+            "message": f"Successfully completed session {session_id}",
+            "session_id": result.content if result.content else ""
+        }
+
+    def _handle_communicate_to(self, target_agent_id: str, message: str, session_id: str) -> Dict[str, Any]:
+        """
+        Handler for the communicate_to function.
+
+        Args:
+            target_agent_id (str): The ID of the target agent
+            message (str): The message to send
+            session_id (str): Session ID of chat between two agents
+
+        Returns:
+            Dict[str, Any]: Result of the communication attempt
+        """
+        old_session_id = self.session_id
+        try:
+            self.session_id = session_id
+            linked_by_graph = False
+            for a1_id, a2_id, rel in self.agent_graph.relationships:
+                if a1_id == self.agent_id or a2_id == self.agent_id:
+                    linked_by_graph = True
+                    break
+
+            if not self.agent_graph or not linked_by_graph:
+                return {
+                    "success": False,
+                    "error": f"No relationship found with agent {target_agent_id}"
+                }
+
+            target_agent = self.agent_graph.agents.get(target_agent_id)
+            if not target_agent:
+                return {
+                    "success": False,
+                    "error": f"Target agent {target_agent_id} not found in agent graph"
+                }
+
+            # Send the message using the existing send_message method
+            self.send_message(self.session_id, target_agent, message)
+
+            return {
+                "success": True,
+                "message": f"Successfully sent message to agent {target_agent_id}",
+                "session_id": session_id
+            }
+
+        except Exception as e:
+            self.session_id = old_session_id
+            return {
+                "success": False,
+                "error": f"Error sending message: {str(e)}"
+            }
     def plan_task(self) -> Optional[str]:
         """
         Plan the next task based on the original tasks input, the agent's memory, task history, and its profile/persona.
@@ -206,8 +484,6 @@ class BaseAgent:
             temperature=0.0,
             top_p=None,
             stream=None,
-            tools=[],
-            tool_choice="auto"
         )[0].content
         self.logger.info(f"Agent '{self.agent_id}' plans next task based on persona: {next_task}")
 
