@@ -41,4 +41,3 @@ WHERE ci.note IN ('(writer)',
   AND it1.id = mi.info_type_id
   AND it2.id = mi_idx.info_type_id
   AND k.id = mk.keyword_id;
-

@@ -16,4 +16,3 @@ WHERE ct.kind = 'production companies'
   AND mc.movie_id = mi.movie_id
   AND ct.id = mc.company_type_id
   AND it.id = mi.info_type_id;
-

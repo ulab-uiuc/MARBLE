@@ -1,14 +1,16 @@
 import subprocess
+import sys
+
 import createdatabase
 import dropdatabase
 import psycopg2
-import sys
+
 sys.path.append('/root/DB-GPT/')
-import time
-import datetime
 import random
-import yaml
+import time
 from multiprocessing.pool import *
+
+import yaml
 
 
 class DBArgs(object):
@@ -48,7 +50,7 @@ class Database():
                                             port=self.args.port)
         return conn
 
-    
+
     def execute_sqls(self,sql):
         self.conn =self.resetConn(timeout=-1)
         cur = self.conn.cursor()
@@ -85,12 +87,12 @@ class Database():
         pool.close()
         pool.join()
         return results
-    
+
 def init():
     #add the config
     config_path = "/root/DB-GPT/config/tool_config.yaml"
     with open(config_path, 'r') as config_file:
-        config = yaml.safe_load(config_file) 
+        config = yaml.safe_load(config_file)
     db_args =DBArgs('pgsql', config)
     return db_args
 

@@ -1,5 +1,5 @@
 import numpy as np
-import requests
+
 
 def detect_anomalies(data, significance_level=0.2):
     """
@@ -32,5 +32,3 @@ def detect_anomalies(data, significance_level=0.2):
     anomalies = np.where(ks_statistic > critical_value, True, False)
 
     return ks_statistic, anomalies
-
-

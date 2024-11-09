@@ -27,4 +27,3 @@ WHERE ci.note IN ('(voice)',
   AND chn.id = ci.person_role_id
   AND an.person_id = n.id
   AND an.person_id = ci.person_id;
-

@@ -4,7 +4,6 @@ import time
 
 import psycopg2
 
-
 REPEATCOUNT = 1
 TIMELOGPATH = str(int(time.time())) + "_tpch_trigger_time_log.txt"
 TIMELOG = open(TIMELOGPATH, 'w+')
@@ -114,4 +113,3 @@ if __name__ == '__main__':
         TIMELOG.flush()
 
     TIMELOG.close()
-

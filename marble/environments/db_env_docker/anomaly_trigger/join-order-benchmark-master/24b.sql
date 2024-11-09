@@ -50,4 +50,3 @@ WHERE ci.note IN ('(voice)',
   AND ci.person_id = an.person_id
   AND chn.id = ci.person_role_id
   AND k.id = mk.keyword_id;
-

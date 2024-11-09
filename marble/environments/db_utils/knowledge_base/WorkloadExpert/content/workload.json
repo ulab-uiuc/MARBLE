@@ -662,5 +662,5 @@
         "cause_name": "session_diagnostic_analysis",
         "desc": "The function retrieves session information from the database. It starts by initializing the variables for session percentage (sesspct), session information (sess_info), and a flag for session (flag_sess). \n\nNext, it iterates through each element in sesspct and constructs a SQL query based on the values retrieved. It also checks if the session percentage is above 90%. If it is, a diagnostic message is added to sess_info indicating that the session percentage is too high and requires attention. Additionally, the flag_sess variable is incremented. If the session percentage is below or equal to 90%, a different diagnostic message is added to sess_info indicating that the session percentage is normal.\n\nThe constructed SQL query is then truncated to remove the trailing \"union all\" statement.\n\nOverall, this code performs a diagnostic analysis on session information, checking for high session percentages and providing relevant diagnostic messages.",
         "metrics": "1. sesspct\n2. sess_info\n3. flag_sess\n4. session percentage\n5. SQL query\n6. diagnostic message\n7. trailing \"union all\" statement"
-    }    
+    }
 ]

@@ -1,9 +1,12 @@
 import time
 from typing import Any, Dict
+
 import requests
 from bs4 import BeautifulSoup
 from litellm.utils import trim_messages
+
 from marble.environments.base_env import BaseEnvironment
+
 
 class WebEnvironment(BaseEnvironment):
     def __init__(self, config: Dict[str, Any], name: str="WebEnv"):
@@ -16,7 +19,7 @@ class WebEnvironment(BaseEnvironment):
         self.last_visited_timestamp: float = 0
         self.last_visited_url: str = ""
         self.web_cache: Dict[str, str] = {}  # Cache for storing webpage content
-        
+
         # Register the fetch_webpage action
         fetch_webpage_description = {
             "type": "function",
@@ -41,27 +44,27 @@ class WebEnvironment(BaseEnvironment):
     def extract_text_from_html(self, html_content: str) -> str:
         """
         Extract meaningful text content from HTML.
-        
+
         Args:
             html_content (str): Raw HTML content
-            
+
         Returns:
             str: Extracted text content
         """
         soup = BeautifulSoup(html_content, 'html.parser')
-        
+
         # Remove script and style elements
         for script in soup(["script", "style"]):
             script.decompose()
-            
+
         # Get text content
         text = soup.get_text(separator=' ', strip=True)
-        
+
         # Clean up whitespace
         lines = (line.strip() for line in text.splitlines())
         chunks = (phrase.strip() for line in lines for phrase in line.split("  "))
         text = ' '.join(chunk for chunk in chunks if chunk)
-        
+
         return text
 
     def _fetch_webpage_handler(self, url: str = "") -> Dict[str, Any]:
@@ -86,10 +89,10 @@ class WebEnvironment(BaseEnvironment):
             headers = {
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36 Edg/114.0.0.0'
             }
-            
+
             while time.time() - self.last_visited_timestamp < 1:
                 time.sleep(0.5)
-                
+
             try:
                 response = requests.get(url, headers=headers, timeout=5.0)  # 5 second timeout
                 response.raise_for_status()  # Raise an error for bad responses
@@ -106,7 +109,7 @@ class WebEnvironment(BaseEnvironment):
         # Extract text content and trim it
         extracted_text = self.extract_text_from_html(content)
         trimmed_content = trim_messages(
-            [{"role": "assistant", "content": extracted_text}], 
+            [{"role": "assistant", "content": extracted_text}],
             "gpt-3.5-turbo",
             max_tokens=2048
         )[0]["content"]

@@ -1,4 +1,5 @@
 import re
+
 with open('missingindex2.txt', 'r') as file:
     # 逐行读取文件并将每一行作为字符串添加到列表中
     lines = [line.strip() for line in file]
@@ -102,12 +103,12 @@ class Database():
         pool.close()
         pool.join()
         return results
-    
+
 def init():
     #add the config
     config_path = "/root/DB-GPT/config/tool_config.yaml"
     with open(config_path, 'r') as config_file:
-        config = yaml.safe_load(config_file) 
+        config = yaml.safe_load(config_file)
     db_args =DBArgs('pgsql', config)
     return db_args
 
@@ -147,28 +148,28 @@ def insert_large_data(threads,duration,ncolumns,nrows,colsize,table_name='table1
 
     #delete the table
     delete_table(table_name)
-    
+
     #print the end time
     print_time()
 if __name__ == "__main__":
     # Number of threads to use for concurrent inserts
     num_threads = {threads}
-    
+
     # Duration for which to run the inserts (in seconds)
     insert_duration = {duration}
-    
+
     # Number of columns in the table
     num_columns = {ncolumn}
-    
+
     # Number of rows to insert
     num_rows = {nrow}
-    
+
     # Size of each column (in characters)
     column_size = {colsize}
-    
+
     # Table name
     table_name = 'table1'
-    
+
     # Call the insert_large_data function
     insert_large_data(num_threads, insert_duration, num_columns, num_rows, column_size, table_name)\n\n\n\n'''
     if anomaly == 'MISSING_INDEXES':
@@ -218,7 +219,7 @@ class Database():
                                             host=self.args.host,
                                             port=self.args.port)
         return conn
-    
+
     def execute_sqls(self,sql):
         self.conn =self.resetConn(timeout=-1)
         cur = self.conn.cursor()
@@ -260,7 +261,7 @@ def init():
     #add the config
     config_path = "/root/DB-GPT/config/tool_config.yaml"
     with open(config_path, 'r') as config_file:
-        config = yaml.safe_load(config_file) 
+        config = yaml.safe_load(config_file)
     db_args =DBArgs('pgsql', config)
     return db_args
 
@@ -292,10 +293,10 @@ def missing_index(threads,duration,ncolumns,nrows,colsize,table_name='table1'):
     delete_table(table_name)
     create_table(table_name,colsize, ncolumns)
 
-    # insert some data to be selected 
+    # insert some data to be selected
     insert_definitions = ', '.join(f'(SELECT substr(md5(random()::text), 1, {{colsize}}))' for i in range(ncolumns))
     insert_data=f'insert into {{table_name}} select generate_series(1,{{nrows}}),{{insert_definitions}}, now();'
-    db.execute_sqls(insert_data)  
+    db.execute_sqls(insert_data)
 
     #select without the index
     missing_index='select * from '+table_name+' where id='
@@ -309,22 +310,22 @@ def missing_index(threads,duration,ncolumns,nrows,colsize,table_name='table1'):
 if __name__ == "__main__":
     # Number of threads to use for concurrent inserts
     num_threads = {threads}
-    
+
     # Duration for which to run the inserts (in seconds)
     insert_duration = {duration}
-    
+
     # Number of columns in the table
     num_columns = {ncolumn}
-    
+
     # Number of rows to insert
     num_rows = {nrow}
-    
+
     # Size of each column (in characters)
     column_size = {colsize}
-    
+
     # Table name
     table_name = 'table1'
-    
+
     # Call the insert_large_data function
     missing_index(num_threads, insert_duration, num_columns, num_rows, column_size, table_name)\n\n\n\n'''
 
@@ -375,7 +376,7 @@ class Database():
                                             host=self.args.host,
                                             port=self.args.port)
         return conn
-    
+
     def execute_sqls(self,sql):
         self.conn =self.resetConn(timeout=-1)
         cur = self.conn.cursor()
@@ -412,12 +413,12 @@ class Database():
         pool.close()
         pool.join()
         return results
-    
+
 def init():
     #add the config
     config_path = "/root/DB-GPT/config/tool_config.yaml"
     with open(config_path, 'r') as config_file:
-        config = yaml.safe_load(config_file) 
+        config = yaml.safe_load(config_file)
     db_args =DBArgs('pgsql', config)
     return db_args
 
@@ -451,8 +452,8 @@ def vacuum(threads,duration,ncolumns,nrows,colsize,table_name='table1'):
 
     # insert some data to be deleted
     insert_definitions = ', '.join(f'(SELECT substr(md5(random()::text), 1, {{colsize}}))' for i in range(ncolumns))
-    insert_data=f'insert into {{table_name}} select generate_series(1,{{nrows}}),{{insert_definitions}}, now();' 
-    db.execute_sqls(insert_data) 
+    insert_data=f'insert into {{table_name}} select generate_series(1,{{nrows}}),{{insert_definitions}}, now();'
+    db.execute_sqls(insert_data)
 
     # delete 80% of the rows
     delete_nrows=int(nrows*0.8)
@@ -471,22 +472,22 @@ def vacuum(threads,duration,ncolumns,nrows,colsize,table_name='table1'):
 if __name__ == "__main__":
     # Number of threads to use for concurrent inserts
     num_threads = {threads}
-    
+
     # Duration for which to run the inserts (in seconds)
     insert_duration = {duration}
-    
+
     # Number of columns in the table
     num_columns = {ncolumn}
-    
+
     # Number of rows to insert
     num_rows = {nrow}
-    
+
     # Size of each column (in characters)
     column_size = {colsize}
-    
+
     # Table name
     table_name = 'table1'
-    
+
     # Call the insert_large_data function
     vacuum(num_threads, insert_duration, num_columns, num_rows, column_size, table_name)\n\n\n\n'''
 
@@ -537,7 +538,7 @@ class Database():
                                             host=self.args.host,
                                             port=self.args.port)
         return conn
-    
+
     def execute_sqls(self,sql):
         self.conn =self.resetConn(timeout=-1)
         cur = self.conn.cursor()
@@ -579,7 +580,7 @@ def init():
     #add the config
     config_path = "/root/DB-GPT/config/tool_config.yaml"
     with open(config_path, 'r') as config_file:
-        config = yaml.safe_load(config_file) 
+        config = yaml.safe_load(config_file)
     db_args =DBArgs('pgsql', config)
     return db_args
 
@@ -610,10 +611,10 @@ def lock_contention(threads,duration,ncolumns,nrows,colsize,table_name='table1')
     delete_table(table_name)
     create_table(table_name,colsize, ncolumns)
     db=Database(init())
-    # insert some data to be updated 
+    # insert some data to be updated
     insert_definitions = ', '.join(f'(SELECT substr(md5(random()::text), 1, {{colsize}}))' for i in range(ncolumns))
-    insert_data=f'insert into {{table_name}} select generate_series(1,{{nrows}}),{{insert_definitions}}, now();' 
-    db.execute_sqls(insert_data) 
+    insert_data=f'insert into {{table_name}} select generate_series(1,{{nrows}}),{{insert_definitions}}, now();'
+    db.execute_sqls(insert_data)
     pool = Pool(threads)
     for _ in range(threads):
         pool.apply_async(
@@ -645,22 +646,22 @@ def lock(table_name, ncolumns, colsize, duration, nrows):
 if __name__ == "__main__":
     # Number of threads to use for concurrent inserts
     num_threads = {threads}
-    
+
     # Duration for which to run the inserts (in seconds)
     insert_duration = {duration}
-    
+
     # Number of columns in the table
     num_columns = {ncolumn}
-    
+
     # Number of rows to insert
     num_rows = {nrow}
-    
+
     # Size of each column (in characters)
     column_size = {colsize}
-    
+
     # Table name
     table_name = 'table1'
-    
+
     # Call the insert_large_data function
     lock_contention(num_threads, insert_duration, num_columns, num_rows, column_size, table_name)\n\n\n\n'''
 
@@ -711,7 +712,7 @@ class Database():
                                             host=self.args.host,
                                             port=self.args.port)
         return conn
-    
+
     def execute_sqls(self,sql):
         self.conn =self.resetConn(timeout=-1)
         cur = self.conn.cursor()
@@ -748,23 +749,23 @@ class Database():
         pool.close()
         pool.join()
         return results
-    
+
     def build_index(self, table_name, idx_num):
         self.conn = self.resetConn(timeout=-1)
         cursor = self.conn.cursor()
-        
+
         for i in range(0, idx_num):
             the_sql = 'CREATE INDEX index_' + table_name + '_' + str(i) + ' ON ' + table_name + '(name' + str(i) + ');'
             print(the_sql)
             cursor.execute(the_sql)
 
-        
+
         self.conn.commit()
         self.conn.close()
         return
 
 
-    
+
     def drop_index(self,table_name):
         self.conn = self.resetConn(timeout=-1)
         cursor = self.conn.cursor()
@@ -783,7 +784,7 @@ def init():
     #add the config
     config_path = "/root/DB-GPT/config/tool_config.yaml"
     with open(config_path, 'r') as config_file:
-        config = yaml.safe_load(config_file) 
+        config = yaml.safe_load(config_file)
     db_args =DBArgs('pgsql', config)
     return db_args
 
@@ -813,10 +814,10 @@ def redundent_index(threads,duration,ncolumns,nrows,colsize,nindex,table_name='t
     delete_table(table_name)
     create_table(table_name,colsize, ncolumns)
     db=Database(init())
-    # insert some data to be updated 
+    # insert some data to be updated
     insert_definitions = ', '.join(f'(SELECT substr(md5(random()::text), 1, {{colsize}}))' for i in range(ncolumns))
-    insert_data=f'insert into {{table_name}} select generate_series(1,{{nrows}}),{{insert_definitions}}, now();' 
-    db.execute_sqls(insert_data) 
+    insert_data=f'insert into {{table_name}} select generate_series(1,{{nrows}}),{{insert_definitions}}, now();'
+    db.execute_sqls(insert_data)
 
     #initialization of the indexes
     nindex=int((nindex*ncolumns)/10)
@@ -861,29 +862,29 @@ def lock(table_name, ncolumns, colsize, duration, nrows):
 if __name__ == "__main__":
     # Number of threads to use for concurrent inserts
     num_threads = {threads}
-    
+
     # Duration for which to run the inserts (in seconds)
     insert_duration = {duration}
-    
+
     # Number of columns in the table
     num_columns = {ncolumn}
-    
+
     # Number of rows to insert
     num_rows = {nrow}
-    
+
     # Size of each column (in characters)
     column_size = {colsize}
-    
+
     # Table name
     table_name = 'table1'
-    
+
     nindex=6
-    
+
     # Call the insert_large_data function
     redundent_index(num_threads, insert_duration, num_columns, num_rows, column_size, nindex,table_name)\n\n\n\n'''
-        
+
     if anomaly == 'INSERT_LARGE_DATA,IO_CONTENTION':
-        code=f'''import os
+        code='''import os
 import datetime
 
 #print the current time
@@ -905,7 +906,7 @@ if __name__ == "__main__":
     print_time()\n\n\n\n'''
     if anomaly == 'FETCH_LARGE_DATA,CORRELATED_SUBQUERY':
         # 打印提取的数字
-        code=f'''import os
+        code='''import os
 import re
 import time
 
@@ -951,7 +952,7 @@ class Database():
 
 
 def all_sql_files():
-    res_path = "{{}}/tpch-queries/".format(
+    res_path = "{}/tpch-queries/".format(
         os.path.dirname(os.path.abspath(__file__)))
     # all_file_list = list(filter(file_filter, os.listdir(res_path)))
     # all_file_list = sorted(all_file_list, key=custom_sort)
@@ -1008,7 +1009,7 @@ def test_all():
 
 
 def test_one():
-    res_path = "{{}}/tpch-queries/".format(
+    res_path = "{}/tpch-queries/".format(
         os.path.dirname(os.path.abspath(__file__)))
     test_hint_from_file(res_path + '1.explain.sql')
 
@@ -1023,7 +1024,7 @@ if __name__ == '__main__':
     TIMELOG.close()\n\n\n\n'''
     if anomaly == 'POOR_JOIN_PERFORMANCE,CPU_CONTENTION':
         # 打印提取的数字
-        code=f'''import os
+        code='''import os
 import re
 import time
 
@@ -1069,7 +1070,7 @@ class Database():
 
 
 def all_sql_files():
-    res_path = "{{}}/join-order-benchmark-master/".format(
+    res_path = "{}/join-order-benchmark-master/".format(
         os.path.dirname(os.path.abspath(__file__)))
     # all_file_list = list(filter(file_filter, os.listdir(res_path)))
     # all_file_list = sorted(all_file_list, key=custom_sort)
@@ -1158,7 +1159,7 @@ def test_all():
 
 
 def test_one():
-    res_path = "{{}}/join-order-benchmark-master/".format(
+    res_path = "{}/join-order-benchmark-master/".format(
         os.path.dirname(os.path.abspath(__file__)))
     test_hint_from_file(res_path + '1a.sql')
 

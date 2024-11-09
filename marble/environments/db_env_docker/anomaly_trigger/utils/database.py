@@ -1,12 +1,12 @@
-import psycopg2
-import pymysql
 import json
 import logging
-import os
-from enum import IntEnum
-import time
 import random
+import time
+from enum import IntEnum
 from multiprocessing.pool import *
+
+import psycopg2
+import pymysql
 
 DB_CONFIG = {
     "dbname":"sysbench",  # 连接到默认的 "postgres" 数据库
@@ -27,7 +27,7 @@ SERVER_CONFIG = {
 
 def extract_node_types(json_tree):
     node_types = []
-    
+
     def traverse_tree(node):
         if isinstance(node, dict):
             if 'Node Type' in node:
@@ -37,7 +37,7 @@ def extract_node_types(json_tree):
         elif isinstance(node, list):
             for item in node:
                 traverse_tree(item)
-    
+
     traverse_tree(json_tree)
     return node_types
 
@@ -130,7 +130,7 @@ class Database():
                                             options='-c statement_timeout={}s'.format(timeout),
                                             application_name=self.args.application_name)
             else:
-                
+
                 conn = psycopg2.connect(database=self.args.dbname,
                                             user=self.args.user,
                                             password=self.args.password,
@@ -145,7 +145,7 @@ class Database():
         cur.execute(statement)
         if one:
             return cur.fetchone()
-        return cur.fetchall()    
+        return cur.fetchall()
     '''
 
     def execute_sql(self, sql):
@@ -206,7 +206,7 @@ class Database():
                 sql = sqls[0] + ';' + ' explain (FORMAT JSON) ' + sqls[1]
             else:
                 sql = 'explain (FORMAT JSON) ' + sql
-            
+
             success, res = self.execute_sql(sql)
             if success == 1:
                 plan = res[0][0][0]['Plan']
@@ -302,7 +302,7 @@ class Database():
             sql = 'SELECT table_name FROM information_schema.tables WHERE table_schema = \'public\';'
             success, res = self.execute_sql(sql)
             #print("======== tables", res)
-            if success == 1:                
+            if success == 1:
                 tables = res
                 schema = {}
                 for table_info in tables:
@@ -315,7 +315,7 @@ class Database():
                     for col in columns:
 
                         ''' compute the distinct value ratio of the column
-                        
+
                         if transfer_field_type(col[1], self.args.dbtype) == DataType.VALUE.value:
                             sql = 'SELECT count({}) FROM {};'.format(col[0], table_name)
                             success, res = self.execute_sql(sql)
@@ -351,13 +351,13 @@ class Database():
         try:
             #success, res = self.execute_sql('explain (FORMAT JSON, analyze) ' + sql)
             #command = "SELECT query, calls, total_time FROM pg_stat_statements ORDER BY total_time DESC LIMIT 2;"
-            
+
             command = f"SELECT s.query, s.calls, s.total_time, d.datname FROM pg_stat_statements s JOIN pg_database d ON s.dbid = d.oid ORDER BY s.total_time DESC LIMIT {topn};"
             success, res = self.execute_sql(command)
             if success == 1:
                 slow_queries = []
                 for sql_stat in res:
-                    if not "postgres" in sql_stat[3]:
+                    if "postgres" not in sql_stat[3]:
                         sql_template = sql_stat[0].replace("\n", "").replace("\t", "").strip()
                         # print("===== logged slow query: ", sql_template,sql_stat[1],sql_stat[2],sql_stat[3])
                         sql_template = sql_template.lower()
@@ -365,14 +365,14 @@ class Database():
                             continue
 
                         slow_queries.append({"sql": sql_template, "calls": sql_stat[1], "total_time": sql_stat[2], "dbname": sql_stat[3]})
-                        
+
                 return slow_queries
             else:
                 logging.error('obtain_historical_queries_statistics Fails!')
                 return 0
         except Exception as error:
             logging.error('obtain_historical_queries_statistics Exception', error)
-            return 0        
+            return 0
 
     def drop_simulated_index(self, oid):
         statement = f"select * from hypopg_drop_index({oid})"
@@ -416,13 +416,13 @@ class Database():
         pool.close()
         pool.join()
         return results
-    
 
-        
+
+
     def build_index(self, table_name, idx_num):
         self.conn = self.resetConn(timeout=-1)
         cursor = self.conn.cursor()
-    
+
         for i in range(0, idx_num):
             the_sql = 'CREATE INDEX index_' + table_name + '_' + str(i) + ' ON ' + table_name + '(name' + str(i) + ');'
             print(the_sql)
@@ -433,13 +433,13 @@ class Database():
                 #print(f'Index index_{table_name}_{i} created successfully.')
             #else:
                 #print(f'Failed to create index index_{table_name}_{i}.')
-    
+
         self.conn.commit()
         self.conn.close()
         return
 
 
-    
+
     def drop_index(self,table_name):
         self.conn = self.resetConn(timeout=-1)
         cursor = self.conn.cursor()

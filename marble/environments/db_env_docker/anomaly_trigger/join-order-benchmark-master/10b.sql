@@ -18,4 +18,3 @@ WHERE ci.note LIKE '%(producer)%'
   AND rt.id = ci.role_id
   AND cn.id = mc.company_id
   AND ct.id = mc.company_type_id;
-

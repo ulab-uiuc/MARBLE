@@ -1,9 +1,9 @@
 # join-order-benchmark
 
-This package contains the Join Order Benchmark (JOB) queries from:  
-"How Good Are Query Optimizers, Really?"  
-by Viktor Leis, Andrey Gubichev, Atans Mirchev, Peter Boncz, Alfons Kemper, Thomas Neumann  
-PVLDB Volume 9, No. 3, 2015  
+This package contains the Join Order Benchmark (JOB) queries from:
+"How Good Are Query Optimizers, Really?"
+by Viktor Leis, Andrey Gubichev, Atans Mirchev, Peter Boncz, Alfons Kemper, Thomas Neumann
+PVLDB Volume 9, No. 3, 2015
 [http://www.vldb.org/pvldb/vol9/p204-leis.pdf](http://www.vldb.org/pvldb/vol9/p204-leis.pdf)
 
 ### IMDB Data Set
@@ -19,7 +19,7 @@ found at [http://www.imdb.com/interfaces](http://www.imdb.com/interfaces)
   ```sh
   wget ftp://ftp.fu-berlin.de/misc/movies/database/frozendata/*gz
   ```
-  
+
 2. download and unpack `imdbpy` and the `imdbpy2sql.py` script
 
   ```sh

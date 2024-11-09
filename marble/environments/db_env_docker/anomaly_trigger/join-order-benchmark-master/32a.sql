@@ -14,4 +14,3 @@ WHERE k.keyword ='10,000-mile-club'
   AND ml.linked_movie_id = t2.id
   AND lt.id = ml.link_type_id
   AND mk.movie_id = t1.id;
-

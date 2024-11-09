@@ -1,5 +1,5 @@
-import re
 import random
+import re
 
 input_file_name = "xxx"
 output_file_name = "xxx"
@@ -76,7 +76,7 @@ for line in lines:
         with open(output_file_name, 'a') as output_file:
             script=f'python anomaly_trigger/main.py --anomaly VACUUM   --threads {threads} --ncolumn {ncolumn} --colsize {colsize} --nrow {nrow} {timestamp1}{timestamp2}\n'
             output_file.write(script)
-    
+
     if anomaly=="io":
         # 使用正则表达式提取数字
         threads_match = re.search(r'--client_2 (\d+)', input_string)

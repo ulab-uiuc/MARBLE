@@ -1,5 +1,6 @@
-import os
 import datetime
+import os
+
 
 #print the current time
 def print_time():

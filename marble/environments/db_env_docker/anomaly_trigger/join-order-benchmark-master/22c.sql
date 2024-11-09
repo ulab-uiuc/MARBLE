@@ -51,4 +51,3 @@ WHERE cn.country_code != '[us]'
   AND it2.id = mi_idx.info_type_id
   AND ct.id = mc.company_type_id
   AND cn.id = mc.company_id;
-

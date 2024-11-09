@@ -53,4 +53,3 @@ WHERE cct1.kind = 'cast'
   AND mk.movie_id = cc.movie_id
   AND mc.movie_id = cc.movie_id
   AND mi.movie_id = cc.movie_id;
-

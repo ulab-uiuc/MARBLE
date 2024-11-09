@@ -1,5 +1,6 @@
 import psycopg2
-from utils.database import DB_CONFIG, SERVER_CONFIG
+from utils.database import DB_CONFIG
+
 
 def createdatabase(name):
     # 连接到 PostgreSQL 服务器的默认数据库 "postgres"

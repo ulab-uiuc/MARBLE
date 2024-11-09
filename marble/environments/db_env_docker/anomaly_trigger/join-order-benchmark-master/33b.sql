@@ -45,4 +45,3 @@ WHERE cn1.country_code = '[nl]'
   AND ml.linked_movie_id = mi_idx2.movie_id
   AND ml.linked_movie_id = mc2.movie_id
   AND mi_idx2.movie_id = mc2.movie_id;
-

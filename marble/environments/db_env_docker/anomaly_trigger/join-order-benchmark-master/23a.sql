@@ -36,4 +36,3 @@ WHERE cct1.kind = 'complete+verified'
   AND cn.id = mc.company_id
   AND ct.id = mc.company_type_id
   AND cct1.id = cc.status_id;
-

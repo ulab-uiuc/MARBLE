@@ -1,5 +1,6 @@
 import psycopg2
-from utils.database import DB_CONFIG, SERVER_CONFIG
+from utils.database import DB_CONFIG
+
 
 def dropdatabase(name):
     # 连接到 "postgres" 数据库

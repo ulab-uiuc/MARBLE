@@ -1,15 +1,14 @@
 import os
-import time
-import datetime
 import subprocess
-from typing import Any, Dict, List, Optional
-import numpy as np
+import time
+from typing import Any, Dict, List
 
+import numpy as np
 import requests
+from db_utils.anomaly_detection import detect_anomalies
 
 from marble.environments.base_env import BaseEnvironment
 
-from db_utils.anomaly_detection import detect_anomalies
 
 def get_prometheus_metric_data(metric_name: str) -> List[List[Any]]:
     """
@@ -70,6 +69,18 @@ class DBEnvironment(BaseEnvironment):
 
         # Then, run "docker-compose up
         subprocess.run(["docker", "compose", "up", "-d", "--remove-orphans"], check=True)
+
+        # anomalies
+        env_configs = config.get('environment', [])
+
+        if env_configs:
+            anomalies = config.get('anomalies', [])
+            for anomaly in anomalies:
+                anomaly_type = anomaly['anomaly']
+                threads = anomaly['threads']
+                ncolumn = anomaly['ncolumn']
+                colsize = anomaly['colsize']
+                subprocess.run(["python3", "anomaly_trigger/main.py", "--anomaly", anomaly_type, "--threads", f"{threads}", "--ncolumn", f"{ncolumn}", "--colsize", f"{colsize}"], check=True)
 
         # We will query using v1 api instead
         # Code must be agnostic to system clock
@@ -196,7 +207,19 @@ class DBEnvironment(BaseEnvironment):
         subprocess.run(["docker", "compose", "down"], check=True)
 
 if __name__ == "__main__":
-    env = DBEnvironment(config={})
+    env = DBEnvironment(config={
+        'environment': {
+            'anomalies':
+            [
+                {
+                    'anomaly': 'MISSING_INDEXES',
+                    'threads': 1000,
+                    'ncolumn': 1000,
+                    'colsize': 1000,
+                }
+            ]
+        }
+    })
     while True:
         command = input('> ')
         if command == 'alert':

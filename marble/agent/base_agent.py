@@ -4,7 +4,6 @@ Base agent module.
 
 import json
 import uuid
-from litellm.utils import trim_messages
 from collections import defaultdict
 from typing import Any, Dict, List, Optional, Tuple, TypeVar, Union
 
@@ -324,7 +323,7 @@ class BaseAgent:
                 "type": "function",
                 "function": {
                     "name": "communicate_to",
-                    "description": f"Send a message to a specific target agent:" + "\n".join([f"- {desc}" for desc in agent_descriptions]),
+                    "description": "Send a message to a specific target agent:" + "\n".join([f"- {desc}" for desc in agent_descriptions]),
                     "parameters": {
                         "type": "object",
                         "properties": {

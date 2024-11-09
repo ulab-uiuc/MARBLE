@@ -17,4 +17,3 @@ WHERE cn.country_code ='[us]'
   AND ci.role_id = rt.id
   AND a1.person_id = ci.person_id
   AND ci.movie_id = mc.movie_id;
-

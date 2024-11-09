@@ -1,15 +1,13 @@
-import psycopg2
-import sys
-from utils.database import DB_CONFIG
-from utils.database import DBArgs,Database
-import random
-import os
 import datetime
-import yaml
+import os
+import random
 import time
-import paramiko
 from multiprocessing.pool import *
+
 import promethues
+import psycopg2
+from utils.database import DB_CONFIG, Database, DBArgs
+
 
 def init():
     # add the config
@@ -90,7 +88,7 @@ def write_amomaly_sql_to_file_a_line(text):
 def write_space():
     try:
         with open('badsql.txt', 'a') as file:
-            file.write(f"\n")
+            file.write("\n")
     except Exception as e:
         print(f"写入文件时出现错误: {e}")
 
@@ -268,7 +266,7 @@ def redundent_index(threads,duration,ncolumns,nrows,colsize,nindex,table_name='t
 
 '''io_contention'''
 def io_contention():
-    cmd=f"python anomaly_trigger/main.py --anomaly INSERT_LARGE_DATA,IO_CONTENTION"
+    cmd="python anomaly_trigger/main.py --anomaly INSERT_LARGE_DATA,IO_CONTENTION"
     print_start_time(cmd)
     command = (
     "su - root -c 'cd /sysbench-tpcc-master; "
@@ -290,7 +288,7 @@ def io_contention():
 
 '''fetch_large_data'''
 def fetch_large_data():
-    cmd=f"python anomaly_trigger/main.py --anomaly FETCH_LARGE_DATA,CORRELATED_SUBQUERY"
+    cmd="python anomaly_trigger/main.py --anomaly FETCH_LARGE_DATA,CORRELATED_SUBQUERY"
 
     try:
         print_start_time(cmd)
@@ -311,7 +309,7 @@ def fetch_large_data():
 
 '''cpu_contention'''
 def cpu_contention():
-    cmd=f"python anomaly_trigger/main.py --anomaly POOR_JOIN_PERFORMANCE,CPU_CONTENTION"
+    cmd="python anomaly_trigger/main.py --anomaly POOR_JOIN_PERFORMANCE,CPU_CONTENTION"
     try:
         print_start_time(cmd)
         os.system("python anomaly_trigger/benchmark_job.py")

@@ -1,7 +1,8 @@
-import re
 import datetime
+
 #from alert import filter_alerts_by_time
 import json
+
 '''
 def dataset_statistics():
     max_column = 0
@@ -132,7 +133,7 @@ import"""
         nlps = f.read()
         code_blocks = nlps.split(splitting_token)
         new_code_blocks = []
-        for code_block in code_blocks:            
+        for code_block in code_blocks:
             new_code_blocks.append('import ' + code_block)
         code_blocks = new_code_blocks
 
@@ -144,7 +145,7 @@ import"""
         while True:
             line1 = f.readline()
             line2 = f.readline()
-            
+
             if not line1:
                 break
 
@@ -177,7 +178,7 @@ import"""
                 # 2023-10-10 03:00:00
                 formatted_time = dt_object.strftime("%Y-%m-%d %H:%M:%S")
                 content["end_timestamp"] = formatted_time
-            
+
             # alerts
             '''alerts = filter_alerts_by_time("alert.txt", content["start_time"], content["end_time"])
             content["alerts"] = alerts
@@ -195,7 +196,7 @@ import"""
 
             # script
             content["script"] = code_blocks[len(anomaly_jsons)]
-                                
+
             # description
             content["description"] = desc_blocks[len(anomaly_jsons)]
 

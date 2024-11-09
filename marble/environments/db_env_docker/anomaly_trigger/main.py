@@ -1,9 +1,8 @@
 import argparse
+
 import anomaly
 import createdatabase
 import dropdatabase
-
-
 
 parser = argparse.ArgumentParser(description='Anomaly simulation tool')
 parser.add_argument('--anomaly', type=str, required=True, choices=['INSERT_LARGE_DATA', 'MISSING_INDEXES','LOCK_CONTENTION','VACUUM','REDUNDANT_INDEX','INSERT_LARGE_DATA,IO_CONTENTION',
@@ -94,5 +93,3 @@ elif args.anomaly == 'POOR_JOIN_PERFORMANCE,CPU_CONTENTION':
 
 else:
         print("Invalid --anomaly option.")
-
-

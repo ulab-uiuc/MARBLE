@@ -42,5 +42,3 @@ services:
       PG_EXPORTER_URL: 'postgresql://test:Test123_456@postgres_db:5432/sysbench?sslmode=disable'
     ports:
       - 9187:9187
-
-

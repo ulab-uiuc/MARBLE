@@ -24,10 +24,10 @@ def restart_decision():
 
     # 提取CPU使用率的值
     print("cpu_usage: ", cpu_usage, " memory_usage: ", memory_usage)
-    cpu_usage_value = cpu_usage['data']['result'][0]['value'][1] 
+    cpu_usage_value = cpu_usage['data']['result'][0]['value'][1]
     cpu=int(float(cpu_usage_value))
     # 提取内存使用量的值
-    memory_usage_value = memory_usage['data']['result'][0]['value'][1] 
+    memory_usage_value = memory_usage['data']['result'][0]['value'][1]
     mem=int(float(memory_usage_value))
     # 打印结果
     print("CPU Usage:", cpu_usage_value, "%")
@@ -36,4 +36,4 @@ def restart_decision():
     return cpu,mem
 
 
-restart_decision()  
+restart_decision()

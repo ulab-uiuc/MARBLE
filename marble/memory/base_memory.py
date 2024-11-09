@@ -5,6 +5,7 @@ Base memory module for agents.
 import json
 from typing import Any, List
 
+
 class BaseMemory:
     """Base class for agent memory modules."""
 
@@ -61,7 +62,7 @@ class BaseMemory:
             str: Technical string representation.
         """
         return f"BaseMemory(storage={self.storage})"
-      
+
     def get_memory_str(self) -> str:
         """
         Get a string representation of the memory.

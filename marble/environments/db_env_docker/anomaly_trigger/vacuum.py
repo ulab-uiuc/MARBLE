@@ -1,11 +1,14 @@
-import psycopg2
 import sys
+
+import psycopg2
+
 sys.path.append('/root/DB-GPT/')
-import time
 import datetime
 import random
-import yaml
+import time
 from multiprocessing.pool import *
+
+import yaml
 
 
 class DBArgs(object):
@@ -43,7 +46,7 @@ class Database():
                                             host=self.args.host,
                                             port=self.args.port)
         return conn
-    
+
     def execute_sqls(self,sql):
         self.conn =self.resetConn(timeout=-1)
         cur = self.conn.cursor()
@@ -80,12 +83,12 @@ class Database():
         pool.close()
         pool.join()
         return results
-    
+
 def init():
     #add the config
     config_path = "/root/DB-GPT/config/tool_config.yaml"
     with open(config_path, 'r') as config_file:
-        config = yaml.safe_load(config_file) 
+        config = yaml.safe_load(config_file)
     db_args =DBArgs('pgsql', config)
     return db_args
 
@@ -119,8 +122,8 @@ def vacuum(threads,duration,ncolumns,nrows,colsize,table_name='table1'):
 
     # insert some data to be deleted
     insert_definitions = ', '.join(f'(SELECT substr(md5(random()::text), 1, {colsize}))' for i in range(ncolumns))
-    insert_data=f'insert into {table_name} select generate_series(1,{nrows}),{insert_definitions}, now();' 
-    db.execute_sqls(insert_data) 
+    insert_data=f'insert into {table_name} select generate_series(1,{nrows}),{insert_definitions}, now();'
+    db.execute_sqls(insert_data)
 
     # delete 80% of the rows
     delete_nrows=int(nrows*0.8)
@@ -139,21 +142,21 @@ def vacuum(threads,duration,ncolumns,nrows,colsize,table_name='table1'):
 if __name__ == "__main__":
     # Number of threads to use for concurrent inserts
     num_threads = 100
-    
+
     # Duration for which to run the inserts (in seconds)
     insert_duration = 60
-    
+
     # Number of columns in the table
     num_columns = 10
-    
+
     # Number of rows to insert
     num_rows = 100
-    
+
     # Size of each column (in characters)
     column_size = 20000
-    
+
     # Table name
     table_name = 'table1'
-    
+
     # Call the insert_large_data function
     vacuum(num_threads, insert_duration, num_columns, num_rows, column_size, table_name)
