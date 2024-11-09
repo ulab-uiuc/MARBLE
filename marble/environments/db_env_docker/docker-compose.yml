@@ -10,15 +10,6 @@ services:
     ports:
       - 9090:9090
 
-  alertmanager:
-    image: prom/alertmanager
-    volumes:
-      - ./alertmanager.yml:/etc/alertmanager/alertmanager.yml
-    command:
-      - '--config.file=/etc/alertmanager/alertmanager.yml'
-    ports:
-      - 9093:9093
-
   postgres_db:
     image: postgres:12.11
     environment:
@@ -52,15 +43,4 @@ services:
     ports:
       - 9187:9187
 
-  python_app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    volumes:
-      - .:/app
-    ports:
-      - 8023:8023
 
-networks:
-  default:
-    name: agent_network
