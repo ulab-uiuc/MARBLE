@@ -123,7 +123,7 @@ class Engine:
         Graph-based coordination mode.
         """
         try:
-            summary_data = []
+            summary_data = {"task": self.task, "coordination_mode": self.coordinate_mode, "iterations": []}
             # Initial assignment: Distribute the overall task to each agent
             self.logger.info("Initial task distribution to all agents.")
             initial_tasks = {agent.agent_id: self.task for agent in self.graph.get_all_agents()}
@@ -131,21 +131,21 @@ class Engine:
             for agent_id, task in initial_tasks.items():
                 iteration_data = {
                     "initial_task_assignment": {"agent_id": agent_id, "task": task},
-                    "result": None,
-                    "coordination_mode": self.coordinate_mode
+                    "result": None
+
                 }
                 try:
                     agent = self.graph.get_agent(agent_id)
                     self.logger.info(f"Assigning initial task to {agent_id}: {task}")
                     result = agent.act(task)
                     agents_results.append({agent_id: result})
-                    iteration_data["result"] = result
+                    iteration_data["result"] = result.content
                     self.logger.debug(f"Agent '{agent_id}' completed initial task with result: {result}")
                 except KeyError:
                     self.logger.error(f"Agent '{agent_id}' not found in the graph.")
                 except Exception as e:
                     self.logger.error(f"Error while executing initial task for agent '{agent_id}': {e}")
-                summary_data.append(iteration_data)
+                summary_data["iterations"].append(iteration_data)
 
             # Update progress based on initial results
             summary = self._summarize_results(agents_results)
@@ -162,9 +162,7 @@ class Engine:
                     "task_assignments": {},
                     "task_results": [],
                     "summary": "",
-                    "continue_simulation": True,
-                    "task": self.task,
-                    "coordination_mode": self.coordinate_mode
+                    "continue_simulation": True
                 }
                 self.current_iteration += 1
                 self.logger.info(f"Starting iteration {self.current_iteration}")
@@ -184,7 +182,7 @@ class Engine:
                         # Agent acts on the planned task
                         result = agent.act(task)
                         agents_results.append({agent.agent_id: result})
-                        iteration_data["task_results"].append({agent.agent_id: result})
+                        iteration_data["task_results"].append({agent.agent_id: result.content})
                         self.logger.debug(f"Agent '{agent.agent_id}' executed task with result: {result}")
                     except Exception as e:
                         self.logger.error(f"Error in agent '{agent.agent_id}' during planning or action: {e}")
@@ -209,8 +207,7 @@ class Engine:
                 if self.environment.is_task_completed():
                     self.logger.info("Task has been completed successfully.")
                     break
-
-                summary_data.append(iteration_data)
+                summary_data["iterations"].append(iteration_data)
 
             self.logger.info("Engine graph-based coordination loop completed.")
 
@@ -227,16 +224,15 @@ class Engine:
         Centralized coordination mode.
         """
         try:
-            summary_data = []
+            summary_data = {"task": self.task, "coordination_mode": self.coordinate_mode, "iterations": []}
+
             while not self._should_terminate():
                 iteration_data = {
                     "iteration": self.current_iteration + 1,
                     "task_assignments": {},
                     "task_results": [],
                     "summary": "",
-                    "continue_simulation": True,
-                    "task": self.task,
-                    "coordination_mode": self.coordinate_mode
+                    "continue_simulation": True
                 }
                 self.current_iteration += 1
                 self.logger.info(f"Starting iteration {self.current_iteration}")
@@ -254,7 +250,8 @@ class Engine:
                         agent = self.graph.get_agent(agent_id)
                         self.logger.info(f"Assigning task to {agent_id}: {task}")
                         result = agent.act(task)
-                        agents_results.append({agent_id: result})
+                        agents_results.append({agent_id: result.content})
+
                         self.logger.debug(f"Agent '{agent_id}' completed task with result: {result}")
                     except KeyError:
                         self.logger.error(f"Agent '{agent_id}' not found in the graph.")
@@ -287,7 +284,7 @@ class Engine:
                     self.logger.info("Maximum iterations reached.")
                     break
 
-                summary_data.append(iteration_data)
+                summary_data["iterations"].append(iteration_data)
 
             self.logger.info("Engine simulation loop completed.")
 
@@ -305,7 +302,7 @@ class Engine:
         """
         try:
             self.logger.info("Starting chain-based coordination.")
-            summary_data = []
+            summary_data = {"task": self.task, "coordination_mode": self.coordinate_mode, "iterations": []}
             # Start with the initial agent
             current_agent = self._select_initial_agent()
             if not current_agent:
@@ -323,15 +320,13 @@ class Engine:
                 iteration_data = {
                     "chain_length": chain_length + 1,
                     "current_agent": current_agent.agent_id,
-                    "task": task,
                     "result": None,
-                    "continue_simulation": True,
-                    "coordination_mode": self.coordinate_mode
+                    "continue_simulation": True
                 }
                 self.logger.info(f"Agent '{current_agent.agent_id}' is executing task.")
                 result = current_agent.act(task)
                 agents_results.append({current_agent.agent_id: result})
-                iteration_data["result"] = result
+                iteration_data["result"] = result.content
                 self.logger.info(f"Agent '{current_agent.agent_id}' completed task with result: {result}")
 
                 # Prevent loops
@@ -340,7 +335,7 @@ class Engine:
                 # Get profiles of other agents
                 agent_profiles = self.graph.get_agent_profiles()
                 # Current agent chooses the next agent
-                next_agent_id, plan = current_agent.plan_next_agent(result, agent_profiles)
+                next_agent_id, plan = current_agent.plan_next_agent(result.content, agent_profiles)
                 current_agent = self.graph.get_agent(next_agent_id)
                 task = plan
                 chain_length += 1
@@ -353,8 +348,7 @@ class Engine:
                     self.logger.info("EnginePlanner decided to terminate the simulation.")
                     break
 
-                summary_data.append(iteration_data)
-
+                summary_data["iterations"].append(iteration_data)
             # Update progress
             summary = self._summarize_results(agents_results)
             self.logger.info(f"Chain execution Summary:\n{summary}")
@@ -376,7 +370,8 @@ class Engine:
         """
         try:
             self.logger.info("Starting tree-based coordination.")
-            summary_data = []
+            summary_data = {"task": self.task, "coordination_mode": self.coordinate_mode, "iterations": []}
+
             root_agent = self.graph.get_root_agent()
             if not root_agent:
                 self.logger.error("No root agent found in the tree.")
@@ -389,14 +384,12 @@ class Engine:
                     "root_agent": root_agent.agent_id,
                     "result": None,
                     "continue_simulation": True,
-                    "task": self.task,
-                    "coordination_mode": self.coordinate_mode
                 }
                 self.current_iteration += 1
                 self.logger.info(f"Starting iteration {self.current_iteration}")
-
                 result = self._execute_agent_task_recursive(root_agent, self.task)
-                iteration_data["result"] = result
+                iteration_data["result"] = result.content
+
 
                 # Update progress
                 summary = self._summarize_results([{'root_agent': result}])
@@ -414,7 +407,8 @@ class Engine:
                     self.logger.info("EnginePlanner decided to terminate the simulation.")
                     break
 
-                summary_data.append(iteration_data)
+                summary_data["iterations"].append(iteration_data)
+
 
             self.logger.info("Tree-based coordination simulation completed.")
 
@@ -528,7 +522,7 @@ class Engine:
         self.logger.debug(f"Summarized agents' results:\n{summary}")
         return summary
 
-    def _write_to_jsonl(self, summary_data: List[Dict[str, Any]]) -> None:
+    def _write_to_jsonl(self, summary_data: Dict[str, Any]) -> None:
         """
         Write summary data to the JSONL file.
 
@@ -538,8 +532,9 @@ class Engine:
         file_path = self.config.output.get("file_path", "result/discussion_output.jsonl")
         try:
             with open(file_path, "a") as jsonl_file:
-                for entry in summary_data:
-                    jsonl_file.write(json.dumps(entry) + "\n")
+                print(summary_data)
+                jsonl_file.write(json.dumps(summary_data) + "\n")
+
                 jsonl_file.flush()
             self.logger.info(f"Summary data successfully written to {file_path}")
         except IOError as e:
