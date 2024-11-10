@@ -8,14 +8,12 @@ from collections import defaultdict
 from typing import Any, Dict, List, Optional, Tuple, TypeVar, Union
 
 from marble.environments import BaseEnvironment, WebEnvironment
-from marble.graph.agent_graph import AgentGraph
 from marble.llms.model_prompting import model_prompting
 from marble.memory import BaseMemory, SharedMemory
 from marble.utils.logger import get_logger
 
 EnvType = Union[BaseEnvironment, WebEnvironment]
 AgentType = TypeVar('AgentType', bound='BaseAgent')
-AgentGraphType = TypeVar('AgentGraphType', bound='AgentGraph')
 
 class BaseAgent:
     """
@@ -37,7 +35,7 @@ class BaseAgent:
         self.env: EnvType = env
         self.actions: List[str] = []
         self.agent_id: str = agent_id
-        self.agent_graph: AgentGraphType = None
+        self.agent_graph = None
         self.profile = config.get("profile", '')
         self.system_message = (
             f"You are \"{self.agent_id}\": \"{self.profile}\"\n"
@@ -63,7 +61,7 @@ class BaseAgent:
         self.RECV_FROM = 1
         self.session_id: str = ''
 
-    def set_agent_graph(self, agent_graph: AgentGraphType) -> None:
+    def set_agent_graph(self, agent_graph: Any) -> None:
         self.agent_graph = agent_graph
 
     def perceive(self, state: Any) -> Any:
@@ -138,19 +136,19 @@ class BaseAgent:
         }
 
         tools.append(new_communication_session_description)
-        # act_task = (
-        #     f"You are {self.agent_id}: {self.profile}\n"
-        #     f"These are your memory: {self.memory}\n"
-        #     f"This is your task: {task}\n"
-        #     f"These are the ids and profiles of other agents you can interact with:\n"
-        #     f"{agent_descriptions}"
-        #     f"But you do not have to communcate with other agents.\n"
-        #     f"You can also solve the task by calling other functions to solve it by yourself.\n"
-        # )
+        act_task = (
+            f"You are {self.agent_id}: {self.profile}\n"
+            f"These are your memory: {self.memory.get_memory_str()}\n"
+            f"This is your task: {task}\n"
+            f"These are the ids and profiles of other agents you can interact with:\n"
+            f"{agent_descriptions}"
+            f"But you do not have to communcate with other agents.\n"
+            f"You can also solve the task by calling other functions to solve it by yourself.\n"
+        )
         if len(tools) == 0:
             result = model_prompting(
                 llm_model="gpt-3.5-turbo",
-                messages=[{"role":"user", "content": task}],
+                messages=[{"role":"user", "content": act_task}],
                 return_num=1,
                 max_token_num=512,
                 temperature=0.0,
@@ -160,7 +158,7 @@ class BaseAgent:
         else:
             result = model_prompting(
                 llm_model="gpt-3.5-turbo",
-                messages=[{"role":"user", "content": task}],
+                messages=[{"role":"user", "content": act_task}],
                 return_num=1,
                 max_token_num=512,
                 temperature=0.0,
@@ -196,7 +194,7 @@ class BaseAgent:
         else:
             self.memory.update(self.agent_id, {
                     "type": "action_response",
-                    "result": result
+                    "result": result.content
                 }
             )
             self.logger.info(f"Agent '{self.agent_id}' acted with result '{result}'.")
