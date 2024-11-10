@@ -132,6 +132,7 @@ class Engine:
                 iteration_data = {
                     "initial_task_assignment": {"agent_id": agent_id, "task": task},
                     "result": None
+
                 }
                 try:
                     agent = self.graph.get_agent(agent_id)
@@ -206,7 +207,6 @@ class Engine:
                 if self.environment.is_task_completed():
                     self.logger.info("Task has been completed successfully.")
                     break
-
                 summary_data["iterations"].append(iteration_data)
 
             self.logger.info("Engine graph-based coordination loop completed.")
@@ -225,6 +225,7 @@ class Engine:
         """
         try:
             summary_data = {"task": self.task, "coordination_mode": self.coordinate_mode, "iterations": []}
+
             while not self._should_terminate():
                 iteration_data = {
                     "iteration": self.current_iteration + 1,
@@ -250,6 +251,7 @@ class Engine:
                         self.logger.info(f"Assigning task to {agent_id}: {task}")
                         result = agent.act(task)
                         agents_results.append({agent_id: result.content})
+
                         self.logger.debug(f"Agent '{agent_id}' completed task with result: {result}")
                     except KeyError:
                         self.logger.error(f"Agent '{agent_id}' not found in the graph.")
@@ -347,7 +349,6 @@ class Engine:
                     break
 
                 summary_data["iterations"].append(iteration_data)
-
             # Update progress
             summary = self._summarize_results(agents_results)
             self.logger.info(f"Chain execution Summary:\n{summary}")
@@ -370,6 +371,7 @@ class Engine:
         try:
             self.logger.info("Starting tree-based coordination.")
             summary_data = {"task": self.task, "coordination_mode": self.coordinate_mode, "iterations": []}
+
             root_agent = self.graph.get_root_agent()
             if not root_agent:
                 self.logger.error("No root agent found in the tree.")
@@ -388,6 +390,7 @@ class Engine:
                 result = self._execute_agent_task_recursive(root_agent, self.task)
                 iteration_data["result"] = result.content
 
+
                 # Update progress
                 summary = self._summarize_results([{'root_agent': result}])
                 iteration_data["summary"] = summary
@@ -405,6 +408,7 @@ class Engine:
                     break
 
                 summary_data["iterations"].append(iteration_data)
+
 
             self.logger.info("Tree-based coordination simulation completed.")
 
@@ -530,6 +534,7 @@ class Engine:
             with open(file_path, "a") as jsonl_file:
                 print(summary_data)
                 jsonl_file.write(json.dumps(summary_data) + "\n")
+
                 jsonl_file.flush()
             self.logger.info(f"Summary data successfully written to {file_path}")
         except IOError as e:

@@ -8,6 +8,7 @@ from collections import defaultdict
 from typing import Any, Dict, List, Optional, Tuple, TypeVar, Union
 
 from marble.environments import BaseEnvironment, WebEnvironment
+from marble.graph.agent_graph import AgentGraph
 from marble.llms.model_prompting import model_prompting
 from marble.memory import BaseMemory, SharedMemory
 from marble.utils.logger import get_logger
