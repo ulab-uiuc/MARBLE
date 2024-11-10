@@ -41,8 +41,6 @@ class BaseEnvironment:
         # Implement a method to compare result to ground truth
         # For simplicity, check if result matches ground_truth exactly
         if result:
-            import pdb; pdb.set_trace()
-
             return result.strip().lower() == ground_truth.strip().lower()
         else:
             return False

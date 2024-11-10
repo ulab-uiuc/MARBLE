@@ -33,6 +33,7 @@ class Config:
         self.task:Dict[str, Any] = data.get('task', {})
         self.coordination_mode = data.get('coordinate_mode', 'centralized')
         self.relationships = data.get('relationships', [])
+        self.output = data.get('output', {})
 
     @staticmethod
     def load(file_path: str) -> 'Config':

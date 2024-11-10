@@ -40,3 +40,7 @@ metrics:
 
 engine_planner:
   initial_progress: "Starting the discussion on AI's impact across industries."
+
+output:
+  format: jsonl
+  file_path: "result/discussion_output.jsonl"
