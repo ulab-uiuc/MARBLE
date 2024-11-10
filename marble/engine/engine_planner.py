@@ -80,9 +80,9 @@ class EnginePlanner:
         """
         prompt = self.create_prompt()
         system_message = (
-            f"You are a task assignment system for multiple AI agents based on their profiles and current progress.\n"
-            f"Your task is to analyze the current state and assign the next task to each agent that requires an action.\n"
-            f"Don't ask agents to assign tasks to other agents.\n"
+            "You are a task assignment system for multiple AI agents based on their profiles and current progress.\n"
+            "Your task is to analyze the current state and assign the next task to each agent that requires an action.\n"
+            "Don't ask agents to assign tasks to other agents.\n"
         )
         messages = [{"role": "system", "content": system_message}, {"role": "user", "content": prompt}]
         response = model_prompting(

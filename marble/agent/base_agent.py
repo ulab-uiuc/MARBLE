@@ -4,11 +4,11 @@ Base agent module.
 
 import json
 import uuid
-from litellm.utils import trim_messages
 from collections import defaultdict
 from typing import Any, Dict, List, Optional, Tuple, TypeVar, Union
 
 from marble.environments import BaseEnvironment, WebEnvironment
+from marble.graph.agent_graph import AgentGraph
 from marble.llms.model_prompting import model_prompting
 from marble.memory import BaseMemory, SharedMemory
 from marble.utils.logger import get_logger
@@ -138,15 +138,15 @@ class BaseAgent:
         }
 
         tools.append(new_communication_session_description)
-        act_task = (
-            f"You are {self.agent_id}: {self.profile}\n"
-            f"These are your memory: {self.memory}\n"
-            f"This is your task: {task}\n"
-            f"These are the ids and profiles of other agents you can interact with:\n"
-            f"{agent_descriptions}"
-            f"But you do not have to communcate with other agents.\n"
-            f"You can also solve the task by calling other functions to solve it by yourself.\n"
-        )
+        # act_task = (
+        #     f"You are {self.agent_id}: {self.profile}\n"
+        #     f"These are your memory: {self.memory}\n"
+        #     f"This is your task: {task}\n"
+        #     f"These are the ids and profiles of other agents you can interact with:\n"
+        #     f"{agent_descriptions}"
+        #     f"But you do not have to communcate with other agents.\n"
+        #     f"You can also solve the task by calling other functions to solve it by yourself.\n"
+        # )
         if len(tools) == 0:
             result = model_prompting(
                 llm_model="gpt-3.5-turbo",
@@ -324,7 +324,7 @@ class BaseAgent:
                 "type": "function",
                 "function": {
                     "name": "communicate_to",
-                    "description": f"Send a message to a specific target agent:" + "\n".join([f"- {desc}" for desc in agent_descriptions]),
+                    "description": "Send a message to a specific target agent:" + "\n".join([f"- {desc}" for desc in agent_descriptions]),
                     "parameters": {
                         "type": "object",
                         "properties": {
@@ -368,7 +368,7 @@ class BaseAgent:
                 if function_name == "communicate_to":
                     message = function_args["message"]
                     print(message)
-                    result_from_function = session_current_agent._handle_communicate_to(target_agent_id=session_other_agent_id, message=message, session_id=session_current_agent.session_id)
+                    session_current_agent._handle_communicate_to(target_agent_id=session_other_agent_id, message=message, session_id=session_current_agent.session_id)
                     if "<end-of-session>" in message:
                         break
 
