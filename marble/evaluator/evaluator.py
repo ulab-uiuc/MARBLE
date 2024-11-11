@@ -24,8 +24,16 @@ class Evaluator:
         self.metrics_config = metrics_config
         self.metrics:Dict[str, Any] = {
             "task_completion": [],
-            "token_consumption": []
+            "token_consumption": [],
+            "planning_score": [],
+            "communication_score": []
         }
+
+    def intermediate_evaluation(self, summary_data: Dict[str, Any]) -> None:
+       """
+       save intermediate evaluation results
+       """
+       pass
 
     def update(self, environment: BaseEnvironment, agents: List[BaseAgent]) -> None:
         """

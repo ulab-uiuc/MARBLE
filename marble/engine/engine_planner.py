@@ -5,7 +5,9 @@ Engine Planner module responsible for task assignment and scheduling.
 """
 
 import json
-from typing import Any, Dict
+from typing import Any, Dict, List
+
+from litellm.types.utils import Message
 
 from marble.graph.agent_graph import AgentGraph
 from marble.llms.model_prompting import model_prompting
@@ -17,7 +19,7 @@ class EnginePlanner:
     The EnginePlanner class handles task assignment and scheduling for agents.
     """
 
-    def __init__(self, agent_graph: AgentGraph, memory: Any, config: Dict[str, Any], task:str):
+    def __init__(self, agent_graph: AgentGraph, memory: Any, config: Dict[str, Any], task:str, model:str="gpt-3.5-turbo"):
         """
         Initialize the EnginePlanner.
 
@@ -32,6 +34,7 @@ class EnginePlanner:
         self.config = config
         self.current_progress = config.get('initial_progress', '')
         self.task = task
+        self.model = model
         self.logger.info("EnginePlanner initialized.")
 
     def create_prompt(self) -> str:
@@ -58,8 +61,8 @@ class EnginePlanner:
             "Provide the assignments in the following JSON format:\n\n"
             "{\n"
             '  "tasks": {\n'
-            '    "agent1": "Task description for agent1",\n'
-            '    "agent2": "Task description for agent2"\n'
+            '    "agent1": "...", \n'
+            '    "agent2": "...", \n'
             '    // Add more agents as needed\n'
             '  },\n'
             '  "continue": true // Set to false if the task is completed\n'
@@ -77,9 +80,14 @@ class EnginePlanner:
             Dict[str, Any]: The task assignments and continuation flag.
         """
         prompt = self.create_prompt()
-        messages = [{"role": "system", "content": prompt}]
+        system_message = (
+            "You are a task assignment system for multiple AI agents based on their profiles and current progress.\n"
+            "Your task is to analyze the current state and assign the next task to each agent that requires an action.\n"
+            "Don't ask agents to assign tasks to other agents.\n"
+        )
+        messages = [{"role": "system", "content": system_message}, {"role": "user", "content": prompt}]
         response = model_prompting(
-            llm_model="gpt-3.5-turbo",
+            llm_model=self.model,
             messages=messages,
             return_num=1,
             max_token_num=1024,
@@ -105,7 +113,28 @@ class EnginePlanner:
         self.current_progress += f"\n{summary}"
         self.logger.debug(f"Updated progress: {self.current_progress}")
 
-    def decide_next_step(self, agents_results: Dict[str, Any]) -> bool:
+    def summarize_output(self, summary:str, task:str, output_format:str) -> Message:
+        """
+        Summarize the output of the agents.
+
+        Args:
+            summary (str): Summary of the latest iteration.
+
+        Returns:
+            str: The summarized output.
+        """
+        response = model_prompting(
+            llm_model=self.model,
+            messages=[{"role": "user", "content": f"Summarize the output of the agents for the task: {task}\n\nNow here is some result of thr agent: {summary}, please summarize it. You should follow the use of the following format: {output_format}"}],
+            return_num=1,
+            max_token_num=1024,
+            temperature=0.0,
+            top_p=None,
+            stream=None
+        )[0]
+        return response
+
+    def decide_next_step(self, agents_results: List[Dict[str, Any]]) -> bool:
         """
         Decide whether to continue or terminate the simulation based on agents' results.
 
@@ -119,8 +148,8 @@ class EnginePlanner:
             "Based on the following agents' results, determine whether the overall task is completed.\n\n"
             "Agents' Results:\n"
         )
-        for agent_id, result in agents_results.items():
-            prompt += f"- {agent_id}: {result}\n"
+        for result in agents_results:
+            prompt += f"- {result}\n"
 
         prompt += (
             "\nRespond with a JSON object containing a single key 'continue' set to true or false.\n"
@@ -132,7 +161,7 @@ class EnginePlanner:
 
         messages = [{"role": "system", "content": prompt}]
         response = model_prompting(
-            llm_model="gpt-3.5-turbo",
+            llm_model=self.model,
             messages=messages,
             return_num=1,
             max_token_num=256,

@@ -465,11 +465,12 @@ class WerewolfAgent:
 
             # Get speech position
             speech_position = action['content'].get('speech_position', 'unknown')
-
+            speech_sequence = action['content'].get('speech_sequence', 'unknown')
             # Fill in specific placeholders for sheriff_speech
             filled_prompt = prompt_template.replace("<<public_chat>>", public_chat)
             filled_prompt = filled_prompt.replace("<<game_state>>", json.dumps(game_state, indent=2))
             filled_prompt = filled_prompt.replace("<<election_info>>", election_info)
+            filled_prompt = filled_prompt.replace("<<speech_sequence>>", speech_sequence)
             filled_prompt = filled_prompt.replace("<<speech_position>>", speech_position)
 
         # For Vote for Sheriff Action

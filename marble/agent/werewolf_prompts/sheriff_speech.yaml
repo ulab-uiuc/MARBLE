@@ -5,16 +5,18 @@ user: |
 
   <<public_chat>>
 
-  Here's the current game state:
+  "Here's the current game state:"
 
   <<game_state>>
   
-  Election Information:
+  "Election Information:"
   You are the <<speech_position>> to speak.
-  Here are the speeches made before you:
+
+  The speech sequence is <<speech_sequence>>.
+  "Here are the speeches made before you:"
   <<election_info>>
 
-  Now, as a candidate (or potential candidate) for sheriff, it is your turn to speak. Organize your thoughts and follow these steps to make your decision:
+  "Now, as a candidate (or potential candidate) for sheriff, it is your turn to speak. Organize your thoughts and follow these steps to make your decision:"
 
   1. Reflect on your position in the speaking order. Have the players before you made strong, high-quality speeches? Did any of them target you specifically (e.g., claiming to have information about your role)? If so, should you respond directly? Record your reflections in speech_analysis.
   2. Consider your goal for this speech. Are you trying to win the sheriff position, defend yourself against accusations, or shift the conversation and gain trust? Think about what you want to achieve and how to best approach this. Record your goal and strategy in speech_goal.

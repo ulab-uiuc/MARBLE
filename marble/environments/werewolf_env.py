@@ -1023,6 +1023,13 @@ class WerewolfEnv:
         Publishes a 'run for sheriff' event to the event bus. This event is directed to all 
         players with a 'health' status of 1, allowing them to decide if they want to run for sheriff.
         """
+        # 初始化 sheriff_election 字段
+        if "sheriff_election" not in self.shared_memory["private_state"]:
+            # 初始化警长竞选状态，包含所有玩家的候选状态（默认为 None）
+            self.shared_memory["private_state"]["sheriff_election"] = {
+                "candidates": {agent.agent_id: None for agent in self.agents}
+            }
+
         # 查找所有存活玩家
         alive_players = [
             agent for agent in self.agents 
@@ -1042,8 +1049,137 @@ class WerewolfEnv:
         else:
             self._log_event("No living players found to participate in sheriff election.")
 
-            
-    
+    def process_run_for_sheriff(self, event: dict) -> None:
+        """
+        Processes each player's decision on whether or not to run for sheriff and 
+        prepares candidates for the sheriff election once all decisions are received.
+
+        Args:
+            event (dict): The event data containing the player's decision on running for sheriff.
+        """
+        # 从事件内容中获取玩家的参选决定
+        player_id = event["sender"]
+        action_content = event.get("content", {}).get("action", {})
+        run_for_sheriff = action_content.get("run_for_sheriff", False)
+
+        # 将玩家的决定记录到 shared memory 中的 sheriff_election 中
+        self.shared_memory["private_state"]["sheriff_election"]["candidates"][player_id] = run_for_sheriff
+
+        # 检查是否所有存活玩家都做出了决定
+        if any(choice is None for choice in self.shared_memory["private_state"]["sheriff_election"]["candidates"].values()):
+            self._log_event("Waiting for all players to decide on running for sheriff.")
+            return
+
+        # 获取所有决定参选的玩家列表，并按编号从小到大排序
+        candidate_ids = sorted([
+            agent_id for agent_id, wants_to_run in self.shared_memory["private_state"]["sheriff_election"]["candidates"].items()
+            if wants_to_run
+        ])
+
+        # 记录竞选候选人信息为公开消息
+        if candidate_ids:
+            candidate_list_str = ", ".join(candidate_ids)
+            self.log_event(
+                is_private=False,
+                agent_id="system",
+                content=f"Sheriff election candidates: {candidate_list_str}"
+            )
+
+            # 初始化 sheriff_speech 字典，所有候选人的演讲内容为 None
+            self.shared_memory["private_state"]["sheriff_election"]["sheriff_speech"] = {candidate_id: None for candidate_id in candidate_ids}
+            self.shared_memory["private_state"]["sheriff_election"]["final_candidate"] = []
+
+            # 调用第一个候选人的演讲
+            first_candidate_id = candidate_ids[0]
+            self.sheriff_speech(candidate_ids, first_candidate_id)
+        else:
+            # 无人参选，记录信息
+            self._log_event("No candidates decided to run for sheriff.")
+            return
+
+    def sheriff_speech(self, candidate_ids: list, candidate_id: str) -> None:
+        """
+        Publishes a 'sheriff_speech' event for a given candidate, allowing them to make their speech for the election.
+
+        Args:
+            candidate_ids (list): List of IDs of all candidates running for sheriff, sorted by ID.
+            candidate_id (str): The ID of the current candidate making their speech.
+        """
+        # 获取所有候选人的 ID 列表作为 speech_sequence，并以逗号分隔
+        speech_sequence = ", ".join(candidate_ids)
+
+        # 确定当前候选人在候选人列表中的位置（从 1 开始计数）
+        speech_position = candidate_ids.index(candidate_id) + 1
+
+        # 构建 election_info，包含所有已完成演讲的内容
+        election_info = "\n".join([
+            f"{cid}: {speech}" for cid, speech in self.shared_memory["private_state"]["sheriff_election"]["sheriff_speech"].items()
+            if speech is not None
+        ])
+
+        # 获取当前候选人的实例
+        candidate_instance = self.agents[candidate_ids.index(candidate_id)]
+
+        # 创建并发布 sheriff_speech 事件
+        event = {
+            "event_type": "sheriff_speech",
+            "sender": self,  # 标识为环境实例
+            "recipients": [candidate_instance],  # 当前候选人实例
+            "content": {
+                "election_info": election_info,
+                "speech_sequence": speech_sequence,
+                "speech_position": str(speech_position)
+            }
+        }
+
+        self.event_bus.publish(event)
+        self._log_event(f"Sheriff speech event published for candidate {candidate_id}.")
+
+    def process_sheriff_speech(self, event: dict) -> None:
+        """
+        Processes each candidate's sheriff speech, recording their decision to continue in the election
+        and their speech content. Proceeds to the next candidate's speech if there are remaining candidates.
+
+        Args:
+            event (dict): The event data containing the candidate's speech and decision to continue.
+        """
+        # 获取候选人 ID 和发言内容
+        candidate_id = event["sender"]
+        action_content = event.get("content", {}).get("action", {})
+        continue_running = action_content.get("continue_running", False)
+        speech_content = action_content.get("speech_content", "")
+
+        # 记录候选人的发言内容
+        self.shared_memory["private_state"]["sheriff_election"]["sheriff_speech"][candidate_id] = speech_content
+        self.log_event(
+            is_private=False,
+            agent_id=candidate_id,
+            content=f"{candidate_id}'s speech: {speech_content}"
+        )
+
+        if continue_running:
+            # 如果候选人选择继续竞选，添加到最终候选人列表
+            self.shared_memory["private_state"]["sheriff_election"]["final_candidate"].append(candidate_id)
+        else:
+            # 候选人退出竞选的决定
+            self.log_event(
+                is_private=False,
+                agent_id="system",
+                content=f"{candidate_id} has withdrawn from the sheriff election."
+            )
+
+        # 检查是否还有候选人未发言
+        candidate_ids = list(self.shared_memory["private_state"]["sheriff_election"]["sheriff_speech"].keys())
+        remaining_candidates = [cid for cid in candidate_ids if self.shared_memory["private_state"]["sheriff_election"]["sheriff_speech"][cid] is None]
+
+        if remaining_candidates:
+            # 调用下一个候选人的演讲
+            next_candidate_id = remaining_candidates[0]
+            self.sheriff_speech(candidate_ids, next_candidate_id)
+        else:
+            # 所有候选人已发言，开始投票
+            self.vote_for_sheriff()
+
     def receive_action(self, event: dict) -> None:
         """
         Processes an action event received from the EventBus. 
@@ -1069,6 +1205,12 @@ class WerewolfEnv:
         elif event_type == "reply_witch_action":
             # 处理女巫的行动
             self.process_witch_action(event)
+        elif event_type == "reply_run_for_sheriff":
+            # 处理警长竞选
+            self.process_run_for_sheriff(event)
+        elif event_type == "reply_sheriff_speech":
+            # 处理警长演讲
+            self.process_sheriff_speech(event)
         else:
             # 未知的事件类型
             pass

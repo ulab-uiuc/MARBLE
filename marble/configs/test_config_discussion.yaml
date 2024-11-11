@@ -1,0 +1,46 @@
+coordinate_mode: graph
+relationships:
+  - [agent1, agent2, "colleague"]
+  - [agent2, agent3, "mentor"]
+  - [agent3, agent4, "friend"]
+  - [agent1, agent4, "collaborates_with"]
+
+environment:
+  type: Base
+  name: "Discussion Simulation Environment"
+  max_iterations: 1
+
+task:
+  content: "Discuss the potential impact of AI on various industries."
+
+agents:
+  - type: BaseAgent
+    agent_id: agent1
+    profile: "You are an AI researcher with a strategic and forward-thinking mindset. Your expertise lies in AI ethics and policy."
+
+  - type: BaseAgent
+    agent_id: agent2
+    profile: "You are a software developer specializing in AI applications in healthcare. You are practical, focused on immediate applications and potential risks in healthcare."
+
+  - type: BaseAgent
+    agent_id: agent3
+    profile: "You are an economist interested in the long-term effects of AI on the labor market. You tend to be analytical and cautious about AI's societal impacts."
+
+  - type: BaseAgent
+    agent_id: agent4
+    profile: "You are a creative designer working with AI for art and media. You are optimistic and enjoy discussing how AI can transform creative processes."
+
+memory:
+  type: SharedMemory
+
+metrics:
+  engagement_level: true
+  relevance: true
+  diversity_of_perspectives: true
+
+engine_planner:
+  initial_progress: "Starting the discussion on AI's impact across industries."
+
+output:
+  format: jsonl
+  file_path: "result/discussion_output.jsonl"
