@@ -36,9 +36,9 @@ services:
       - 9100:9100
 
   pg_exporter:
-    #image: wrouesnel/postgres_exporter
-    image: vonng/pg_exporter:v0.6.1
+    image: wrouesnel/postgres_exporter
+    # image: vonng/pg_exporter:v0.6.1
     environment:
-      PG_EXPORTER_URL: 'postgresql://test:Test123_456@postgres_db:5432/sysbench?sslmode=disable'
+      DATA_SOURCE_NAME: 'postgresql://test:Test123_456@postgres_db:5432/sysbench?sslmode=disable'
     ports:
       - 9187:9187

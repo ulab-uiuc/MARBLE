@@ -32,3 +32,23 @@ def detect_anomalies(data, significance_level=0.2):
     anomalies = np.where(ks_statistic > critical_value, True, False)
 
     return ks_statistic, anomalies
+
+def describe_data_features(data):
+    """Describe the features of a given data in natural language."""
+    if data == []:
+        raise Exception("No metric values found for the given time range")
+
+    # compute processed values for the metric
+    # max (reserve two decimal places)
+    max_value = round(np.max(np.array(data)), 2)
+    # min
+    min_value = round(np.min(np.array(data)), 2)
+    # mean
+    mean_value = round(np.mean(np.array(data)), 2)
+    # deviation
+    deviation_value = round(np.std(np.array(data)), 2)
+    # evenly sampled 10 values (reserve two decimal places)
+    evenly_sampled_values = [round(data[i], 2) for i in range(0, len(data), len(data) // 10)]
+
+    # describe the above five values in a string
+    return f"the max value is {max_value}, the min value is {min_value}, the mean value is {mean_value}, the deviation value is {deviation_value}, and the evenly_sampled_values are {evenly_sampled_values}."
