@@ -5,6 +5,8 @@ The core engine module that coordinates agents within the environment.
 """
 import json
 from typing import Any, Dict, List, Optional, Union
+import os
+from typing import Any, Dict, List, Union
 
 from marble.agent import BaseAgent
 from marble.configs.config import Config
@@ -52,11 +54,13 @@ class Engine:
         self.planner = EnginePlanner(agent_graph=self.graph, memory=self.memory, config=config.engine_planner, task=self.task, model=config.llm)
         self.max_iterations = config.environment.get('max_iterations', 10)
         self.current_iteration = 0
+
         self.logger.info("Engine initialized.")
 
-    def _initialize_environment(self, env_config: Dict[str, Any]) -> EnvType:
+
+    def _initialize_environment(self, env_config: Dict[str, Any]) -> BaseEnvironment:
         """
-        Initialize the environment.
+        Initialize the environment based on configuration.
 
         Args:
             env_config (dict): Environment configuration.
@@ -68,6 +72,7 @@ class Engine:
             ValueError: If the environment type is not supported.
         """
         env_type = env_config.get("type")
+        
         if env_type == "Web":
             env1 = WebEnvironment(name="Web Environment", config=env_config)
             return env1
@@ -79,7 +84,8 @@ class Engine:
             return env3
         else:
             raise ValueError(f"Unsupported environment type: {env_type}")
-
+        self.logger.debug(f"Environment '{env_type}' initialized.")
+        return environment
 
     def _initialize_agents(self, agent_configs: List[Dict[str, Any]]) -> List[BaseAgent]:
         """
@@ -164,7 +170,7 @@ class Engine:
             summary = self._summarize_results(agents_results)
             self.logger.info(f"Initial Summary:\n{summary}")
             summary = self.planner.summarize_output(summary, self.task, self.output_format)
-            iteration_data["summary"] = summary
+            iteration_data["summary"] = summary.content
 
             # Decide whether to continue or terminate after initial assignment
             continue_simulation = self.planner.decide_next_step(agents_results)
@@ -190,8 +196,6 @@ class Engine:
             agent_tasks_str = self._format_agent_tasks(iteration_data["task_assignments"])
             results_str = self._format_results(iteration_data["task_results"])
             self.evaluator.evaluate_planning(iteration_data["summary"], agent_profiles, agent_tasks_str, results_str)
-
-
 
             while self.current_iteration < self.max_iterations:
                 iteration_data:Dict[str, Any] = {
@@ -232,7 +236,7 @@ class Engine:
                 self.logger.info(f"Iteration {self.current_iteration} Summary:\n{summary}")
                 self.current_iteration += 1
                 summary = self.planner.summarize_output(summary, self.task,  self.output_format)
-                iteration_data["summary"] = summary
+                iteration_data["summary"] = summary.content
 
 
                             # Evaluate communication
@@ -311,6 +315,7 @@ class Engine:
                         agents_results.append({agent_id: result})
                         if communication:
                             communications.append(communication)
+
                         self.logger.debug(f"Agent '{agent_id}' completed task with result: {result}")
                     except KeyError:
                         self.logger.error(f"Agent '{agent_id}' not found in the graph.")
@@ -482,7 +487,6 @@ class Engine:
                 self.logger.info(f"Starting iteration {self.current_iteration}")
                 result, communication = self._execute_agent_task_recursive(root_agent, self.task)
                 iteration_data["result"] = result
-
 
                 # Update progress
                 summary = self._summarize_results([{'root_agent': result}])
@@ -660,7 +664,6 @@ class Engine:
             Dict[str, Any]: The final output graph.
         """
         return self.graph.get_output_graph()
-
 
     def _format_communications(self, communications: List[Any]) -> str:
         """

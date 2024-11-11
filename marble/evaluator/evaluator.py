@@ -42,6 +42,12 @@ class Evaluator:
        """
        pass
 
+    def intermediate_evaluation(self, summary_data: Dict[str, Any]) -> None:
+       """
+       save intermediate evaluation results
+       """
+       pass
+
     def update(self, environment: BaseEnvironment, agents: List[BaseAgent]) -> None:
         """
         Update the metrics based on the current state of the environment and agents.

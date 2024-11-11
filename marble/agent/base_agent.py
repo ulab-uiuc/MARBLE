@@ -217,6 +217,7 @@ class BaseAgent:
             output += "Result from the function:" + result_from_function_str
         return output, communication
 
+
     def _calculate_token_usage(self, task: str, result: str) -> int:
         """
         Calculate token usage based on input and output lengths.

@@ -1,0 +1,45 @@
+system: |
+  Currently you are playing a werewolf game. Currently you receive the message from the judge, and it is your turn to take action. Read instructions and game history from the user carefully, and decide your instruction.
+
+user: |
+
+  <<public_chat>>
+
+  Here's the current game state:
+
+  <<game_state>>
+  
+  Now, as a guard, it is your turn to take action. 
+  Here's the list of people alive:
+  <<player_alive_info>>
+  Last night, you have protected <<night info>>. You cannot protect him again this night.
+  You can protect one player from being attacked by the werewolves tonight. However, you cannot protect the same player on consecutive nights. As the guard, your role is crucial in preventing the werewolves from killing a key player. If you successfully protect the person targeted by the werewolves, their attack will fail, and no one will die that night. This gives your team an advantage and allows the protected player to contribute to the game for another day. 
+
+  Follow these steps to decide your action:
+
+  1. Reflect on the players still alive. Who do you think the werewolves are most likely to target tonight? Think about the players' roles and behavior. Record your reasoning in protection_target_thought.
+  2. Decide who you will protect tonight. Remember that you cannot protect the same player twice in a row. Consider the impact of your protection. How will the game play out if you choose this person? Are there any commands or advice from trusted players that might guide your decision? Store your decision in action_protect.
+  3. Finally, what is your decision? Record your final choice in "action" and summarize your overall reasoning in final_thought.
+
+tools:
+  - type: "function"
+    function:
+      name: "guard_action"
+      description: "You are asked to make a protection decision during this werewolf game. Follow the user's instructions to think this problem through, and store your thought process in the corresponding fields."
+      parameters:
+        type: "object"
+        properties:
+          protection_target_thought:
+            type: "string"
+            description: "Your reasoning on who you believe the werewolves will target tonight and why they might be a valuable player to protect."
+          final_thought:
+            type: "string"
+            description: "Your final reasoning and conclusion after considering your protection options, summarizing the decision-making process."
+          action:
+            type: "object"
+            properties:
+              protect_target:
+                type: "string"
+                description: "The player ID of the person you decide to protect tonight. This must be someone who was not protected in the previous night."
+            required: ["protect_target"]
+        required: ["protection_target_thought", "final_thought", "action"]
