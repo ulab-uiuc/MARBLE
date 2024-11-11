@@ -5,21 +5,21 @@ user: |
 
   <<public_chat>>
 
-  Here's the current game state:
+  "Here's the current game state:
 
   <<game_state>>
 
-  Here are the candidates running for sheriff:
+  "Here are the candidates running for sheriff:"
 
   <<candidate_list>>
 
-  Here is the election log, which includes speeches, withdrawals, and other relevant election events:
+  "Here is the election log, which includes speeches, withdrawals, and other relevant election events:"
 
   <<election_log>>
 
   Now, it is time for you to vote for one of the candidates, or you may choose to abstain. The sheriff holds significant power in the game, with a 1.5x vote weight during voting rounds, giving them greater influence over decisions. The sheriff also has the authority to decide the speaking order, which can influence how information is revealed during the game. If the sheriff dies, they may either appoint a successor or choose to tear up the badge, leaving the game without a sheriff for the remainder of the match. 
 
-  Please consider the following points carefully:
+  "Please consider the following points carefully:"
 
   1. Based on the speeches and behavior so far, who do you think is the most credible candidate? Consider the roles you suspect the candidates have and the overall dynamics of the game. Record your thoughts in candidate_analysis.
   2. Reflect on the impact your vote will have. How might this vote affect the game? Will it shift the balance of trust towards or away from you? Record your reasoning in vote_impact.

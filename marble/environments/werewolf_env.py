@@ -1179,6 +1179,41 @@ class WerewolfEnv:
         else:
             # 所有候选人已发言，开始投票
             self.vote_for_sheriff()
+    def vote_for_sheriff(self) -> None:
+        """
+        Initiates the voting process for electing a sheriff by broadcasting a 
+        'vote_for_sheriff' event to all eligible players who did not participate
+        in the sheriff election.
+        """
+        # Step 1: 获取选举日志和候选人列表
+        election_log = self.shared_memory["private_state"]["sheriff_election"].get("sheriff_speech", {})
+        final_candidates = self.shared_memory["private_state"]["sheriff_election"].get("final_candidate", [])
+
+        # 将选举日志转化为指定格式的字符串
+        election_log_str = "\n".join([f"{candidate}: {speech}" for candidate, speech in election_log.items()])
+        # 将候选人列表转化为逗号分隔的字符串
+        candidate_list_str = ", ".join(final_candidates)
+
+        # Step 2: 确定投票对象（从未参选的玩家）
+        all_players = self.shared_memory["public_state"]["alive_players"]
+        never_ran_for_sheriff = [
+            player_id for player_id in all_players 
+            if not self.shared_memory["private_state"]["sheriff_election"]["candidates"].get(player_id)
+        ]
+
+        # Step 3: 构建投票事件
+        event = {
+            "event_type": "vote_for_sheriff",
+            "sender": self,  # 环境实例
+            "recipients": never_ran_for_sheriff,  # 投票对象列表
+            "content": {
+                "election_log": election_log_str,
+                "candidate_list": candidate_list_str
+            }
+        }
+
+        # Step 4: 发布投票事件
+        self.event_bus.publish(event)
 
     def receive_action(self, event: dict) -> None:
         """
