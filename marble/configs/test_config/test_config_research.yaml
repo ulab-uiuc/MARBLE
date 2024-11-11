@@ -178,7 +178,7 @@ memory:
   type: SharedMemory
 
 metrics:
-  evaluate_llm: "gpt-3.5-turbo"
+  evaluate_llm: "gpt-4o-mini"
   engagement_level: true
   relevance: true
   diversity_of_perspectives: true

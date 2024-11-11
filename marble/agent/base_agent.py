@@ -15,6 +15,14 @@ from marble.utils.logger import get_logger
 EnvType = Union[BaseEnvironment, WebEnvironment]
 AgentType = TypeVar('AgentType', bound='BaseAgent')
 
+def convert_to_str(result):
+    if isinstance(result, bool):
+        return str(result)  # 转为 'True' 或 'False'
+    elif isinstance(result, dict):
+        return json.dumps(result)  # 将字典转为JSON格式的字符串
+    else:
+        return str(result)  # 处理字符串和数字等其他类型
+
 class BaseAgent:
     """
     Base class for all agents.
@@ -168,6 +176,7 @@ class BaseAgent:
                 tool_choice="auto"
             )[0]
         communication = None
+        result_from_function_str = None
         if result.tool_calls:
             function_call = result.tool_calls[0]
             function_name = function_call.function.name
@@ -175,12 +184,14 @@ class BaseAgent:
             function_args = json.loads(function_call.function.arguments)
             if function_name != "new_communication_session":
                 result_from_function = self.env.apply_action(agent_id=self.agent_id, action_name=function_name, arguments=function_args)
+                result_from_function_str = convert_to_str(result_from_function)
             else: # function_name == "new_communication_session"
                 self.session_id = uuid.uuid4() # new session id
                 target_agent_id = function_args["target_agent_id"]
                 message = function_args["message"]
                 result_from_function = self._handle_new_communication_session(target_agent_id=target_agent_id, message=message, session_id=self.session_id, task=task, turns=5)
-                communication = result_from_function.final_chat_history
+                result_from_function_str = convert_to_str(result_from_function)
+                communication = result_from_function.get("full_chat_history", None)
             self.memory.update(self.agent_id, {
                     "type": "action_function_call",
                     "action_name": function_name,
@@ -201,8 +212,11 @@ class BaseAgent:
             self.logger.info(f"Agent '{self.agent_id}' acted with result '{result}'.")
         result_content = result.content if result.content else ""
         self.token_usage += self._calculate_token_usage(task, result_content)
+        output = "Result from the model:" + result_content + "\n"
+        if result_from_function_str:
+            output += "Result from the function:" + result_from_function_str
+        return output, communication
 
-        return result, communication
 
     def _calculate_token_usage(self, task: str, result: str) -> int:
         """
