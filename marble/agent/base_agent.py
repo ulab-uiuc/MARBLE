@@ -8,7 +8,6 @@ from collections import defaultdict
 from typing import Any, Dict, List, Optional, Tuple, TypeVar, Union
 
 from marble.environments import BaseEnvironment, WebEnvironment
-from marble.graph.agent_graph import AgentGraph
 from marble.llms.model_prompting import model_prompting
 from marble.memory import BaseMemory, SharedMemory
 from marble.utils.logger import get_logger
@@ -21,7 +20,7 @@ class BaseAgent:
     Base class for all agents.
     """
 
-    def __init__(self, config: Dict[str, Union[Any, Dict[str, Any]]], env: EnvType, shared_memory: Union[SharedMemory, None] = None):
+    def __init__(self, config: Dict[str, Union[Any, Dict[str, Any]]], env: EnvType, shared_memory: Union[SharedMemory, None] = None, model: str = "gpt-3.5-turbo"):
         """
         Initialize the agent.
 
@@ -31,6 +30,7 @@ class BaseAgent:
             shared_memory (BaseMemory, optional): Shared memory instance.
         """
         agent_id = config.get("agent_id")
+        self.llm = model
         assert isinstance(agent_id, str), "agent_id must be a string."
         assert env is not None, "agent must has an environment."
         self.env: EnvType = env
@@ -135,20 +135,19 @@ class BaseAgent:
                 }
             }
         }
-
         tools.append(new_communication_session_description)
         act_task = (
             f"You are {self.agent_id}: {self.profile}\n"
-            f"These are your memory: {self.memory.get_memory_str()}\n"
             f"This is your task: {task}\n"
             f"These are the ids and profiles of other agents you can interact with:\n"
             f"{agent_descriptions}"
             f"But you do not have to communcate with other agents.\n"
             f"You can also solve the task by calling other functions to solve it by yourself.\n"
+            f"These are your memory: {self.memory.get_memory_str()}\n"
         )
         if len(tools) == 0:
             result = model_prompting(
-                llm_model="gpt-3.5-turbo",
+                llm_model=self.llm,
                 messages=[{"role":"user", "content": act_task}],
                 return_num=1,
                 max_token_num=512,
@@ -158,7 +157,7 @@ class BaseAgent:
             )[0]
         else:
             result = model_prompting(
-                llm_model="gpt-3.5-turbo",
+                llm_model=self.llm,
                 messages=[{"role":"user", "content": act_task}],
                 return_num=1,
                 max_token_num=512,
@@ -168,7 +167,7 @@ class BaseAgent:
                 tools=tools,
                 tool_choice="auto"
             )[0]
-
+        communication = None
         if result.tool_calls:
             function_call = result.tool_calls[0]
             function_name = function_call.function.name
@@ -181,6 +180,7 @@ class BaseAgent:
                 target_agent_id = function_args["target_agent_id"]
                 message = function_args["message"]
                 result_from_function = self._handle_new_communication_session(target_agent_id=target_agent_id, message=message, session_id=self.session_id, task=task, turns=5)
+                communication = result_from_function.final_chat_history
             self.memory.update(self.agent_id, {
                     "type": "action_function_call",
                     "action_name": function_name,
@@ -202,7 +202,7 @@ class BaseAgent:
         result_content = result.content if result.content else ""
         self.token_usage += self._calculate_token_usage(task, result_content)
 
-        return result
+        return result, communication
 
     def _calculate_token_usage(self, task: str, result: str) -> int:
         """
@@ -349,7 +349,7 @@ class BaseAgent:
                 f"From {session_current_agent_id} to {session_other_agent_id}:"
             )
             result = model_prompting(
-                llm_model="gpt-4o-mini",
+                llm_model=self.llm,
                 messages=[{"role": "system", "content": session_current_agent.system_message}, {"role":"user", "content": communicate_task}],
                 return_num=1,
                 max_token_num=512,
@@ -388,7 +388,7 @@ class BaseAgent:
             f"Please summarize information in the chat history relevant to the task: {task}."
         )
         result = model_prompting(
-            llm_model="gpt-4o-mini",
+            llm_model=self.llm,
             messages=[{"role": "system", "content": system_message_summary}, {"role":"user", "content": summary_task}],
             return_num=1,
             max_token_num=512,
@@ -406,6 +406,7 @@ class BaseAgent:
         return {
             "success": True,
             "message": f"Successfully completed session {session_id}",
+            "full_chat_history": session_current_agent.seralize_message(session_id=self.session_id),
             "session_id": result.content if result.content else ""
         }
 
@@ -476,7 +477,7 @@ class BaseAgent:
 
         # Use memory entries, persona, and task history to determine the next task
         next_task = model_prompting(
-            llm_model="gpt-3.5-turbo",
+            llm_model=self.llm,
             messages=[{"role": "user", "content": f"Agent '{self.agent_id}' should prioritize tasks that align with their role: {persona}. Based on the task history: {task_history_str}, and memory: {memory_str}, what should be the next task?"}],
             return_num=1,
             max_token_num=512,
@@ -573,7 +574,7 @@ class BaseAgent:
         '  "another_child_agent_id": "Task description"\n'
         "}\n"
         response = model_prompting(
-            llm_model="gpt-3.5-turbo",
+            llm_model=self.llm,
             messages=[{"role": "system", "content": prompt}],
             return_num=1,
             max_token_num=512,
@@ -605,7 +606,7 @@ class BaseAgent:
         for agent_id, result in children_results.items():
             prompt += f"- Agent '{agent_id}': {result}\n"
         response = model_prompting(
-            llm_model="gpt-3.5-turbo",
+            llm_model=self.llm,
             messages=[{"role": "system", "content": prompt}],
             return_num=1,
             max_token_num=512,
@@ -647,7 +648,7 @@ class BaseAgent:
 
         # Use the LLM to select the next agent and create a planning task
         response = model_prompting(
-            llm_model="gpt-3.5-turbo",
+            llm_model=self.llm,
             messages=[{"role": "system", "content": prompt}],
             return_num=1,
             max_token_num=256,
