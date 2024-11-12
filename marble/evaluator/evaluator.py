@@ -34,7 +34,10 @@ class Evaluator:
         }
         with open('evaluator/evaluator_prompts.json', 'r', encoding='utf-8') as f:
             self.evaluation_prompts = json.load(f)
-        self.llm = self.metrics_config.get('evaluate_llm', 'gpt-3.5-turbo')
+        
+        evaluate_llm_config = self.metrics_config.get('evaluate_llm', {})
+        self.llm = evaluate_llm_config.get('model', 'gpt-3.5-turbo') if isinstance(evaluate_llm_config, dict) else evaluate_llm_config
+
 
 
     def update(self, environment: BaseEnvironment, agents: List[BaseAgent]) -> None:

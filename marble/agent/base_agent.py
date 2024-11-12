@@ -40,7 +40,10 @@ class BaseAgent:
             shared_memory (BaseMemory, optional): Shared memory instance.
         """
         agent_id = config.get("agent_id")
-        self.llm = model
+        if isinstance(model, dict):
+            self.llm = model.get("model", "gpt-3.5-turbo")
+        else:
+            self.llm = model
         assert isinstance(agent_id, str), "agent_id must be a string."
         assert env is not None, "agent must has an environment."
         self.env: EnvType = env
@@ -71,6 +74,31 @@ class BaseAgent:
         self.FORWARD_TO = 0
         self.RECV_FROM = 1
         self.session_id: str = ''
+        self.strategy = config.get("strategy", "default")
+        self.reasoning_prompts = {
+            "default": "",
+            "cot": (
+                "Think through this step by step:\n"
+                "1. What is the main objective of this task?\n"
+                "2. What information and resources do I have available?\n"
+                "3. What approach would be most effective?\n"
+                "4. What specific actions should I take?\n"
+            ),
+            "reflexion": (
+                "Follow the reflection process:\n"
+                "1. Initial thoughts on the task\n"
+                "2. Analysis of available options\n"
+                "3. Potential challenges and solutions\n"
+                "4. Final approach decision\n"
+            ),
+            "react": (
+                "Follow the ReAct framework:\n"
+                "Observation: What do I notice about this task?\n"
+                "Thought: What are my considerations?\n"
+                "Action: What specific action should I take?\n"
+                "Result: What do I expect to achieve?\n"
+            )
+        }
 
     def set_agent_graph(self, agent_graph: Any) -> None:
         self.agent_graph = agent_graph
@@ -146,8 +174,12 @@ class BaseAgent:
             }
         }
         tools.append(new_communication_session_description)
+        reasoning_prompt = self.reasoning_prompts.get(self.strategy, '')
+        self.logger.info(f"Agent {self.agent_id} using {self.strategy} strategy with prompt:\n{reasoning_prompt}")
+
         act_task = (
             f"You are {self.agent_id}: {self.profile}\n"
+            f"{reasoning_prompt}\n"  # 使用已经获取的 reasoning_prompt
             f"This is your task: {task}\n"
             f"These are the ids and profiles of other agents you can interact with:\n"
             f"{agent_descriptions}"
@@ -155,6 +187,8 @@ class BaseAgent:
             f"You can also solve the task by calling other functions to solve it by yourself.\n"
             f"These are your memory: {self.memory.get_memory_str()}\n"
         )
+        self.logger.info(f"Complete prompt for agent {self.agent_id}:\n{act_task}")
+
         if len(tools) == 0:
             result = model_prompting(
                 llm_model=self.llm,
