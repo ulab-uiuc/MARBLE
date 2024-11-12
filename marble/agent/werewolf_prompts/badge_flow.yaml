@@ -1,0 +1,57 @@
+system: |
+  You are the sheriff in a werewolf game, and unfortunately, you are about to be eliminated. As the sheriff, you hold the power to decide the future of the sheriff’s badge (police badge) in the game. This is a crucial decision that can shift the balance of the game. Read through the game history and carefully decide whether to pass on the badge to another player or destroy it.
+
+user: |
+
+  <<public_chat>>
+
+  Here's the current game state:
+
+  <<game_state>>
+
+  Now, as the sheriff, it is time for you to decide what to do with the sheriff’s badge. Follow these steps to think through your options and make your decision:
+
+  1. Reflect on your current allies and their positions in the game. Who are your most trusted teammates, and how credible do they seem to others? Record your analysis in team_analysis.
+
+  2. Consider the impact of passing the badge to the person you trust the most. How will others perceive this choice? How will they view the new sheriff? Will this help your faction’s victory? Record your reasoning in badge_transfer_impact.
+
+  3. Reflect on your previous speeches. Have you shared a badge transfer plan or "badge flow" in any of your speeches? Should you follow through with this plan? What message will this send to the others if you follow it? What might happen if you don't? Record your thoughts in badge_flow_consistency.
+
+  4. Consider whether destroying the badge is a better choice. Is this a strategic move for your faction? If you have no trusted allies left or if they hold little influence, this might be an option. Record your reasoning in badge_destruction_thought.
+
+  5. Finally, make your decision. Will you pass the badge to someone, or will you destroy it? Record your final decision in "action" and summarize your overall reasoning in final_thought.
+
+tools:
+  - type: "function"
+    function:
+      name: "bedge_flow"
+      description: "You are asked to decide whether to pass the sheriff's badge to another player or destroy it. Follow the user's instructions to think through your decision carefully, and store your thought process in the appropriate fields."
+      parameters:
+        type: "object"
+        properties:
+          team_analysis:
+            type: "string"
+            description: "Your analysis of your teammates' positions in the game. Who do you trust, and how credible are they in the eyes of the other players?"
+          badge_transfer_impact:
+            type: "string"
+            description: "Your reasoning on the impact of passing the badge to the person you trust the most. How will this choice affect the game's dynamics and others' perception of both you and the new sheriff?"
+          badge_flow_consistency:
+            type: "string"
+            description: "Your thoughts on whether to follow the badge flow plan you have mentioned in previous speeches. What message will this send, and what consequences might arise from either following or not following it?"
+          badge_destruction_thought:
+            type: "string"
+            description: "Your analysis of whether destroying the badge is a better strategic move for your faction. Consider this option if you lack trusted allies or if your team is in a weak position."
+          final_thought:
+            type: "string"
+            description: "Your final reasoning after considering all options and the potential impact on the game."
+          action:
+            type: "object"
+            properties:
+              pass_badge:
+                type: "boolean"
+                description: "Whether or not you choose to pass the badge. True if you decide to pass it on, False if you choose to destroy it."
+              badge_receiver:
+                type: "string"
+                description: "The player ID of the person you choose to pass the badge to if you decide to pass it. If you destroy the badge, leave this as None."
+            required: ["pass_badge", "badge_receiver"]
+        required: ["team_analysis", "badge_transfer_impact", "badge_flow_consistency", "badge_destruction_thought", "final_thought", "action"]

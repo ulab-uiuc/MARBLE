@@ -2,10 +2,13 @@
 Evaluator module for tracking metrics and evaluating agent performance.
 """
 
+import json
+import re
 from typing import Any, Dict, List
 
 from marble.agent import BaseAgent
 from marble.environments import BaseEnvironment
+from marble.llms.model_prompting import model_prompting
 from marble.utils.logger import get_logger
 
 
@@ -24,8 +27,26 @@ class Evaluator:
         self.metrics_config = metrics_config
         self.metrics:Dict[str, Any] = {
             "task_completion": [],
-            "token_consumption": []
+            "token_consumption": [],
+            "planning_score": [],
+            "communication_score": []
         }
+        with open('evaluator/evaluator_prompts.json', 'r', encoding='utf-8') as f:
+            self.evaluation_prompts = json.load(f)
+        self.llm = self.metrics_config.get('evaluate_llm', 'gpt-3.5-turbo')
+
+
+    def intermediate_evaluation(self, summary_data: Dict[str, Any]) -> None:
+       """
+       save intermediate evaluation results
+       """
+       pass
+
+    def intermediate_evaluation(self, summary_data: Dict[str, Any]) -> None:
+       """
+       save intermediate evaluation results
+       """
+       pass
 
     def update(self, environment: BaseEnvironment, agents: List[BaseAgent]) -> None:
         """
@@ -44,6 +65,84 @@ class Evaluator:
         # For token consumption, sum up the tokens used by agents in this iteration
         total_tokens = sum(agent.get_token_usage() for agent in agents)
         self.metrics["token_consumption"].append(total_tokens)
+
+    def evaluate_communication(self, task: str, communications: str) -> None:
+        """
+        Evaluate communication between agents and update the communication score.
+
+        Args:
+            task (str): The task description.
+            communications (str): The communication logs between agents.
+        """
+        # Get the communication prompt
+        communication_prompt_template = self.evaluation_prompts["Graph"]["Communication"]["prompt"]
+        # Fill in the placeholders {task} and {communications}
+        prompt = communication_prompt_template.format(task=task, communications=communications)
+        # Call the language model
+        result = model_prompting(
+            llm_model=self.llm,
+            messages=[{"role": "user", "content": prompt}],
+            return_num=1,
+            max_token_num=512,
+            temperature=0.0,
+            top_p=None,
+            stream=None,
+        )[0]
+        # Parse the score from result.content
+        score = self.parse_score(result.content)
+        # Update the metric
+        self.metrics["communication_score"].append(score)
+
+    def evaluate_planning(self, summary: str, agent_profiles: str, agent_tasks: str, results: str) -> None:
+        """
+        Evaluate planning and self-coordination among agents and update the planning score.
+
+        Args:
+            summary (str): Last round summary.
+            agent_profiles (str): Profiles of agents.
+            agent_tasks (str): Tasks assigned to agents.
+            results (str): Results of the next round.
+        """
+        # Get the planning prompt
+        planning_prompt_template = self.evaluation_prompts["Graph"]["Planning"]["prompt"]
+        # Fill in the placeholders
+        prompt = planning_prompt_template.format(
+            summary=summary,
+            agent_profiles=agent_profiles,
+            agent_tasks=agent_tasks,
+            results=results
+        )
+        # Call the language model
+        result = model_prompting(
+            llm_model=self.llm,
+            messages=[{"role": "user", "content": prompt}],
+            return_num=1,
+            max_token_num=512,
+            temperature=0.0,
+            top_p=None,
+            stream=None,
+        )[0]
+        # Parse the score from result.content
+        score = self.parse_score(result.content)
+        # Update the metric
+        self.metrics["planning_score"].append(score)
+
+    def parse_score(self, assistant_answer: str) -> int:
+        """
+        Parse the score from the assistant's answer.
+
+        Args:
+            assistant_answer (str): The assistant's answer containing the score.
+
+        Returns:
+            int: The parsed score.
+        """
+        # Look for "Rating: [[rating]]" in the assistant's answer
+        match = re.search(r'Rating:\s*\[\[\[(\d+)\]\]\]', assistant_answer)
+        if match:
+            return int(match.group(1))
+        else:
+            return int(assistant_answer[-1])
 
     def finalize(self) -> None:
         """

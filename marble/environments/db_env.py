@@ -38,7 +38,7 @@ def get_prometheus_metric_data(metric_name: str) -> List[List[Any]]:
         'query': metric_name,
         'start': start_time,
         'end': end_time,
-        'step': 1  # sample every second
+        'step': 1, # sample every second
     }
 
     # Make the HTTP request to Prometheus
@@ -202,7 +202,6 @@ class DBEnvironment(BaseEnvironment):
             except:
                 pass
         print(f'Alert detected @ {alerts}')
-
 
     def whether_is_abnormal_metric_handler(self, metric_name: str) -> bool:
         #try:

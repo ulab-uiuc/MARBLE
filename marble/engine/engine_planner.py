@@ -19,7 +19,7 @@ class EnginePlanner:
     The EnginePlanner class handles task assignment and scheduling for agents.
     """
 
-    def __init__(self, agent_graph: AgentGraph, memory: Any, config: Dict[str, Any], task:str):
+    def __init__(self, agent_graph: AgentGraph, memory: Any, config: Dict[str, Any], task:str, model:str="gpt-3.5-turbo"):
         """
         Initialize the EnginePlanner.
 
@@ -34,6 +34,7 @@ class EnginePlanner:
         self.config = config
         self.current_progress = config.get('initial_progress', '')
         self.task = task
+        self.model = model
         self.logger.info("EnginePlanner initialized.")
 
     def create_prompt(self) -> str:
@@ -86,7 +87,7 @@ class EnginePlanner:
         )
         messages = [{"role": "system", "content": system_message}, {"role": "user", "content": prompt}]
         response = model_prompting(
-            llm_model="gpt-3.5-turbo",
+            llm_model=self.model,
             messages=messages,
             return_num=1,
             max_token_num=1024,
@@ -112,7 +113,7 @@ class EnginePlanner:
         self.current_progress += f"\n{summary}"
         self.logger.debug(f"Updated progress: {self.current_progress}")
 
-    def summarize_output(self, summary:str, task:str) -> Message:
+    def summarize_output(self, summary:str, task:str, output_format:str) -> Message:
         """
         Summarize the output of the agents.
 
@@ -123,8 +124,8 @@ class EnginePlanner:
             str: The summarized output.
         """
         response = model_prompting(
-            llm_model="gpt-3.5-turbo",
-            messages=[{"role": "user", "content": f"Summarize the output of the agents for the task: {task}\n\nNow here is some result of thr agent: {summary}, please summarize it."}],
+            llm_model=self.model,
+            messages=[{"role": "user", "content": f"Summarize the output of the agents for the task: {task}\n\nNow here is some result of thr agent: {summary}, please summarize it. You should follow the use of the following format: {output_format}"}],
             return_num=1,
             max_token_num=1024,
             temperature=0.0,
@@ -160,7 +161,7 @@ class EnginePlanner:
 
         messages = [{"role": "system", "content": prompt}]
         response = model_prompting(
-            llm_model="gpt-3.5-turbo",
+            llm_model=self.model,
             messages=messages,
             return_num=1,
             max_token_num=256,

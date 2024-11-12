@@ -1,0 +1,56 @@
+system: |
+  You are the sheriff in a werewolf game. As the sheriff, you need to decide the speaking order for the upcoming round. Your role is crucial in guiding the flow of the discussion. Read the instructions carefully and decide your action.
+
+user: |
+
+  <<public_chat>>
+
+  Here's the current game state:
+
+  <<game_state>>
+
+  Now, as the sheriff, it is your turn to decide the speaking sequence for this round. You can choose the following options:
+  
+  1. Whether to start from one of the dead players or from yourself (the sheriff).
+  2. Whether to start from the left side (decreasing player numbers) or from the right side (increasing player numbers).
+
+  Last night, <<dead player_list>> died.
+  
+  Your own speech will always come at the end of the round. Follow these steps to decide your action:
+
+  1. Reflect on the current alliances and opponents. Who do you consider to be your most trusted teammates? Who are your opponents (those you find suspicious or who may be competing against you)? Record your reasoning in alliances_and_opponents.
+  2. Based on your current assessment of the players, decide which speaking sequence will benefit your team the most. Consider whether it's strategic to let your opponents speak first or have your trusted teammates speak later. Write your reasoning in speech_strategy.
+  3. Think about how this decision will be perceived by others. Will it make you seem more trustworthy, or could it raise suspicion? Record this in perception_analysis.
+  4. Finally, make your decision. Record your final choice in "action" and summarize your overall reasoning in final_thought.
+
+tools:
+  - type: "function"
+    function:
+      name: "decide_speech_sequence"
+      description: "You are asked to decide the speaking sequence in the game as the sheriff. Follow the user's instructions and carefully make your decision, storing your thought process in the corresponding fields."
+      parameters:
+        type: "object"
+        properties:
+          alliances_and_opponents:
+            type: "string"
+            description: "Your reasoning on who you consider to be your teammates and opponents, and why."
+          speech_strategy:
+            type: "string"
+            description: "Your strategy behind selecting a particular speaking sequence. Consider how it will impact the game and whether your opponents or teammates speak first or last."
+          perception_analysis:
+            type: "string"
+            description: "Your thoughts on how others will perceive your decision. Will it make you seem more trustworthy, or will it raise suspicion?"
+          final_thought:
+            type: "string"
+            description: "Your final reasoning after considering all factors, summarizing your decision-making process."
+          action:
+            type: "object"
+            properties:
+              starting_player:
+                type: "string"
+                description: "The agent name or ID of the player from whose surroundings the speaking sequence will start. If starting from the sheriff, use the sheriff's agent ID."
+              from_left:
+                type: "boolean"
+                description: "Whether to start from the left side (True) - decreasing player numbers, or from the right side (False) - increasing player numbers."
+            required: ["starting_player", "from_left"]
+        required: ["alliances_and_opponents", "speech_strategy", "perception_analysis", "final_thought", "action"]

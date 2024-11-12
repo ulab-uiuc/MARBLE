@@ -1356,13 +1356,13 @@ use = ["tensorflow", "tensorflow-hub", "tensorflow-text"]
 
 [[package]]
 name = "litellm"
-version = "1.51.3"
+version = "1.52.1"
 description = "Library to easily interface with LLM API providers"
 optional = false
 python-versions = "!=2.7.*,!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,!=3.5.*,!=3.6.*,!=3.7.*,>=3.8"
 files = [
-    {file = "litellm-1.51.3-py3-none-any.whl", hash = "sha256:440d3c7cc5ab8eeb12cee8f4d806bff05b7db834ebc11117d7fa070a1142ced5"},
-    {file = "litellm-1.51.3.tar.gz", hash = "sha256:31eff9fcbf7b058bac0fd7432c4ea0487e8555f12446a1f30e5862e33716f44d"},
+    {file = "litellm-1.52.1-py3-none-any.whl", hash = "sha256:a76133fc6d14a3157275d9ae850b9f18312ae93ae313092d6cf9e9d35f2c72f2"},
+    {file = "litellm-1.52.1.tar.gz", hash = "sha256:750056e0329c5c742193b8f2104133da1e69b2fcc534827e18f7b536af56315c"},
 ]
 
 [package.dependencies]
@@ -1371,7 +1371,7 @@ click = "*"
 importlib-metadata = ">=6.8.0"
 jinja2 = ">=3.1.2,<4.0.0"
 jsonschema = ">=4.22.0,<5.0.0"
-openai = ">=1.52.0"
+openai = ">=1.54.0"
 pydantic = ">=2.0.0,<3.0.0"
 python-dotenv = ">=0.2.0"
 requests = ">=2.31.0,<3.0.0"
@@ -1996,13 +1996,13 @@ files = [
 
 [[package]]
 name = "openai"
-version = "1.52.2"
+version = "1.54.3"
 description = "The official Python library for the openai API"
 optional = false
-python-versions = ">=3.7.1"
+python-versions = ">=3.8"
 files = [
-    {file = "openai-1.52.2-py3-none-any.whl", hash = "sha256:57e9e37bc407f39bb6ec3a27d7e8fb9728b2779936daa1fcf95df17d3edfaccc"},
-    {file = "openai-1.52.2.tar.gz", hash = "sha256:87b7d0f69d85f5641678d414b7ee3082363647a5c66a462ed7f3ccb59582da0d"},
+    {file = "openai-1.54.3-py3-none-any.whl", hash = "sha256:f18dbaf09c50d70c4185b892a2a553f80681d1d866323a2da7f7be2f688615d5"},
+    {file = "openai-1.54.3.tar.gz", hash = "sha256:7511b74eeb894ac0b0253dc71f087a15d2e4d71d22d0088767205143d880cca6"},
 ]
 
 [package.dependencies]
@@ -3969,13 +3969,13 @@ urllib3 = ">=2"
 
 [[package]]
 name = "types-setuptools"
-version = "75.2.0.20241025"
+version = "75.3.0.20241107"
 description = "Typing stubs for setuptools"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "types-setuptools-75.2.0.20241025.tar.gz", hash = "sha256:2949913a518d5285ce00a3b7d88961c80a6e72ffb8f3da0a3f5650ea533bd45e"},
-    {file = "types_setuptools-75.2.0.20241025-py3-none-any.whl", hash = "sha256:6721ac0f1a620321e2ccd87a9a747c4a383dc381f78d894ce37f2455b45fcf1c"},
+    {file = "types-setuptools-75.3.0.20241107.tar.gz", hash = "sha256:f66710e1cd4a936e5fcc12d4e49be1a67c34372cf753e87ebe704426451b4012"},
+    {file = "types_setuptools-75.3.0.20241107-py3-none-any.whl", hash = "sha256:bc6de6e2bcb6d610556304d0a69fe4ca208ac4896162647314ecfd9fd73d8550"},
 ]
 
 [[package]]
