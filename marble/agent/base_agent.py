@@ -7,6 +7,8 @@ import uuid
 from collections import defaultdict
 from typing import Any, Dict, List, Optional, Tuple, TypeVar, Union
 
+from litellm import token_counter
+
 from marble.environments import BaseEnvironment, WebEnvironment
 from marble.llms.model_prompting import model_prompting
 from marble.memory import BaseMemory, SharedMemory
@@ -175,6 +177,8 @@ class BaseAgent:
                 tools=tools,
                 tool_choice="auto"
             )[0]
+        messages = [{'role':'usr', 'content': act_task}, {'role':'sys', 'content': result.content}]
+        self.token_usage += token_counter(model=self.llm,messages=messages)
         communication = None
         result_from_function_str = None
         if result.tool_calls:
@@ -373,6 +377,8 @@ class BaseAgent:
                 tools=[communicate_to_description],
                 tool_choice="required"
             )[0]
+            messages = [{"role": "system", "content": session_current_agent.system_message}, {"role":"user", "content": communicate_task}, {'role':'system', 'content': result.content}]
+            self.token_usage += token_counter(model=self.llm, messages=messages)
             if result.tool_calls:
                 function_call = result.tool_calls[0]
                 function_name = function_call.function.name
@@ -410,6 +416,8 @@ class BaseAgent:
             top_p=None,
             stream=None,
         )[0]
+        messages = [{"role": "system", "content": system_message_summary}, {"role":"user", "content": summary_task}, {'role':'system', 'content': result.content}]
+        self.token_usage += token_counter(model=self.llm, messages=messages)
         self.memory.update(self.agent_id, {
                 "type": "action_communicate",
                 "action_name": "communicate_to",
@@ -499,6 +507,8 @@ class BaseAgent:
             top_p=None,
             stream=None,
         )[0].content
+        messages = [{"role": "user", "content": f"Agent '{self.agent_id}' should prioritize tasks that align with their role: {persona}. Based on the task history: {task_history_str}, and memory: {memory_str}, what should be the next task?"}, {'role':'system', 'content': next_task}]
+        self.token_usage += token_counter(model=self.llm, messages=messages)
         self.logger.info(f"Agent '{self.agent_id}' plans next task based on persona: {next_task}")
 
         return next_task
@@ -595,6 +605,8 @@ class BaseAgent:
             temperature=0.7,
             top_p=1.0
         )[0]
+        messages = [{"role": "system", "content": prompt}, {'role':'system', 'content': response.content}]
+        self.token_usage += token_counter(model=self.llm, messages=messages)
         try:
             tasks_for_children:Dict[str, Any] = json.loads(response.content if response.content else "{}")
             self.logger.info(f"Agent '{self.agent_id}' assigned tasks to children: {tasks_for_children}")
@@ -628,6 +640,8 @@ class BaseAgent:
             top_p=1.0
         )[0]
         summary = response.content if response.content else ""
+        messages = [{"role": "system", "content": prompt}, {'role':'system', 'content': summary}]
+        self.token_usage += token_counter(model=self.llm, messages=messages)
         return summary
 
 
@@ -669,7 +683,7 @@ class BaseAgent:
             temperature=0.7,
             top_p=1.0
         )[0].content
-
+        self.token_usage += token_counter(model=self.llm, messages=[{"role": "system", "content": prompt}, {"role": "system", "content": response}])
         # Parse the response to extract the agent ID and planning task
         next_agent_id: Optional[str] = None
         planning_task: Optional[str] = None

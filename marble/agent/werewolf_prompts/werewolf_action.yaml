@@ -8,7 +8,7 @@ user: |
 
   <<game_state>>
 
-  Now, as a werewolf, it is your turn to make a kill decision. 
+  Now, as a werewolf, it is your turn to make a kill decision.
   <<player info>>
 
   Follow these steps to decide your action as a werewolf:

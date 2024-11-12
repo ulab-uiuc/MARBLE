@@ -465,7 +465,7 @@ def get_paper_by_keyword(
     results = perform_arxiv_search(search)
 
     papers = []
-    for paper in results():
+    for paper in results:
         short_id = paper.get_short_id().split('v')[0]
         if short_id not in existing_arxiv_ids:
             papers.append(paper)

@@ -2,12 +2,12 @@ import json
 import os
 import random
 import time
+
 import yaml
-from typing import Any, Dict
-from ..agent.werewolf_agent import WerewolfAgent
 from colorama import Fore, Style, init  # 引入 colorama 库
 
-from marble.environments.base_env import BaseEnvironment
+from ..agent.werewolf_agent import WerewolfAgent
+
 
 class EventBus:
     def __init__(self):
@@ -22,7 +22,7 @@ class EventBus:
     def publish(self, event: dict):
         """
         广播事件，仅调用事件接收者的处理方法。
-        
+
         Args:
             event (dict): 包含事件数据的字典。必须包含 "recipients" 字段，列表格式。
         """
@@ -56,7 +56,7 @@ class WerewolfEnv:
 
         with open(system_prompt_path, 'r') as f:
             system_prompt = yaml.safe_load(f)
-        
+
         game_introduction = system_prompt.get("game_introduction", "")
 
         # 所有角色介绍
@@ -160,7 +160,7 @@ class WerewolfEnv:
                 "status": status,
                 "personal_event_log": personal_event_log  # 个人事件日志
             }
-            
+
         # 初始化警长信息为 None，表示没有警长
         self.shared_memory["public_state"]["sheriff"] = None
 
@@ -222,7 +222,7 @@ class WerewolfEnv:
                 night_start_message = f"SYSTEM: Night {current_day} begins. Werewolves and special roles take actions."
                 self.log_event(is_private=False, agent_id="system", content=night_start_message)
                 self.night()
-                
+
                 # Check termination condition after night phase
                 if self.should_terminate():
                     termination_message = "SYSTEM: Game termination condition met after night phase."
@@ -235,7 +235,7 @@ class WerewolfEnv:
                 self._log_event(day_start_message)
                 self.log_event(is_private=False, agent_id="system", content=day_start_message)
                 self.day()
-                
+
                 # Check termination condition after day phase
                 if self.should_terminate():
                     termination_message = "SYSTEM: Game termination condition met after day phase."
@@ -255,12 +255,12 @@ class WerewolfEnv:
 
     def night(self) -> None:
         """
-        Executes the night phase of the game. Werewolves select a target, and special 
+        Executes the night phase of the game. Werewolves select a target, and special
         roles (witch, seer, guard) may take actions.
         """
         # 记录当前夜晚编号
         current_night = self.shared_memory["public_state"]["days"]  # 第几夜（游戏回合数 +1）
-        
+
         # 在 night_cache 中添加一个新的字典以记录当前夜晚
         night_event = {"night": current_night,
                        "player_dead_tonight": []
@@ -303,7 +303,7 @@ class WerewolfEnv:
         if current_day == 1:
             # 第一日的特殊行动流程
             self._log_event("First day: Sheriff election begins.")
-            
+
             # 竞选警长
             self.run_for_sheriff()
 
@@ -372,13 +372,13 @@ class WerewolfEnv:
             bool: True if the game should end, otherwise False.
         """
         self._log_system("Checking if the game should terminate.")
-        
+
         # 获取存活玩家和狼人数量
         alive_players = self.shared_memory["public_state"]["alive_players"]
         remaining_players = len(alive_players)
-        werewolf_count = sum(1 for agent_id in alive_players 
+        werewolf_count = sum(1 for agent_id in alive_players
                             if self.shared_memory["private_state"]["players"][agent_id]["role"] == "wolf")
-        
+
         # 计算终止条件
         majority_threshold = -(-remaining_players // 2)  # 向上取整计算一半以上
         if werewolf_count >= majority_threshold:
@@ -389,7 +389,7 @@ class WerewolfEnv:
             self._log_system(termination_message)
             self.log_event(is_private=False, agent_id="system", content=termination_message)
             return True
-        
+
         # 如果未满足终止条件
         return False
 
@@ -487,9 +487,9 @@ class WerewolfEnv:
                 }
             }
             self.event_bus.publish(event)
-            self._log_event(f"Guard action event published.")
+            self._log_event("Guard action event published.")
         else:
-            self._log_event(f"Guard action event published.")
+            self._log_event("Guard action event published.")
 
     def process_guard_action(self, event: dict) -> None:
         """
@@ -507,24 +507,24 @@ class WerewolfEnv:
             if protect_target == last_protected:
                 # 无效操作，记录错误日志
                 self.log_event(
-                    is_private=True, 
+                    is_private=True,
                     agent_id=self.agent_id,
                     content=f"Guard action failed. {protect_target} was protected last night and cannot be protected again tonight."
                 )
             else:
                 # 更新守卫目标信息，将 protection_count 设置为 1
                 self.shared_memory["private_state"]["players"][protect_target]["status"]["protection_count"] = 1
-                
+
                 # 更新 last_protected 信息
                 self.shared_memory["private_state"]["guard_last_night_protect"] = protect_target
 
                 # 记录事件日志到私有日志
                 self.log_event(
-                    is_private=True, 
+                    is_private=True,
                     agent_id=self.agent_id,  # 守卫的 ID
                     content=f"Guard action processed. {protect_target} is protected this night."
                 )
-                
+
                 # 将守卫目标添加到 night_cache 的当夜日志
                 if self.shared_memory["private_state"]["night_cache"]:
                     current_night_log = self.shared_memory["private_state"]["night_cache"][-1]
@@ -543,7 +543,7 @@ class WerewolfEnv:
         """
         # 获取所有存活玩家的 ID 列表
         alive_players = self.shared_memory["public_state"].get("alive_players", [])
-        
+
         # 获取所有存活的狼人玩家的实例索引和 ID
         alive_werewolves = [
             (agent, agent_id) for agent_id, agent in self.agents.items()  # 假设 self.agents 是包含所有代理实例的字典
@@ -554,7 +554,7 @@ class WerewolfEnv:
         # 提取狼人实例和 ID 列表
         alive_werewolves_instances = [agent for agent, _ in alive_werewolves]
         alive_werewolves_ids = [agent_id for _, agent_id in alive_werewolves]
-        
+
         # 在 round_targets 中添加一个新字典，键为存活狼人的 ID，值初始化为 None
         new_round_target = {wolf_id: None for wolf_id in alive_werewolves_ids}
         self.shared_memory["private_state"]["werewolf_action"]["round_targets"].append(new_round_target)
@@ -727,7 +727,7 @@ class WerewolfEnv:
                     content=detailed_kill_result,
                     log_to_system=False
                 )
-            
+
             # 系统私密日志记录
             self.log_event(
                 is_private=True,
@@ -753,7 +753,7 @@ class WerewolfEnv:
 
                 # 调用 `werewolf_discussion` 进行下一轮讨论
                 self.werewolf_discussion()
-            
+
             else:
                 # 若剩余讨论轮次为 0，记录行动失败信息
                 remaining_werewolves = [
@@ -792,7 +792,7 @@ class WerewolfEnv:
                     agent_id="system",
                     content=detailed_fail_result
                 )
-                
+
                 # 记录到 night_cache
                 if self.shared_memory["private_state"]["night_cache"]:
                     current_night_log = self.shared_memory["private_state"]["night_cache"][-1]
@@ -827,9 +827,9 @@ class WerewolfEnv:
                 "content": {}  # 不传入任何内容
             }
             self.event_bus.publish(event)
-            self._log_event(f"Seer action event published.")
+            self._log_event("Seer action event published.")
         else:
-            self._log_event(f"Seer action event published.")
+            self._log_event("Seer action event published.")
 
     def process_seer_action(self, event: dict) -> None:
         """
@@ -916,9 +916,9 @@ class WerewolfEnv:
                 }
             }
             self.event_bus.publish(event)
-            self._log_event(f"Witch action event published.")
+            self._log_event("Witch action event published.")
         else:
-            self._log_event(f"Witch action event published.")
+            self._log_event("Witch action event published.")
 
     def process_witch_action(self, event: dict) -> None:
         """
@@ -1020,7 +1020,7 @@ class WerewolfEnv:
 
     def run_for_sheriff(self) -> None:
         """
-        Publishes a 'run for sheriff' event to the event bus. This event is directed to all 
+        Publishes a 'run for sheriff' event to the event bus. This event is directed to all
         players with a 'health' status of 1, allowing them to decide if they want to run for sheriff.
         """
         # 初始化 sheriff_election 字段
@@ -1032,7 +1032,7 @@ class WerewolfEnv:
 
         # 查找所有存活玩家
         alive_players = [
-            agent for agent in self.agents 
+            agent for agent in self.agents
             if self.shared_memory["private_state"]["players"][agent.agent_id]["status"].get("health", 0) == 1
         ]
 
@@ -1051,7 +1051,7 @@ class WerewolfEnv:
 
     def process_run_for_sheriff(self, event: dict) -> None:
         """
-        Processes each player's decision on whether or not to run for sheriff and 
+        Processes each player's decision on whether or not to run for sheriff and
         prepares candidates for the sheriff election once all decisions are received.
 
         Args:
@@ -1181,7 +1181,7 @@ class WerewolfEnv:
             self.vote_for_sheriff()
     def vote_for_sheriff(self) -> None:
         """
-        Initiates the voting process for electing a sheriff by broadcasting a 
+        Initiates the voting process for electing a sheriff by broadcasting a
         'vote_for_sheriff' event to all eligible players who did not participate
         in the sheriff election.
         """
@@ -1197,7 +1197,7 @@ class WerewolfEnv:
         # Step 2: 确定投票对象（从未参选的玩家）
         all_players = self.shared_memory["public_state"]["alive_players"]
         never_ran_for_sheriff = [
-            player_id for player_id in all_players 
+            player_id for player_id in all_players
             if not self.shared_memory["private_state"]["sheriff_election"]["candidates"].get(player_id)
         ]
 
@@ -1217,7 +1217,7 @@ class WerewolfEnv:
 
     def receive_action(self, event: dict) -> None:
         """
-        Processes an action event received from the EventBus. 
+        Processes an action event received from the EventBus.
         The event contains details about the action to be taken by the agent.
 
         Args:
@@ -1226,7 +1226,7 @@ class WerewolfEnv:
         """
         # 获取事件类型
         event_type = event.get("event_type", "unknown")
-        
+
         # 根据事件类型处理不同的行动
         if event_type == "reply_guard_action":
             # 处理守卫的行动
@@ -1251,8 +1251,3 @@ class WerewolfEnv:
             pass
 
         # 可以添加任何进一步的日志或其他辅助功能
-
-
-
-
-
