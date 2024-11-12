@@ -38,6 +38,7 @@ class BaseAgent:
             shared_memory (BaseMemory, optional): Shared memory instance.
         """
         agent_id = config.get("agent_id")
+        self.communicate = config.get("communication", False)
         self.llm = model
         assert isinstance(agent_id, str), "agent_id must be a string."
         assert env is not None, "agent must has an environment."
@@ -143,7 +144,8 @@ class BaseAgent:
                 }
             }
         }
-        tools.append(new_communication_session_description)
+        if self.communicate:
+            tools.append(new_communication_session_description)
         act_task = (
             f"You are {self.agent_id}: {self.profile}\n"
             f"This is your task: {task}\n"

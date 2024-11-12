@@ -83,7 +83,7 @@ class Engine:
             env3 = ResearchEnvironment(name="Research Environment", config=env_config)
             return env3
         elif env_type == "DB":
-            env4 = BaseEnvironment(name="DB Environment", config=env_config)
+            env4 = DBEnvironment(name="DB Environment", config=env_config)
             return env4
         else:
             raise ValueError(f"Unsupported environment type: {env_type}")

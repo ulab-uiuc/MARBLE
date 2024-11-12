@@ -61,8 +61,8 @@ class EnginePlanner:
             "Provide the assignments in the following JSON format:\n\n"
             "{\n"
             '  "tasks": {\n'
-            '    "agent1": "...", \n'
-            '    "agent2": "...", \n'
+            '    "...": "...", \n'
+            '    "...": "...", \n'
             '    // Add more agents as needed\n'
             '  },\n'
             '  "continue": true // Set to false if the task is completed\n'
@@ -144,6 +144,7 @@ class EnginePlanner:
         Returns:
             bool: True to continue, False to terminate.
         """
+        return True
         prompt = (
             "Based on the following agents' results, determine whether the overall task is completed.\n\n"
             "Agents' Results:\n"
