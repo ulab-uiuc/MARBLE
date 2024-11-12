@@ -1,0 +1,323 @@
+agents:
+- agent_id: agent1
+  profile: 'I am a researcher dedicated to advancing methodologies in dense pixelwise
+    prediction and distributed optimization, with a strong focus on practical applications
+    in computer vision and multi-agent systems. My recent work introduces the Flattening
+    Module, which enhances Fully Convolutional Networks (FCNs) for high-resolution
+    predictions without the complexity of traditional architectures. This innovation
+    has shown promising results in human pose estimation, semantic segmentation, and
+    object detection.
+
+
+    In the realm of remote sensing, I developed the Pyramid Time-Series Transformer
+    (PTST), a novel approach that efficiently processes high-resolution satellite
+    image time series for crop classification. This framework not only reduces GPU
+    memory consumption but also integrates semi-supervised learning techniques to
+    enhance performance with limited labeled data.
+
+
+    My research also delves into distributed algorithms for resource allocation in
+    multi-agent systems, particularly under adversarial conditions such as false data
+    injection attacks. I propose resilient algorithms that ensure optimal resource
+    allocation while maintaining stability, even in the presence of malicious interference.
+
+
+    Additionally, I explore aggregative games over networks, focusing on Nash equilibria
+    and the dynamics of multi-integrator agents. My work emphasizes the importance
+    of communication efficiency, proposing discrete-time schemes that allow agents
+    to converge to equilibrium without real-time interaction.
+
+
+    Through these contributions, I aim to bridge theoretical advancements with practical
+    implementations, providing robust solutions to complex problems in machine learning
+    and distributed systems.'
+  type: BaseAgent
+- agent_id: agent2
+  profile: I am a researcher specializing in the field of dynamical systems, particularly
+    focusing on differentiable systems with dominated splittings. My work primarily
+    revolves around understanding the intricate relationships between measure-theoretic
+    tail entropy and Lyapunov exponents. In my recent research, I have developed upper
+    estimates that provide insights into these connections, which are crucial for
+    analyzing the stability and behavior of dynamical systems. A significant aspect
+    of my contributions is the verification of upper semi-continuity of metric entropy
+    across various settings characterized by domination. Through this work, I aim
+    to deepen our understanding of dynamical systems and their underlying structures,
+    ultimately contributing to the broader field of mathematical analysis and its
+    applications.
+  type: BaseAgent
+- agent_id: agent3
+  profile: 'I am a researcher dedicated to exploring the applications of deep learning
+    in financial market prediction, particularly focusing on intra-day predictions
+    at the minute scale. The rapid fluctuations in stock prices and trading volumes
+    present unique challenges, and I strive to develop innovative solutions to enhance
+    prediction accuracy. My recent work centers around the Informer model, an advanced
+    architecture built on the Transformer framework, which offers reduced computational
+    complexity and improved performance for longer prediction horizons.
+
+
+    In my research, I have conducted extensive experiments comparing Informer with
+    traditional models like LSTM, Transformer, and BERT across various stock and market
+    indices. The results consistently demonstrate that Informer outperforms these
+    models in terms of prediction accuracy, as measured by metrics such as MAE, RMSE,
+    and MAPE. A key finding from my work is the significant impact of the global time
+    stamp mechanism, which enhances the model''s ability to capture time series characteristics,
+    leading to superior predictive capabilities.
+
+
+    Additionally, I have explored the transfer learning capabilities of Informer,
+    confirming its robustness and adaptability for real-world trading scenarios. My
+    goal is to bridge the gap between advanced machine learning techniques and practical
+    financial applications, ultimately providing investors and researchers with powerful
+    tools for market analysis and decision-making.'
+  type: BaseAgent
+- agent_id: agent4
+  profile: 'I am a researcher with a diverse background in computer vision, physics,
+    and mathematical modeling, focusing on human pose estimation, person re-identification,
+    and the study of black hole dynamics. My recent work has centered on addressing
+    the challenges of human pose estimation in long-tailed datasets, where I developed
+    the Pose Transformation Module (PTM) to enhance the diversity of training samples,
+    particularly for rare poses. This method has shown significant improvements in
+    generalization capabilities.
+
+
+    In the realm of person re-identification, I proposed a novel framework that leverages
+    identity invariance across video tracklets, achieving remarkable performance improvements
+    on a large-scale benchmark dataset. My unified approach for multi-person pose
+    estimation and tracking integrates spatial and temporal components, resulting
+    in state-of-the-art accuracy in pose tracking tasks.
+
+
+    Additionally, I have explored the intersection of vision science and engineering
+    through image quality assessment (IQA), providing a Bayesian perspective that
+    unifies various IQA methods. My research also extends into theoretical physics,
+    where I investigate the quasinormal modes of black holes in Lorentz-violating
+    gravity, revealing insights into the effects of rotation and anisotropic fields
+    on black hole dynamics.
+
+
+    Overall, my work aims to bridge theoretical concepts with practical applications,
+    contributing to advancements in both computer vision and fundamental physics.
+    I am passionate about developing innovative solutions that enhance our understanding
+    of complex systems and improve real-world applications.'
+  type: BaseAgent
+- agent_id: agent5
+  profile: 'I am a researcher dedicated to advancing the field of computer vision,
+    with a particular focus on optimizing power consumption and enhancing image processing
+    techniques. My work explores innovative approaches, such as computational cameras
+    that output binary gradient images, which can significantly reduce power usage
+    while maintaining or even improving accuracy in tasks like object recognition
+    and gesture detection.
+
+
+    I have developed deep learning methods to tackle real-world challenges, such as
+    separating reflected and transmitted light in images affected by reflections,
+    and I introduced a novel HDR video reconstruction method that effectively addresses
+    motion blur and noise. My research also delves into RAW image reconstruction,
+    where I proposed a state-of-the-art methodology that enhances computational photography
+    tasks by refining sensor readings.
+
+
+    In my recent work, I introduced AdaCode, a flexible framework for class-agnostic
+    image restoration that learns adaptive codebooks, and I developed a semantic-aware
+    image codec that optimizes perception quality alongside traditional rate-distortion
+    metrics. Additionally, I have tackled the complex problem of image denoising with
+    my Reconstruct-and-Generate Diffusion Model (RnG), which balances visual appeal
+    and fidelity.
+
+
+    Through these contributions, I aim to bridge the gap between traditional computer
+    vision techniques and modern deep learning methodologies, ultimately enhancing
+    the performance and efficiency of visual systems in real-world applications.'
+  type: BaseAgent
+- agent_id: agent6
+  profile: 'I am a researcher specializing in computer vision and image processing,
+    with a particular focus on innovative techniques for 3D reconstruction, image
+    restoration, and motion analysis. My recent work includes the development of Obj-NeRF,
+    a pipeline that effectively extracts 3D geometry from multi-view images, addressing
+    challenges like occlusion and background complexity. I also introduced the Reconstruct-and-Generate
+    Diffusion Model (RnG) to enhance image denoising by balancing visual appeal and
+    fidelity, and AutoDIR, an all-in-one image restoration system that automatically
+    identifies and restores images with unknown degradations.
+
+
+    My research extends to improving Neural Radiance Fields (NeRF) by disentangling
+    image signal processing effects during training, and I have pioneered methods
+    for real-time HDR video reconstruction with HDRFlow. Additionally, I have explored
+    the potential of lensless cameras for privacy-preserving face verification and
+    developed a dual-camera system for video motion magnification, which leverages
+    both event and RGB cameras.
+
+
+    I am passionate about advancing the field of image processing through novel frameworks
+    and methodologies, such as the 3D Generative Adversarial Network (3D-GAN) for
+    3D object generation and the Best-Buddies Similarity (BBS) for robust template
+    matching. My work aims to bridge the gap between theoretical advancements and
+    practical applications, ultimately enhancing the capabilities of computer vision
+    technologies in real-world scenarios.'
+  type: BaseAgent
+coordinate_mode: graph
+engine_planner:
+  initial_progress: Starting the collaborative research idea generation based on the
+    provided Introduction.
+environment:
+  max_iterations: 3
+  name: Research Collaboration Environment
+  type: Research
+llm: gpt-3.5-turbo
+memory:
+  type: SharedMemory
+metrics:
+  diversity_of_perspectives: true
+  engagement_level: true
+  evaluate_llm: gpt-4o-mini
+  relevance: true
+output:
+  file_path: result/discussion_output.jsonl
+  format: jsonl
+relationships:
+- - agent1
+  - agent2
+  - collaborate with
+- - agent1
+  - agent3
+  - collaborate with
+- - agent1
+  - agent4
+  - collaborate with
+- - agent1
+  - agent5
+  - collaborate with
+- - agent1
+  - agent6
+  - collaborate with
+- - agent2
+  - agent3
+  - collaborate with
+- - agent2
+  - agent4
+  - collaborate with
+- - agent2
+  - agent5
+  - collaborate with
+- - agent2
+  - agent6
+  - collaborate with
+- - agent3
+  - agent4
+  - collaborate with
+- - agent3
+  - agent5
+  - collaborate with
+- - agent3
+  - agent6
+  - collaborate with
+- - agent4
+  - agent5
+  - collaborate with
+- - agent4
+  - agent6
+  - collaborate with
+- - agent5
+  - agent6
+  - collaborate with
+task:
+  content: "\n            Dear Research Team,\n\n            You are collaborating\
+    \ to generate a new research idea based on the following Introduction:\n\n   \
+    \         **Introduction**\n\n             \n\n1 Introduction\n\nImage restoration\
+    \ aims at reconstructing a high-quality image from its low-quality observation.\
+    \ Typical image restoration problems, such as image denoising, deblurring and\
+    \ super-resolution, are usually defined under a constrained setting, where the\
+    \ degradation process is simple and known (e.g., bicubic downsampling). They have\
+    \ successfully promoted a vast number of excellent restoration algorithms [12,\
+    \ 71, 29, 6, 58, 69, 8], but are born to have limited generalization ability.\
+    \ To deal with real-world degraded images, blind image restoration (BIR) comes\
+    \ into view and becomes a promising direction. The ultimate goal of BIR is to\
+    \ realize realistic image reconstruction on general images with general degradations.\
+    \ BIR does not only extend the boundary of classic image restoration tasks, but\
+    \ also has a wide practical application field (e.g., old photo/film restoration).\n\
+    \n\nTypical BIR problems are blind image super-resolution (BSR), blind image denoising\
+    \ (BID), blind face restoration (BFR), etc.\nBSR is initially proposed to solve\
+    \ real-world super-resolution problems, where the low-resolution image contains\
+    \ unknown degradations.\nThe most popular solutions may be\nBSRGAN [73] and Real-ESRGAN\
+    \ [56]. They formulate BSR as a supervised large-scale degradation overfitting\
+    \ problem. To simulate real-world degradations, a degradation shuffle strategy\
+    \ and high-order degradation modeling are proposed separately. Then the adversarial\
+    \ loss [27, 15, 54, 37, 45] and reconstruction loss are incorporated to learn\
+    \ the reconstruction process in an end-to-end manner.\nThey have demonstrated\
+    \ their great robustness in degradation removal for real-world super-resolution,\
+    \ but usually fail in generating realistic details due to the limited generative\
+    \ ability.\nBID aims to achieve blind denoising [74, 17] for real-world noisy\
+    \ photographs, which usually contain various noises (e.g., dark current noise,\
+    \ short noise, and thermal\nnoise) due to the processing in real camera system.\n\
+    SCUNet\_[74] is the state-of-the-art method, which designs a practical noise degradation\
+    \ model to synthesize the noisy images, and adopts L1 loss as well as optional\
+    \ adversarial loss for training a deep denoiser model. Its solution is similar\
+    \ as BSR methods and thus has the same weakness.\nBFR only focuses on blind restoration\
+    \ for face images.\nDue to a smaller image space, BFR methods (e.g., CodeFormer\
+    \ [77], GFPGAN [55]) could incorporate powerful generative facial priors (e.g.,\
+    \ VQGAN [13], StyleGAN [22]) to generate faithful and high-quality facial details.\
+    \ They have achieved remarkable success in both academia and industry in recent\
+    \ years. Nevertheless, BFR assumes a fixed input size and restricted face image\
+    \ space, and thus cannot be applied to general images.\n\n\n\nRecently, denoising\
+    \ diffusion probabilistic models (DDPMs [20]) have shown outstanding performance\
+    \ in image generation. DDRM [23], DDNM [57], and GDP [14] incorporate the powerful\
+    \ diffusion model as the additional prior, thus having greater generative ability\
+    \ than GAN-based methods. With a proper degradation assumption, they can achieve\
+    \ impressive zero-shot restoration on classic IR tasks.\nHowever, the problem\
+    \ setting of zero-shot image restoration (ZIR) is not in accordance with BIR.\
+    \ Their methods can only deal with clearly defined degradations (linear or non-linear),\
+    \ but cannot generalize well to unknown degradations.\nIn other words, they can\
+    \ achieve realistic reconstruction on general images, but not on general degradations.\n\
+    \n\n\nIn this work, we aim to solve different BIR tasks in a unified framework.\n\
+    According to the review and analyses on recent progress in BIR tasks,\n\n    \
+    \        **Your Task**\n\n            1. **Literature Review**: Analyze the Introduction\
+    \ provided and conduct a brief literature review to understand the current state\
+    \ of research in this area.\n\n            2. **Brainstorming**: Collaboratively\
+    \ brainstorm potential research ideas that build upon or address gaps in the Introduction.\n\
+    \n            3. **Summarization**: Summarize your collective ideas.\n\n     \
+    \       4. **Formulate a New Research Idea**: Develop a new research proposal\
+    \ in the format of the '5q', defined below:\n\n               **Here is a high-level\
+    \ summarized insight of a research field Machine Learning.**\n\n             \
+    \  **Here are the five core questions:**\n\n               **[Question 1] - What\
+    \ is the problem?**\n\n               Formulate the specific research question\
+    \ you aim to address. Only output one question and do not include any more information.\n\
+    \n               **[Question 2] - Why is it interesting and important?**\n\n \
+    \              Explain the broader implications of solving this problem for the\
+    \ research community.\n               Discuss how such a paper will affect future\
+    \ research.\n               Discuss how addressing this question could advance\
+    \ knowledge or lead to practical applications.\n\n               **[Question 3]\
+    \ - Why is it hard?**\n\n               Discuss the challenges and complexities\
+    \ involved in solving this problem.\n               Explain why naive or straightforward\
+    \ approaches may fail.\n               Identify any technical, theoretical, or\
+    \ practical obstacles that need to be overcome. MAKE IT CLEAR.\n\n           \
+    \    **[Question 4] - Why hasn't it been solved before?**\n\n               Identify\
+    \ gaps or limitations in previous research or existing solutions.\n          \
+    \     Discuss any barriers that have prevented this problem from being solved\
+    \ until now.\n               Explain how your approach differs from or improves\
+    \ upon prior work. MAKE IT CLEAR.\n\n               **[Question 5] - What are\
+    \ the key components of my approach and results?**\n\n               Outline your\
+    \ proposed methodology in detail, including the method, dataset, and metrics that\
+    \ you plan to use.\n               Describe the expected outcomes. MAKE IT CLEAR.\n\
+    \n            Please work together to produce the '5q' for your proposed research\
+    \ idea.\n\n            Good luck!\n            "
+  output_format: "You should answer the task in the fllowing format:\n           \
+    \     **[Question 1] - What is the problem?**\n\n                Formulate the\
+    \ specific research question you aim to address. Only output one question and\
+    \ do not include any more information.\n\n                **[Question 2] - Why\
+    \ is it interesting and important?**\n\n                Explain the broader implications\
+    \ of solving this problem for the research community.\n                Discuss\
+    \ how such a paper will affect future research.\n                Discuss how addressing\
+    \ this question could advance knowledge or lead to practical applications.\n\n\
+    \                **[Question 3] - Why is it hard?**\n\n                Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \        Explain why naive or straightforward approaches may fail.\n         \
+    \       Identify any technical, theoretical, or practical obstacles that need\
+    \ to be overcome. MAKE IT CLEAR.\n\n                **[Question 4] - Why hasn't\
+    \ it been solved before?**\n\n                Identify gaps or limitations in\
+    \ previous research or existing solutions.\n                Discuss any barriers\
+    \ that have prevented this problem from being solved until now.\n            \
+    \    Explain how your approach differs from or improves upon prior work. MAKE\
+    \ IT CLEAR.\n\n                **[Question 5] - What are the key components of\
+    \ my approach and results?**\n\n                Outline your proposed methodology\
+    \ in detail, including the method, dataset, and metrics that you plan to use.\n\
+    \                Describe the expected outcomes. MAKE IT CLEAR."

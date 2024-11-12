@@ -1,0 +1,214 @@
+agents:
+- agent_id: agent1
+  profile: "I am a researcher dedicated to enhancing the efficiency and adaptability\
+    \ of machine learning models, particularly in the realm of Vision Transformers\
+    \ (ViTs) and image compression techniques. My recent work, HydraViT, addresses\
+    \ the significant hardware demands of ViTs by introducing a scalable architecture\
+    \ that dynamically adjusts the size of embedded dimensions and the number of attention\
+    \ heads during training. This innovative approach allows for the creation of multiple\
+    \ subnetworks, enabling deployment across a variety of hardware environments without\
+    \ sacrificing performance. \n\nAdditionally, I have developed ProgDTD, a novel\
+    \ training method that transforms traditional non-progressive image compression\
+    \ models into progressive ones. By prioritizing the information stored in the\
+    \ bottleneck of compression models, ProgDTD enhances user experience in scenarios\
+    \ with slow network connections, allowing images to load progressively in higher\
+    \ resolutions. My research aims to bridge the gap between model performance and\
+    \ practical deployment, ensuring that advanced machine learning techniques can\
+    \ be effectively utilized in real-world applications."
+  type: BaseAgent
+- agent_id: agent2
+  profile: 'I am a researcher dedicated to enhancing navigation systems and image
+    processing technologies, with a particular focus on accessibility and efficiency.
+    My work spans various domains, including indoor navigation for visually impaired
+    individuals, where I have evaluated and compared existing systems such as ultrasonic
+    and RFID-based solutions. I aim to bridge the gap in navigation technology, ensuring
+    that those with visual impairments can navigate their environments more effectively.
+
+
+    In the realm of image compression, I developed ProgDTD, a novel training method
+    that transforms traditional non-progressive image compression models into progressive
+    ones. This innovation allows images to load in low resolution and gradually improve,
+    significantly enhancing user experience, especially in low-bandwidth scenarios.
+
+
+    Additionally, I have explored the intricacies of bipartite networks, introducing
+    a new measure called H.H to identify influential nodes in community formation.
+    This measure provides insights that traditional centrality metrics overlook, demonstrating
+    its effectiveness in real-world datasets.
+
+
+    Most recently, I have focused on Vision Transformers (ViTs) and their deployment
+    challenges on resource-constrained devices. My work on HydraViT introduces a scalable
+    architecture that adapts to varying hardware environments, achieving superior
+    performance without the need for multiple separate models. Through these contributions,
+    I strive to push the boundaries of technology, making it more accessible and efficient
+    for diverse applications.'
+  type: BaseAgent
+- agent_id: agent3
+  profile: 'I am a researcher specializing in wireless communication technologies,
+    particularly Bluetooth and Bluetooth Low Energy (BLE), and their applications
+    in the Internet of Things (IoT). My work focuses on enhancing the reliability
+    and efficiency of communication protocols in dynamic environments. One of my notable
+    contributions is the development of eAFH, a mechanism that intelligently manages
+    channel exclusion and inclusion in Adaptive Frequency Hopping, achieving remarkable
+    link-layer reliability even in the presence of dynamic interference.
+
+
+    I have also explored Two-Way Ranging techniques to enable scalable localization
+    of passive tags without the need for synchronized anchors, significantly improving
+    distance estimation accuracy. My research extends to self-adaptive protocols like
+    Dimmer, which utilize reinforcement learning to optimize performance in varying
+    wireless conditions, demonstrating a 95.8% reliability rate against strong interference.
+
+
+    In addition, I have introduced innovative methods for progressive image compression
+    and scalable Vision Transformers, addressing the challenges of deploying advanced
+    models on resource-constrained devices. My work on Whisper has led to a fast and
+    efficient flooding protocol for multi-hop networks, while EdgeAlpha offers a distributed
+    approach to process mining directly on sensor nodes, enhancing scalability and
+    reducing communication overhead.
+
+
+    Through my research, I aim to push the boundaries of wireless communication and
+    IoT technologies, ensuring they are robust, efficient, and adaptable to real-world
+    challenges.'
+  type: BaseAgent
+coordinate_mode: graph
+engine_planner:
+  initial_progress: Starting the collaborative research idea generation based on the
+    provided Introduction.
+environment:
+  max_iterations: 3
+  name: Research Collaboration Environment
+  type: Research
+llm: gpt-3.5-turbo
+memory:
+  type: SharedMemory
+metrics:
+  diversity_of_perspectives: true
+  engagement_level: true
+  evaluate_llm: gpt-4o-mini
+  relevance: true
+output:
+  file_path: result/discussion_output.jsonl
+  format: jsonl
+relationships:
+- - agent1
+  - agent2
+  - collaborate with
+- - agent1
+  - agent3
+  - collaborate with
+- - agent2
+  - agent3
+  - collaborate with
+task:
+  content: "\n            Dear Research Team,\n\n            You are collaborating\
+    \ to generate a new research idea based on the following Introduction:\n\n   \
+    \         **Introduction**\n\n             Introduction\nWeb-scale pretrained\
+    \ models, including Large Lan-\nguage Models (LLMs), are widely used in vari-\n\
+    ous applications (Devlin et al., 2018; Liu et al.,\n2019a; Brown et al., 2020).\
+    \ However, their compu-\ntational resource requirements can be problematic,\n\
+    especially in environments with limited resources.\nTo address this issue, more\
+    \ efficient appendix D.0.1 for the full\nset of plots). Our Results of changing\
+    \ confidence thresholds\nwith RoBERTa basemodel on MNLI-m dataset. We\nuse reduction\
+    \ factors {0.25,1.0}and confidence thresh-\nolds [0, x]for reduction factor 0.25and\
+    \ confidence\nthresholds [x,1]for reduction factor 1, where x\u2208\n{0.5,0.7.0.9}.\n\
+    E.0.4 Using Entropy or Confidence-based\nHardness Labels to Train Router\nSimilar\
+    \ to sample adaptive inference in early ex-\niting Appendix E.\nTable 4: While\
+    \ using adaptive width with RoBERTa base\non MNLI-m, SHARCS router outperforms\
+    \ BERxiT router.\nRouter on RoBERTa base AUC\u2191\nSHARCS 0.78\nBERxiT 0.73\n\
+    5 results. Best viewed in color. Conclusion\nWe presented SHARCS as a new sample\
+    \ adaptive in-\nference approach that can improve any network\u2019s\ninference\
+    \ efficiency. SHARCS incorporated a light-\nweight router which is trained with\
+    \ a novel ap-\nproach using the confidence of the network predic-\ntions during\
+    \ training. Our discussion and feedback, and Hyak cluster team\nat the University\
+    \ of Washington for infrastructure\nsupport. This research was supported by NSF\
+    \ IIS-\n2044660, ONR MURI N00014- 18-1-2670, and\ngifts from AI2, Google and Apple.\
+    \ References\nJimmy Lei Ba, Jamie Ryan Kiros, and Geoffrey E. Hin-\nton. 2016.\
+    \ Layer normalization.\nTom B. Brown, Benjamin Mann, Nick Ryder, Melanie\nSubbiah,\
+    \ Jared Kaplan, Prafulla Dhariwal, Arvind\nNeelakantan, Pranav Shyam, Girish Sastry,\
+    \ Amanda\nAskell, Sandhini Agarwal, Ariel Herbert-V oss,\nGretchen Krueger, Tom\
+    \ Henighan, Rewon Child,\nAditya Ramesh, Daniel M. Ziegler, Jeffrey Wu,\nClemens\
+    \ Winter, Christopher Hesse, Mark Chen, Eric\nSigler, Mateusz Litwin, Scott Gray,\
+    \ Benjamin Chess,\nJack Clark, Christopher Berner, Sam McCandlish,\nAlec Radford,\
+    \ Ilya Sutskever, and Dario Amodei.\n2020. Language models are few-shot learners.\
+    \ CoRR ,\nabs/2005.14165.\nIdo Dagan, Oren Glickman, and Bernardo Magnini.\n2005.\
+    \ The pascal recognising textual entailment chal-\nlenge. In Proceedings of the\
+    \ PASCAL Challenges\nWorkshop on Recognising Textual Entailment .\nJacob Devlin,\
+    \ Ming-Wei Chang, Kenton Lee, and\nKristina Toutanova. 2018. BERT: pre-training\
+    \ of\ndeep bidirectional transformers for language under-\nstanding. CoRR , abs/1810.04805.\n\
+    Devvrit, Sneha Kudugunta, Aditya Kusupati, Tim\nDettmers, Kaifeng Chen, Inderjit\
+    \ Dhillon, Yulia\nTsvetkov, Hajishirzi Hannaneh, Sham Kakade, Ali\nFarhadi, and\
+    \ Prateek Jain. 2023. Matformer: Nested\ntransformer for elastic inference. arXiv\
+    \ preprint\narxiv:2310.07707 .\nWilliam B. Dolan and Chris Brockett. 2005. Automati-\n\
+    cally constructing a corpus of sentential paraphrases.\nInProceedings of the Third\
+    \ International Workshop\non Paraphrasing (IWP2005) .\nKawin Ethayarajh, Yejin\
+    \ Choi, and Swabha\nSwayamdipta. 2021. Information-theoretic measures\nof dataset\
+    \ difficulty. CoRR , abs/2110.08420.\nSaurabh Goyal, Anamitra R. Choudhury, Saurabh\
+    \ M.\nRaje, Venkatesan T. Chakaravarthy, Yogish Sabhar-\nwal, and Ashish Verma.\
+    \ 2020. Power-bert: Accel-erating bert inference via progressive word-vector\n\
+    elimination.\nYue Guan, Zhengyi Li, Jingwen Leng, Zhouhan Lin,\nand Minyi Guo.\
+    \ 2022. Transkimmer: Transformer\nlearns to layer-wise skim. In Proceedings of\
+    \ the 60th\nAnnual Meeting of the Association for Computational\nLinguistics (Volume\
+    \ 1: Long Papers) , pages 7275\u2013\n7286, Dublin, Ireland. Association for Computational\n\
+    Linguistics.\nDan Hendrycks and Kevin Gimpel. 2016. Bridging non-\nlinearities\
+    \ and stochastic regularizers with gaussian\nerror linear units. CoRR , abs/1606.08415.\n\
+    Geoffrey Hinton, Oriol Vinyals, and Jeff Dean. 2015.\nDistilling the knowledge\
+    \ in a neural network.\nLu Hou, Zhiqi Huang, Lifeng Shang, Xin Jiang, Xiao\nChen,\
+    \ and Qun Liu. 2020. Dynabert: Dynamic bert\nwith adaptive width and depth. In\
+    \ Advances in Neural\nInformation Processing Systems , volume 33, pages\n9782\u2013\
+    9793. Curran Associates, Inc.\nXiaoqi Jiao, Yichun Yin, Lifeng Shang, Xin Jiang,\
+    \ Xiao\nChen, Linlin Li, Fang Wang, and Qun Liu. 2019.\nTinybert: Distilling BERT\
+    \ for natural language\n\n            **Your Task**\n\n            1. **Literature\
+    \ Review**: Analyze the Introduction provided and conduct a brief literature review\
+    \ to understand the current state of research in this area.\n\n            2.\
+    \ **Brainstorming**: Collaboratively brainstorm potential research ideas that\
+    \ build upon or address gaps in the Introduction.\n\n            3. **Summarization**:\
+    \ Summarize your collective ideas.\n\n            4. **Formulate a New Research\
+    \ Idea**: Develop a new research proposal in the format of the '5q', defined below:\n\
+    \n               **Here is a high-level summarized insight of a research field\
+    \ Machine Learning.**\n\n               **Here are the five core questions:**\n\
+    \n               **[Question 1] - What is the problem?**\n\n               Formulate\
+    \ the specific research question you aim to address. Only output one question\
+    \ and do not include any more information.\n\n               **[Question 2] -\
+    \ Why is it interesting and important?**\n\n               Explain the broader\
+    \ implications of solving this problem for the research community.\n         \
+    \      Discuss how such a paper will affect future research.\n               Discuss\
+    \ how addressing this question could advance knowledge or lead to practical applications.\n\
+    \n               **[Question 3] - Why is it hard?**\n\n               Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \       Explain why naive or straightforward approaches may fail.\n          \
+    \     Identify any technical, theoretical, or practical obstacles that need to\
+    \ be overcome. MAKE IT CLEAR.\n\n               **[Question 4] - Why hasn't it\
+    \ been solved before?**\n\n               Identify gaps or limitations in previous\
+    \ research or existing solutions.\n               Discuss any barriers that have\
+    \ prevented this problem from being solved until now.\n               Explain\
+    \ how your approach differs from or improves upon prior work. MAKE IT CLEAR.\n\
+    \n               **[Question 5] - What are the key components of my approach and\
+    \ results?**\n\n               Outline your proposed methodology in detail, including\
+    \ the method, dataset, and metrics that you plan to use.\n               Describe\
+    \ the expected outcomes. MAKE IT CLEAR.\n\n            Please work together to\
+    \ produce the '5q' for your proposed research idea.\n\n            Good luck!\n\
+    \            "
+  output_format: "You should answer the task in the fllowing format:\n           \
+    \     **[Question 1] - What is the problem?**\n\n                Formulate the\
+    \ specific research question you aim to address. Only output one question and\
+    \ do not include any more information.\n\n                **[Question 2] - Why\
+    \ is it interesting and important?**\n\n                Explain the broader implications\
+    \ of solving this problem for the research community.\n                Discuss\
+    \ how such a paper will affect future research.\n                Discuss how addressing\
+    \ this question could advance knowledge or lead to practical applications.\n\n\
+    \                **[Question 3] - Why is it hard?**\n\n                Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \        Explain why naive or straightforward approaches may fail.\n         \
+    \       Identify any technical, theoretical, or practical obstacles that need\
+    \ to be overcome. MAKE IT CLEAR.\n\n                **[Question 4] - Why hasn't\
+    \ it been solved before?**\n\n                Identify gaps or limitations in\
+    \ previous research or existing solutions.\n                Discuss any barriers\
+    \ that have prevented this problem from being solved until now.\n            \
+    \    Explain how your approach differs from or improves upon prior work. MAKE\
+    \ IT CLEAR.\n\n                **[Question 5] - What are the key components of\
+    \ my approach and results?**\n\n                Outline your proposed methodology\
+    \ in detail, including the method, dataset, and metrics that you plan to use.\n\
+    \                Describe the expected outcomes. MAKE IT CLEAR."

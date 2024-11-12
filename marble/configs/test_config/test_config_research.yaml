@@ -1,15 +1,22 @@
-coordinate_mode: graph
+coordinate_mode: chain
+
 relationships:
-  - [agent1, agent2, "collaborate with"]
-  - [agent1, agent3, "collaborate with"]
-  - [agent1, agent4, "collaborate with"]
-  - [agent1, agent5, "collaborate with"]
-  - [agent2, agent3, "collaborate with"]
-  - [agent2, agent4, "collaborate with"]
-  - [agent2, agent5, "collaborate with"]
-  - [agent3, agent4, "collaborate with"]
-  - [agent3, agent5, "collaborate with"]
-  - [agent4, agent5, "collaborate with"]
+  - [agent1, agent2, "parent"]
+  - [agent1, agent3, "parent"]
+  - [agent1, agent4, "parent"]
+  - [agent1, agent5, "parent"]
+
+# relationships:
+#   - [agent1, agent2, "collaborate with"]
+#   - [agent1, agent3, "collaborate with"]
+#   - [agent1, agent4, "collaborate with"]
+#   - [agent1, agent5, "collaborate with"]
+#   - [agent2, agent3, "collaborate with"]
+#   - [agent2, agent4, "collaborate with"]
+#   - [agent2, agent5, "collaborate with"]
+#   - [agent3, agent4, "collaborate with"]
+#   - [agent3, agent5, "collaborate with"]
+#   - [agent4, agent5, "collaborate with"]
 
 llm: "gpt-3.5-turbo"
 

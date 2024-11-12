@@ -9,78 +9,78 @@ prompts:
 
       **Milestones**:
 
-      - **Milestone Name**: Install Biopython and Set Up Environment  
-        **Objective**: Ensure that the necessary libraries and environment are prepared for PDB file parsing.  
-        **Tasks**:  
-          - Install the Biopython library in the Python environment.  
-          - Verify the installation by importing the library and running a simple test function.  
+      - **Milestone Name**: Install Biopython and Set Up Environment
+        **Objective**: Ensure that the necessary libraries and environment are prepared for PDB file parsing.
+        **Tasks**:
+          - Install the Biopython library in the Python environment.
+          - Verify the installation by importing the library and running a simple test function.
         **Expected Outcome**: Biopython is successfully installed and functional within the environment.
 
-      - **Milestone Name**: Download and Parse the PDB File  
-        **Objective**: Retrieve the PDB file using Biopython and parse it to access atom data.  
-        **Tasks**:  
-          - Download the PDB file for the protein with ID 5wb7 from the RCSB Protein Data Bank.  
-          - Parse the file to access atom coordinates and structure data.  
+      - **Milestone Name**: Download and Parse the PDB File
+        **Objective**: Retrieve the PDB file using Biopython and parse it to access atom data.
+        **Tasks**:
+          - Download the PDB file for the protein with ID 5wb7 from the RCSB Protein Data Bank.
+          - Parse the file to access atom coordinates and structure data.
         **Expected Outcome**: The PDB file is downloaded and parsed, with access to atom details for further calculations.
 
-      - **Milestone Name**: Extract Atom Coordinates  
-        **Objective**: Identify and extract the coordinates of the first and second atoms in the parsed PDB file.  
-        **Tasks**:  
-          - Locate the list of atoms in the parsed PDB structure.  
-          - Access the coordinates of the first atom in the list and store its x, y, z values.  
-          - Access the coordinates of the second atom in the list and store its x, y, z values.  
+      - **Milestone Name**: Extract Atom Coordinates
+        **Objective**: Identify and extract the coordinates of the first and second atoms in the parsed PDB file.
+        **Tasks**:
+          - Locate the list of atoms in the parsed PDB structure.
+          - Access the coordinates of the first atom in the list and store its x, y, z values.
+          - Access the coordinates of the second atom in the list and store its x, y, z values.
         **Expected Outcome**: The x, y, z coordinates of the first and second atoms are extracted and stored for calculation.
 
-      - **Milestone Name**: Calculate Distance Between Atoms  
-        **Objective**: Compute the Euclidean distance between the first and second atoms using their coordinates.  
-        **Tasks**:  
-          - Use the x, y, z coordinates of both atoms to calculate the Euclidean distance between them in Angstroms.  
-          - Convert the calculated distance from Angstroms to picometers.  
-          - Round the final distance to the nearest picometer.  
+      - **Milestone Name**: Calculate Distance Between Atoms
+        **Objective**: Compute the Euclidean distance between the first and second atoms using their coordinates.
+        **Tasks**:
+          - Use the x, y, z coordinates of both atoms to calculate the Euclidean distance between them in Angstroms.
+          - Convert the calculated distance from Angstroms to picometers.
+          - Round the final distance to the nearest picometer.
         **Expected Outcome**: The distance between the first and second atoms is calculated in picometers, ready for reporting.
 
-      - **Milestone Name**: Prepare and Report Final Distance  
-        **Objective**: Format the calculated distance for reporting and finalize the output.  
-        **Tasks**:  
-          - Format the rounded distance result with appropriate units for clear reporting.  
-          - Verify that the result aligns with the specified output format.  
-          - Print or save the final distance value for reporting.  
+      - **Milestone Name**: Prepare and Report Final Distance
+        **Objective**: Format the calculated distance for reporting and finalize the output.
+        **Tasks**:
+          - Format the rounded distance result with appropriate units for clear reporting.
+          - Verify that the result aligns with the specified output format.
+          - Print or save the final distance value for reporting.
         **Expected Outcome**: The distance between the first and second atoms is presented clearly in the specified format, completing the task.
 
       **Example Task 2**: The photograph in the Whitney Museum of American Art's collection with accession number 2022.128 shows a person holding a book. Which military unit did the author of this book join in 1813? Answer without using articles.
 
       **Milestones**:
 
-      - **Milestone Name**: Identify the Book Author  
-        **Objective**: Determine the name of the author of the book in the photograph.  
-        **Tasks**:  
-          - Access the Whitney Museum’s collection database using the accession number 2022.128.  
-          - Identify the title of the book shown in the photograph and its author.  
+      - **Milestone Name**: Identify the Book Author
+        **Objective**: Determine the name of the author of the book in the photograph.
+        **Tasks**:
+          - Access the Whitney Museum’s collection database using the accession number 2022.128.
+          - Identify the title of the book shown in the photograph and its author.
         **Expected Outcome**: The author of the book in the photograph is identified.
 
-      - **Milestone Name**: Research Author's Biography  
-        **Objective**: Gather background information on the author, focusing on their life around 1813.  
-        **Tasks**:  
-          - Look up credible biographical sources or historical records for the author.  
-          - Confirm if the author joined a military unit in 1813.  
+      - **Milestone Name**: Research Author's Biography
+        **Objective**: Gather background information on the author, focusing on their life around 1813.
+        **Tasks**:
+          - Look up credible biographical sources or historical records for the author.
+          - Confirm if the author joined a military unit in 1813.
         **Expected Outcome**: Biographical information is gathered, including any military service records from 1813.
 
-      - **Milestone Name**: Identify Military Unit  
-        **Objective**: Pinpoint the exact military unit the author joined in 1813.  
-        **Tasks**:  
-          - Search military records, historical documents, or credible biographies for details on the author's military affiliation.  
-          - Verify the unit name and any associated details.  
+      - **Milestone Name**: Identify Military Unit
+        **Objective**: Pinpoint the exact military unit the author joined in 1813.
+        **Tasks**:
+          - Search military records, historical documents, or credible biographies for details on the author's military affiliation.
+          - Verify the unit name and any associated details.
         **Expected Outcome**: The military unit the author joined in 1813 is identified.
 
-      - **Milestone Name**: Format Answer  
-        **Objective**: Prepare the final answer according to the specific format requested.  
-        **Tasks**:  
-          - Ensure the military unit name is presented without any articles.  
-          - Double-check accuracy and clarity of the response.  
+      - **Milestone Name**: Format Answer
+        **Objective**: Prepare the final answer according to the specific format requested.
+        **Tasks**:
+          - Ensure the military unit name is presented without any articles.
+          - Double-check accuracy and clarity of the response.
         **Expected Outcome**: A formatted, article-free answer specifying the military unit is ready for submission.
 
     user: |
-      
+
       Follow the steps carefully and ensure each milestone is specific, achievable, and aligned with the overall objective.
       For each task, follow this structured process to define milestones:
 
@@ -93,7 +93,7 @@ prompts:
 
       Once the milestones are defined, return them as a list of dictionaries, each containing the above fields.
 
-      
+
       Here is the task description that needs to be broken down into milestones:
       <<task_description>>
 

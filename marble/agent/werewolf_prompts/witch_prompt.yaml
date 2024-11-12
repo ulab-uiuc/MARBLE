@@ -8,8 +8,8 @@ user: |
   Here's the current game state:
 
   <<game_state>>
-  
-  Now, as a witch, it is your turn to take action. 
+
+  Now, as a witch, it is your turn to take action.
   <<night info>>
   <<poison info>>
   <<antidote info>>

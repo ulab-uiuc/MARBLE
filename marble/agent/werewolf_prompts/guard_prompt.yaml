@@ -8,12 +8,12 @@ user: |
   Here's the current game state:
 
   <<game_state>>
-  
-  Now, as a guard, it is your turn to take action. 
+
+  Now, as a guard, it is your turn to take action.
   Here's the list of people alive:
   <<player_alive_info>>
   Last night, you have protected <<night info>>. You cannot protect him again this night.
-  You can protect one player from being attacked by the werewolves tonight. However, you cannot protect the same player on consecutive nights. As the guard, your role is crucial in preventing the werewolves from killing a key player. If you successfully protect the person targeted by the werewolves, their attack will fail, and no one will die that night. This gives your team an advantage and allows the protected player to contribute to the game for another day. 
+  You can protect one player from being attacked by the werewolves tonight. However, you cannot protect the same player on consecutive nights. As the guard, your role is crucial in preventing the werewolves from killing a key player. If you successfully protect the person targeted by the werewolves, their attack will fail, and no one will die that night. This gives your team an advantage and allows the protected player to contribute to the game for another day.
 
   Follow these steps to decide your action:
 
