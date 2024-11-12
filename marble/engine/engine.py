@@ -269,7 +269,7 @@ class Engine:
             summary_data["planning_scores"] = self.evaluator.metrics["planning_score"]
             summary_data["communication_scores"] = self.evaluator.metrics["communication_score"]
             summary_data["token_usage"] = self._get_totoal_token_usage()
-            summary_data["agent_kpis"] = self.evaluator.metrics["agent_kpi"]
+            summary_data["agent_kpis"] = self.evaluator.metrics["agent_kpis"]
             summary_data["total_milestones"] = self.evaluator.metrics["total_milestones"]
             if self.environment.name == 'Research Environment':
                 self.evaluator.evaluate_task_research(self.task, iteration_data["summary"])
@@ -373,7 +373,7 @@ class Engine:
             summary_data["planning_scores"] = self.evaluator.metrics["planning_score"]
             summary_data["communication_scores"] = self.evaluator.metrics["communication_score"]
             summary_data["token_usage"] = self._get_totoal_token_usage()
-            summary_data["agent_kpis"] = self.evaluator.metrics["agent_kpi"]
+            summary_data["agent_kpis"] = self.evaluator.metrics["agent_kpis"]
             summary_data["total_milestones"] = self.evaluator.metrics["total_milestones"]
             if self.environment.name == 'Research Environment':
                 self.evaluator.evaluate_task_research(self.task, iteration_data["summary"])
@@ -407,7 +407,6 @@ class Engine:
 
             task = self.task
             agents_results = []
-            visited_agents = set()
 
             while current_agent and chain_length < max_chain_length:
                 iteration_data = {
@@ -426,10 +425,6 @@ class Engine:
                 agents_results.append({current_agent.agent_id: result})
                 iteration_data["result"] = result
                 self.logger.info(f"Agent '{current_agent.agent_id}' completed task with result: {result}")
-
-                # Prevent loops
-                visited_agents.add(current_agent.agent_id)
-
                 # Get profiles of other agents
                 agent_profiles = self.graph.get_agent_profiles()
                 # Current agent chooses the next agent
@@ -462,11 +457,10 @@ class Engine:
                 # Decide whether to continue or terminate
                 continue_simulation = self.planner.decide_next_step([{'root_agent': result}])
                 iteration_data["continue_simulation"] = continue_simulation
+                summary_data["iterations"].append(iteration_data)
                 if not continue_simulation:
                     self.logger.info("EnginePlanner decided to terminate the simulation.")
                     break
-
-                summary_data["iterations"].append(iteration_data)
             # Update progress
             summary = self._summarize_results(agents_results)
             self.logger.info(f"Chain execution Summary:\n{summary}")
@@ -476,7 +470,7 @@ class Engine:
             summary_data["planning_scores"] = self.evaluator.metrics["planning_score"]
             summary_data["communication_scores"] = self.evaluator.metrics["communication_score"]
             summary_data["token_usage"] = self._get_totoal_token_usage()
-            summary_data["agent_kpis"] = self.evaluator.metrics["agent_kpi"]
+            summary_data["agent_kpis"] = self.evaluator.metrics["agent_kpis"]
             summary_data["total_milestones"] = self.evaluator.metrics["total_milestones"]
             if self.environment.name == 'Research Environment':
                 self.evaluator.evaluate_task_research(self.task, iteration_data["summary"])
@@ -517,18 +511,17 @@ class Engine:
                 }
                 self.current_iteration += 1
                 self.logger.info(f"Starting iteration {self.current_iteration}")
-                result, communication, tasks = self._execute_agent_task_recursive(root_agent, self.task)
-                iteration_data["result"] = result
+                results, communication, tasks = self._execute_agent_task_recursive(root_agent, self.task)
 
                 # Update progress
-                summary = self._summarize_results([{'root_agent': result}])
+                summary = self._summarize_results(results)
                 summary = self.planner.summarize_output(summary, self.task,  self.output_format)
                 iteration_data["summary"] = summary.content
                 self.logger.info(f"Iteration {self.current_iteration} Summary:\n{summary}")
                 self.planner.update_progress(summary)
                 iteration_data["communications"] = communication
                 iteration_data["task_assignments"] = tasks
-                iteration_data["task_results"] = [{'root_agent': result}]
+                iteration_data["task_results"] = results
 
                 # Evaluate communication
                 if iteration_data["communications"]:
@@ -546,7 +539,7 @@ class Engine:
                 self.evaluator.evaluate_kpi(self.task, results_str)
 
                 # Decide whether to continue or terminate
-                continue_simulation = self.planner.decide_next_step([{'root_agent': result}])
+                continue_simulation = self.planner.decide_next_step(results)
                 iteration_data["continue_simulation"] = continue_simulation
                 if not continue_simulation:
                     self.logger.info("EnginePlanner decided to terminate the simulation.")
@@ -557,7 +550,7 @@ class Engine:
             summary_data["planning_scores"] = self.evaluator.metrics["planning_score"]
             summary_data["communication_scores"] = self.evaluator.metrics["communication_score"]
             summary_data["token_usage"] = self._get_totoal_token_usage()
-            summary_data["agent_kpis"] = self.evaluator.metrics["agent_kpi"]
+            summary_data["agent_kpis"] = self.evaluator.metrics["agent_kpis"]
             summary_data["total_milestones"] = self.evaluator.metrics["total_milestones"]
             if self.environment.name == 'Research Environment':
                 self.evaluator.evaluate_task_research(self.task, iteration_data["summary"])
@@ -590,7 +583,7 @@ class Engine:
             # Agent assigns tasks to children
             tasks_for_children = agent.plan_tasks_for_children(task)
             tasks.append(tasks_for_children)
-            children_results = {}
+            children_results = []
             communications = []
             for child in agent.children:
                 child_task = tasks_for_children.get(child.agent_id, "")
@@ -599,19 +592,20 @@ class Engine:
                     tasks += tasks_
                     if communication:
                         communications.append(communication)
-                    children_results[child.agent_id] = child_result
+                    children_results += child_result
             # Agent may also act itself
             own_result, communication = agent.act(task)
             if communication:
                 communications.append(communication)
             communications_str = "\n".join(communications) if communications else None
-            # Combine results
-            combined_result = agent.summarize_results(children_results, own_result)
-            return combined_result, communications_str, tasks
+            # # Combine results
+            # combined_result = agent.summarize_results(children_results, own_result)
+            results = [{'agent_id':agent.agent_id, 'result':own_result}] + children_results
+            return results, communications_str, tasks
         else:
             # Agent directly acts on the task
             result, communication = agent.act(task)
-            return result, communication, tasks
+            return [{'agent_id':agent.agent_id, 'result':result}], communication, tasks
 
     def _select_initial_agent(self) -> Optional[BaseAgent]:
         """

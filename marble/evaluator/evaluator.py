@@ -265,9 +265,17 @@ class Evaluator:
         Returns:
             List[Dict[str, Any]]: The list of milestones.
         """
-        # Extract the JSON block from the assistant's answer
+        # Preprocess to handle escaped newlines and unnecessary symbols
         try:
-            milestones = json.loads(assistant_answer.strip())
+            # Remove escaped newlines
+            cleaned_answer = assistant_answer.replace("\\n", "").strip()
+
+            # Remove any leading and trailing backticks and whitespace
+            if cleaned_answer.startswith("```json") and cleaned_answer.endswith("```"):
+                cleaned_answer = cleaned_answer[7:-3].strip()
+
+            # Parse the JSON block
+            milestones = json.loads(cleaned_answer)
             return milestones
         except json.JSONDecodeError:
             self.logger.error("Failed to parse JSON from assistant's answer.")

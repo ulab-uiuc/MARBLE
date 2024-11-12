@@ -272,7 +272,7 @@ class ResearchEnvironment(BaseEnvironment):
         """
         try:
             papers = get_paper_by_keyword(keyword=keyword, existing_arxiv_ids=set(), max_papers=max_papers)
-            return {"success": True, "papers": [paper.to_dict() for paper in papers]}
+            return {"success": True, "papers": [paper.model_dump(exclude_none=True) for paper in papers]}
         except ValueError as e:
             return {"success": False, "error-msg": str(e)}
 
@@ -289,7 +289,7 @@ class ResearchEnvironment(BaseEnvironment):
         try:
             paper = get_paper_by_arxiv_id(arxiv_id=arxiv_id)
             if paper:
-                return {"success": True, "paper": paper.to_dict()}
+                return {"success": True, "paper": paper.model_dump(exclude_none=True)}
             else:
                 return {"success": False, "error-msg": "Paper not found."}
         except ValueError as e:
@@ -308,7 +308,7 @@ class ResearchEnvironment(BaseEnvironment):
         try:
             paper = get_paper_by_title(title=title)
             if paper:
-                return {"success": True, "paper": paper.to_dict()}
+                return {"success": True, "paper": paper.model_dump(exclude_none=True)}
             else:
                 return {"success": False, "error-msg": "Paper not found."}
         except ValueError as e:
