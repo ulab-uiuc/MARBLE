@@ -11,14 +11,17 @@ services:
       - 9090:9090
 
   postgres_db:
-    image: postgres:12.11
+    image: postgres
+    ports:
+      - 5432:5432
+    volumes:
+      - /var/lib/postgresql/data
+    command: postgres -c shared_preload_libraries=pg_stat_statements -c pg_stat_statements.track=all -c max_connections=200
     environment:
       POSTGRES_USER: test
       POSTGRES_PASSWORD: Test123_456
       POSTGRES_DB: sysbench
       POSTGRES_PORT: 5432
-    ports:
-      - 5432:5432
 
   node_exporter:
     image: prom/node-exporter

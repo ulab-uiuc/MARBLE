@@ -8,14 +8,14 @@ from typing import Any, Dict, List, Optional, Union
 from marble.agent import BaseAgent
 from marble.configs.config import Config
 from marble.engine.engine_planner import EnginePlanner
-from marble.environments import BaseEnvironment, WebEnvironment
+from marble.environments import BaseEnvironment, WebEnvironment, DBEnvironment
 from marble.evaluator.evaluator import Evaluator
 from marble.graph.agent_graph import AgentGraph
 from marble.memory.base_memory import BaseMemory
 from marble.memory.shared_memory import SharedMemory
 from marble.utils.logger import get_logger
 
-EnvType = Union[BaseEnvironment, WebEnvironment]
+EnvType = Union[BaseEnvironment, WebEnvironment, DBEnvironment]
 AgentType = Union[BaseAgent]
 
 class Engine:
@@ -71,6 +71,9 @@ class Engine:
             return env1
         elif env_type == "Base":
             env2 = BaseEnvironment(name="Base Environment", config=env_config)
+            return env2
+        elif env_type == "DB":
+            env2 = BaseEnvironment(name="DB Environment", config=env_config)
             return env2
         else:
             raise ValueError(f"Unsupported environment type: {env_type}")

@@ -12,6 +12,7 @@ from marble.environments.base_env import BaseEnvironment
 
 from db_utils.metrics import allowed_metrics_full_names, full_metrics_full_names
 from db_utils.diagnostic_kb import DiagnosticKB
+from db_utils.slow_query import obtain_slow_queries
 
 def get_prometheus_metric_data(metric_name: str) -> List[List[Any]]:
     """
@@ -190,6 +191,19 @@ class DBEnvironment(BaseEnvironment):
 
         # TODO: match_diagnose_knowledge, optimize_index_selection
 
+        is_initialized = False
+        alerts = []
+        while True:
+            try:
+                alerts = env.get_alerts()['alerts']
+                if len(alerts):
+                    is_initialized = True
+                    break
+            except:
+                pass
+        print(f'Alert detected @ {alerts}')
+
+
     def whether_is_abnormal_metric_handler(self, metric_name: str) -> bool:
         #try:
         if True:
@@ -273,6 +287,10 @@ class DBEnvironment(BaseEnvironment):
                 rag_str += f"Expert : {result['expert']}\n"
                 rag_str += f"\n"
 
+        # slow queries
+        slow_query_str = f"Here are the commands that took longest time:\n"
+        slow_query_str += obtain_slow_queries()
+
         # for metric proposed by llm
         rag_str += f"For the metric you wanted to look into, here are the matched knowledge: \n"
         for result in self.kb.search(llm_selected_metric_str, expert=expert, top_k=3):
@@ -282,7 +300,7 @@ class DBEnvironment(BaseEnvironment):
             rag_str += f"Expert : {result['expert']}\n"
             rag_str += f"\n"
 
-        return alert_metric_str + llm_selected_metric_str + rag_str
+        return alert_metric_str + llm_selected_metric_str + slow_query_str + rag_str
 
     def get_alerts(self) -> dict:
         prom_url = 'http://localhost:9090/api/v1/alerts'
@@ -326,6 +344,8 @@ if __name__ == "__main__":
             print(env.whether_is_abnormal_metric_handler('cpu_usage'))
         elif command == 'analyze':
             print(env.match_diagnose_knowledge_handler('WorkloadExpert', 'cpu'))
+        elif command == 'slow':
+            print(obtain_slow_queries())
         elif command == 'q':
             env.terminate()
             break
