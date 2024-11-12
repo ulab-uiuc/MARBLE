@@ -82,36 +82,39 @@ def collect_publications_and_coauthors(
     paper_max_num: int = 20,
     exclude_known: bool = True,
 ) -> Tuple[List[str], List[str], List[str]]:
-    matched_author_ids = match_author_ids(author, known_paper_titles)
-    author_id = matched_author_ids.pop()  # Only one author ID is expected
+    try:
+        matched_author_ids = match_author_ids(author, known_paper_titles)
+        author_id = matched_author_ids.pop()  # Only one author ID is expected
 
-    papers = get_papers_from_author_id(author_id, paper_max_num)
-    paper_abstracts = []
-    paper_titles = []
-    co_authors: Dict[str, int] = {}
+        papers = get_papers_from_author_id(author_id, paper_max_num)
+        paper_abstracts = []
+        paper_titles = []
+        co_authors: Dict[str, int] = {}
 
-    if known_paper_titles is not None:
-        known_titles_lower = {title.lower() for title in known_paper_titles}
+        if known_paper_titles is not None:
+            known_titles_lower = {title.lower() for title in known_paper_titles}
 
-    for paper in papers:
-        title = paper.get('title', '')
-        if exclude_known and known_paper_titles and title.lower() in known_titles_lower:
-            continue
+        for paper in papers:
+            title = paper.get('title', '')
+            if exclude_known and known_paper_titles and title.lower() in known_titles_lower:
+                continue
 
-        abstract = paper.get('abstract')
-        if abstract:
-            paper_abstracts.append(abstract.replace('\n', ' '))
-            paper_titles.append(title)
+            abstract = paper.get('abstract')
+            if abstract:
+                paper_abstracts.append(abstract.replace('\n', ' '))
+                paper_titles.append(title)
 
-        paper_authors = paper.get('authors', [])
-        co_authors = coauthor_frequency(author_id, paper_authors, co_authors)
+            paper_authors = paper.get('authors', [])
+            co_authors = coauthor_frequency(author_id, paper_authors, co_authors)
 
-    if not paper_abstracts or not paper_titles:
-        raise ValueError('Not enough papers found with abstracts.')
+        if not paper_abstracts or not paper_titles:
+            raise ValueError('Not enough papers found with abstracts.')
 
-    co_author_names = coauthor_filter(co_authors, limit=100)
+        co_author_names = coauthor_filter(co_authors, limit=100)
 
-    return paper_abstracts, paper_titles, co_author_names
+        return paper_abstracts, paper_titles, co_author_names
+    except Exception:
+        return None, None, None
 
 
 @beartype
