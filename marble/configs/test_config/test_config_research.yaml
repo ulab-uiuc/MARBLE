@@ -1,5 +1,12 @@
-coordinate_mode: graph
+coordinate_mode: tree
+
 relationships:
+  - [agent1, agent2, "parent"]
+  - [agent1, agent3, "parent"]
+  - [agent1, agent4, "parent"]
+  - [agent1, agent5, "parent"]
+
+relationships_graph:
   - [agent1, agent2, "collaborate with"]
   - [agent1, agent3, "collaborate with"]
   - [agent1, agent4, "collaborate with"]

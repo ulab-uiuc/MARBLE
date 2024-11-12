@@ -7,6 +7,7 @@ Engine Planner module responsible for task assignment and scheduling.
 import json
 from typing import Any, Dict, List
 
+from litellm import token_counter
 from litellm.types.utils import Message
 
 from marble.graph.agent_graph import AgentGraph
@@ -35,6 +36,7 @@ class EnginePlanner:
         self.current_progress = config.get('initial_progress', '')
         self.task = task
         self.model = model
+        self.token_usage = 0
         self.logger.info("EnginePlanner initialized.")
 
     def create_prompt(self) -> str:
@@ -94,7 +96,8 @@ class EnginePlanner:
             temperature=0.7,
             top_p=1.0
         )
-
+        messages =[{"role": "system", "content": system_message}, {"role": "user", "content": prompt}, {"role": "assistant", "content": response[0].content}]
+        self.token_usage += token_counter(model=self.model, messages=messages)
         try:
             assignment:Dict[str, Any] = json.loads(response[0].content if response[0].content else "")
             self.logger.debug(f"Received task assignment: {assignment}")
@@ -132,6 +135,7 @@ class EnginePlanner:
             top_p=None,
             stream=None
         )[0]
+        self.token_usage += token_counter(model=self.model, messages=[{"role": "user", "content": f"Summarize the output of the agents for the task: {task}\n\nNow here is some result of thr agent: {summary}, please summarize it. You should follow the use of the following format: {output_format}"}, {"role": "assistant", "content": response.content}])
         return response
 
     def decide_next_step(self, agents_results: List[Dict[str, Any]]) -> bool:
@@ -146,6 +150,7 @@ class EnginePlanner:
         """
         prompt = (
             "Based on the following agents' results, determine whether the overall task is completed.\n\n"
+            f'Task Description:\n{self.task}\n\n'
             "Agents' Results:\n"
         )
         for result in agents_results:
@@ -168,7 +173,8 @@ class EnginePlanner:
             temperature=0.3,
             top_p=1.0
         )
-
+        messages = [{"role": "system", "content": prompt}, {"role": "assistant", "content": response[0].content}]
+        self.token_usage += token_counter(model=self.model, messages=messages)
         try:
             decision = json.loads(response[0].content if response[0].content else "")
             self.logger.debug(f"Received continuation decision: {decision}")

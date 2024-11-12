@@ -203,7 +203,7 @@ class ResearchEnvironment(BaseEnvironment):
         """
         try:
             papers = get_related_papers(num_results=num_results, query=query, domain=domain, author=author)
-            return {"success": True, "papers": [paper.to_dict() for paper in papers]}
+            return {"success": True, "papers": [paper.model_dump(exclude_none=True) for paper in papers]}
         except ValueError as e:
             return {"success": False, "error-msg": str(e)}
 
@@ -220,7 +220,7 @@ class ResearchEnvironment(BaseEnvironment):
         """
         try:
             papers = get_recent_papers(domain=domain, max_results=max_results)
-            return {"success": True, "papers": [paper.to_dict() for paper in papers]}
+            return {"success": True, "papers": [paper.model_dump(exclude_none=True) for paper in papers]}
         except ValueError as e:
             return {"success": False, "error-msg": str(e)}
 
