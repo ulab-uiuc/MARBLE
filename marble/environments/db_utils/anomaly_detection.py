@@ -31,7 +31,7 @@ def detect_anomalies(data, significance_level=0.2):
     # Compare the KS statistic with the critical value
     anomalies = np.where(ks_statistic > critical_value, True, False)
 
-    return ks_statistic, anomalies
+    return ks_statistic.tolist(), anomalies.tolist()
 
 def describe_data_features(data):
     """Describe the features of a given data in natural language."""

@@ -73,24 +73,24 @@ def write_amomaly_sql_to_file(text):
     try:
         with open('badsql.txt', 'a') as file:
             file.write(f"{text}\n")
-        print("文本已成功写入到badsql.txt文件中。")
+        print("Written to badsql.txt")
     except Exception as e:
-        print(f"写入文件时出现错误: {e}")
+        print(f"Error when writing to file: {e}")
 
 def write_amomaly_sql_to_file_a_line(text):
     try:
         with open('badsql.txt', 'a') as file:
             file.write(f"{text}\t\t")
-        print("文本已成功写入到badsql.txt文件中。")
+        print("Written to badsql.txt")
     except Exception as e:
-        print(f"写入文件时出现错误: {e}")
+        print(f"Error when writing to file: {e}")
 
 def write_space():
     try:
         with open('badsql.txt', 'a') as file:
             file.write("\n")
     except Exception as e:
-        print(f"写入文件时出现错误: {e}")
+        print(f"Error when writing to file: {e}")
 
 '''insert_large_data'''
 def insert_large_data(threads,duration,ncolumns,nrows,colsize,table_name='table1'):

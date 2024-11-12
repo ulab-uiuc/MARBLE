@@ -3,6 +3,8 @@ import subprocess
 import time
 from typing import Any, Dict, List
 import re
+import psycopg2
+from psycopg2 import OperationalError
 
 import numpy as np
 import requests
@@ -80,16 +82,31 @@ class DBEnvironment(BaseEnvironment):
         subprocess.run(["docker", "compose", "-f", os.path.join(self.current_dir, "db_env_docker", "docker-compose.yml"), "up", "-d", "--remove-orphans"], check=True)
 
         # anomalies
-        env_configs = config.get('environment', [])
 
-        if env_configs:
-            anomalies = config.get('anomalies', [])
+        import pdb; pdb.set_trace()
+        anomalies = config.get('anomalies', [])
+
+        is_db_up = False
+        while True:
+            try:
+                is_db_up = 1
+                if is_db_up:
+                    break
+            except:
+                pass
+        print(f'DB up and running')
+        import pdb; pdb.set_trace()
+
+        if anomalies:
+            import pdb; pdb.set_trace()
             for anomaly in anomalies:
                 anomaly_type = anomaly['anomaly']
                 threads = anomaly['threads']
                 ncolumn = anomaly['ncolumn']
                 colsize = anomaly['colsize']
-                subprocess.run(["python3", "anomaly_trigger/main.py", "--anomaly", anomaly_type, "--threads", f"{threads}", "--ncolumn", f"{ncolumn}", "--colsize", f"{colsize}"], check=True)
+
+                import pdb; pdb.set_trace()
+                subprocess.run(["python", os.path.join(self.current_dir, "db_env_docker", "anomaly_trigger/main.py"), "--anomaly", anomaly_type, "--threads", f"{threads}", "--ncolumn", f"{ncolumn}", "--colsize", f"{colsize}"], check=True)
 
         # Register the actions available in this environment
         self.register_action(
@@ -188,6 +205,7 @@ class DBEnvironment(BaseEnvironment):
         while True:
             try:
                 alerts = self.get_raw_alerts()['alerts']
+                time.sleep(1)
                 if len(alerts):
                     is_initialized = True
                     break
@@ -327,6 +345,25 @@ class DBEnvironment(BaseEnvironment):
                 raise ValueError(f"Prometheus returned an error: {data.get('error', 'Unknown error')}")
         else:
             raise ValueError(f"Failed to query Prometheus. Status code: {response.status_code}")
+
+    def check_db_connection(self):
+        """Check if the database is up and return True if successful, False otherwise."""
+        try:
+            # Attempt to connect to PostgreSQL database
+            connection = psycopg2.connect(
+                user="test",
+                password="Test123_456",
+                database="sysbench",
+                host="localhost",  # Use "postgres_db" if running within Docker
+                port="5432"
+            )
+            print("Database is up!")
+            connection.close()
+            return True  # Return True if connection is successful
+
+        except OperationalError:
+            print("Database is not available.")
+            return False  # Return False if connection fails
 
     def terminate(self) -> None:
         subprocess.run(["docker", "compose", "-f", os.path.join(self.current_dir, "db_env_docker", "docker-compose.yml"), "down"], check=True)
