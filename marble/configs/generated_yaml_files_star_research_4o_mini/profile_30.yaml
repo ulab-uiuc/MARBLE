@@ -1,0 +1,311 @@
+agents:
+- agent_id: agent1
+  profile: 'I am a researcher specializing in deep imitation learning and its applications
+    in autonomous driving, with a particular focus on navigating complex environments
+    like crowded intersections. My recent work has led to the development of a multi-task
+    conditional imitation learning framework that enhances both lateral and longitudinal
+    control tasks, significantly improving interaction safety with pedestrians. I
+    also created the IntersectNav benchmark, which provides human demonstrations to
+    facilitate research in this area.
+
+
+    In addition to my work on imitation learning, I have conducted a comprehensive
+    survey of deep reinforcement learning (DRL) and deep imitation learning (DIL)
+    techniques for deriving driving policies in autonomous vehicles. This survey not
+    only categorizes existing literature but also addresses critical issues such as
+    driving safety and environmental uncertainty, providing insights that can guide
+    future research.
+
+
+    Moreover, I have explored the realm of remote sensing image processing, specifically
+    focusing on pansharpening. I developed a novel probability-based global cross-modal
+    upsampling method (PGCU) that leverages both local and global information from
+    low-resolution multispectral images and guiding panchromatic images. My experiments
+    demonstrate that PGCU outperforms existing methods and enhances the performance
+    of state-of-the-art deep learning approaches in pansharpening.
+
+
+    Through my research, I aim to bridge the gap between advanced machine learning
+    techniques and real-world applications, contributing to safer and more efficient
+    autonomous systems.'
+  type: BaseAgent
+- agent_id: agent2
+  profile: "I am a researcher dedicated to advancing the efficiency and effectiveness\
+    \ of deep neural networks (DNNs) in computer vision and related fields. My work\
+    \ primarily focuses on optimizing DNNs for deployment on resource-constrained\
+    \ devices, such as smartphones, where computational intensity and memory usage\
+    \ pose significant challenges. \n\nIn my recent publications, I introduced Fixed-point\
+    \ Factorized Networks (FFNs) to reduce computational complexity while maintaining\
+    \ accuracy, and developed Binary Weight Networks via Hashing (BWNH) to enhance\
+    \ performance with low-bit representations. I also explored innovative quantization\
+    \ techniques, such as the Q-ViT framework for vision transformers, which allows\
+    \ for learnable quantization parameters, and the Soft Threshold Ternary Networks\
+    \ (STTN) that automatically determine quantization intervals.\n\nMy research extends\
+    \ to the realm of privacy in machine learning, where I proposed frameworks that\
+    \ balance user-level differential privacy with model performance, and I have investigated\
+    \ the integration of location information into semantic segmentation tasks to\
+    \ improve accuracy. Additionally, I am exploring zero-shot transfer learning in\
+    \ graph data, introducing the ZeroG framework to facilitate cross-dataset generalization.\n\
+    \nThrough my work, I aim to bridge the gap between cutting-edge deep learning\
+    \ techniques and practical applications, ensuring that advanced models can be\
+    \ effectively utilized in real-world scenarios. I am passionate about pushing\
+    \ the boundaries of what is possible in machine learning while maintaining a focus\
+    \ on efficiency and accessibility."
+  type: BaseAgent
+- agent_id: agent3
+  profile: 'I am a dedicated researcher specializing in deep learning, particularly
+    in the realms of computer vision and neural network optimization. My work has
+    focused on addressing the challenges of deploying deep convolutional neural networks
+    (CNNs) on resource-constrained devices, leading to innovations such as Binary
+    Weight Networks via Hashing (BWNH) and the PArallel Low-precision Quantization
+    (PalQuant) method. These contributions have significantly improved model efficiency
+    without sacrificing accuracy, making advanced neural networks more accessible
+    for mobile applications.
+
+
+    I have also explored novel loss functions, such as Li-ArcFace, to enhance face
+    recognition performance, and developed data-free quantization techniques that
+    leverage intrinsic Batch Normalization statistics. My research extends to optimizing
+    resource management in deep learning datacenters, where I introduced a framework
+    that improves job scheduling and energy efficiency.
+
+
+    Recently, I have been investigating the intersection of spiking neural networks
+    and neural radiance fields, proposing SpikingNeRF to reduce energy consumption
+    while maintaining high-quality 3D scene rendering. Additionally, I have contributed
+    to the development of FastGL, a GPU-efficient framework for accelerating sampling-based
+    training of Graph Neural Networks (GNNs) on large-scale graphs.
+
+
+    Through my work, I aim to push the boundaries of deep learning technologies, making
+    them more efficient and applicable across various domains, while also addressing
+    the practical challenges of deployment in real-world scenarios.'
+  type: BaseAgent
+- agent_id: agent4
+  profile: 'I am a researcher specializing in differential geometry and mathematical
+    physics, with a particular focus on Riemannian manifolds and their curvature properties.
+    My recent work has explored the compactness of metrics in conformal classes with
+    prescribed positive $Q$-curvature, demonstrating significant results in dimensions
+    5, 6, and 7. I have developed flow approaches to tackle the generalized Loewner-Nirenberg
+    problem, establishing unique solutions to the $\sigma_k$-Ricci equation on compact
+    manifolds with boundary.
+
+
+    My research also delves into the uniqueness of conformally compact Einstein metrics,
+    particularly for Berger metrics on spheres and their higher-dimensional analogs.
+    I have shown that these metrics are unique up to isometries, contributing to our
+    understanding of the relationship between curvature and conformal structures.
+    Additionally, I have investigated the existence of asymptotically hyperbolic metrics
+    and their implications in spectral theory.
+
+
+    Beyond geometry, I have ventured into the realm of condensed matter physics, studying
+    correlated electron systems and the Kondo-Lattice model. My work employs advanced
+    computational techniques, such as the dual-fermion approach, to analyze the effects
+    of spatial fluctuations in these systems.
+
+
+    Overall, my research aims to bridge the gap between abstract mathematical theories
+    and their practical applications in physics, providing insights that advance both
+    fields. I am passionate about exploring the intricate connections between geometry,
+    topology, and physical phenomena, and I look forward to further contributions
+    in these areas.'
+  type: BaseAgent
+- agent_id: agent5
+  profile: 'I am a researcher dedicated to enhancing the efficiency and performance
+    of neural networks, particularly in the context of approximate computing and graph
+    neural networks (GNNs). My recent work has focused on developing innovative architectures
+    and methodologies that address the challenges of energy efficiency, computational
+    redundancy, and memory consumption in deep learning applications.
+
+
+    One of my notable contributions is AXNet, a unified neural network structure that
+    integrates approximators and predictors into a single end-to-end trainable model,
+    significantly improving invocation rates and reducing training time. I also introduced
+    the Multiclass-Classifier and Multiple Approximators (MCMA) architecture, which
+    optimizes the invocation of approximators for better energy efficiency.
+
+
+    In the realm of GNNs, I have developed FastGL, a GPU-efficient framework that
+    accelerates sampling-based training by optimizing memory I/O, computation, and
+    subgraph sampling phases. My work on the Memory-Efficient GNN Accelerator (MEGA)
+    further explores algorithm-hardware co-design, employing degree-aware mixed-precision
+    quantization to enhance performance while minimizing memory usage.
+
+
+    Additionally, I have investigated the potential of resistive random-access memory
+    (ReRAM) for deep learning, proposing novel architectures that leverage its in-memory
+    computing capabilities to improve training efficiency and robustness against weight
+    drifting.
+
+
+    Through my research, I aim to bridge the gap between theoretical advancements
+    and practical applications, ensuring that deep learning technologies can be effectively
+    deployed in resource-constrained environments. My work not only contributes to
+    the academic community but also has the potential to impact real-world applications
+    across various domains.'
+  type: BaseAgent
+- agent_id: agent6
+  profile: "I am a researcher dedicated to advancing the fields of deep learning and\
+    \ computer vision, with a particular focus on optimizing neural network architectures\
+    \ for efficiency and performance. My recent work includes the development of Fixed-point\
+    \ Factorized Networks (FFN), which significantly reduce computational complexity\
+    \ and storage requirements for deep neural networks, making them more suitable\
+    \ for embedded systems like smartphones. \n\nI have also tackled the challenges\
+    \ of visible-thermal cross-modality person re-identification (VT Re-ID) by proposing\
+    \ an approach that enhances discriminative feature learning through innovative\
+    \ techniques such as skip-connections and dual-modality triplet loss. My research\
+    \ extends to super-resolution, where I introduced a probabilistic model that improves\
+    \ image restoration by addressing the non-uniqueness of high-resolution candidates.\n\
+    \nIn the realm of time series classification, I developed the Self-Attentive Recurrent\
+    \ Convolutional Networks (SARCoN), which effectively learn multi-faceted representations\
+    \ and provide interpretability in identifying key features. Additionally, I have\
+    \ explored reinforcement learning for adaptive control in electric and connected\
+    \ vehicles, demonstrating significant energy savings while maintaining travel\
+    \ efficiency.\n\nMy work in federated learning has led to the creation of a Hyperparameter\
+    \ Network (HPN) that personalizes hyperparameter choices for heterogeneous clients\
+    \ while preserving data privacy. I have also contributed to probabilistic inference\
+    \ in Bayesian networks through innovative sampling algorithms, enhancing the precision\
+    \ of posterior probability estimates.\n\nOverall, my research aims to bridge the\
+    \ gap between advanced machine learning techniques and practical applications,\
+    \ ensuring that these technologies are both effective and accessible in real-world\
+    \ scenarios."
+  type: BaseAgent
+coordinate_mode: graph
+engine_planner:
+  initial_progress: Starting the collaborative research idea generation based on the
+    provided Introduction.
+environment:
+  max_iterations: 3
+  name: Research Collaboration Environment
+  type: Research
+llm: gpt-4o-mini
+memory:
+  type: SharedMemory
+metrics:
+  diversity_of_perspectives: true
+  engagement_level: true
+  evaluate_llm: gpt-4o-mini
+  relevance: true
+output:
+  file_path: result/star_research_gpt4o-mini.jsonl
+  format: jsonl
+relationships:
+- - agent1
+  - agent2
+  - collaborate with
+- - agent1
+  - agent3
+  - collaborate with
+- - agent1
+  - agent4
+  - collaborate with
+- - agent1
+  - agent5
+  - collaborate with
+- - agent1
+  - agent6
+  - collaborate with
+task:
+  content: "\n            Dear Research Team,\n\n            You are collaborating\
+    \ to generate a new research idea based on the following Introduction:\n\n   \
+    \         **Introduction**\n\n             INTRODUCTION\nGraph neural networks\
+    \ (GNNs) are a class of neural networks\nthat operate on graph-structured data.\
+    \ GNNs have shown to be\neffective in addressing a variety of real-world applications\
+    \ such as\nfraud detection [ 18,47,74], recommendation systems [ 61,71,72],\n\
+    predicting molecular and protein structure [ 29,57], knowledge\n1Accepted in KDD\u2019\
+    23. DOI: 10.1145/3580305.3599843representation [ 15], and more recently helping\
+    \ in fine-tuning large\nlanguage models [ 73]. Their popularity has led to the\
+    \ development\nof various optimized frameworks and libraries [ 19,63,76] that\n\
+    enable the fast application of GNNs on new domains, making it\neasier for researchers\
+    \ and practitioners to leverage the power of\nGNNs in their work.\nHowever, high-quality\
+    \ frameworks and libraries are necessary\nbut not sufficient for enabling fast\
+    \ research progress in GNN. One\nof the major challenges in GNN research is the\
+    \ lack of large-scale\ndatasets. This is because large graph datasets are typically\
+    \ propriety\nand most publicly available ones are rather small. The small size\n\
+    of these datasets makes it difficult to train GNNs that can handle\nlarge-graph\
+    \ structures and prevents the use of powerful pre-training\ntechniques [ 16,32,59,65].\
+    \ These challenges make it difficult to fully\nleverage GNN potential and its\
+    \ applications.\nTo address these challenges, recent work such as OGBN and\nMAG\
+    \ [ 26,27] have proposed open large graph benchmark suites\nproviding up to 244\
+    \ million nodes and 1.7 billion edge graphs. These\ndatasets contain a diverse\
+    \ set of graphs and have been widely used\nin the research community to benchmark\
+    \ GNNs\u2019 performance. How-\never, most existing datasets, including OGBN,\
+    \ provide very limited\nlabeled data. As GNN downstream tasks are often trained\
+    \ as super-\nvised learning tasks, having large labeled data matters, especially\n\
+    for multi-label classification problems. However, both OGBN and\nMAG use Arxiv\
+    \ [ 26,27] class labels which provide 1.4 million la-\nbeled nodes, meaning only\
+    \ about 1% of the overall dataset is labeled!\nWith such small labeled data usage\
+    \ during training, it becomes chal-\nlenging to determine if the GNN model\u2019\
+    s low accuracy for unseen\ndata is inherently due to insufficient training data\
+    \ or if the model\nitself fails to generalize [28, 37, 45, 62, 78].\nFurthermore,\
+    \ the lack of flexible datasets hinders the researcher\u2019s\nability to scrutinize\
+    \ and systematically evaluate the scalability of\nthe GNN models, frameworks,\
+    \ and systems. Ideally, a dataset should\nprovide (a) capability to study the\
+    \ impact of embedding generation\ntechniques and their properties on the GNN model\u2019\
+    s accuracy, (b)\nprovide sub-datasets of varying graph sizes and embeddings main-\n\
+    taining consistent homophily, and (c) provide a range of multi-class\nclassification\
+    \ tasks with varying degrees of complexity. Without\nsuch flexible datasets, it\
+    \ is difficult to train models on small graph\ndatasets and then evaluate their\
+    \ accuracy and execution efficiency\non larger data corpus, a common scenario\
+    \ in industrial settings.\nMoreover, the framework and system scalability problems\
+    \ encoun-\ntered with small datasets are different from those with large datasets,\n\
+    making it challenging to study the system requirements of GNNs.arXiv:2302.13522v2\
+    \  [cs.LG]  21 Jun 2023Arpandeep Khatua, Vikram Sharma Mailthody, Bhagyashree\
+    \ Taleka, Tengfei Ma, Xiang Song, and Wen-mei Hwu\nTo this end, this work proposes\
+    \ Illinois Graph Benchmark\n(IGB) , a research dataset tool that the researchers\
+    \ can use to scruti-\nnize and systematically evaluate the GNN models and their\
+    \ execu-\ntion efficiency. IGB provides access to enormous academic graph\ndatasets\
+    \ for deep learning research consisting of both homogeneous\nand heterogeneous\
+    \ graphs, providing a diverse range of graph struc-\ntures for\n\n           \
+    \ **Your Task**\n\n            1. **Literature Review**: Analyze the Introduction\
+    \ provided and conduct a brief literature review to understand the current state\
+    \ of research in this area.\n\n            2. **Brainstorming**: Collaboratively\
+    \ brainstorm potential research ideas that build upon or address gaps in the Introduction.\n\
+    \n            3. **Summarization**: Summarize your collective ideas.\n\n     \
+    \       4. **Formulate a New Research Idea**: Develop a new research proposal\
+    \ in the format of the '5q', defined below:\n\n               **Here is a high-level\
+    \ summarized insight of a research field Machine Learning.**\n\n             \
+    \  **Here are the five core questions:**\n\n               **[Question 1] - What\
+    \ is the problem?**\n\n               Formulate the specific research question\
+    \ you aim to address. Only output one question and do not include any more information.\n\
+    \n               **[Question 2] - Why is it interesting and important?**\n\n \
+    \              Explain the broader implications of solving this problem for the\
+    \ research community.\n               Discuss how such a paper will affect future\
+    \ research.\n               Discuss how addressing this question could advance\
+    \ knowledge or lead to practical applications.\n\n               **[Question 3]\
+    \ - Why is it hard?**\n\n               Discuss the challenges and complexities\
+    \ involved in solving this problem.\n               Explain why naive or straightforward\
+    \ approaches may fail.\n               Identify any technical, theoretical, or\
+    \ practical obstacles that need to be overcome. MAKE IT CLEAR.\n\n           \
+    \    **[Question 4] - Why hasn't it been solved before?**\n\n               Identify\
+    \ gaps or limitations in previous research or existing solutions.\n          \
+    \     Discuss any barriers that have prevented this problem from being solved\
+    \ until now.\n               Explain how your approach differs from or improves\
+    \ upon prior work. MAKE IT CLEAR.\n\n               **[Question 5] - What are\
+    \ the key components of my approach and results?**\n\n               Outline your\
+    \ proposed methodology in detail, including the method, dataset, and metrics that\
+    \ you plan to use.\n               Describe the expected outcomes. MAKE IT CLEAR.\n\
+    \n            Please work together to produce the '5q' for your proposed research\
+    \ idea.\n\n            Good luck!\n            "
+  output_format: "You should answer the task in the fllowing format:\n           \
+    \     **[Question 1] - What is the problem?**\n\n                Formulate the\
+    \ specific research question you aim to address. Only output one question and\
+    \ do not include any more information.\n\n                **[Question 2] - Why\
+    \ is it interesting and important?**\n\n                Explain the broader implications\
+    \ of solving this problem for the research community.\n                Discuss\
+    \ how such a paper will affect future research.\n                Discuss how addressing\
+    \ this question could advance knowledge or lead to practical applications.\n\n\
+    \                **[Question 3] - Why is it hard?**\n\n                Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \        Explain why naive or straightforward approaches may fail.\n         \
+    \       Identify any technical, theoretical, or practical obstacles that need\
+    \ to be overcome. MAKE IT CLEAR.\n\n                **[Question 4] - Why hasn't\
+    \ it been solved before?**\n\n                Identify gaps or limitations in\
+    \ previous research or existing solutions.\n                Discuss any barriers\
+    \ that have prevented this problem from being solved until now.\n            \
+    \    Explain how your approach differs from or improves upon prior work. MAKE\
+    \ IT CLEAR.\n\n                **[Question 5] - What are the key components of\
+    \ my approach and results?**\n\n                Outline your proposed methodology\
+    \ in detail, including the method, dataset, and metrics that you plan to use.\n\
+    \                Describe the expected outcomes. MAKE IT CLEAR."

@@ -1,0 +1,280 @@
+agents:
+- agent_id: agent1
+  profile: 'I am a researcher dedicated to addressing the ethical implications and
+    security challenges posed by Artificial Intelligence and Machine Learning. My
+    recent work focuses on fairness in machine learning, particularly through the
+    lens of counterfactual reasoning. I have developed methodologies that unveil unfair
+    model behaviors, even in scenarios where sensitive features are omitted, revealing
+    hidden biases that persist in decision-making processes.
+
+
+    In addition to fairness, I am deeply invested in the security of Large Language
+    Models (LLMs). I introduced MoJE, a novel guardrail architecture that enhances
+    the detection of jailbreak attacks while maintaining computational efficiency.
+    My research also explores the intersection of multimodality and recommendation
+    systems, analyzing how different modalities can exacerbate popularity bias and
+    affect recommendation accuracy.
+
+
+    I strive to bridge the gap between academic research and practical applications,
+    particularly in the realm of generative AI. My work on red- and blue-teaming strategies
+    aims to provide actionable insights for practitioners to secure AI systems against
+    adversarial threats. Through my contributions, I hope to foster a more equitable
+    and secure AI landscape, ensuring that technological advancements benefit all
+    users without compromising fairness or safety.'
+  type: BaseAgent
+- agent_id: agent2
+  profile: "I am a researcher dedicated to enhancing the security and robustness of\
+    \ machine learning systems, particularly in the context of adversarial attacks.\
+    \ My work spans various domains, including deep learning, federated learning,\
+    \ and malware detection, where I explore innovative defenses against adversarial\
+    \ examples that can compromise model integrity. \n\nIn my recent publications,\
+    \ I have developed frameworks like Deep Latent Defence, which combines adversarial\
+    \ training with detection mechanisms to safeguard against misclassification. I\
+    \ have also pioneered federated adversarial training protocols that address privacy\
+    \ concerns while maintaining model robustness. My research on adversarial attacks\
+    \ in industrial control systems highlights the vulnerabilities of neural networks\
+    \ and proposes effective countermeasures.\n\nI am particularly interested in the\
+    \ intersection of adversarial training and watermarking techniques, aiming to\
+    \ protect intellectual property while ensuring model resilience. My work on generative\
+    \ AI emphasizes the importance of red- and blue-teaming strategies to identify\
+    \ and mitigate adversarial threats in real-world applications.\n\nThrough extensive\
+    \ experimentation and innovative methodologies, I strive to bridge the gap between\
+    \ theoretical advancements and practical implementations, ensuring that machine\
+    \ learning models can operate securely in critical applications. My goal is to\
+    \ contribute to a safer AI landscape, where the benefits of machine learning can\
+    \ be harnessed without compromising security or privacy."
+  type: BaseAgent
+- agent_id: agent3
+  profile: 'As a researcher deeply immersed in the field of graph neural networks
+    (GNNs) and their applications, my work primarily revolves around enhancing the
+    capabilities and understanding of these powerful models. My recent publications
+    reflect a commitment to addressing the limitations of existing GNN architectures.
+    For instance, I developed Position-aware GNNs (P-GNNs) to better capture the positional
+    context of nodes within graphs, which has proven effective in various prediction
+    tasks, achieving significant performance improvements.
+
+
+    I am particularly interested in the interplay between graph structures and predictive
+    performance, as demonstrated in my work on relational graphs that reveal a "sweet
+    spot" for optimizing neural network architectures. This exploration has led to
+    the creation of Identity-aware GNNs (ID-GNNs), which enhance the expressive power
+    of message-passing frameworks by incorporating node identities during the aggregation
+    process.
+
+
+    Additionally, I have tackled the challenges posed by dynamic graphs through the
+    ROLAND framework, which allows for the seamless adaptation of static GNNs to dynamic
+    environments. My research also extends to automated machine learning (AutoML),
+    where I introduced methods like FALCON and AutoTransfer to improve the efficiency
+    of model design searches by leveraging prior knowledge across tasks.
+
+
+    Overall, my work aims to bridge theoretical insights with practical applications,
+    providing scalable solutions that enhance the performance of GNNs across a variety
+    of domains. I am passionate about pushing the boundaries of what GNNs can achieve
+    and contributing to the broader understanding of their design and functionality.'
+  type: BaseAgent
+- agent_id: agent4
+  profile: "As a researcher dedicated to the security of Large Language Models (LLMs),\
+    \ I focus on addressing the vulnerabilities that can be exploited through jailbreak\
+    \ attacks. The rapid adoption of LLMs across various applications has highlighted\
+    \ the urgent need for effective protective measures to ensure data integrity and\
+    \ user privacy. My recent work emphasizes the importance of input guardrails in\
+    \ safeguarding these models, culminating in the development of MoJE (Mixture of\
+    \ Jailbreak Expert). \n\nMoJE represents a significant advancement in guardrail\
+    \ architecture, designed to overcome the limitations of existing solutions. By\
+    \ leveraging simple linguistic statistical techniques, I have created a system\
+    \ that not only excels in detecting jailbreak attacks but also maintains computational\
+    \ efficiency during model inference. My rigorous experimentation has shown that\
+    \ MoJE can detect 90% of attacks while preserving the integrity of benign prompts,\
+    \ thereby enhancing the overall security of LLMs. \n\nThrough my research, I aim\
+    \ to contribute to the development of robust security frameworks that protect\
+    \ users and their data in an increasingly AI-driven world."
+  type: BaseAgent
+- agent_id: agent5
+  profile: 'I am a researcher deeply engaged in the intersection of machine learning,
+    deep learning, and data privacy. My work primarily focuses on addressing the challenges
+    posed by adversarial attacks, model robustness, and the complexities of generative
+    models. I have developed innovative frameworks such as Kernel GANs to enhance
+    the training of Generative Adversarial Networks, and I have explored Bayesian
+    methods to improve model uncertainty and robustness against adversarial examples.
+
+
+    My recent research has delved into federated learning, where I have proposed methods
+    for federated adversarial training and unlearning, ensuring data privacy while
+    maintaining model performance. I have also investigated the security of large
+    language models (LLMs), developing guardrail architectures like MoJE to prevent
+    jailbreak attacks and enhance model integrity.
+
+
+    I am passionate about democratizing data science through automated methods, and
+    I have contributed to the AutoDS challenge by proposing frameworks that streamline
+    the data science process. My work aims to make advanced machine learning techniques
+    more accessible and efficient, ultimately paving the way for safer and more reliable
+    AI applications. Through rigorous experimentation and innovative methodologies,
+    I strive to push the boundaries of what is possible in machine learning while
+    addressing critical issues of security and privacy.'
+  type: BaseAgent
+- agent_id: agent6
+  profile: 'I am a researcher dedicated to advancing the integration of renewable
+    energy sources into distribution grids through innovative technologies and data-driven
+    approaches. My recent work focuses on developing AI-driven tools that enhance
+    grid management, such as a probabilistic graph-based modeling tool that predicts
+    congestion and identifies energy flexibility needs. I have also contributed to
+    the design of scalable time-series forecasting systems that support real-time
+    decision-making for distributed energy resources.
+
+
+    In my exploration of federated learning (FL), I have developed AdaFed, a scalable
+    architecture that optimizes resource utilization and adapts to the dynamic nature
+    of FL jobs. My work emphasizes the importance of security in large language models
+    (LLMs), where I introduced MoJE, a guardrail architecture that effectively detects
+    jailbreak attacks while maintaining computational efficiency.
+
+
+    Additionally, I have been involved in creating Castor, a cloud-native system that
+    streamlines the management of IoT time-series data and predictive models, ensuring
+    that data scientists can efficiently deploy and monitor their models in production
+    environments. My research aims to bridge the gap between advanced machine learning
+    techniques and practical applications in energy systems, IoT, and federated learning,
+    all while addressing ethical considerations and promoting transparency in AI.
+    Through collaboration with industry partners and research institutions, I strive
+    to contribute to a sustainable and secure energy future.'
+  type: BaseAgent
+coordinate_mode: graph
+engine_planner:
+  initial_progress: Starting the collaborative research idea generation based on the
+    provided Introduction.
+environment:
+  max_iterations: 3
+  name: Research Collaboration Environment
+  type: Research
+llm: together_ai/meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo
+memory:
+  type: SharedMemory
+metrics:
+  diversity_of_perspectives: true
+  engagement_level: true
+  evaluate_llm: gpt-4o-mini
+  relevance: true
+output:
+  file_path: result/star_research_Llama3.1_70B.jsonl
+  format: jsonl
+relationships:
+- - agent1
+  - agent2
+  - collaborate with
+- - agent1
+  - agent3
+  - collaborate with
+- - agent1
+  - agent4
+  - collaborate with
+- - agent1
+  - agent5
+  - collaborate with
+- - agent1
+  - agent6
+  - collaborate with
+task:
+  content: "\n            Dear Research Team,\n\n            You are collaborating\
+    \ to generate a new research idea based on the following Introduction:\n\n   \
+    \         **Introduction**\n\n             \n\n1 Introduction\n\n\n\n\n(a) chatGPT.\n\
+    \n\n\n\n(b) Gemini Ultra.\n\n\n\nFigure 1: \nA real-world example of Crescendo\
+    \ for the Molotov task with ChatGPT (1(a)) and Gemini Ultra (1(b)), compared to\
+    \ the baseline approach of directly requesting the task. See full examples at[1,\
+    \ 2].\n\n\nRecent advancements in large language models (LLMs) have fueled their\
+    \ adoption into the products of numerous companies, including Microsoft, Google,\
+    \ and OpenAI. Concurrently, multiple research studies have been examining the\
+    \ security\_[27, 33] and privacy risks\_[28, 9, 22, 17] associated with these\
+    \ LLMs. One of the most notable security threats is the concept of \u201Cjailbreaks\u201D\
+    . Most LLMs are safety-aligned\_[15, 18, 8, 24], meaning they are trained to avoid\
+    \ performing illegal or unethical tasks or generating harmful content in general.\
+    \ Jailbreak attacks aim to disrupt this alignment, enabling LLMs to execute arbitrary\
+    \ malicious tasks.\n\n\nThere are various forms of jailbreaks. For instance, optimization-based\
+    \ jailbreaks\_[33, 20], involve adversaries optimizing a suffix to circumvent\
+    \ the model\u2019s safety measures. These methods mostly require white-box access\
+    \ to the target LLMs, rendering them ineffective against black-box models like\
+    \ GPT-3.5 and GPT-4, and also demand significant computational resources to calculate\
+    \ such optimizations. Another type of jailbreak relies solely on textual inputs\_\
+    [27, 10, 13], where attackers craft a text input that includes instructions or\
+    \ triggers, often in a one-shot setting, such as the \u201CDo Anything Now\u201D\
+    \ (DAN) jailbreaks, to bypass safety regulations. Recent works [12, 31] have introduced\
+    \ tools to automate the discovery of such jailbreaks.\n\n\nA significant drawback\
+    \ of these jailbreaks is that once discovered, input filters can effectively defend\
+    \ against them, as they often use inputs with identifiable malicious content.\
+    \ In this work, we propose a new class of multi-turn jailbreaks, Crescendo. Crescendo\
+    \ is a multi-turn jailbreaking technique that uses benign inputs to compromise\
+    \ the target model. Intuitively, Crescendo exploits the LLM\u2019s tendency to\
+    \ follow patterns and pay attention to recent text, especially text generated\
+    \ by the LLM itself. More concretely, Crescendo begins the conversation innocuously\
+    \ with an abstract question about the intended jailbreaking task. Through multiple\
+    \ interactions, Crescendo gradually steers the model to generate harmful content\
+    \ in small, seemingly benign steps. This use of benign inputs and the nature of\
+    \ Crescendo multi-turn interaction, makes it harder to detect and defend against\
+    \ even after being discovered. Figure\_1 presents an illustration of real examples\
+    \ of Crescendo on ChatGPT and Gemini Ultra, where posing the main question upfront\
+    \ would result in the LLM\u2019s refusal to respond. However, applying Crescendo\
+    \ leads the LLM to perform the task. The complete conversations are available\
+    \ at [1, 2].\n\n\nTo validate and assess Crescendo\u2019s effectiveness, we evaluate\
+    \ it against current state-of-the-art LLMs, ranging from open-source models like\
+    \ LLaMA-2 70b and LLaMA-3 70b to closed-source ones such as Gemini-Pro, Claude-2,\
+    \ Claude-3, GPT-3.5 Turbo, and GPT-4.\n\n\nIn this paper, we start by manually\
+    \ executing Crescendo on a subset of the tasks listed in Table\_1 against all\
+    \ models. Our findings confirm that Crescendo can indeed overcome the safety alignment\
+    \ of all models for nearly all tasks (Table\_2).\nMoreover, we show that once\
+    \ a multimodal model, such as ChatGPT and Gemini, is jailbroken using Crescendo,\
+    \ it can be used for different modality tasks, such as generating images that\n\
+    \n            **Your Task**\n\n            1. **Literature Review**: Analyze the\
+    \ Introduction provided and conduct a brief literature review to understand the\
+    \ current state of research in this area.\n\n            2. **Brainstorming**:\
+    \ Collaboratively brainstorm potential research ideas that build upon or address\
+    \ gaps in the Introduction.\n\n            3. **Summarization**: Summarize your\
+    \ collective ideas.\n\n            4. **Formulate a New Research Idea**: Develop\
+    \ a new research proposal in the format of the '5q', defined below:\n\n      \
+    \         **Here is a high-level summarized insight of a research field Machine\
+    \ Learning.**\n\n               **Here are the five core questions:**\n\n    \
+    \           **[Question 1] - What is the problem?**\n\n               Formulate\
+    \ the specific research question you aim to address. Only output one question\
+    \ and do not include any more information.\n\n               **[Question 2] -\
+    \ Why is it interesting and important?**\n\n               Explain the broader\
+    \ implications of solving this problem for the research community.\n         \
+    \      Discuss how such a paper will affect future research.\n               Discuss\
+    \ how addressing this question could advance knowledge or lead to practical applications.\n\
+    \n               **[Question 3] - Why is it hard?**\n\n               Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \       Explain why naive or straightforward approaches may fail.\n          \
+    \     Identify any technical, theoretical, or practical obstacles that need to\
+    \ be overcome. MAKE IT CLEAR.\n\n               **[Question 4] - Why hasn't it\
+    \ been solved before?**\n\n               Identify gaps or limitations in previous\
+    \ research or existing solutions.\n               Discuss any barriers that have\
+    \ prevented this problem from being solved until now.\n               Explain\
+    \ how your approach differs from or improves upon prior work. MAKE IT CLEAR.\n\
+    \n               **[Question 5] - What are the key components of my approach and\
+    \ results?**\n\n               Outline your proposed methodology in detail, including\
+    \ the method, dataset, and metrics that you plan to use.\n               Describe\
+    \ the expected outcomes. MAKE IT CLEAR.\n\n            Please work together to\
+    \ produce the '5q' for your proposed research idea.\n\n            Good luck!\n\
+    \            "
+  output_format: "You should answer the task in the fllowing format:\n           \
+    \     **[Question 1] - What is the problem?**\n\n                Formulate the\
+    \ specific research question you aim to address. Only output one question and\
+    \ do not include any more information.\n\n                **[Question 2] - Why\
+    \ is it interesting and important?**\n\n                Explain the broader implications\
+    \ of solving this problem for the research community.\n                Discuss\
+    \ how such a paper will affect future research.\n                Discuss how addressing\
+    \ this question could advance knowledge or lead to practical applications.\n\n\
+    \                **[Question 3] - Why is it hard?**\n\n                Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \        Explain why naive or straightforward approaches may fail.\n         \
+    \       Identify any technical, theoretical, or practical obstacles that need\
+    \ to be overcome. MAKE IT CLEAR.\n\n                **[Question 4] - Why hasn't\
+    \ it been solved before?**\n\n                Identify gaps or limitations in\
+    \ previous research or existing solutions.\n                Discuss any barriers\
+    \ that have prevented this problem from being solved until now.\n            \
+    \    Explain how your approach differs from or improves upon prior work. MAKE\
+    \ IT CLEAR.\n\n                **[Question 5] - What are the key components of\
+    \ my approach and results?**\n\n                Outline your proposed methodology\
+    \ in detail, including the method, dataset, and metrics that you plan to use.\n\
+    \                Describe the expected outcomes. MAKE IT CLEAR."

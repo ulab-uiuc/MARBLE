@@ -1,0 +1,251 @@
+agents:
+- agent_id: agent1
+  profile: 'I am a researcher dedicated to advancing the intersection of machine learning
+    and healthcare, with a particular focus on privacy-preserving technologies and
+    decision support systems. My recent work has centered on developing frameworks
+    that ensure patient data privacy while enabling effective clinical decision-making.
+    For instance, I pioneered a local differential privacy approach for learning population
+    rulesets in clinical decision support systems, utilizing Monte-Carlo Tree Search
+    to balance privacy and utility.
+
+
+    I have also explored safety assurance in machine learning for medical cyber-physical
+    systems, specifically in artificial pancreas systems, where I implemented deep
+    learning models and formal verification techniques to enhance prediction accuracy.
+    My research on hemodynamic risk stratification led to the creation of CARNA, a
+    framework that integrates invasive hemodynamics and interpretable machine learning
+    to improve heart failure risk assessments.
+
+
+    Additionally, I have investigated Type I Diabetes management through a Signal
+    Temporal Logic-based learning approach, identifying behavioral patterns that influence
+    glycemic control. My work on causal discovery in time series data culminated in
+    the development of MotifDisco, a framework that uncovers causal relationships
+    among motifs in glucose traces, enhancing our understanding of patient behaviors.
+
+
+    Most recently, I introduced GlucoSynth, a privacy-preserving GAN framework for
+    generating synthetic glucose traces, which maintains the integrity of the data
+    while ensuring strong privacy guarantees. My research aims to empower healthcare
+    providers with robust, interpretable tools that enhance patient care while safeguarding
+    sensitive information.'
+  type: BaseAgent
+- agent_id: agent2
+  profile: "I am a researcher dedicated to advancing the understanding and application\
+    \ of time series analysis, particularly in the context of health data streams.\
+    \ My recent work has focused on identifying and quantifying motifs\u2014short\
+    \ trace segments within time series data that capture underlying human behaviors,\
+    \ such as those observed in glucose monitoring. I developed MotifDisco, a novel\
+    \ causal discovery framework that leverages Graph Neural Networks to uncover causal\
+    \ relationships among these motifs, enhancing our ability to forecast, detect\
+    \ anomalies, and cluster data effectively.\n\nIn addition to causal discovery,\
+    \ I have also tackled the challenge of generating high-quality, privacy-preserving\
+    \ synthetic glucose traces through my framework, GlucoSynth. This innovative approach\
+    \ not only captures the intricate relationships among motifs but also incorporates\
+    \ differential privacy mechanisms, ensuring strong privacy guarantees without\
+    \ compromising data utility. My work aims to bridge the gap between advanced data\
+    \ synthesis techniques and real-world applications, ultimately contributing to\
+    \ personalized health technologies and improved patient care. Through these efforts,\
+    \ I strive to push the boundaries of what is possible in time series analysis\
+    \ and its applications in health informatics."
+  type: BaseAgent
+- agent_id: agent3
+  profile: "I am a researcher dedicated to the intersection of time series analysis\
+    \ and privacy-preserving data synthesis, with a particular focus on glucose monitoring\
+    \ data. My recent work has led to the development of GlucoSynth, a novel Generative\
+    \ Adversarial Network (GAN) framework that generates high-quality synthetic glucose\
+    \ traces while ensuring strong privacy guarantees through differential privacy\
+    \ mechanisms. This work addresses the limitations of existing methods that fail\
+    \ to capture the unique characteristics of glucose data.\n\nIn addition to data\
+    \ synthesis, I have explored the concept of motifs\u2014short trace segments that\
+    \ encapsulate underlying phenomena within time series data. My framework, MotifDisco,\
+    \ introduces a novel approach to causal discovery among these motifs, leveraging\
+    \ Graph Neural Networks to uncover causal relationships. By formalizing Motif\
+    \ Causality, I have demonstrated its applicability across various tasks, including\
+    \ forecasting, anomaly detection, and clustering, significantly enhancing performance\
+    \ in each case.\n\nThrough my research, I aim to contribute to the development\
+    \ of advanced technologies, such as personalized coaching and artificial insulin\
+    \ delivery systems, by providing robust tools for understanding and representing\
+    \ complex health data. My work not only advances the field of time series analysis\
+    \ but also prioritizes the ethical considerations of data privacy in health-related\
+    \ applications."
+  type: BaseAgent
+- agent_id: agent4
+  profile: 'I am a researcher dedicated to harnessing the power of machine learning
+    to enhance operational weather forecasting and health data analysis. My recent
+    work focuses on developing advanced parameterization schemes for weather models,
+    particularly in the context of non-orographic gravity wave drag. By creating emulators
+    that leverage complex neural networks, I have demonstrated that these models can
+    outperform traditional forecasting methods, achieving greater accuracy while maintaining
+    computational efficiency, especially on GPU hardware.
+
+
+    In addition to my work in meteorology, I am passionate about analyzing time series
+    data, particularly in health contexts. I have pioneered a novel framework called
+    MotifDisco, which uncovers causal relationships among motifs in time series data,
+    such as glucose traces from continuous glucose monitors. This framework not only
+    formalizes the concept of Motif Causality but also integrates seamlessly with
+    various applications, including forecasting, anomaly detection, and clustering.
+    My research aims to improve our understanding of human behaviors and their implications
+    for personalized health technologies, such as artificial insulin delivery systems.
+    Through these interdisciplinary efforts, I strive to contribute to both scientific
+    knowledge and practical advancements in technology.'
+  type: BaseAgent
+- agent_id: agent5
+  profile: "I am a researcher dedicated to advancing the understanding and application\
+    \ of time series analysis, particularly in the context of health data streams.\
+    \ My recent work has focused on identifying and quantifying motifs\u2014short\
+    \ trace segments within time series data that capture underlying human behaviors,\
+    \ such as those observed in glucose monitoring. I developed MotifDisco, a novel\
+    \ causal discovery framework that leverages Graph Neural Networks to uncover causal\
+    \ relationships among these motifs, enhancing our ability to forecast, detect\
+    \ anomalies, and cluster data effectively.\n\nIn addition to causal discovery,\
+    \ I have also tackled the challenge of generating high-quality, privacy-preserving\
+    \ synthetic glucose traces through my framework, GlucoSynth. This innovative approach\
+    \ not only captures the intricate relationships among motifs but also incorporates\
+    \ differential privacy mechanisms, ensuring strong privacy guarantees without\
+    \ compromising data utility. My work aims to bridge the gap between advanced data\
+    \ synthesis techniques and real-world applications, ultimately contributing to\
+    \ the development of personalized health technologies, such as artificial insulin\
+    \ delivery systems and tailored coaching solutions. Through my research, I strive\
+    \ to improve the intersection of machine learning and healthcare, making significant\
+    \ strides in how we understand and utilize time series data."
+  type: BaseAgent
+coordinate_mode: graph
+engine_planner:
+  initial_progress: Starting the collaborative research idea generation based on the
+    provided Introduction.
+environment:
+  max_iterations: 3
+  name: Research Collaboration Environment
+  type: Research
+llm: together_ai/meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo
+memory:
+  type: SharedMemory
+metrics:
+  diversity_of_perspectives: true
+  engagement_level: true
+  evaluate_llm: gpt-4o-mini
+  relevance: true
+output:
+  file_path: result/star_research_Llama3.1_70B.jsonl
+  format: jsonl
+relationships:
+- - agent1
+  - agent2
+  - collaborate with
+- - agent1
+  - agent3
+  - collaborate with
+- - agent1
+  - agent4
+  - collaborate with
+- - agent1
+  - agent5
+  - collaborate with
+task:
+  content: "\n            Dear Research Team,\n\n            You are collaborating\
+    \ to generate a new research idea based on the following Introduction:\n\n   \
+    \         **Introduction**\n\n             Introduction\nGraph-level anomaly detection\
+    \ aims to identify graph instances\nthat are significantly different from the\
+    \ majority of graphs. As a few\nanomalies may cause tremendous loss, detecting\
+    \ anomalous data\nhas significant implications for various domains ranging from\
+    \ iden-\ntifying abnormal proteins in biochemistry and distinguishing brain\n\
+    disorders in brain networks, to uncovering fraudulent activities in\nonline social\
+    \ networks [ 2,30]. Numerous corresponding detection methods and\nevaluation.\
+    \ ACM SIGKDD Explorations Newsletter 22, 1 (2020), 18\u201333.\n[34] Chaoxi Niu,\
+    \ Guansong Pang, and Ling Chen. 2023. Graph-Level Anomaly Detec-\ntion via Hierarchical\
+    \ Memory Networks. In ECML . 201\u2013218.\n[35] Caleb C Noble and Diane J Cook.\
+    \ 2003. Graph-based anomaly detection. In KDD .\n631\u2013636.\n[36] Chen Qiu,\
+    \ Marius Kloft, Stephan Mandt, and Maja Rudolph. 2022. Raising the\nbar in graph-level\
+    \ anomaly detection. In IJCAI . 2196\u20132203.\n[37] Christian Szegedy, Wojciech\
+    \ Zaremba, Ilya Sutskever, Joan Bruna, Dumitru Erhan,\nIan Goodfellow, and Rob\
+    \ Fergus. 2014. Intriguing properties of neural networks.\nInICLR .\n[38] Jianheng\
+    \ Tang, Jiajin Li, Ziqi Gao, and Jia Li. 2022. Rethinking graph neural\nnetworks\
+    \ for anomaly detection. In ICML . 21076\u201321089.\n[39] Cheng Wu, Chaokun Wang,\
+    \ Jingcao Xu, Ziyang Liu, Kai Zheng, Xiaowei Wang,\nYang Song, and Kun Gai. 2023.\
+    \ Graph Contrastive Learning with Generative\nAdversarial Network. In KDD . 2721\u2013\
+    2730.\n[40] Chunjing Xiao, Zehua Gou, Wenxin Tai, Kunpeng Zhang, and Fan Zhou.\
+    \ 2023.\nImputation-based Time-Series Anomaly Detection with Conditional Weight-\n\
+    Incremental Diffusion Models. In KDD . 2742\u20132751.\n[41] Chunjing Xiao, Xovee\
+    \ Xu, Yue Lei, Kunpeng Zhang, Siyuan Liu, and Fan Zhou.\n2023. Counterfactual\
+    \ Graph Learning for Anomaly Detection on Attributed\nNetworks. IEEE Transactions\
+    \ on Knowledge and Data Engineering 35, 10 (2023),\n10540\u201310553.\n[42] Hongteng\
+    \ Xu, Dixin Luo, Lawrence Carin, and Hongyuan Zha. 2021. Learning\ngraphons via\
+    \ structured gromov-wasserstein barycenters. In AAAI . 10505\u201310513.\n[43]\
+    \ Haoran Yang, Hongxu Chen, Sixiao Zhang, Xiangguo Sun, Qian Li, Xiangyu Zhao,\n\
+    and Guandong Xu. 2023. Generating Counterfactual Hard Negative Samples for\nGraph\
+    \ Contrastive Learning. In WWW . 621\u2013629.\n[44] Qiang Yang, Changsheng Ma,\
+    \ Qiannan Zhang, Xin Gao, Chuxu Zhang, and\nXiangliang Zhang. 2023. Counterfactual\
+    \ Learning on Heterogeneous Graphs\nwith Greedy Perturbation. In KDD . 2988\u2013\
+    2998.\n[45] Zhitao Ying, Jiaxuan You, Christopher Morris, Xiang Ren, Will Hamilton,\
+    \ and Jure\nLeskovec. 2018. Hierarchical graph representation learning with differentiable\n\
+    pooling. NIPS (2018).\n[46] Minji Yoon, Bryan Hooi, Kijung Shin, and Christos\
+    \ Faloutsos. 2019. Fast and\naccurate anomaly detection in dynamic graphs with\
+    \ a two-pronged approach. In\nKDD . 647\u2013657.\n[47] Zirui Yuan, Minglai Shao,\
+    \ and Qiben Yan. 2023. Motif-level Anomaly Detection in\nDynamic Graphs. IEEE\
+    \ Transactions on Information Forensics and Security (2023).\n[48] Ge Zhang, Zhenyu\
+    \ Yang, Jia Wu, Jian Yang, Shan Xue, Hao Peng, Jianlin Su,\nChuan Zhou, Quan Z\
+    \ Sheng, Leman Akoglu, et al .2022. Dual-discriminative\ngraph neural network\
+    \ for imbalanced graph-level anomaly detection. In NIPS .\n24144\u201324157.\n\
+    [49] Kun Zhang, Chong Chen, Yuanzhuo Wang, Qi Tian, and Long Bai. 2023. CFGL-\n\
+    LCR: A Counterfactual Graph Learning Framework for Legal Case Retrieval. In\n\
+    KDD . 3332\u20133341.\n[50] Xiheng Zhang, Yongkang Wong, Xiaofei Wu, Juwei Lu,\
+    \ Mohan Kankanhalli,\nXiangdong Li, and Weidong Geng. 2021. Learning causal representation\
+    \ for\ntraining cross-domain pose estimator via generative interventions. In ICCV\
+    \ .\n11270\u201311280.\n[51] Lingxiao Zhao and Leman Akoglu. 2023. On using classification\
+    \ datasets to\nevaluate graph outlier detection: Peculiar observations and new\
+    \ insights. Big\nData 11, 3 (2023), 151\u2013180.\n[52] Lingxiao Zhao, Saurabh\
+    \ Sawlani, Arvind Srinivasan, and Leman Akoglu. 2022.\nGraph anomaly detection\
+    \ with unsupervised GNNs. In ICDM .\n[53] Tong Zhao, Gang Liu,\n\n           \
+    \ **Your Task**\n\n            1. **Literature Review**: Analyze the Introduction\
+    \ provided and conduct a brief literature review to understand the current state\
+    \ of research in this area.\n\n            2. **Brainstorming**: Collaboratively\
+    \ brainstorm potential research ideas that build upon or address gaps in the Introduction.\n\
+    \n            3. **Summarization**: Summarize your collective ideas.\n\n     \
+    \       4. **Formulate a New Research Idea**: Develop a new research proposal\
+    \ in the format of the '5q', defined below:\n\n               **Here is a high-level\
+    \ summarized insight of a research field Machine Learning.**\n\n             \
+    \  **Here are the five core questions:**\n\n               **[Question 1] - What\
+    \ is the problem?**\n\n               Formulate the specific research question\
+    \ you aim to address. Only output one question and do not include any more information.\n\
+    \n               **[Question 2] - Why is it interesting and important?**\n\n \
+    \              Explain the broader implications of solving this problem for the\
+    \ research community.\n               Discuss how such a paper will affect future\
+    \ research.\n               Discuss how addressing this question could advance\
+    \ knowledge or lead to practical applications.\n\n               **[Question 3]\
+    \ - Why is it hard?**\n\n               Discuss the challenges and complexities\
+    \ involved in solving this problem.\n               Explain why naive or straightforward\
+    \ approaches may fail.\n               Identify any technical, theoretical, or\
+    \ practical obstacles that need to be overcome. MAKE IT CLEAR.\n\n           \
+    \    **[Question 4] - Why hasn't it been solved before?**\n\n               Identify\
+    \ gaps or limitations in previous research or existing solutions.\n          \
+    \     Discuss any barriers that have prevented this problem from being solved\
+    \ until now.\n               Explain how your approach differs from or improves\
+    \ upon prior work. MAKE IT CLEAR.\n\n               **[Question 5] - What are\
+    \ the key components of my approach and results?**\n\n               Outline your\
+    \ proposed methodology in detail, including the method, dataset, and metrics that\
+    \ you plan to use.\n               Describe the expected outcomes. MAKE IT CLEAR.\n\
+    \n            Please work together to produce the '5q' for your proposed research\
+    \ idea.\n\n            Good luck!\n            "
+  output_format: "You should answer the task in the fllowing format:\n           \
+    \     **[Question 1] - What is the problem?**\n\n                Formulate the\
+    \ specific research question you aim to address. Only output one question and\
+    \ do not include any more information.\n\n                **[Question 2] - Why\
+    \ is it interesting and important?**\n\n                Explain the broader implications\
+    \ of solving this problem for the research community.\n                Discuss\
+    \ how such a paper will affect future research.\n                Discuss how addressing\
+    \ this question could advance knowledge or lead to practical applications.\n\n\
+    \                **[Question 3] - Why is it hard?**\n\n                Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \        Explain why naive or straightforward approaches may fail.\n         \
+    \       Identify any technical, theoretical, or practical obstacles that need\
+    \ to be overcome. MAKE IT CLEAR.\n\n                **[Question 4] - Why hasn't\
+    \ it been solved before?**\n\n                Identify gaps or limitations in\
+    \ previous research or existing solutions.\n                Discuss any barriers\
+    \ that have prevented this problem from being solved until now.\n            \
+    \    Explain how your approach differs from or improves upon prior work. MAKE\
+    \ IT CLEAR.\n\n                **[Question 5] - What are the key components of\
+    \ my approach and results?**\n\n                Outline your proposed methodology\
+    \ in detail, including the method, dataset, and metrics that you plan to use.\n\
+    \                Describe the expected outcomes. MAKE IT CLEAR."

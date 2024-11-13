@@ -1,0 +1,249 @@
+agents:
+- agent_id: agent1
+  profile: 'I am a researcher dedicated to exploring the intricate relationships between
+    statistical modeling, network analysis, and machine learning. My work primarily
+    focuses on nonparametric regression models, where I have developed methodologies
+    for variable screening that leverage the negligible impact of irrelevant variables
+    on regression functions. This research has practical applications across various
+    fields, including economics and finance.
+
+
+    In addition to regression analysis, I delve into the realm of random graphs, particularly
+    latent position random graph models. My recent work involves predicting response
+    variables on out-of-sample nodes using manifold learning and graph embedding techniques,
+    with a strong emphasis on theoretical convergence guarantees. This approach has
+    been validated through simulations and applications to biological data, such as
+    Drosophila brain studies.
+
+
+    I am also interested in generative models, where I investigate the differences
+    in model behavior through embedding-based representations. My research aims to
+    establish consistent estimation techniques as the landscape of generative models
+    evolves.
+
+
+    Furthermore, I have developed algorithms for predicting responses in networks
+    that share common nodes, utilizing a manifold learning framework to capture the
+    underlying structure of these networks. My work is grounded in rigorous theoretical
+    justifications and is supported by numerical simulations, demonstrating its applicability
+    to complex datasets like the larval Drosophila connectome.
+
+
+    Overall, my research is driven by a passion for uncovering the statistical properties
+    of complex systems and developing innovative methodologies that bridge theory
+    and application.'
+  type: BaseAgent
+- agent_id: agent2
+  profile: 'I am a researcher deeply engaged in the intersection of statistical inference,
+    manifold learning, and random graph models. My work primarily focuses on developing
+    innovative methodologies for nonlinear dimension reduction and enhancing the understanding
+    of complex data structures. I have revisited and clarified foundational techniques
+    like Isomap, emphasizing its role in constructing Euclidean representations of
+    geodesic structures rather than merely as a tool for convex parametrization recovery.
+
+
+    My research extends to the realm of statistical inference, where I explore the
+    intricacies of restricted inference and develop approximate information tests
+    that leverage manifold learning to extract insights from unknown statistical submodels.
+    I have also contributed to the understanding of mixing proportions in skew normal
+    distributions and the dynamics of likelihood ratio tests, revealing the nuanced
+    relationships between model restrictions and statistical power.
+
+
+    In the context of random graph models, I connect various frameworks, such as the
+    Popularity Adjusted Block Model and the Generalized Random Dot Product Graph,
+    to enhance community detection algorithms. My recent work on latent position random
+    graph models employs manifold learning techniques to predict response variables,
+    demonstrating the practical applications of my theoretical insights.
+
+
+    As the landscape of generative models evolves, I am committed to developing robust
+    techniques for analyzing and understanding the differences in model behavior,
+    ensuring that my research remains relevant and impactful in the rapidly changing
+    field of machine learning.'
+  type: BaseAgent
+- agent_id: agent3
+  profile: 'I am a researcher specializing in statistical pattern recognition and
+    inference for graph-valued data. My work has focused on developing robust methodologies
+    for analyzing complex networks, particularly in scenarios where vertex labels
+    are latent or shuffled. I have explored various statistical models, including
+    mixed membership stochastic block models and latent process models, to uncover
+    dynamic structures within relational data.
+
+
+    My recent contributions include the introduction of a novel graph embedding method
+    that achieves linear computational complexity, enabling efficient processing of
+    large-scale graphs. I have also developed a Bayesian framework for vertex nomination,
+    which leverages both content and context to improve the accuracy of identifying
+    key vertices in networks. Additionally, I have investigated the challenges of
+    independence testing between graphs, providing new insights into statistical detectability
+    and computational trade-offs.
+
+
+    Through my research, I aim to bridge theoretical advancements with practical applications,
+    particularly in fields such as social network analysis and neuroscience. I am
+    passionate about creating innovative solutions that enhance our understanding
+    of complex systems and improve decision-making processes based on network data.
+    My work not only addresses fundamental statistical questions but also leads to
+    the development of practical algorithms with state-of-the-art performance in real-world
+    applications.'
+  type: BaseAgent
+- agent_id: agent4
+  profile: 'I am a researcher deeply engaged in the exploration of foundation models
+    and their applications across various domains. My recent work focuses on developing
+    methodologies for comparing these models beyond traditional metrics, utilizing
+    random graph theory to analyze embedding space geometry. This innovative approach
+    allows for a more nuanced understanding of model performance, particularly in
+    scenarios where ideal evaluation metrics are not readily available.
+
+
+    I have also contributed to the field of generative models, investigating how different
+    models respond to the same queries and establishing conditions for consistent
+    estimation of model embeddings. My research extends to practical applications,
+    such as the subgraph nomination inference task, where I emphasize user-in-the-loop
+    methodologies to enhance recommendation systems and structural retrieval tasks.
+
+
+    In addition to theoretical advancements, I have applied multi-graph tools to extract
+    features from EEG data, demonstrating the effectiveness of these features in classifying
+    high-level mental states. My work on domain adaptation through Fisher''s Linear
+    Discriminant has shown promise in improving classification performance in EEG
+    and ECG settings.
+
+
+    I am passionate about bridging the gap between theory and practice, as evidenced
+    by my development of GraSPy, a Python library for statistical inference and machine
+    learning on random graphs. My overarching goal is to foster a deeper understanding
+    of learning paradigms and improve model robustness, particularly in the presence
+    of label noise. Through my research, I aim to contribute to a more systematic
+    and principled approach to machine learning, ultimately enhancing the effectiveness
+    of models in real-world applications.'
+  type: BaseAgent
+coordinate_mode: graph
+engine_planner:
+  initial_progress: Starting the collaborative research idea generation based on the
+    provided Introduction.
+environment:
+  max_iterations: 3
+  name: Research Collaboration Environment
+  type: Research
+llm: together_ai/meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo
+memory:
+  type: SharedMemory
+metrics:
+  diversity_of_perspectives: true
+  engagement_level: true
+  evaluate_llm: gpt-4o-mini
+  relevance: true
+output:
+  file_path: result/tree_research_Llama3.1_70B.jsonl
+  format: jsonl
+relationships:
+- - agent1
+  - agent2
+  - collaborate with
+- - agent1
+  - agent3
+  - collaborate with
+- - agent1
+  - agent4
+  - collaborate with
+task:
+  content: "\n            Dear Research Team,\n\n            You are collaborating\
+    \ to generate a new research idea based on the following Introduction:\n\n   \
+    \         **Introduction**\n\n             Introduction\nFoundation models are\
+    \ general models of language, vision, speech, and/or other modalities that are\
+    \ designed\nto support a large variety of AI tasks. They form the basis of many\
+    \ modern AI systems.\nThe development of modern foundation models consists of\
+    \ two main stages: (1)a pre-training stage in which\nthe model is trained at massive\
+    \ scale using straightforward tasks such as next-word prediction or captioning\n\
+    and(2)a post-training stage in which the model is tuned to follow instructions,\
+    \ align with human preferences,\nand improve specific capabilities (for example,\
+    \ coding and reasoning).\nIn this paper, we present a new set of foundation models\
+    \ for language, called Llama 3. The Llama 3 Herd\nof models natively supports\
+    \ multilinguality, coding, reasoning, and tool usage. Our largest model is dense\n\
+    Transformer with 405B parameters, processing information in a context window of\
+    \ up to 128K tokens. Each\nmember of the herd is listed in Table 1. All the Results\n\
+    For speech generation, we focus on evaluating the quality of token-wise input\
+    \ streaming models with the\nLlama 3 embeddings for the text normalization and\
+    \ prosody modeling tasks. The evaluation focuses on\n20On FLEURS ASR, Malayalam\
+    \ is not officially reported for Whisper v3, so we use the average of 33 languages.\n\
+    21On Covost 2, we evaluate only on 15 (out of 21) languages.\n22Note that for\
+    \ Gemini, we encountered that a significant number of responses were empty, which\
+    \ could be due to safety filters\non their side (though some empty responses were\
+    \ for non-toxic input) or to rate limits. To conduct the analysis, we assumed\
+    \ that\nall the empty responses are safe. This is the most conservative approach\
+    \ for methods at ever increasing scales in\nfoundation models. Improvements are\
+    \ driven by increased compute and improved data, with the 405B model\nusing almost\
+    \ fifty times the pre-training compute budget of Llama 2 70B. Despite containing\
+    \ 405B parameters,\nour largest Llama 3 in fact contains fewer parameters than\
+    \ earlier and much less performant models such as\nPALM (Chowdhery et al., 2023),\
+    \ due to better understanding of scaling laws (Kaplan et al., 2020; Hoffmann\n\
+    et al., 2022). Little is publicly known about the size of other frontier models,\
+    \ such as Claude 3 or GPT\n4 (OpenAI, 2023a), but overall performance is compareable.\n\
+    Small models. Developments in smaller models have paralleled those in large models.\
+    \ Models with fewer\nparameters can dramatically improve inference cost and simplify\
+    \ deployment (Mehta et al., 2024; Team et al.,\n2024). The smaller Llama 3 models\
+    \ achieve this by training far beyond the point of compute optimal training,\n\
+    effectively trading training compute for inference efficiency. An alternative\
+    \ path is to distill larger models into\nsmaller ones, as in Phi (Abdin et al.,\
+    \ 2024).\nArchitectures. While Llama 3 makes minimal architectural modifiations\
+    \ to compared to Llama 2, other recent\nfoundation models have explored other\
+    \ designs. Most notably, mixture of experts architectures (Shazeer et al.,\n2017;\
+    \ Lewis et al., 2021; Fedus et al., 2022; Zhou et al., 2022) can be used as an\
+    \ efficient way to increase\nthe capacity of a models, such as in Mixtral (Jiang\
+    \ et al., 2024) and Arctic (Snowflake, 2024). Llama 3\noutperforms these models,\
+    \ suggesting that dense architectures are not the limiting factor, but there remain\n\
+    numerous trade offs in terms of training and inference efficiency, and model stability\
+    \ at\n\n            **Your Task**\n\n            1. **Literature Review**: Analyze\
+    \ the Introduction provided and conduct a brief literature review to understand\
+    \ the current state of research in this area.\n\n            2. **Brainstorming**:\
+    \ Collaboratively brainstorm potential research ideas that build upon or address\
+    \ gaps in the Introduction.\n\n            3. **Summarization**: Summarize your\
+    \ collective ideas.\n\n            4. **Formulate a New Research Idea**: Develop\
+    \ a new research proposal in the format of the '5q', defined below:\n\n      \
+    \         **Here is a high-level summarized insight of a research field Machine\
+    \ Learning.**\n\n               **Here are the five core questions:**\n\n    \
+    \           **[Question 1] - What is the problem?**\n\n               Formulate\
+    \ the specific research question you aim to address. Only output one question\
+    \ and do not include any more information.\n\n               **[Question 2] -\
+    \ Why is it interesting and important?**\n\n               Explain the broader\
+    \ implications of solving this problem for the research community.\n         \
+    \      Discuss how such a paper will affect future research.\n               Discuss\
+    \ how addressing this question could advance knowledge or lead to practical applications.\n\
+    \n               **[Question 3] - Why is it hard?**\n\n               Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \       Explain why naive or straightforward approaches may fail.\n          \
+    \     Identify any technical, theoretical, or practical obstacles that need to\
+    \ be overcome. MAKE IT CLEAR.\n\n               **[Question 4] - Why hasn't it\
+    \ been solved before?**\n\n               Identify gaps or limitations in previous\
+    \ research or existing solutions.\n               Discuss any barriers that have\
+    \ prevented this problem from being solved until now.\n               Explain\
+    \ how your approach differs from or improves upon prior work. MAKE IT CLEAR.\n\
+    \n               **[Question 5] - What are the key components of my approach and\
+    \ results?**\n\n               Outline your proposed methodology in detail, including\
+    \ the method, dataset, and metrics that you plan to use.\n               Describe\
+    \ the expected outcomes. MAKE IT CLEAR.\n\n            Please work together to\
+    \ produce the '5q' for your proposed research idea.\n\n            Good luck!\n\
+    \            "
+  output_format: "You should answer the task in the fllowing format:\n           \
+    \     **[Question 1] - What is the problem?**\n\n                Formulate the\
+    \ specific research question you aim to address. Only output one question and\
+    \ do not include any more information.\n\n                **[Question 2] - Why\
+    \ is it interesting and important?**\n\n                Explain the broader implications\
+    \ of solving this problem for the research community.\n                Discuss\
+    \ how such a paper will affect future research.\n                Discuss how addressing\
+    \ this question could advance knowledge or lead to practical applications.\n\n\
+    \                **[Question 3] - Why is it hard?**\n\n                Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \        Explain why naive or straightforward approaches may fail.\n         \
+    \       Identify any technical, theoretical, or practical obstacles that need\
+    \ to be overcome. MAKE IT CLEAR.\n\n                **[Question 4] - Why hasn't\
+    \ it been solved before?**\n\n                Identify gaps or limitations in\
+    \ previous research or existing solutions.\n                Discuss any barriers\
+    \ that have prevented this problem from being solved until now.\n            \
+    \    Explain how your approach differs from or improves upon prior work. MAKE\
+    \ IT CLEAR.\n\n                **[Question 5] - What are the key components of\
+    \ my approach and results?**\n\n                Outline your proposed methodology\
+    \ in detail, including the method, dataset, and metrics that you plan to use.\n\
+    \                Describe the expected outcomes. MAKE IT CLEAR."

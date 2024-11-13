@@ -1,0 +1,251 @@
+agents:
+- agent_id: agent1
+  profile: "I am a researcher dedicated to advancing the field of automated planning\
+    \ and decision-making through innovative approaches to problem decomposition and\
+    \ policy learning. My recent work focuses on enhancing width-based planning methods,\
+    \ particularly in addressing the limitations of existing algorithms like SIW when\
+    \ dealing with complex conjunctive goals. By introducing policy sketches\u2014\
+    a powerful language for expressing nuanced problem decompositions\u2014I have\
+    \ demonstrated how these sketches can facilitate efficient planning in domains\
+    \ previously deemed intractable.\n\nI have also explored the automatic learning\
+    \ of sketches, leveraging logical formulations and implementing solutions with\
+    \ ASP solvers like Clingo. This work has led to the development of a domain-independent\
+    \ planner that effectively learns and utilizes domain structure, showcasing the\
+    \ potential of sketches in simplifying complex planning tasks.\n\nAdditionally,\
+    \ I have investigated the role of state symmetries in planning, emphasizing their\
+    \ importance in reducing search space and enhancing learning efficiency. My research\
+    \ highlights the limitations of current learning architectures in distinguishing\
+    \ non-symmetric states, and I have proposed methods to improve symmetry detection,\
+    \ ultimately leading to more effective policy learning.\n\nThrough my work, I\
+    \ aim to create flexible and reusable planning languages that incorporate internal\
+    \ memory states, indexical features, and modular structures, thereby expanding\
+    \ the expressive power of policies and sketches. I am passionate about bridging\
+    \ theoretical advancements with practical applications, contributing to the evolution\
+    \ of intelligent planning systems."
+  type: BaseAgent
+- agent_id: agent2
+  profile: 'As a researcher deeply immersed in the field of graph neural networks
+    (GNNs) and machine learning, my work focuses on enhancing the capabilities and
+    understanding of these powerful models. My recent publications reflect a commitment
+    to addressing the limitations of existing GNN architectures and exploring innovative
+    solutions. For instance, I developed Position-aware GNNs (P-GNNs) to better capture
+    the positional context of nodes within graphs, significantly improving performance
+    in tasks like link prediction and community detection.
+
+
+    I also introduced Identity-aware GNNs (ID-GNNs), which extend the expressive power
+    of traditional GNNs by incorporating node identity during message passing. This
+    advancement has led to substantial accuracy improvements across various prediction
+    tasks. Additionally, I proposed the ROLAND framework, which facilitates the adaptation
+    of static GNNs to dynamic graphs, addressing the challenges of evolving data structures.
+
+
+    My research extends beyond GNNs; I have investigated the interplay between neural
+    network architecture and predictive performance through relational graphs, and
+    I have systematically explored the design space of GNNs to provide guidelines
+    for optimal architecture selection. My work aims to bridge the gap between theoretical
+    insights and practical applications, ultimately contributing to the development
+    of more efficient and effective machine learning models. I am passionate about
+    pushing the boundaries of what GNNs can achieve and fostering a deeper understanding
+    of their underlying mechanisms.'
+  type: BaseAgent
+- agent_id: agent3
+  profile: 'I am a researcher deeply engaged in the intersection of artificial intelligence,
+    decision-making, and causal reasoning. My work primarily focuses on developing
+    robust frameworks for understanding and modeling complex decision processes, particularly
+    through the lens of causal relevance and planning. I have contributed to the formalization
+    of causal models, enhancing the understanding of instrumental variables, and exploring
+    the intricacies of Partially Observable Markov Decision Processes (POMDPs).
+
+
+    My recent research delves into qualitative decision-making models, where I aim
+    to bridge the gap between human-like reasoning and computational efficiency. I
+    have developed algorithms that leverage the structure of state spaces to improve
+    belief tracking and planning in uncertain environments. My work on generalized
+    planning has led to innovative approaches that allow for the creation of policies
+    applicable across multiple instances, enhancing the flexibility of AI systems.
+
+
+    I am particularly interested in the challenges posed by bounded width in planning
+    domains and how this concept can be harnessed to develop more efficient algorithms.
+    My exploration of graph neural networks (GNNs) for learning generalized policies
+    has opened new avenues for understanding how these models can be applied to classical
+    planning problems.
+
+
+    Through my research, I strive to create systems that not only solve specific tasks
+    but also learn and adapt to new challenges, ultimately contributing to the development
+    of more intelligent and flexible AI solutions.'
+  type: BaseAgent
+- agent_id: agent4
+  profile: 'I am a researcher deeply engaged in the intersection of artificial intelligence,
+    planning, and decision-making. My work spans several decades, reflecting a commitment
+    to bridging the gap between model-free learners and model-based solvers. I have
+    explored the evolution of AI from hand-crafted programs to data-driven learning
+    approaches, emphasizing the need for transparency and generality in intelligent
+    systems.
+
+
+    My recent research focuses on developing robust planning algorithms that can handle
+    uncertainty and complexity. I have introduced innovative frameworks for conformant
+    and fully observable non-deterministic planning, leveraging SAT encodings to produce
+    efficient policies. I am particularly interested in qualitative numerical planning
+    and the role of width in planning domains, where I have demonstrated how bounded
+    width can lead to optimal general policies.
+
+
+    I also advocate for the integration of structured causal models and first-order
+    representations in learning from unstructured data, aiming to create flexible
+    AI systems that can adapt to various problem instances. My work on policy sketches
+    has provided a powerful language for expressing domain-specific knowledge, enabling
+    more efficient problem decompositions and planning strategies.
+
+
+    Through my research, I strive to make AI systems more interpretable and capable
+    of generalization, ultimately contributing to the development of intelligent agents
+    that can reason and act effectively in complex environments.'
+  type: BaseAgent
+coordinate_mode: graph
+engine_planner:
+  initial_progress: Starting the collaborative research idea generation based on the
+    provided Introduction.
+environment:
+  max_iterations: 3
+  name: Research Collaboration Environment
+  type: Research
+llm: gpt-4o-mini
+memory:
+  type: SharedMemory
+metrics:
+  diversity_of_perspectives: true
+  engagement_level: true
+  evaluate_llm: gpt-4o-mini
+  relevance: true
+output:
+  file_path: result/chain_research_gpt4o-mini.jsonl
+  format: jsonl
+relationships:
+- - agent1
+  - agent2
+  - collaborate with
+- - agent1
+  - agent3
+  - collaborate with
+- - agent1
+  - agent4
+  - collaborate with
+task:
+  content: "\n            Dear Research Team,\n\n            You are collaborating\
+    \ to generate a new research idea based on the following Introduction:\n\n   \
+    \         **Introduction**\n\n             \n\n1 Introduction\n\nGeneral policies\
+    \ are policies that can be used to solve a collection of planning\nproblems\n\
+    reactively\_Srivastava et al. (2008); Hu and Giacomo (2011); Belle and\nLevesque\
+    \ (2016); Bonet and\nGeffner (2018); Illanes and\nMcIlraith (2019); Jim\xE9nez\
+    \ et al. (2019).\nFor example, a general policy for solving all Blocksworld problems\
+    \ can place\nall blocks on the table, and then build up the target towers from\
+    \ the bottom up.\nYet while nearly perfect general policies have been learned\
+    \ for many classes of\nplanning\ndomains\_Toyer et al. (2020); Rivlin et al. (2020);\
+    \ St\xE5hlberg et al. (2022a),\none key expressive limitation results from the\
+    \ types of features used to\nclassify state transitions or actions. In combinatorial\
+    \ approaches, features are\nselected from a domain-independent pool, created using\
+    \ a description logic\ngrammar\_Baader et al. (2003) based on the given domain\n\
+    predicates\_Bonet and\nGeffner (2018); Bonet et al. (2019), while in deep\nlearning\
+    \ approaches, the features are learned using relational versions of graph\nneural\
+    \ networks\nScarselli et al. (2009); Gilmer et al. (2017); Hamilton (2020). A\
+    \ shared\nlimitation of both approaches, however, is their inability to learn\n\
+    policies requiring complex logical features. This limitation arises in\ndescription\
+    \ logics from the C2subscript\U0001D4362C_{2}italic_C start_POSTSUBSCRIPT 2 end_POSTSUBSCRIPT\
+    \ fragment of first-order logic that they\ncapture; namely, first-order logic\
+    \ limited to two variables and\ncounting\_Baader et al. (2003), and in GNNs, from\
+    \ the type of message passing\nthat is accommodated, where direct communication\
+    \ involves pairs of objects but\nno triplets\_Grohe (2021).\n\n\nThis expressive\
+    \ limitation, not always acknowledged, is serious. For example,\nalthough these\
+    \ methods can learn general policies for guiding an agent to a\nspecific cell\
+    \ in an n\xD7n\U0001D45B\U0001D45Bn\\times nitalic_n \xD7 italic_n grid containing\
+    \ obstacles, with\npositions and adjacency relations defined in terms of cells\
+    \ and atoms such as\nAt\u2062(c)At\U0001D450\\textsc{At}(c)At ( italic_c ) and\
+    \ Adj\u2062(c,c\u2032)Adj\U0001D450superscript\U0001D450\u2032\\textsc{Adj}(c,c^{\\\
+    prime})Adj ( italic_c , italic_c start_POSTSUPERSCRIPT \u2032 end_POSTSUPERSCRIPT\
+    \ ), they lack the expressive\ncapacity when the relations are represented with\
+    \ atoms like At\u2062(x,y)At\U0001D465\U0001D466\\textsc{At}(x,y)At ( italic_x\
+    \ , italic_y ),\nAdj1\u2062(x,x\u2032)subscriptAdj1\U0001D465superscript\U0001D465\
+    \u2032\\textsc{Adj}_{1}(x,x^{\\prime})Adj start_POSTSUBSCRIPT 1 end_POSTSUBSCRIPT\
+    \ ( italic_x , italic_x start_POSTSUPERSCRIPT \u2032 end_POSTSUPERSCRIPT ), and\
+    \ Adj2\u2062(y,y\u2032)subscriptAdj2\U0001D466superscript\U0001D466\u2032\\textsc{Adj}_{2}(y,y^{\\\
+    prime})Adj start_POSTSUBSCRIPT 2 end_POSTSUBSCRIPT ( italic_y , italic_y start_POSTSUPERSCRIPT\
+    \ \u2032 end_POSTSUPERSCRIPT ). Similarly, these methods\nare unable to learn\
+    \ policies for classical benchmark domains such as Logistics\nand Grid, that require\
+    \ composition of binary relations, which is beyond the\nscope of C2subscript\U0001D436\
+    2C_{2}italic_C start_POSTSUBSCRIPT 2 end_POSTSUBSCRIPT\_[St\xE5hlberg et al.,\n\
+    2022b; 2023].\n\n\nIn principle, this limitation can be addressed by using richer\
+    \ grammars to\ngenerate non-C2subscript\U0001D4362C_{2}italic_C start_POSTSUBSCRIPT\
+    \ 2 end_POSTSUBSCRIPT features or by using k\U0001D458kitalic_k-GNNs, for k=3\U0001D458\
+    3k=3italic_k = 3, where triplets of\nobjects are embedded instead of individual\
+    \ objects\_Morris et al. (2019).\nIt is known that 3-GNNs have the expressive\
+    \ power of C3subscript\U0001D4363C_{3}italic_C start_POSTSUBSCRIPT 3 end_POSTSUBSCRIPT\
+    \ logic, unlike the\nC2subscript\U0001D4362C_{2}italic_C start_POSTSUBSCRIPT 2\
+    \ end_POSTSUBSCRIPT expressive power of 1- and 2-GNNs\_Grohe (2021). Yet 3-GNNs\
+    \ do not\nscale up as they require cubic number of embeddings, and quartic time\
+    \ for\nexchanging messages.\n\n\nIn this paper, we introduce an alternative, parameterized\
+    \ version of Relational\nGNNs (R-GNNs). The architecture for R-GNN[t\U0001D461\
+    titalic_t] mirrors that of plain R-GNNs\nand differs only in the input. While\
+    \ plain R-GNNs take the set of atoms S\U0001D446Sitalic_S\nrepresenting a planning\
+    \ state as input, R-GNN[t\U0001D461titalic_t] accepts a transformed set\nof atoms\
+    \ At\u2062(S)subscript\U0001D434\U0001D461\U0001D446A_{t}(S)italic_A start_POSTSUBSCRIPT\
+    \ italic_t end_POSTSUBSCRIPT ( italic_S ) instead. At t=0\U0001D4610t=0italic_t\
+    \ = 0, R-GNN[t\U0001D461titalic_t] approximates 3-GNNs weakly,\nwhile at t=\u221E\
+    \U0001D461t=\\inftyitalic_t = \u221E, it offers a strong approximation. Thus,\
+    \ the parameter t\U0001D461titalic_t\nserves to balance expressive power with\
+    \ computational effort. Crucially, for\nlower values of t\U0001D461titalic_t,\n\
+    \n            **Your Task**\n\n            1. **Literature Review**: Analyze the\
+    \ Introduction provided and conduct a brief literature review to understand the\
+    \ current state of research in this area.\n\n            2. **Brainstorming**:\
+    \ Collaboratively brainstorm potential research ideas that build upon or address\
+    \ gaps in the Introduction.\n\n            3. **Summarization**: Summarize your\
+    \ collective ideas.\n\n            4. **Formulate a New Research Idea**: Develop\
+    \ a new research proposal in the format of the '5q', defined below:\n\n      \
+    \         **Here is a high-level summarized insight of a research field Machine\
+    \ Learning.**\n\n               **Here are the five core questions:**\n\n    \
+    \           **[Question 1] - What is the problem?**\n\n               Formulate\
+    \ the specific research question you aim to address. Only output one question\
+    \ and do not include any more information.\n\n               **[Question 2] -\
+    \ Why is it interesting and important?**\n\n               Explain the broader\
+    \ implications of solving this problem for the research community.\n         \
+    \      Discuss how such a paper will affect future research.\n               Discuss\
+    \ how addressing this question could advance knowledge or lead to practical applications.\n\
+    \n               **[Question 3] - Why is it hard?**\n\n               Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \       Explain why naive or straightforward approaches may fail.\n          \
+    \     Identify any technical, theoretical, or practical obstacles that need to\
+    \ be overcome. MAKE IT CLEAR.\n\n               **[Question 4] - Why hasn't it\
+    \ been solved before?**\n\n               Identify gaps or limitations in previous\
+    \ research or existing solutions.\n               Discuss any barriers that have\
+    \ prevented this problem from being solved until now.\n               Explain\
+    \ how your approach differs from or improves upon prior work. MAKE IT CLEAR.\n\
+    \n               **[Question 5] - What are the key components of my approach and\
+    \ results?**\n\n               Outline your proposed methodology in detail, including\
+    \ the method, dataset, and metrics that you plan to use.\n               Describe\
+    \ the expected outcomes. MAKE IT CLEAR.\n\n            Please work together to\
+    \ produce the '5q' for your proposed research idea.\n\n            Good luck!\n\
+    \            "
+  output_format: "You should answer the task in the fllowing format:\n           \
+    \     **[Question 1] - What is the problem?**\n\n                Formulate the\
+    \ specific research question you aim to address. Only output one question and\
+    \ do not include any more information.\n\n                **[Question 2] - Why\
+    \ is it interesting and important?**\n\n                Explain the broader implications\
+    \ of solving this problem for the research community.\n                Discuss\
+    \ how such a paper will affect future research.\n                Discuss how addressing\
+    \ this question could advance knowledge or lead to practical applications.\n\n\
+    \                **[Question 3] - Why is it hard?**\n\n                Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \        Explain why naive or straightforward approaches may fail.\n         \
+    \       Identify any technical, theoretical, or practical obstacles that need\
+    \ to be overcome. MAKE IT CLEAR.\n\n                **[Question 4] - Why hasn't\
+    \ it been solved before?**\n\n                Identify gaps or limitations in\
+    \ previous research or existing solutions.\n                Discuss any barriers\
+    \ that have prevented this problem from being solved until now.\n            \
+    \    Explain how your approach differs from or improves upon prior work. MAKE\
+    \ IT CLEAR.\n\n                **[Question 5] - What are the key components of\
+    \ my approach and results?**\n\n                Outline your proposed methodology\
+    \ in detail, including the method, dataset, and metrics that you plan to use.\n\
+    \                Describe the expected outcomes. MAKE IT CLEAR."

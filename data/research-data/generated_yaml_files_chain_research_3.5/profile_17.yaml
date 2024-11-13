@@ -1,0 +1,319 @@
+agents:
+- agent_id: agent1
+  profile: 'I am a researcher with a keen interest in the dynamical evolution of celestial
+    bodies within our Solar System, particularly focusing on transneptunian objects
+    (TNOs), asteroids, and their interactions with planetary systems. My recent work
+    has delved into the stability of orbits in the Earth-Mars belt, revealing a narrower
+    region where small bodies can survive over 4.5 billion years. I have also explored
+    the intriguing dynamics of sednoids, uncovering a primordial alignment that suggests
+    significant events during the planet formation epoch.
+
+
+    In addition to my studies on TNOs, I have investigated the unique dynamics of
+    retrograde mean-motion resonances, particularly with Jupiter and Saturn, and have
+    identified potential candidates for retrograde co-orbital resonance with Saturn.
+    My research employs advanced numerical simulations and analytical tools to understand
+    the complex interactions and stability of binary planets within star clusters,
+    contributing to our understanding of the formation and evolution of celestial
+    systems.
+
+
+    Beyond planetary dynamics, I have ventured into the realm of natural language
+    processing, developing innovative techniques like MetaPT for prompt tuning in
+    language models and Atomic Self-Consistency (ASC) to enhance the recall of relevant
+    information in long-form responses. My interdisciplinary approach combines astrophysics
+    and machine learning, aiming to uncover the underlying principles governing both
+    celestial mechanics and artificial intelligence. Through my work, I strive to
+    bridge the gap between these fields, contributing to a deeper understanding of
+    our universe and the technologies we create.'
+  type: BaseAgent
+- agent_id: agent2
+  profile: 'I am a researcher deeply engaged in the intersection of quantum computing,
+    optimization, and machine learning. My recent work has focused on applying the
+    stabilizer formalism to various complex problems, such as the Maximum Cut problem
+    and molecular simulations, where I developed innovative heuristics and methods
+    that enhance performance and efficiency. For instance, my greedy construction
+    heuristic for the Maximum Cut problem elegantly synthesizes existing approaches,
+    achieving a solid approximation ratio and demonstrating impressive results on
+    larger graphs.
+
+
+    In the realm of quantum chemistry, I have explored the application of stabilizer
+    states to challenging molecules, revealing their potential as reference states
+    for systems with strong static correlations. My research also extends to the optimization
+    of deep learning models, where I analyze the challenges of gradient vanishing
+    and exploding, proposing strategies to improve gradient flow and model stability.
+
+
+    Additionally, I have contributed to advancements in contrastive learning through
+    the development of DisCo-CLIP, a memory-efficient training approach that significantly
+    reduces GPU memory consumption while maintaining computational accuracy. My work
+    on modular learning and generalization in artificial intelligence highlights the
+    importance of task segmentation and memory-based ensembling, showcasing competitive
+    performance in continual learning scenarios.
+
+
+    Overall, my research aims to bridge theoretical insights with practical applications,
+    fostering advancements in both quantum computing and machine learning. I am passionate
+    about exploring new methodologies that enhance our understanding and capabilities
+    in these rapidly evolving fields.'
+  type: BaseAgent
+- agent_id: agent3
+  profile: 'I am a researcher deeply engaged in the intersection of computer vision
+    and time series analysis, with a particular focus on developing innovative models
+    that enhance performance across various tasks. My recent work challenges the prevailing
+    reliance on Transformer-based architectures for long-term time series forecasting,
+    demonstrating that simpler linear models can outperform these complex solutions.
+    This finding has sparked new discussions about the validity of Transformer applications
+    in time series analysis.
+
+
+    I have also pioneered the T-WaveNet, a tree-structured wavelet neural network
+    that effectively captures essential features from sensor data, achieving state-of-the-art
+    results in activity recognition and gesture recognition tasks. My work extends
+    to developing FITS, a lightweight model for time series analysis that operates
+    in the complex frequency domain, showcasing the potential for efficient deployment
+    in edge devices.
+
+
+    In the realm of human pose estimation, I have introduced several frameworks, including
+    DWPose and X-Pose, which leverage multi-modal prompts and innovative architectures
+    to improve accuracy and efficiency. My research emphasizes the importance of robust
+    data representation and the integration of diverse data sources, as seen in my
+    work on the Human-Art dataset and the development of DPoser, a versatile human
+    pose prior based on diffusion models.
+
+
+    Through my contributions, I aim to bridge gaps in existing methodologies, enhance
+    model generalization, and push the boundaries of what is achievable in both time
+    series forecasting and human-centric computer vision tasks. My work is driven
+    by a commitment to advancing the field and providing practical solutions that
+    can be readily applied in real-world scenarios.'
+  type: BaseAgent
+- agent_id: agent4
+  profile: 'As a researcher deeply immersed in the field of graph neural networks
+    (GNNs) and machine learning, my work focuses on enhancing the capabilities and
+    understanding of these powerful models. My recent publications reflect a commitment
+    to addressing the limitations of existing GNN architectures and exploring innovative
+    solutions. For instance, I developed Position-aware GNNs (P-GNNs) to better capture
+    the positional context of nodes within graphs, significantly improving performance
+    on tasks like link prediction and community detection.
+
+
+    I also introduced Identity-aware GNNs (ID-GNNs), which extend the expressive power
+    of traditional GNNs by incorporating node identity during message passing. This
+    advancement has led to substantial accuracy improvements across various prediction
+    tasks. My research doesn''t stop at static graphs; I proposed the ROLAND framework
+    to effectively handle dynamic graphs, allowing for scalable and efficient learning
+    in real-world applications.
+
+
+    In addition to architectural innovations, I have explored the design space of
+    GNNs, systematically studying over 315,000 designs to provide guidelines for optimizing
+    performance across different tasks. My work on AutoML, particularly with FALCON
+    and AutoTransfer, aims to streamline the process of finding optimal model designs
+    by leveraging prior knowledge and enhancing search efficiency.
+
+
+    Through these contributions, I strive to push the boundaries of what GNNs can
+    achieve, fostering a deeper understanding of their structure and performance while
+    making them more accessible for diverse applications.'
+  type: BaseAgent
+- agent_id: agent5
+  profile: 'I am a mathematician specializing in algebraic geometry and its connections
+    to number theory and representation theory. My research primarily focuses on minimal
+    surfaces, algebraic stacks, and the interplay between algebraic and topological
+    properties of varieties. I have made significant contributions to the understanding
+    of bicanonical maps, particularly in the context of minimal surfaces of general
+    type, where I established conditions under which the degree of the bicanonical
+    map is either 1 or 2.
+
+
+    My work also extends to the homotopy sequences of fundamental groups, where I
+    have explored exactness conditions and their implications for classical theorems.
+    I have investigated the abundance of 3-folds with non-trivial Albanese maps, providing
+    insights into their structure and classification. Additionally, I have delved
+    into the spectral properties of linear operators and their applications in various
+    mathematical contexts.
+
+
+    In my recent studies, I have generalized key results in the theory of ample line
+    bundles on Abelian varieties and contributed to the understanding of Kodaira dimensions
+    in fibrations. My research often bridges different areas of mathematics, such
+    as the relationship between algebraic geometry and representation theory, exemplified
+    by my work on automorphic representations and their analytic properties.
+
+
+    Overall, my goal is to deepen our understanding of complex algebraic structures
+    and their geometric implications, while also exploring new connections between
+    seemingly disparate areas of mathematics.'
+  type: BaseAgent
+- agent_id: agent6
+  profile: 'I am a researcher deeply engaged in the intersection of computer vision
+    and machine learning, with a particular focus on image and 3D scene understanding.
+    My recent work has revolved around developing innovative frameworks and methodologies
+    that enhance the capabilities of models in various tasks, such as pedestrian attribute
+    recognition, image generation, and 3D point cloud processing.
+
+
+    One of my notable contributions is the Localization Guided Network, which improves
+    pedestrian attribute classification by effectively localizing features specific
+    to each attribute. I also introduced ArtBench-10, a high-quality dataset for benchmarking
+    artwork generation, which addresses the limitations of previous datasets by ensuring
+    class balance and clean annotations.
+
+
+    In the realm of image generation, I developed GenArtist, a unified system that
+    leverages a multimodal large language model to tackle complex generation and editing
+    tasks. My work on PointContrast and the Masked Scene Contrast framework has advanced
+    unsupervised 3D representation learning, enabling efficient and effective extraction
+    of 3D features.
+
+
+    I am also pioneering research in compositional text-to-image and text-to-video
+    generation, exemplified by T2I-CompBench and T2V-CompBench, which provide comprehensive
+    benchmarks for evaluating generative models. My approach to integrating natural
+    language descriptions into person re-identification has shown significant improvements
+    in feature learning.
+
+
+    Overall, my research aims to push the boundaries of what is possible in visual
+    understanding and generation, leveraging the latest advancements in multimodal
+    learning and deep learning architectures. I am committed to creating tools and
+    datasets that facilitate further exploration and innovation in these fields.'
+  type: BaseAgent
+coordinate_mode: graph
+engine_planner:
+  initial_progress: Starting the collaborative research idea generation based on the
+    provided Introduction.
+environment:
+  max_iterations: 3
+  name: Research Collaboration Environment
+  type: Research
+llm: gpt-3.5-turbo
+memory:
+  type: SharedMemory
+metrics:
+  diversity_of_perspectives: true
+  engagement_level: true
+  evaluate_llm: gpt-4o-mini
+  relevance: true
+output:
+  file_path: result/chain_research_gpt3.5.jsonl
+  format: jsonl
+relationships:
+- - agent1
+  - agent2
+  - collaborate with
+- - agent1
+  - agent3
+  - collaborate with
+- - agent1
+  - agent4
+  - collaborate with
+- - agent1
+  - agent5
+  - collaborate with
+- - agent1
+  - agent6
+  - collaborate with
+task:
+  content: "\n            Dear Research Team,\n\n            You are collaborating\
+    \ to generate a new research idea based on the following Introduction:\n\n   \
+    \         **Introduction**\n\n             \n\n1 Introduction\n\nHumans use all\
+    \ facial expressions, body motions, and hand motions to express our emotions and\
+    \ intentions, and interact with other people and objects.\nIn particular, facial\
+    \ expressions and hand gestures are one of the most powerful channels for non-verbal\
+    \ communication, and hand motions are necessary to interact with diverse types\
+    \ of objects.\nModeling the facial expression, body motion, and hand motion altogether\
+    \ is extremely challenging.\nSeveral whole-body 3D human geometry models have\
+    \ been introduced\_[21, 37, 50, 2].\nAmong them, SMPL-X\_[37] is the most widely\
+    \ used one, which motivated a number of 3D whole-body pose estimation methods\_\
+    [9, 45, 11, 32, 52, 26, 28, 4] and benchmarks\_[36].\n\n\nTo represent 3D humans\
+    \ beyond the minimally clothed parametric models, personalized 3D human avatars\
+    \ have been recently studied.\nThe 3D human avatar is a representation that combines\
+    \ 3D geometry and the appearance of a certain person, which can be animated and\
+    \ rendered with novel poses.\nHowever, most of existing 3D human avatars\_[39,\
+    \ 38, 25, 8, 6, 20, 15, 19, 24, 18] modeled from a casually captured video only\
+    \ support body motions without facial expressions and hand motions.\nTheir avatars\
+    \ bake facial expressions and hand poses, and animating them is not possible.\n\
+    A recent work\_[47] introduced a whole-body avatar that supports animation with\
+    \ facial expressions, and body and hand poses; however, it requires 3D observations,\
+    \ such as 3D scans or RGBD images with highly accurate SMPL-X registrations, with\
+    \ diverse poses and facial expressions.\nSuch an assumption does not hold for\
+    \ the majority of casually captured videos in daily life.\n\n\nFigure 1: \nFrom\
+    \ (a) a monocular video from a single person, we create our (b) ExAvatar, an expressive\
+    \ whole-body 3D avatar, animatable with novel facial expression code, hand poses,\
+    \ and body poses of SMPL-X.\n\n\n\nWe present ExAvatar, an expressive whole-body\
+    \ 3D human avatar that can be made from a short monocular video.\nExAvatar is\
+    \ designed as a combination of the whole-body 3D parametric model (SMPL-X)\_[37]\
+    \ and 3D Gaussian Splatting (3DGS)\_[22].\nIt utilizes the whole-body drivability\
+    \ of SMPL-X and the photorealistic and efficient rendering capability of 3DGS.\n\
+    After the training, it is animatable with novel facial expression code and 3D\
+    \ pose of SMPL-X, as shown in Fig.\_1.\nDespite its desired properties, modeling\
+    \ ExAvatar is an non-trivial task with the following two challenges: 1) a limited\
+    \ diversity of facial expressions and poses in the video and 2) the absence of\
+    \ 3D observations, such as 3D scans and RGBD videos.\nThe limited diversity in\
+    \ the video makes a drivability with novel facial expressions and poses non-trivial.\n\
+    In addition, the absence of 3D observations creates ambiguity in the occluded\
+    \ human parts, exhibiting noticeable artifacts in novel facial expressions and\
+    \ poses.\n\n\nTo address them, we propose a novel hybrid representation of the\
+    \ surface mesh and 3D Gaussians in ExAvatar.\nOur hybrid representation treats\
+    \ each 3D Gaussian as a vertex on the surface, where the vertices have pre-defined\
+    \ connectivity (i.e., triangle faces) between them following the mesh topology\
+    \ of SMPL-X.\nExisting volumetric avatars\_[39, 38, 25, 8, 6, 20, 15, 19, 47]\
+    \ do not have the connectivity by the definition.\nAlso, previous 3DGS-based\_\
+    [24, 18] works consider a set of 3D Gaussian points as a point cloud without considering\
+    \ the connectivity between them.\n\n\nUsing our hybrid representation, our\n\n\
+    \            **Your Task**\n\n            1. **Literature Review**: Analyze the\
+    \ Introduction provided and conduct a brief literature review to understand the\
+    \ current state of research in this area.\n\n            2. **Brainstorming**:\
+    \ Collaboratively brainstorm potential research ideas that build upon or address\
+    \ gaps in the Introduction.\n\n            3. **Summarization**: Summarize your\
+    \ collective ideas.\n\n            4. **Formulate a New Research Idea**: Develop\
+    \ a new research proposal in the format of the '5q', defined below:\n\n      \
+    \         **Here is a high-level summarized insight of a research field Machine\
+    \ Learning.**\n\n               **Here are the five core questions:**\n\n    \
+    \           **[Question 1] - What is the problem?**\n\n               Formulate\
+    \ the specific research question you aim to address. Only output one question\
+    \ and do not include any more information.\n\n               **[Question 2] -\
+    \ Why is it interesting and important?**\n\n               Explain the broader\
+    \ implications of solving this problem for the research community.\n         \
+    \      Discuss how such a paper will affect future research.\n               Discuss\
+    \ how addressing this question could advance knowledge or lead to practical applications.\n\
+    \n               **[Question 3] - Why is it hard?**\n\n               Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \       Explain why naive or straightforward approaches may fail.\n          \
+    \     Identify any technical, theoretical, or practical obstacles that need to\
+    \ be overcome. MAKE IT CLEAR.\n\n               **[Question 4] - Why hasn't it\
+    \ been solved before?**\n\n               Identify gaps or limitations in previous\
+    \ research or existing solutions.\n               Discuss any barriers that have\
+    \ prevented this problem from being solved until now.\n               Explain\
+    \ how your approach differs from or improves upon prior work. MAKE IT CLEAR.\n\
+    \n               **[Question 5] - What are the key components of my approach and\
+    \ results?**\n\n               Outline your proposed methodology in detail, including\
+    \ the method, dataset, and metrics that you plan to use.\n               Describe\
+    \ the expected outcomes. MAKE IT CLEAR.\n\n            Please work together to\
+    \ produce the '5q' for your proposed research idea.\n\n            Good luck!\n\
+    \            "
+  output_format: "You should answer the task in the fllowing format:\n           \
+    \     **[Question 1] - What is the problem?**\n\n                Formulate the\
+    \ specific research question you aim to address. Only output one question and\
+    \ do not include any more information.\n\n                **[Question 2] - Why\
+    \ is it interesting and important?**\n\n                Explain the broader implications\
+    \ of solving this problem for the research community.\n                Discuss\
+    \ how such a paper will affect future research.\n                Discuss how addressing\
+    \ this question could advance knowledge or lead to practical applications.\n\n\
+    \                **[Question 3] - Why is it hard?**\n\n                Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \        Explain why naive or straightforward approaches may fail.\n         \
+    \       Identify any technical, theoretical, or practical obstacles that need\
+    \ to be overcome. MAKE IT CLEAR.\n\n                **[Question 4] - Why hasn't\
+    \ it been solved before?**\n\n                Identify gaps or limitations in\
+    \ previous research or existing solutions.\n                Discuss any barriers\
+    \ that have prevented this problem from being solved until now.\n            \
+    \    Explain how your approach differs from or improves upon prior work. MAKE\
+    \ IT CLEAR.\n\n                **[Question 5] - What are the key components of\
+    \ my approach and results?**\n\n                Outline your proposed methodology\
+    \ in detail, including the method, dataset, and metrics that you plan to use.\n\
+    \                Describe the expected outcomes. MAKE IT CLEAR."

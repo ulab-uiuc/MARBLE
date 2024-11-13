@@ -1,0 +1,218 @@
+agents:
+- agent_id: agent1
+  profile: 'I am a researcher dedicated to exploring the intersection of tabular and
+    graph machine learning, with a focus on enhancing predictive performance through
+    the integration of graph-based methods. My work addresses the unique challenges
+    posed by heterogeneous tabular data, where I have developed a benchmark that evaluates
+    various models, including graph neural networks (GNNs) and traditional tabular
+    models. Through empirical studies, I have demonstrated that GNNs can significantly
+    improve predictive outcomes, while also revealing that with appropriate feature
+    preprocessing, standard tabular models can compete effectively.
+
+
+    In addition to this, I am deeply invested in the problem of out-of-distribution
+    (OOD) detection in graph classification. My research emphasizes the importance
+    of uncertainty estimation and highlights the lack of a universal solution for
+    OOD detection, advocating for a nuanced approach that considers both graph representations
+    and predictive distributions.
+
+
+    Furthermore, I have proposed a novel methodology for inducing diverse distributional
+    shifts based on graph structure, which allows for a more comprehensive evaluation
+    of graph models under challenging conditions. My findings indicate that simple
+    models can often outperform more complex ones in these scenarios, revealing a
+    critical trade-off between representation quality and the ability to distinguish
+    between different distributions.
+
+
+    Overall, my research aims to bridge the gap between tabular and graph machine
+    learning, providing insights and methodologies that enhance the robustness and
+    reliability of machine learning systems in real-world applications.'
+  type: BaseAgent
+- agent_id: agent2
+  profile: 'I am a researcher dedicated to exploring the intricacies of graph neural
+    networks (GNNs) and their application to both homophilous and heterophilous graphs.
+    My recent work has focused on addressing the challenges posed by heterophily in
+    graph structures, where I have critically examined existing homophily measures
+    and proposed the adjusted homophily metric, which offers a more reliable comparison
+    across datasets. Additionally, I introduced the concept of label informativeness
+    (LI), which provides deeper insights into how neighbor labels influence node predictions,
+    demonstrating its correlation with GNN performance.
+
+
+    Recognizing the gap between tabular and graph machine learning, I have developed
+    a benchmark that integrates heterogeneous tabular node features into graph models.
+    This work highlights the potential of GNNs to enhance predictive performance in
+    tabular contexts while also revealing that traditional tabular models can be adapted
+    to leverage graph data effectively.
+
+
+    Challenging the prevailing notion that GNNs are limited to homophilous graphs,
+    I have shown that standard GNN architectures can perform robustly on heterophilous
+    datasets, even outperforming specialized models. My research aims to bridge the
+    divide between theoretical advancements and practical applications, providing
+    valuable insights for both researchers and practitioners in the fields of graph
+    and tabular machine learning.'
+  type: BaseAgent
+- agent_id: agent3
+  profile: 'I am a researcher deeply engaged in the fields of network analysis, machine
+    learning, and graph-based methodologies. My work primarily focuses on community
+    detection, where I have developed innovative techniques for hyperparameter tuning
+    without labeled data, significantly enhancing the performance of various community
+    detection algorithms. I have also introduced Stochastic Gradient Langevin Boosting
+    (SGLB), a robust framework that guarantees global convergence for multimodal loss
+    functions, outperforming traditional gradient boosting methods.
+
+
+    My research extends to the intersection of graph neural networks (GNNs) and gradient-boosted
+    decision trees (GBDT), where I proposed a novel architecture that leverages the
+    strengths of both models to handle heterogeneous tabular data effectively. Additionally,
+    I have explored neural algorithmic reasoning, emphasizing the importance of learning
+    algorithms without intermediate supervision, which has led to state-of-the-art
+    results in several algorithmic tasks.
+
+
+    I am particularly interested in uncertainty quantification in model predictions,
+    especially for gradient boosting models, and have developed a probabilistic ensemble-based
+    framework to derive uncertainty estimates. My work also includes a systematic
+    analysis of classification performance measures, leading to the introduction of
+    new metrics that better evaluate classification results.
+
+
+    Through my research, I aim to bridge theoretical insights with practical applications,
+    contributing to the understanding and advancement of machine learning and network
+    analysis methodologies.'
+  type: BaseAgent
+coordinate_mode: graph
+engine_planner:
+  initial_progress: Starting the collaborative research idea generation based on the
+    provided Introduction.
+environment:
+  max_iterations: 3
+  name: Research Collaboration Environment
+  type: Research
+llm: gpt-4o-mini
+memory:
+  type: SharedMemory
+metrics:
+  diversity_of_perspectives: true
+  engagement_level: true
+  evaluate_llm: gpt-4o-mini
+  relevance: true
+output:
+  file_path: result/chain_research_gpt4o-mini.jsonl
+  format: jsonl
+relationships:
+- - agent1
+  - agent2
+  - collaborate with
+- - agent1
+  - agent3
+  - collaborate with
+task:
+  content: "\n            Dear Research Team,\n\n            You are collaborating\
+    \ to generate a new research idea based on the following Introduction:\n\n   \
+    \         **Introduction**\n\n             INTRODUCTION\nRelational databases\
+    \ (RDBs) can be viewed as storing a collection\nof interrelated data spread across\
+    \ multiple linked tables. Of vast\nand steadily growing importance, the market\
+    \ for RDB management\nsystems alone is expected to exceed $133 billion USD by\
+    \ 2028 [ 56].\nEven so, while the machine learning community has devoted con-\n\
+    siderable attention to predictive tasks involving single tables, or\nso-called\
+    \ tabular modeling tasks [ 21,49,58], thus far efforts to\nwiden the scope to\
+    \ handle multiple tables and RDBs still lags be-\nhind, despite the seemingly\
+    \ enormous potential of doing so. With\n\u2217Equal contribution. Corresponding\
+    \ authors: {minjiw,quagan}@amazon.com\n\u2020Work done during an internship in\
+    \ Amazon Web Services.respect to the latter, in many real-world scenarios critical\
+    \ features\nneeded for accurately modeling a given quantity of interest are not\n\
+    constrained to a single table [ 9,14], nor can be easily flattened into\na single\
+    \ table via reliable/obvious feature engineering [15].\nThis disconnect between\
+    \ commercial opportunity and academic\nresearch focus can, at least in large part,\
+    \ be traced back to one trans-\nparent culprit: Unlike widely-studied computer\
+    \ vision [ 16], natural\nlanguage processing [ 67], tabular [ 28], and graph [\
+    \ 35] domains,\nestablished benchmarks for evaluating predictive ML models of\n\
+    RDB data are much less prevalent. This reality is an unsurprising\nconsequence\
+    \ of privacy concerns and the typical storage of RDBs\non servers with heavily\
+    \ restrictive access and/or licensing protec-\ntions. With few exceptions (that\
+    \ will be discussed in later sections),\nrelevant model development is instead\
+    \ predicated on surrogate\nbenchmarks that branch as follows.\nAlong the first\
+    \ branch, sophisticated models that explicitly ac-\ncount for relational information\
+    \ are often framed as graph learning\nproblems, addressable by graph neural networks\
+    \ (GNNs) [ 6,29,32,\n37,42,45,57,66] or their precursors [ 78,80,81], and evaluated\n\
+    specifically on graph benchmarks [ 35,43,51]. The limitation here\nthough is that\
+    \ performance is conditional on a fixed, pre-specified\ngraph and attendant node/edge\
+    \ features intrinsic to the bench-\nmark, not an actual RDB or native multi-table\
+    \ format. Hence the\ninductive biases that might otherwise lead to optimal performance\n\
+    on the original data can be partially masked by whatever process\nwas used to\
+    \ produce the provided graphs and features. As for the\nsecond branch, emphasis\
+    \ is placed on tabular model evaluations\nthat preserve the original format of\
+    \ single table data, possibly with\naugmentations collected from auxiliary tables.\
+    \ But here feature\nengineering and table flattening are typically prioritized\
+    \ over ex-\nploiting rich network effects as with GNNs [ 9,14,47,48]. Critically\n\
+    though, currently-available head-to-head comparisons involving\ndiverse candidate\
+    \ approaches representative of both branches on\nun-filtered RDB/multi-table data\
+    \ are insufficient for drawing clear-\ncut conclusions regarding which might be\
+    \ preferable and under\nwhat particular circumstances.\nTo address the aforementioned\
+    \ limitations and help advance\npredictive modeling over RDB data, in Section\
+    \ 2 we first introduce\na generic supervised learning formulation across both\
+    \ inductive\nand transductive settings covering dynamic RDBs as commonly-\nencountered\
+    \ in practice. A given predictive pipeline is then specified\nby (i) a sampling/distillation\
+    \ operator which extracts information\n1arXiv:2404.18209v1  [cs.LG]  28 Apr 2024Wang\
+    \ et al.\n\u201C4D\" Properties OpenML OGB HGB TGB RDBench CRLR RelBench 4DBInfer\n\
+    [64] [34, 36] [51] [38] [79] [54] [23] (Ours)\n1) Datasets\nUse raw data \u2713\
+    \ \u2713 \u2713 \u2713 \u2713\nMultiple Tables \u2713 \u2713\u2713 \u2713 \u2713\
+    \ \u2713 \u2713\nHeterogeneous Features \u2713 \u2713 \u2713 \u2713\nBillion-scale\
+    \ \u2713 \u2713\n2) Tasks\nTransductive \u2713 \u2713\u2713 \u2713\nInductive\
+    \ \u2713 \u2713 \u2713 \u2713 \u2713\nTemporal \u2713 \u2713 \u2713 \u2713 \u2713\
+    \nEntity Attr. Prediction \u2713 \u2713 \u2713\u2713 \u2713 \u2713 \u2713 \u2713\
+    \nRelationship\n\n            **Your Task**\n\n            1. **Literature Review**:\
+    \ Analyze the Introduction provided and conduct a brief literature review to understand\
+    \ the current state of research in this area.\n\n            2. **Brainstorming**:\
+    \ Collaboratively brainstorm potential research ideas that build upon or address\
+    \ gaps in the Introduction.\n\n            3. **Summarization**: Summarize your\
+    \ collective ideas.\n\n            4. **Formulate a New Research Idea**: Develop\
+    \ a new research proposal in the format of the '5q', defined below:\n\n      \
+    \         **Here is a high-level summarized insight of a research field Machine\
+    \ Learning.**\n\n               **Here are the five core questions:**\n\n    \
+    \           **[Question 1] - What is the problem?**\n\n               Formulate\
+    \ the specific research question you aim to address. Only output one question\
+    \ and do not include any more information.\n\n               **[Question 2] -\
+    \ Why is it interesting and important?**\n\n               Explain the broader\
+    \ implications of solving this problem for the research community.\n         \
+    \      Discuss how such a paper will affect future research.\n               Discuss\
+    \ how addressing this question could advance knowledge or lead to practical applications.\n\
+    \n               **[Question 3] - Why is it hard?**\n\n               Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \       Explain why naive or straightforward approaches may fail.\n          \
+    \     Identify any technical, theoretical, or practical obstacles that need to\
+    \ be overcome. MAKE IT CLEAR.\n\n               **[Question 4] - Why hasn't it\
+    \ been solved before?**\n\n               Identify gaps or limitations in previous\
+    \ research or existing solutions.\n               Discuss any barriers that have\
+    \ prevented this problem from being solved until now.\n               Explain\
+    \ how your approach differs from or improves upon prior work. MAKE IT CLEAR.\n\
+    \n               **[Question 5] - What are the key components of my approach and\
+    \ results?**\n\n               Outline your proposed methodology in detail, including\
+    \ the method, dataset, and metrics that you plan to use.\n               Describe\
+    \ the expected outcomes. MAKE IT CLEAR.\n\n            Please work together to\
+    \ produce the '5q' for your proposed research idea.\n\n            Good luck!\n\
+    \            "
+  output_format: "You should answer the task in the fllowing format:\n           \
+    \     **[Question 1] - What is the problem?**\n\n                Formulate the\
+    \ specific research question you aim to address. Only output one question and\
+    \ do not include any more information.\n\n                **[Question 2] - Why\
+    \ is it interesting and important?**\n\n                Explain the broader implications\
+    \ of solving this problem for the research community.\n                Discuss\
+    \ how such a paper will affect future research.\n                Discuss how addressing\
+    \ this question could advance knowledge or lead to practical applications.\n\n\
+    \                **[Question 3] - Why is it hard?**\n\n                Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \        Explain why naive or straightforward approaches may fail.\n         \
+    \       Identify any technical, theoretical, or practical obstacles that need\
+    \ to be overcome. MAKE IT CLEAR.\n\n                **[Question 4] - Why hasn't\
+    \ it been solved before?**\n\n                Identify gaps or limitations in\
+    \ previous research or existing solutions.\n                Discuss any barriers\
+    \ that have prevented this problem from being solved until now.\n            \
+    \    Explain how your approach differs from or improves upon prior work. MAKE\
+    \ IT CLEAR.\n\n                **[Question 5] - What are the key components of\
+    \ my approach and results?**\n\n                Outline your proposed methodology\
+    \ in detail, including the method, dataset, and metrics that you plan to use.\n\
+    \                Describe the expected outcomes. MAKE IT CLEAR."

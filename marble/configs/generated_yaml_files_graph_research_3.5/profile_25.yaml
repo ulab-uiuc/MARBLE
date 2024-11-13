@@ -1,0 +1,261 @@
+agents:
+- agent_id: agent1
+  profile: 'I am a researcher dedicated to unraveling the complexities of molecular
+    clouds, particularly focusing on their morphology and evolution. My recent work
+    involves analyzing filamentary molecular clouds using data from the Milky Way
+    Imaging Scroll Painting (MWISP) project. By examining a significant area of the
+    Milky Way, I have investigated the orientation and morphological asymmetry of
+    these filaments, employing elliptical fitting techniques to achieve precise measurements.
+
+
+    One of my key findings is the bimodal distribution of filament orientations relative
+    to the Galactic plane, revealing intriguing patterns that deepen our understanding
+    of their formation processes. Despite exploring various parameters, I found no
+    significant correlations with orientation, which raises further questions about
+    the underlying mechanisms at play. Notably, my research highlights that over 40%
+    of the filaments exhibit head-tail asymmetry, indicating a tendency for mass concentration
+    at one end, a phenomenon that could have implications for star formation and cloud
+    dynamics.
+
+
+    Through my work, I aim to contribute to the broader understanding of molecular
+    clouds and their role in the Galactic ecosystem, paving the way for future studies
+    in astrophysics.'
+  type: BaseAgent
+- agent_id: agent2
+  profile: 'I am a researcher dedicated to addressing pressing societal issues through
+    advanced machine learning techniques, particularly in the realms of hate speech
+    detection, wildlife trafficking, and human activity recognition. My recent work
+    focuses on developing robust frameworks that not only enhance the accuracy of
+    hate speech classification but also ensure fairness and resilience against adversarial
+    attacks. For instance, I designed a novel hate speech detection framework, SWE2,
+    which leverages both word-level semantics and sub-word knowledge, achieving impressive
+    performance metrics even under extreme adversarial conditions.
+
+
+    In addition to hate speech detection, I have tackled the challenge of wildlife
+    trafficking by creating a scalable dataset and a practical framework for identifying
+    suspicious online behaviors related to wildlife product sales. This work is crucial
+    in combating illegal activities that threaten biodiversity.
+
+
+    My research also delves into the complexities of human activity recognition, where
+    I developed the Deep Heterogeneous Contrastive Hyper-Graph Learning (DHC-HGL)
+    framework. This innovative approach captures the nuances of context-aware data,
+    significantly outperforming existing models.
+
+
+    I am passionate about making my research accessible and reproducible, sharing
+    code and datasets to foster collaboration and further exploration in these critical
+    areas. My goal is to leverage machine learning to create impactful solutions that
+    contribute to a safer and more equitable society.'
+  type: BaseAgent
+- agent_id: agent3
+  profile: 'I am a researcher dedicated to leveraging deep learning and wearable technology
+    to enhance health monitoring and activity recognition. My recent work includes
+    the development of CovidRhythm, a novel Gated Recurrent Unit (GRU) network that
+    utilizes physiological and rhythmic features from consumer-grade wearables to
+    detect Covid-19 even before symptoms manifest. This innovative approach achieved
+    an AUC-ROC of 0.79, demonstrating the potential of biobehavioral rhythms in timely
+    disease detection.
+
+
+    In addition to my work on Covid-19 detection, I have focused on improving energy
+    efficiency in deep neural networks (DNNs) for speech processing. By integrating
+    a masking kernel into the training process, I successfully minimized energy consumption
+    during both data acquisition and inference by 57%, making strides in sustainable
+    AI applications.
+
+
+    My research also extends to Human Activity Recognition (HAR), where I introduced
+    the Deep Heterogeneous Contrastive Hyper-Graph Learning (DHC-HGL) framework. This
+    framework effectively captures the complexities of context-aware HAR by utilizing
+    heterogeneous hypergraph properties, significantly outperforming state-of-the-art
+    methods.
+
+
+    Furthermore, I have explored context-aware human activity recognition through
+    a novel Heterogeneous HyperGraph Neural Network (HHGNN-CHAR), which leverages
+    the underlying graph structure of activity data. This work has led to substantial
+    improvements in performance metrics, showcasing the power of graph representation
+    learning in real-world applications.
+
+
+    Overall, my research aims to bridge the gap between advanced machine learning
+    techniques and practical health applications, driving innovation in how we monitor
+    and understand human activity and health.'
+  type: BaseAgent
+- agent_id: agent4
+  profile: 'I am a researcher dedicated to understanding and mitigating the impact
+    of misinformation and hate speech in online environments. My work spans various
+    domains, including crowdfunding, social media, and automated fact-checking systems.
+    I have conducted extensive analyses of crowdfunding projects to identify factors
+    influencing on-time reward delivery, revealing that simpler projects with active
+    creator engagement tend to perform better.
+
+
+    In the realm of misinformation, I have developed innovative models such as the
+    Hierarchical Multi-head Attentive Network for fact-checking and a novel fact-checking
+    URL recommendation system to enhance user engagement in combating fake news. My
+    research also delves into the dynamics of social media during health crises, providing
+    insights into public reactions and information propagation during outbreaks like
+    Ebola.
+
+
+    I have tackled the challenges of hate speech detection by proposing robust frameworks
+    that leverage both semantic and sub-word knowledge, achieving high accuracy even
+    under adversarial conditions. Additionally, I have explored the potential of large
+    language models for data augmentation, enhancing the quality of textual data for
+    various downstream tasks.
+
+
+    Through my work, I aim to bridge the gap between technology and social responsibility,
+    ensuring that online platforms remain trustworthy and safe for users. My research
+    not only contributes to academic knowledge but also has practical implications
+    for improving the integrity of information shared in digital spaces.'
+  type: BaseAgent
+coordinate_mode: graph
+engine_planner:
+  initial_progress: Starting the collaborative research idea generation based on the
+    provided Introduction.
+environment:
+  max_iterations: 3
+  name: Research Collaboration Environment
+  type: Research
+llm: gpt-3.5-turbo
+memory:
+  type: SharedMemory
+metrics:
+  diversity_of_perspectives: true
+  engagement_level: true
+  evaluate_llm: gpt-4o-mini
+  relevance: true
+output:
+  file_path: result/graph_research_gpt3.5.jsonl
+  format: jsonl
+relationships:
+- - agent1
+  - agent2
+  - collaborate with
+- - agent1
+  - agent3
+  - collaborate with
+- - agent1
+  - agent4
+  - collaborate with
+- - agent2
+  - agent3
+  - collaborate with
+- - agent2
+  - agent4
+  - collaborate with
+- - agent3
+  - agent4
+  - collaborate with
+task:
+  content: "\n            Dear Research Team,\n\n            You are collaborating\
+    \ to generate a new research idea based on the following Introduction:\n\n   \
+    \         **Introduction**\n\n             INTRODUCTION\nTo alleviate information\
+    \ overload on the web, recommender system\nhas been widely deployed to perform\
+    \ personalized information\nfiltering [ 7,45,46]. The core of recommender system\
+    \ is to predict\nwhether a user will interact with an item, e.g., click, rate,\
+    \ purchase,\namong other forms of interactions. As such, collaborative filtering\n\
+    (CF), which focuses on exploiting the past user-item interactions to\nachieve\
+    \ the prediction, remains to be a fundamental task towards\neffective personalized\
+    \ recommendation [10, 19, 28, 39].\nThe most common paradigm for CF is to learn\
+    \ latent features\n(a.k.a. embedding) to represent a user and an item, and perform\n\
+    prediction based on the embedding vectors [ 6,19]. Matrix\nfactorization is an\
+    \ early such model, which directly projects the\nsingle ID of a user to her embedding\
+    \ [ 26]. Later on, several research\nfind that augmenting user ID with the her\
+    \ interaction history as\nthe input can improve the quality of embedding. For\
+    \ example,\nSVD++ [ 25] demonstrates the benefits of user interaction history\n\
+    in predicting user numerical ratings, and Neural Attentive Item\nSimilarity (NAIS)\
+    \ [ 18] differentiates the importance of items in\nthe interaction history and\
+    \ shows improvements in predicting\nitem ranking. In view of user-item interaction\
+    \ graph, these\nimprovements can be seen as coming from using the subgraph\nstructure\
+    \ of a user \u2014 more specifically, her one-hop neighbors \u2014 to\nimprove\
+    \ the embedding learning.\nTo deepen the use of subgraph structure with high-hop\n\
+    neighbors, Wang et al. [ 39] recently proposes NGCF and achieves\nstate-of-the-art\
+    \ performance for CF. It takes inspiration from the\nGraph Convolution Network\
+    \ (GCN) [ 14,23], following the samearXiv:2002.02126v4  [cs.IR]  7 Jul 2020propagation\
+    \ rule to refine embeddings: feature transformation,\nneighborhood aggregation,\
+    \ and nonlinear activation. Although\nNGCF has shown promising results of the\
+    \ 3-layer LightGCN. We have the following\nobservations:\n\u2022The best setting\
+    \ in general is using sqrt normalization at both\nsides (i.e., the current design\
+    \ of LightGCN). Removing either side\nwill drop the performance largely.\n\u2022\
+    The second best setting is using L1normalization at the left side\nonly (i.e.,\
+    \ LightGCN- L1-L). This is equivalent to normalize the\nadjacency matrix as a\
+    \ stochastic matrix by the in-degree.\n\u2022Normalizing symmetrically on two\
+    \ sides is helpful for the\nsqrt normalization, but will degrade the performance\
+    \ of L1\nnormalization.\n4.4.3 Analysis of Embedding Smoothness. As we have analyzed\n\
+    in Section 3.2.3, a 2-layer LightGCN smooths a user\u2019s embedding\nbased on\
+    \ the users that have overlap on her interacted items, and\nthe smoothing strength\
+    \ between two users cv\u2192uis measured in\nEquation (14). We speculate that\
+    \ such smoothing of embeddings is\nthe key reason of LightGCN\u2019s effectiveness.\
+    \ To verify this, we first\ndefine the smoothness of user embeddings as:\nSU=MX\n\
+    u=1MX\nv=1cv\u2192u(eu\n||eu||2\u2212ev\n||ev||2)2, (17)\nwhere the L2norm on\
+    \ embeddings is used to eliminate the\nimpact of the embedding\u2019s scale. Similarly\
+    \ we can obtained the\ndefinition for item embeddings. Table 6 shows the smoothness\n\
+    of two models, matrix factorization (i.e., using the E(0)for model\nprediction)\
+    \ and the 2-layer LightGCN-single (i.e., using the E(2)for\nprediction). Note\
+    \ that the 2-layer LightGCN-single outperforms\nMF in recommendation accuracy\
+    \ by a large margin. As can be\nseen, the smoothness loss of LightGCN-single is\
+    \ much lower\nthan that of MF. This indicates that by conducting light graph\n\
+    convolution, the embeddings become smoother and more suitable\nfor recommendation.01e-6\
+    \ 1e-5 1e-4 1e-3 1e-2\nRegularization0.0200.0250.0300.0350.0400.0450.0500.0550.060recall@20\n\
+    01e-6 1e-5 1e-4 1e-3 1e-2\nRegularization0.0100.0150.0200.0250.0300.0350.0400.0450.050ndcg@20\n\
+    Figure 5: Performance of 2-layer LightGCN w.r.t. different\nregularization coefficient\
+    \ \u03BBon Yelp and Amazon-Book.\n4.5 Hyper-parameter Studies\nWhen applying LightGCN\
+    \ to a new dataset, besides the standard\nhyper-parameter learning rate,\n\n \
+    \           **Your Task**\n\n            1. **Literature Review**: Analyze the\
+    \ Introduction provided and conduct a brief literature review to understand the\
+    \ current state of research in this area.\n\n            2. **Brainstorming**:\
+    \ Collaboratively brainstorm potential research ideas that build upon or address\
+    \ gaps in the Introduction.\n\n            3. **Summarization**: Summarize your\
+    \ collective ideas.\n\n            4. **Formulate a New Research Idea**: Develop\
+    \ a new research proposal in the format of the '5q', defined below:\n\n      \
+    \         **Here is a high-level summarized insight of a research field Machine\
+    \ Learning.**\n\n               **Here are the five core questions:**\n\n    \
+    \           **[Question 1] - What is the problem?**\n\n               Formulate\
+    \ the specific research question you aim to address. Only output one question\
+    \ and do not include any more information.\n\n               **[Question 2] -\
+    \ Why is it interesting and important?**\n\n               Explain the broader\
+    \ implications of solving this problem for the research community.\n         \
+    \      Discuss how such a paper will affect future research.\n               Discuss\
+    \ how addressing this question could advance knowledge or lead to practical applications.\n\
+    \n               **[Question 3] - Why is it hard?**\n\n               Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \       Explain why naive or straightforward approaches may fail.\n          \
+    \     Identify any technical, theoretical, or practical obstacles that need to\
+    \ be overcome. MAKE IT CLEAR.\n\n               **[Question 4] - Why hasn't it\
+    \ been solved before?**\n\n               Identify gaps or limitations in previous\
+    \ research or existing solutions.\n               Discuss any barriers that have\
+    \ prevented this problem from being solved until now.\n               Explain\
+    \ how your approach differs from or improves upon prior work. MAKE IT CLEAR.\n\
+    \n               **[Question 5] - What are the key components of my approach and\
+    \ results?**\n\n               Outline your proposed methodology in detail, including\
+    \ the method, dataset, and metrics that you plan to use.\n               Describe\
+    \ the expected outcomes. MAKE IT CLEAR.\n\n            Please work together to\
+    \ produce the '5q' for your proposed research idea.\n\n            Good luck!\n\
+    \            "
+  output_format: "You should answer the task in the fllowing format:\n           \
+    \     **[Question 1] - What is the problem?**\n\n                Formulate the\
+    \ specific research question you aim to address. Only output one question and\
+    \ do not include any more information.\n\n                **[Question 2] - Why\
+    \ is it interesting and important?**\n\n                Explain the broader implications\
+    \ of solving this problem for the research community.\n                Discuss\
+    \ how such a paper will affect future research.\n                Discuss how addressing\
+    \ this question could advance knowledge or lead to practical applications.\n\n\
+    \                **[Question 3] - Why is it hard?**\n\n                Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \        Explain why naive or straightforward approaches may fail.\n         \
+    \       Identify any technical, theoretical, or practical obstacles that need\
+    \ to be overcome. MAKE IT CLEAR.\n\n                **[Question 4] - Why hasn't\
+    \ it been solved before?**\n\n                Identify gaps or limitations in\
+    \ previous research or existing solutions.\n                Discuss any barriers\
+    \ that have prevented this problem from being solved until now.\n            \
+    \    Explain how your approach differs from or improves upon prior work. MAKE\
+    \ IT CLEAR.\n\n                **[Question 5] - What are the key components of\
+    \ my approach and results?**\n\n                Outline your proposed methodology\
+    \ in detail, including the method, dataset, and metrics that you plan to use.\n\
+    \                Describe the expected outcomes. MAKE IT CLEAR."

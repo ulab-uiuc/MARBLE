@@ -1,0 +1,216 @@
+agents:
+- agent_id: agent1
+  profile: 'I am a researcher dedicated to advancing the fields of sound detection,
+    speech recognition, and voice conversion through innovative machine learning techniques.
+    My recent work includes developing Anomalous Sound Detection based on Diffusion
+    Models (ASD-Diffusion), which effectively identifies anomalies in factory environments
+    by reconstructing acoustic features and employing a novel post-processing filter.
+    This method has shown a significant performance improvement in real-world applications.
+
+
+    I am also passionate about addressing challenges in Automatic Speech Recognition
+    (ASR), particularly in code-switching scenarios. My approach integrates a speech-conditioned
+    Large Language Model (LLM) with a Mixture of Experts (MoE) architecture, utilizing
+    a unique Insertion and Deletion of Interruption Token (IDIT) mechanism to enhance
+    text generation capabilities. This work has yielded substantial improvements over
+    existing models.
+
+
+    In the realm of voice conversion, I have pioneered a Zero-Shot any-to-any Singing
+    Voice Conversion method that leverages clustering-based phoneme representation,
+    allowing for precise manipulation of voice characteristics. My research emphasizes
+    the importance of sound quality and timbre accuracy, contributing to advancements
+    in voice conversion technology.
+
+
+    Additionally, I have made strides in multimodal emotion recognition, achieving
+    first place in the MER2024-SEMI challenge with my EmoVCLIP model, which enhances
+    video-based emotion recognition through innovative prompt learning techniques.
+    My work in cross-age speaker verification focuses on disentangled representation
+    learning, addressing the challenges posed by aging in voice recognition systems.
+
+
+    Overall, my research aims to push the boundaries of audio and speech technologies,
+    making them more robust, efficient, and applicable to real-world scenarios.'
+  type: BaseAgent
+- agent_id: agent2
+  profile: 'As a researcher deeply immersed in the field of graph neural networks
+    (GNNs) and machine learning, my work focuses on enhancing the capabilities and
+    understanding of these powerful models. My recent publications reflect a commitment
+    to addressing the limitations of existing GNN architectures. For instance, I developed
+    Position-aware GNNs (P-GNNs) to better capture the positional context of nodes
+    within graphs, significantly improving performance in tasks like link prediction
+    and community detection.
+
+
+    I also introduced Identity-aware GNNs (ID-GNNs), which extend the expressive power
+    of traditional GNNs by incorporating node identities during message passing. This
+    innovation has led to substantial accuracy improvements across various prediction
+    tasks. My exploration of dynamic graphs culminated in the ROLAND framework, which
+    allows static GNNs to adapt to dynamic environments, thereby enhancing their scalability
+    and effectiveness.
+
+
+    Beyond architectural advancements, I have delved into the design space of GNNs,
+    systematically studying over 315,000 configurations to provide guidelines for
+    optimal model design. My work on AutoML, particularly with FALCON and AutoTransfer,
+    aims to streamline the search for effective neural architectures by leveraging
+    prior knowledge and improving efficiency.
+
+
+    Through these contributions, I strive to push the boundaries of what GNNs can
+    achieve, fostering a deeper understanding of their structure and performance across
+    diverse applications.'
+  type: BaseAgent
+- agent_id: agent3
+  profile: 'I am a researcher dedicated to advancing methodologies in video denoising,
+    inertial navigation systems, and adaptive control for robotic systems. My recent
+    work has focused on developing innovative solutions that leverage advanced neural
+    network architectures, particularly gated recurrent units (GRUs), to enhance video
+    denoising. My model, GRU-VD, effectively utilizes temporal information to improve
+    denoising quality, achieving superior results compared to existing methods.
+
+
+    In the realm of inertial navigation, I have contributed to the development of
+    the Advanced IEZ (AIEZ) framework, which integrates various algorithms to address
+    heading errors in pedestrian dead reckoning systems. By employing the Quasi-static
+    Magnetic field Detection method, I have enhanced the robustness of navigation
+    solutions in challenging environments.
+
+
+    Additionally, I have explored adaptive control techniques for robotic systems
+    facing parameter uncertainties and discontinuous friction. My proposed adaptive
+    learning control approach draws inspiration from human motor learning, utilizing
+    a composite error learning technique to improve tracking performance without the
+    need for high-gain feedback.
+
+
+    Through my research, I aim to bridge theoretical advancements with practical applications,
+    enhancing the performance and reliability of systems across various domains. I
+    am passionate about pushing the boundaries of technology to create innovative
+    solutions that address real-world challenges.'
+  type: BaseAgent
+coordinate_mode: graph
+engine_planner:
+  initial_progress: Starting the collaborative research idea generation based on the
+    provided Introduction.
+environment:
+  max_iterations: 3
+  name: Research Collaboration Environment
+  type: Research
+llm: together_ai/meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo
+memory:
+  type: SharedMemory
+metrics:
+  diversity_of_perspectives: true
+  engagement_level: true
+  evaluate_llm: gpt-4o-mini
+  relevance: true
+output:
+  file_path: result/tree_research_Llama3.1_70B.jsonl
+  format: jsonl
+relationships:
+- - agent1
+  - agent2
+  - collaborate with
+- - agent1
+  - agent3
+  - collaborate with
+task:
+  content: "\n            Dear Research Team,\n\n            You are collaborating\
+    \ to generate a new research idea based on the following Introduction:\n\n   \
+    \         **Introduction**\n\n             \n\n1 Introduction\n\nAnomalous sound\
+    \ detection (ASD) aims to detect anomalies from acoustic signals. Since anomalous\
+    \ sounds can indicate system error or malicious activities, ASD has received much\
+    \ attention [1, 2, 3, 4, 5], which has been widely used in various applications,\
+    \ such as road surveillance [6, 7], animal disease detection [8], and industrial\
+    \ equipment predictive maintenance [9]. Recently, ASD has also been used to monitor\
+    \ the abnormality of industrial machinery equipment, such as anomaly detection\
+    \ for surface-mounted device machine [10, 11], and the Detection and Classification\
+    \ of Acoustic Scenes and Events (DCASE) challenge Task2 from 2020 to 2023 [12,\
+    \ 13, 14, 15], to reduce the loss caused by machine damage and the cost of manual\
+    \ inspection.\n\n\nSupervised learning based methods usually train a binary classifier\
+    \ to detect the anomaly [7, 16]. However, it is hard to collect enough anomalous\
+    \ data for supervised learning, as actual anomalous sounds rarely occur in real\
+    \ scenarios. In addition, the high diversity of the anomalies can reduce the robustness\
+    \ of supervised methods. Therefore, unsupervised methods are often employed to\
+    \ detect unknown anomalous sounds without using anomalous sound samples.\n\n\n\
+    In unsupervised ASD, a method is to employ the autoencoder (AE) to learn the distributions\
+    \ of sound signals and perform anomaly detection. Conventional AE-based approaches\
+    \ adopt autoencoder to reconstruct multiple frames of spectrogram to learn the\
+    \ distribution of normal sounds, and then the reconstruction error is used to\
+    \ obtain the anomaly score for anomaly detection [10, 12, 17, 18, 19]. However,\
+    \ the conventional AE-based methods do not work well for non-stationary ASD [20],\
+    \ as non-stationary normal sounds (e.g., sound signals of valves) can easily have\
+    \ larger reconstruction errors than abnormal sounds, thus deteriorating the detection\
+    \ performance. In [20], an interpolation deep neural network (IDNN) method is\
+    \ proposed, which masks the center frame of the input, and only uses the reconstruction\
+    \ error of the masked center frame to improve non-stationary sound reconstruction,\
+    \ without considering the edge frames. While the method in [21] adopts a similar\
+    \ strategy as IDNN, and applies the local area mask on the input and employs attentive\
+    \ neural process (ANP) [22] for the reconstruction of the masked input.\n\n\n\
+    Instead of reconstructing spectrogram feature, the method in [23] mixes multiple\
+    \ features as the input, and adopts a fully connected U-Net for the mixed feature\
+    \ reconstruction. To utilize the intra-frame statistics of sound signal, a novel\
+    \ group masked autoencoder for distribution estimation (Group MADE) is proposed\
+    \ for unsupervised ASD [24, 25], which estimates the density of an audio time\
+    \ series and achieves better performance. However, the distributions of normal\
+    \ audio clips from different machines are different even for the same sound class.\
+    \ This difference can be even greater than that between normal and anomalous sound,\
+    \ which makes it harder to distinguish normal and anomalous sounds for these purely\
+    \ AE-based methods, as the learned feature from these normal sounds may also fit\
+    \ with the anomalous sounds [26].\n\n\nMachine identity (ID) has been used as\
+    \ the additional condition for encoding in the latent feature space of AE, in\
+    \ order to allow the decoder to provide different reconstructions for each machine\
+    \ [27, 28]. However, the encoder\n\n            **Your Task**\n\n            1.\
+    \ **Literature Review**: Analyze the Introduction provided and conduct a brief\
+    \ literature review to understand the current state of research in this area.\n\
+    \n            2. **Brainstorming**: Collaboratively brainstorm potential research\
+    \ ideas that build upon or address gaps in the Introduction.\n\n            3.\
+    \ **Summarization**: Summarize your collective ideas.\n\n            4. **Formulate\
+    \ a New Research Idea**: Develop a new research proposal in the format of the\
+    \ '5q', defined below:\n\n               **Here is a high-level summarized insight\
+    \ of a research field Machine Learning.**\n\n               **Here are the five\
+    \ core questions:**\n\n               **[Question 1] - What is the problem?**\n\
+    \n               Formulate the specific research question you aim to address.\
+    \ Only output one question and do not include any more information.\n\n      \
+    \         **[Question 2] - Why is it interesting and important?**\n\n        \
+    \       Explain the broader implications of solving this problem for the research\
+    \ community.\n               Discuss how such a paper will affect future research.\n\
+    \               Discuss how addressing this question could advance knowledge or\
+    \ lead to practical applications.\n\n               **[Question 3] - Why is it\
+    \ hard?**\n\n               Discuss the challenges and complexities involved in\
+    \ solving this problem.\n               Explain why naive or straightforward approaches\
+    \ may fail.\n               Identify any technical, theoretical, or practical\
+    \ obstacles that need to be overcome. MAKE IT CLEAR.\n\n               **[Question\
+    \ 4] - Why hasn't it been solved before?**\n\n               Identify gaps or\
+    \ limitations in previous research or existing solutions.\n               Discuss\
+    \ any barriers that have prevented this problem from being solved until now.\n\
+    \               Explain how your approach differs from or improves upon prior\
+    \ work. MAKE IT CLEAR.\n\n               **[Question 5] - What are the key components\
+    \ of my approach and results?**\n\n               Outline your proposed methodology\
+    \ in detail, including the method, dataset, and metrics that you plan to use.\n\
+    \               Describe the expected outcomes. MAKE IT CLEAR.\n\n           \
+    \ Please work together to produce the '5q' for your proposed research idea.\n\n\
+    \            Good luck!\n            "
+  output_format: "You should answer the task in the fllowing format:\n           \
+    \     **[Question 1] - What is the problem?**\n\n                Formulate the\
+    \ specific research question you aim to address. Only output one question and\
+    \ do not include any more information.\n\n                **[Question 2] - Why\
+    \ is it interesting and important?**\n\n                Explain the broader implications\
+    \ of solving this problem for the research community.\n                Discuss\
+    \ how such a paper will affect future research.\n                Discuss how addressing\
+    \ this question could advance knowledge or lead to practical applications.\n\n\
+    \                **[Question 3] - Why is it hard?**\n\n                Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \        Explain why naive or straightforward approaches may fail.\n         \
+    \       Identify any technical, theoretical, or practical obstacles that need\
+    \ to be overcome. MAKE IT CLEAR.\n\n                **[Question 4] - Why hasn't\
+    \ it been solved before?**\n\n                Identify gaps or limitations in\
+    \ previous research or existing solutions.\n                Discuss any barriers\
+    \ that have prevented this problem from being solved until now.\n            \
+    \    Explain how your approach differs from or improves upon prior work. MAKE\
+    \ IT CLEAR.\n\n                **[Question 5] - What are the key components of\
+    \ my approach and results?**\n\n                Outline your proposed methodology\
+    \ in detail, including the method, dataset, and metrics that you plan to use.\n\
+    \                Describe the expected outcomes. MAKE IT CLEAR."

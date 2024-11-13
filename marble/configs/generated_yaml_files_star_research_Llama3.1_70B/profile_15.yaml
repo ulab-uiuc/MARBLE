@@ -1,0 +1,169 @@
+agents:
+- agent_id: agent1
+  profile: 'I am a researcher dedicated to advancing the field of robotics, particularly
+    in the areas of navigation and motion planning. My recent work focuses on the
+    application of diffusion models to end-to-end navigation, where I explore the
+    integration of perception and planning. I have developed a novel diffusion model
+    that generates collision-free paths in complex 2D environments, leveraging egocentric
+    LIDAR scans and arbitrary maps to facilitate real-time localization and planning.
+
+
+    In addition to my work on diffusion models, I have also created a motion planning
+    framework tailored for multi-modal vehicle dynamics. By employing sparse factor
+    graphs, I optimize trajectories for vehicles with varying dynamics, such as airplanes
+    and VTOL aircraft. This approach not only enhances the efficiency of mode transitions
+    but also streamlines the optimization process, allowing for effective trajectory
+    planning in both simulated and real-world scenarios.
+
+
+    Through my research, I aim to bridge the gap between theoretical advancements
+    and practical applications in robotics, contributing to the development of intelligent
+    systems capable of navigating complex environments with precision and adaptability.'
+  type: BaseAgent
+- agent_id: agent2
+  profile: 'I am a researcher specializing in the application of diffusion models
+    to robotics, particularly in the realms of navigation, perception, and planning.
+    My recent work focuses on developing innovative solutions for end-to-end navigation,
+    where I have successfully integrated global localization and path planning in
+    complex 2D environments. By leveraging diffusion models, I have created a framework
+    that generates collision-free paths based on egocentric LIDAR scans and arbitrary
+    maps, showcasing the model''s ability to generalize across diverse environments.
+
+
+    Additionally, I have explored multi-modal vehicle dynamics through a motion planning
+    framework that utilizes sparse factor graphs. This approach allows for efficient
+    optimization of trajectories while accommodating various vehicle dynamics, such
+    as those of airplanes and VTOL aircraft. My research emphasizes the importance
+    of optimizing mode transitions and trajectory planning, enabling real-world applications
+    in both simulation and practical scenarios.
+
+
+    Through my work, I aim to bridge the gap between theoretical advancements and
+    practical implementations in robotics, contributing to the development of robust
+    and efficient navigation systems.'
+  type: BaseAgent
+coordinate_mode: graph
+engine_planner:
+  initial_progress: Starting the collaborative research idea generation based on the
+    provided Introduction.
+environment:
+  max_iterations: 3
+  name: Research Collaboration Environment
+  type: Research
+llm: together_ai/meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo
+memory:
+  type: SharedMemory
+metrics:
+  diversity_of_perspectives: true
+  engagement_level: true
+  evaluate_llm: gpt-4o-mini
+  relevance: true
+output:
+  file_path: result/star_research_Llama3.1_70B.jsonl
+  format: jsonl
+relationships:
+- - agent1
+  - agent2
+  - collaborate with
+task:
+  content: "\n            Dear Research Team,\n\n            You are collaborating\
+    \ to generate a new research idea based on the following Introduction:\n\n   \
+    \         **Introduction**\n\n             Introduction to Multiple Time Series\
+    \ Analysis . Springer Science & Business Media,\n2005.\n[44] J. E. Matheson and\
+    \ R. L. Winkler. Scoring rules for continuous probability distributions. Management\n\
+    Science , 22(10):1087\u20131096, 1976.\n[45] A. Nichol and P. Dhariwal. Improved\
+    \ denoising diffusion probabilistic models. CoRR , abs/2102.09672,\n2021.\n[46]\
+    \ B. Peng, E. Alcaide, Q. Anthony, A. Albalak, S. Arcadinho, S. Biderman, H. Cao,\
+    \ X. Cheng, M. Chung,\nL. Derczynski, X. Du, M. Grella, K. Gv, X. He, H. Hou,\
+    \ P. Kazienko, J. Kocon, J. Kong, B. Koptyra,\nH. Lau, J. Lin, K. S. I. Mantri,\
+    \ F. Mom, A. Saito, G. Song, X. Tang, J. Wind, S. Wo \xB4zniak, Z. Zhang,\nQ.\
+    \ Zhou, J. Zhu, and R.-J. Zhu. RWKV: Reinventing RNNs for the transformer era.\
+    \ In H. Bouamor,\nJ. Pino, and K. Bali, editors, Findings of the Association for\
+    \ Computational Linguistics: EMNLP 2023 ,\npages 14048\u201314077, Singapore,\
+    \ Dec. 2023. Association for Computational Linguistics.\n[47] C. Raffel, N. Shazeer,\
+    \ A. Roberts, K. Lee, S. Narang, M. Matena, Y . Zhou, W. Li, and P. J. Liu. Exploring\n\
+    the limits of transfer learning with a unified text-to-text transformer. CoRR\
+    \ , abs/1910.10683, 2019.\n[48] K. Rasul, C. Seward, I. Schuster, and R. V ollgraf.\
+    \ Autoregressive Denoising Diffusion Models for\nMultivariate Probabilistic Time\
+    \ Series Forecasting. In Proceedings of the 38th International Conference\non\
+    \ Machine Learning , volume 139 of Proceedings of Machine Learning Research ,\
+    \ 2021.\n[49] K. Rasul, A.-S. Sheikh, I. Schuster, U. M. Bergmann, and R. V ollgraf.\
+    \ Multivariate probabilistic time series\nforecasting via conditioned normalizing\
+    \ flows. In International Conference on Learning Representations ,\n2021.\n[50]\
+    \ T. Salimans and J. Ho. Progressive distillation for fast sampling of diffusion\
+    \ models. CoRR , abs/2202.00512,\n2022.\n[51] D. Salinas, M. Bohlke-Schneider,\
+    \ L. Callot, R. Medico, J. Gasthaus, and R. Medico. High-dimensional\nmultivariate\
+    \ forecasting with low-rank gaussian copula processes. In NeurIPS , 2019.\n[52]\
+    \ D. Salinas, V . Flunkert, J. Gasthaus, and T. Januschowski. Deepar: Probabilistic\
+    \ forecasting with autore-\ngressive recurrent networks. International Journal\
+    \ of Forecasting , 36(3):1181\u20131191, 2020.\n[53] D. Salinas, V . Flunkert,\
+    \ J. Gasthaus, and T. Januschowski. Deepar: Probabilistic forecasting with autore-\n\
+    gressive recurrent networks. International Journal of Forecasting , 36(3):1181\u2013\
+    1191, 2020.\n[54] J. Sohl-Dickstein, E. Weiss, N. Maheswaranathan, and S. Ganguli.\
+    \ Deep unsupervised learning using\nnonequilibrium thermodynamics. In Proceedings\
+    \ of the International Conference on Machine Learning\n(ICML) , 2015.\n[55] J.\
+    \ Song, C. Meng, and S. Ermon. Denoising diffusion implicit models. CoRR , abs/2010.02502,\
+    \ 2020.\n[56] B. Tang and D. S. Matteson. Probabilistic transformer for time series\
+    \ analysis. In A. Beygelzimer,\nY . Dauphin, P. Liang, and J. W. Vaughan, editors,\
+    \ Advances in Neural Information Processing Systems ,\n2021.\n[57] H. Touvron,\
+    \ P. Bojanowski, M. Caron, M. Cord, A. El-Nouby, E. Grave, A. Joulin, G. Synnaeve,\
+    \ J. Verbeek,\nand H. J \xB4egou. Resmlp: Feedforward networks for image classification\
+    \ with data-efficient training. CoRR ,\nabs/2105.03404, 2021.\n[58] A. Van den\
+    \ Oord, N. Kalchbrenner, L. Espeholt, O. Vinyals, A. Graves, et al. Conditional\
+    \ image generation\nwith pixelcnn decoders. Advances in neural information processing\
+    \ systems , 29, 2016.\n[59] R. van der Weide. Go-garch: A multivariate generalized\
+    \ orthogonal garch model. Journal of Applied\nEconometrics , 17(5):549\u2013564,\
+    \ 2002.\n[60] C. Wei, K. Mangalam, P.-Y . Huang, Y . Li, H. Fan, H. Xu, H. Wang,\
+    \ C. Xie, A. Yuille, and C. Feichtenhofer.\nDiffusion models as masked autoencoders.\
+    \ In Proceedings of the IEEE/CVF\n\n            **Your Task**\n\n            1.\
+    \ **Literature Review**: Analyze the Introduction provided and conduct a brief\
+    \ literature review to understand the current state of research in this area.\n\
+    \n            2. **Brainstorming**: Collaboratively brainstorm potential research\
+    \ ideas that build upon or address gaps in the Introduction.\n\n            3.\
+    \ **Summarization**: Summarize your collective ideas.\n\n            4. **Formulate\
+    \ a New Research Idea**: Develop a new research proposal in the format of the\
+    \ '5q', defined below:\n\n               **Here is a high-level summarized insight\
+    \ of a research field Machine Learning.**\n\n               **Here are the five\
+    \ core questions:**\n\n               **[Question 1] - What is the problem?**\n\
+    \n               Formulate the specific research question you aim to address.\
+    \ Only output one question and do not include any more information.\n\n      \
+    \         **[Question 2] - Why is it interesting and important?**\n\n        \
+    \       Explain the broader implications of solving this problem for the research\
+    \ community.\n               Discuss how such a paper will affect future research.\n\
+    \               Discuss how addressing this question could advance knowledge or\
+    \ lead to practical applications.\n\n               **[Question 3] - Why is it\
+    \ hard?**\n\n               Discuss the challenges and complexities involved in\
+    \ solving this problem.\n               Explain why naive or straightforward approaches\
+    \ may fail.\n               Identify any technical, theoretical, or practical\
+    \ obstacles that need to be overcome. MAKE IT CLEAR.\n\n               **[Question\
+    \ 4] - Why hasn't it been solved before?**\n\n               Identify gaps or\
+    \ limitations in previous research or existing solutions.\n               Discuss\
+    \ any barriers that have prevented this problem from being solved until now.\n\
+    \               Explain how your approach differs from or improves upon prior\
+    \ work. MAKE IT CLEAR.\n\n               **[Question 5] - What are the key components\
+    \ of my approach and results?**\n\n               Outline your proposed methodology\
+    \ in detail, including the method, dataset, and metrics that you plan to use.\n\
+    \               Describe the expected outcomes. MAKE IT CLEAR.\n\n           \
+    \ Please work together to produce the '5q' for your proposed research idea.\n\n\
+    \            Good luck!\n            "
+  output_format: "You should answer the task in the fllowing format:\n           \
+    \     **[Question 1] - What is the problem?**\n\n                Formulate the\
+    \ specific research question you aim to address. Only output one question and\
+    \ do not include any more information.\n\n                **[Question 2] - Why\
+    \ is it interesting and important?**\n\n                Explain the broader implications\
+    \ of solving this problem for the research community.\n                Discuss\
+    \ how such a paper will affect future research.\n                Discuss how addressing\
+    \ this question could advance knowledge or lead to practical applications.\n\n\
+    \                **[Question 3] - Why is it hard?**\n\n                Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \        Explain why naive or straightforward approaches may fail.\n         \
+    \       Identify any technical, theoretical, or practical obstacles that need\
+    \ to be overcome. MAKE IT CLEAR.\n\n                **[Question 4] - Why hasn't\
+    \ it been solved before?**\n\n                Identify gaps or limitations in\
+    \ previous research or existing solutions.\n                Discuss any barriers\
+    \ that have prevented this problem from being solved until now.\n            \
+    \    Explain how your approach differs from or improves upon prior work. MAKE\
+    \ IT CLEAR.\n\n                **[Question 5] - What are the key components of\
+    \ my approach and results?**\n\n                Outline your proposed methodology\
+    \ in detail, including the method, dataset, and metrics that you plan to use.\n\
+    \                Describe the expected outcomes. MAKE IT CLEAR."

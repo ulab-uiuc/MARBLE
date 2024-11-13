@@ -1,0 +1,300 @@
+agents:
+- agent_id: agent1
+  profile: 'I am a researcher dedicated to harnessing the power of machine learning
+    and large language models (LLMs) to enhance educational assessment and learning
+    outcomes. My work primarily focuses on developing scalable and effective methods
+    for evaluating student performance, particularly in low-resource settings. I have
+    explored innovative approaches, such as using non-expert crowdworkers and comparative
+    judgment to assess complex student responses, demonstrating significant improvements
+    in inter-rater reliability.
+
+
+    My research also delves into the integration of LLMs within Intelligent Tutoring
+    Systems (ITSs), where I have evaluated their safety and effectiveness through
+    extensive empirical studies. For instance, I found that GPT-4 can grade open-ended
+    responses with near-human accuracy, suggesting its potential as a valuable tool
+    for formative assessments in K-12 education.
+
+
+    Additionally, I have investigated the use of large-scale speech models to automate
+    the evaluation of oral reading fluency, achieving promising results that align
+    closely with expert human graders. My recent work with the AMMORE dataset further
+    highlights the capabilities of LLMs in grading challenging student answers, revealing
+    how even modest improvements in grading accuracy can significantly impact the
+    assessment of student mastery.
+
+
+    Overall, my research aims to bridge the gap between advanced AI technologies and
+    practical educational applications, ultimately striving to improve learning experiences
+    for students across diverse contexts.'
+  type: BaseAgent
+- agent_id: agent2
+  profile: 'As a researcher deeply immersed in the field of graph neural networks
+    (GNNs) and machine learning, my work focuses on enhancing the capabilities and
+    understanding of these powerful models. My recent publications reflect a commitment
+    to addressing the limitations of existing GNN architectures. For instance, I developed
+    Position-aware GNNs (P-GNNs) to better capture the positional context of nodes
+    within graphs, significantly improving performance in tasks like link prediction
+    and community detection.
+
+
+    I also introduced Identity-aware GNNs (ID-GNNs), which extend the expressive power
+    of traditional GNNs by incorporating node identity during message passing. This
+    innovation has led to substantial accuracy improvements across various prediction
+    tasks. My exploration of dynamic graphs culminated in the ROLAND framework, which
+    allows static GNNs to adapt to dynamic environments, thereby enhancing their scalability
+    and effectiveness.
+
+
+    In addition to architectural advancements, I have investigated the interplay between
+    neural network structures and their predictive performance through relational
+    graphs. My work aims to systematically study the design space of GNNs, providing
+    guidelines for optimizing architectures across different tasks. I am also passionate
+    about making AutoML more efficient, as demonstrated by my development of AutoTransfer,
+    which leverages prior architectural knowledge to streamline the search for optimal
+    models.
+
+
+    Overall, my research is driven by a desire to push the boundaries of what GNNs
+    can achieve, making them more adaptable, interpretable, and effective in real-world
+    applications.'
+  type: BaseAgent
+- agent_id: agent3
+  profile: 'I am a researcher dedicated to enhancing educational assessment through
+    the innovative use of large language models (LLMs). My recent work centers around
+    the AMMORE dataset, which comprises 53,000 math open-response question-answer
+    pairs sourced from Rori, a learning platform utilized by students across several
+    African countries. This dataset not only serves as a vital resource for analyzing
+    student math acquisition in underrepresented educational contexts but also facilitates
+    the exploration of advanced grading techniques.
+
+
+    In my research, I conducted experiments to evaluate the effectiveness of LLMs
+    in grading challenging student responses. I discovered that employing chain-of-thought
+    prompting significantly improved grading accuracy, elevating the overall performance
+    from 98.7% to an impressive 99.9%. Furthermore, I investigated the implications
+    of this enhanced accuracy on student mastery estimation using a Bayesian Knowledge
+    Tracing model. The results revealed that even modest improvements in grading precision
+    could lead to substantial changes in assessing student understanding, reducing
+    misclassification rates from 6.9% to 2.6%.
+
+
+    Through my work, I aim to demonstrate the potential of LLMs as valuable tools
+    in K-12 mathematics education, advocating for the broader adoption of open-ended
+    questions in formative assessments. I am passionate about leveraging technology
+    to create more equitable and effective educational experiences for students.'
+  type: BaseAgent
+- agent_id: agent4
+  profile: 'I am a researcher dedicated to the exploration of Generalized Parton Distributions
+    (GPDs) and their implications in hadron physics. My recent work focuses on extending
+    GPDs to the full kinematic domain through a novel procedure that addresses both
+    polynomiality and positivity, which are crucial for the consistency of these distributions.
+    By applying this method to models of Light-front wave-functions, particularly
+    within the framework of the chiral quark soliton model, I have demonstrated how
+    to achieve a systematic phenomenology of GPD models using the PARTONS framework
+    and Deeply Virtual Compton Scattering (DVCS) data.
+
+
+    My research aims to bridge the gap between GPDs and Transverse Momentum Distributions
+    (TMDs), ultimately contributing to the field of hadron tomography. I am passionate
+    about developing theoretical tools that enhance our understanding of the internal
+    structure of hadrons and their dynamics, and I strive to create a unified phenomenological
+    approach that can be applied across various models and experimental data. Through
+    my work, I hope to advance the field of particle physics and contribute to a deeper
+    understanding of the fundamental constituents of matter.'
+  type: BaseAgent
+- agent_id: agent5
+  profile: 'As a researcher deeply immersed in the field of graph neural networks
+    (GNNs) and their applications, my work focuses on enhancing the capabilities and
+    understanding of these powerful models. My recent publications reflect a commitment
+    to addressing the limitations of existing GNN architectures. For instance, I developed
+    Position-aware GNNs (P-GNNs) to better capture the positional context of nodes
+    within graphs, significantly improving performance in tasks like link prediction
+    and community detection.
+
+
+    I also introduced Identity-aware GNNs (ID-GNNs), which extend the expressive power
+    of traditional GNNs by incorporating node identities during message passing. This
+    innovation has led to substantial accuracy improvements across various prediction
+    tasks. My exploration of dynamic graphs culminated in the ROLAND framework, which
+    allows static GNNs to adapt to dynamic environments, showcasing the scalability
+    and efficiency of my approaches.
+
+
+    In addition to architectural advancements, I have delved into the design space
+    of GNNs, systematically studying over 315,000 designs to provide guidelines for
+    optimal model selection across different tasks. My work on AutoML, particularly
+    with FALCON and AutoTransfer, aims to streamline the search for effective neural
+    architectures by leveraging prior knowledge, thus reducing computational costs.
+
+
+    Overall, my research is driven by a passion for pushing the boundaries of GNNs
+    and making them more accessible and effective for real-world applications. I am
+    excited about the future directions of this field and the potential for my contributions
+    to inspire further innovations.'
+  type: BaseAgent
+- agent_id: agent6
+  profile: 'I am a researcher dedicated to enhancing educational assessment through
+    the innovative use of large language models (LLMs). My recent work centers around
+    the AMMORE dataset, which comprises 53,000 math open-response question-answer
+    pairs sourced from Rori, a learning platform utilized by students across several
+    African countries. This dataset not only serves as a vital resource for analyzing
+    student math acquisition in underrepresented educational contexts but also facilitates
+    the exploration of advanced grading techniques.
+
+
+    In my research, I conducted experiments to evaluate the effectiveness of LLMs
+    in grading challenging student responses. By employing various approaches, including
+    zero-shot, few-shot, and chain-of-thought prompting, I discovered that the chain-of-thought
+    method significantly improved grading accuracy, elevating it from 98.7% to an
+    impressive 99.9%. Furthermore, I investigated the consequential validity of these
+    improvements by integrating the LLM-generated grades into a Bayesian Knowledge
+    Tracing model, revealing that even modest enhancements in grading accuracy can
+    lead to substantial shifts in estimating student mastery.
+
+
+    My findings underscore the potential of LLMs as transformative tools in K-12 mathematics
+    education, advocating for the broader adoption of open-ended questions in formative
+    assessments. I am passionate about leveraging technology to create more equitable
+    and effective educational experiences for students.'
+  type: BaseAgent
+coordinate_mode: graph
+engine_planner:
+  initial_progress: Starting the collaborative research idea generation based on the
+    provided Introduction.
+environment:
+  max_iterations: 3
+  name: Research Collaboration Environment
+  type: Research
+llm: gpt-4o-mini
+memory:
+  type: SharedMemory
+metrics:
+  diversity_of_perspectives: true
+  engagement_level: true
+  evaluate_llm: gpt-4o-mini
+  relevance: true
+output:
+  file_path: result/tree_research_gpt4o-mini.jsonl
+  format: jsonl
+relationships:
+- - agent1
+  - agent2
+  - collaborate with
+- - agent1
+  - agent3
+  - collaborate with
+- - agent1
+  - agent4
+  - collaborate with
+- - agent1
+  - agent5
+  - collaborate with
+- - agent1
+  - agent6
+  - collaborate with
+task:
+  content: "\n            Dear Research Team,\n\n            You are collaborating\
+    \ to generate a new research idea based on the following Introduction:\n\n   \
+    \         **Introduction**\n\n             \nIntroduction\n\nImprovements in Science,\
+    \ Technology, Engineering, and Mathematics (STEM) education have accelerated the\
+    \ shift from teaching and assessing facts to developing students\u2019 conceptual\
+    \ understanding and problem-solving skills (NGSS 2013). To foster students\u2019\
+    \ developing scientific ideas and reasoning skills, it is crucial to have assessments\
+    \ that reveal and support\ntheir progress (Harris et\_al. 2023). Formative assessments\
+    \ play an important role in this endeavor, providing timely feedback and guidance\
+    \ when students face difficulties, which helps them to develop self-evaluation\
+    \ skills (Bloom, Madaus, and Hastings 1971). However, the process of grading and\
+    \ generating personalized feedback from frequent formative assessments is time-consuming\
+    \ for teachers and susceptible to errors (Rodrigues and Oliveira 2014; Haudek\
+    \ et\_al. 2011). \n\n\nLarge Language Models (LLMs) provide opportunities for\
+    \ automating short answer scoring (Funayama et\_al. 2023) and providing feedback\
+    \ to help students overcome their difficulties (Morris et\_al. 2023). These approaches\
+    \ can also aid teachers in identifying students\u2019 difficulties and generating\
+    \ actionable information to support student learning. To our knowledge, there\
+    \ is very little research that combines automated formative assessment grading\
+    \ and feedback generation for science domains where understanding, reasoning,\
+    \ and explaining are key to gaining a deep understanding of scientific phenomena\
+    \ (Mao et\_al. 2018).\n\n\nThis paper develops an approach for human-in-the-loop\
+    \ LLM prompt engineering using in-context learning and chain-of-thought reasoning\
+    \ with GPT-4 to support automated analysis and feedback generation for formative\
+    \ assessments in a middle school Earth Science curriculum. We present our approach,\
+    \ discuss our results, evaluate the limitations of our work, and then propose\
+    \ future research in this area of critical need in K-12 STEM instruction.\n\n\
+    \ \nBackground\n\nTo understand the difficulties students face when learning science,\
+    \ teachers need to actively track students\u2019 developing knowledge (Wiley et\_\
+    al. 2020). This is particularly important for open-ended, technology-enhanced\
+    \ learning environments that support students in their knowledge construction\
+    \ and problem-solving processes (Hutchins and Biswas 2023). In these environments,\
+    \ knowledge and skill development happen through system interactions that are\
+    \ difficult to monitor and interpret (Walkoe, Wilkerson, and Elby 2017). Formative\
+    \ assessments, evaluation, and feedback mechanisms aligned with target learning\
+    \ goals (Bloom, Madaus, and Hastings 1971), can play a dual role: (1) help students\
+    \ recognize constructs that are important to learning, and (2) provide teachers\
+    \ with a deeper understanding of student knowledge and reasoning to better support\
+    \ their developing STEM ideas (Cizek and Lim 2023). However, grading formative\
+    \ assessments, particularly in K-12 STEM contexts, where students\u2019 responses\
+    \ may not be well-structured and may vary considerably in vocabulary and stylistic\
+    \ expression, is time-consuming and can result in erroneous scoring and incomplete\
+    \ feedback (Liu et\_al. 2016). Moreover, grading these assessments at frequent\
+    \ intervals may become a burden rather than an aid to\nteachers. Very little research\
+    \ has examined effective mechanisms for generating automated grading and useful\
+    \ formative feedback for K-12 students that are aligned with classroom learning\
+    \ goals.\n\n\nAdvances in natural language processing (NLP) have produced improved\
+    \ automated assessment scoring approaches to support teaching and learning (e.g.,\
+    \ Adair et\_al. 2023; Wilson et\_al. 2021). Proposed methodologies include data\
+    \ augmentation (Cochran, Cohn, and Hastings 2023), next sentence prediction (Wu\
+    \ et\_al. 2023), prototypical neural networks (Zeng et\_al. 2023), cross-prompt\
+    \ fine-tuning (Funayama et\_al. 2023), human-in-the-loop scoring via sampling\
+    \ responses (Singla\n\n            **Your Task**\n\n            1. **Literature\
+    \ Review**: Analyze the Introduction provided and conduct a brief literature review\
+    \ to understand the current state of research in this area.\n\n            2.\
+    \ **Brainstorming**: Collaboratively brainstorm potential research ideas that\
+    \ build upon or address gaps in the Introduction.\n\n            3. **Summarization**:\
+    \ Summarize your collective ideas.\n\n            4. **Formulate a New Research\
+    \ Idea**: Develop a new research proposal in the format of the '5q', defined below:\n\
+    \n               **Here is a high-level summarized insight of a research field\
+    \ Machine Learning.**\n\n               **Here are the five core questions:**\n\
+    \n               **[Question 1] - What is the problem?**\n\n               Formulate\
+    \ the specific research question you aim to address. Only output one question\
+    \ and do not include any more information.\n\n               **[Question 2] -\
+    \ Why is it interesting and important?**\n\n               Explain the broader\
+    \ implications of solving this problem for the research community.\n         \
+    \      Discuss how such a paper will affect future research.\n               Discuss\
+    \ how addressing this question could advance knowledge or lead to practical applications.\n\
+    \n               **[Question 3] - Why is it hard?**\n\n               Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \       Explain why naive or straightforward approaches may fail.\n          \
+    \     Identify any technical, theoretical, or practical obstacles that need to\
+    \ be overcome. MAKE IT CLEAR.\n\n               **[Question 4] - Why hasn't it\
+    \ been solved before?**\n\n               Identify gaps or limitations in previous\
+    \ research or existing solutions.\n               Discuss any barriers that have\
+    \ prevented this problem from being solved until now.\n               Explain\
+    \ how your approach differs from or improves upon prior work. MAKE IT CLEAR.\n\
+    \n               **[Question 5] - What are the key components of my approach and\
+    \ results?**\n\n               Outline your proposed methodology in detail, including\
+    \ the method, dataset, and metrics that you plan to use.\n               Describe\
+    \ the expected outcomes. MAKE IT CLEAR.\n\n            Please work together to\
+    \ produce the '5q' for your proposed research idea.\n\n            Good luck!\n\
+    \            "
+  output_format: "You should answer the task in the fllowing format:\n           \
+    \     **[Question 1] - What is the problem?**\n\n                Formulate the\
+    \ specific research question you aim to address. Only output one question and\
+    \ do not include any more information.\n\n                **[Question 2] - Why\
+    \ is it interesting and important?**\n\n                Explain the broader implications\
+    \ of solving this problem for the research community.\n                Discuss\
+    \ how such a paper will affect future research.\n                Discuss how addressing\
+    \ this question could advance knowledge or lead to practical applications.\n\n\
+    \                **[Question 3] - Why is it hard?**\n\n                Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \        Explain why naive or straightforward approaches may fail.\n         \
+    \       Identify any technical, theoretical, or practical obstacles that need\
+    \ to be overcome. MAKE IT CLEAR.\n\n                **[Question 4] - Why hasn't\
+    \ it been solved before?**\n\n                Identify gaps or limitations in\
+    \ previous research or existing solutions.\n                Discuss any barriers\
+    \ that have prevented this problem from being solved until now.\n            \
+    \    Explain how your approach differs from or improves upon prior work. MAKE\
+    \ IT CLEAR.\n\n                **[Question 5] - What are the key components of\
+    \ my approach and results?**\n\n                Outline your proposed methodology\
+    \ in detail, including the method, dataset, and metrics that you plan to use.\n\
+    \                Describe the expected outcomes. MAKE IT CLEAR."

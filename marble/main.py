@@ -9,6 +9,7 @@ import sys
 
 from marble.configs.config import Config
 from marble.engine.engine import Engine
+from tqdm import tqdm
 
 
 def parse_args() -> argparse.Namespace:
@@ -40,19 +41,32 @@ def main() -> None:
         sys.exit(1)
 
     # Iterate over all YAML files in the directory
-    for filename in os.listdir(args.config_path):
+    counter = 0
+    for filename in tqdm(os.listdir(args.config_path)):
         if filename.endswith(".yaml"):
             config_file_path = os.path.join(args.config_path, filename)
-
             # Load configuration
-            try:
-                config = Config.load(config_file_path)
-            except FileNotFoundError:
-                logging.error(f"Configuration file not found at path: {config_file_path}")
+            # try:
+            config = Config.load(config_file_path)
+            counter += 1
+            # Check the existence and line count of config.output['file_path']
+            output_file_path = config.output['file_path']
+            if not os.path.exists(output_file_path):
+                # Create the file if it doesn't exist
+                with open(output_file_path, 'w') as f:
+                    pass
+            # Count lines in the file
+            with open(output_file_path, 'r') as f:
+                line_count = sum(1 for _ in f)
+            # Continue the loop if counter is not equal to line count + 1
+            if counter != line_count + 1:
                 continue
-            except Exception as e:
-                logging.error(f"Error loading configuration from {config_file_path}: {e}")
-                continue
+            # except FileNotFoundError:
+            #     logging.error(f"Configuration file not found at path: {config_file_path}")
+            #     continue
+            # except Exception as e:
+            #     logging.error(f"Error loading configuration from {config_file_path}: {e}")
+            #     continue
 
             # Initialize and start the engine
             try:

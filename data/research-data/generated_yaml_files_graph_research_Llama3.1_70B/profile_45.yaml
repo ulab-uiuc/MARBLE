@@ -1,0 +1,231 @@
+agents:
+- agent_id: agent1
+  profile: 'I am a researcher specializing in natural language processing (NLP) with
+    a particular focus on machine translation (MT) and the integration of large language
+    models (LLMs) into this domain. My recent work explores the synergy between LLMs
+    and supervised MT systems, leveraging external feedback to enhance translation
+    quality. By fine-tuning models like LLaMA-2, I have demonstrated significant improvements
+    in translation metrics across multiple language pairs, including Chinese-English
+    and English-German.
+
+
+    I am also deeply invested in cross-lingual representation learning, where I introduced
+    the concept of semantic leakage and developed the ORACLE training objective to
+    improve the alignment of contextual representations in multilingual embeddings.
+    My research extends to innovative prompting strategies, such as Cross-lingual
+    QA, which optimize the use of in-context examples without compromising contextual
+    integrity.
+
+
+    Additionally, I have addressed practical challenges in lexically-constrained neural
+    machine translation (LNMT) by developing a homograph disambiguation module and
+    the PLUMCOT framework, which enhances the model''s ability to handle unseen lexical
+    constraints. My work culminates in the creation of HOLLY, a benchmark for evaluating
+    LNMT models under real-world conditions.
+
+
+    Beyond these technical contributions, I am committed to advancing the understanding
+    of prompting techniques in generative AI systems, establishing a structured taxonomy
+    that clarifies the diverse methodologies in this rapidly evolving field. My goal
+    is to bridge theoretical insights with practical applications, driving innovation
+    in multilingual NLP.'
+  type: BaseAgent
+- agent_id: agent2
+  profile: 'I am a researcher dedicated to advancing the fields of natural language
+    processing (NLP) and machine learning, with a particular focus on cross-lingual
+    sentence embeddings, traffic forecasting, and machine translation. My recent work
+    has explored the intricacies of semantic representation, leading to the development
+    of ORACLE, a novel training objective that effectively reduces semantic leakage
+    in multilingual embeddings. I have also tackled the challenges of traffic prediction
+    by introducing ResCAL, a residual estimation module that enhances existing models
+    by capturing autocorrelated errors.
+
+
+    In the realm of machine translation, I have pioneered personalized automatic post-editing
+    frameworks that adapt translations to individual user preferences, and I have
+    investigated domain adaptation strategies to optimize neural machine translation
+    models. My research extends to understanding crowd movement patterns in urban
+    environments, where I developed the PASTA model to predict city-wide crowd flows.
+
+
+    I am passionate about bridging the gap between deep learning models and real-world
+    applications, as demonstrated by my work on visual analytics systems like AttnAnalyzer,
+    which helps users interpret model behaviors in traffic forecasting. Additionally,
+    I have contributed to the development of HyperCLOVA X, a family of large language
+    models tailored to the Korean language, showcasing my commitment to enhancing
+    multilingual capabilities in AI.
+
+
+    Through my research, I aim to address complex challenges in NLP and machine learning,
+    ultimately contributing to more effective and user-centered technologies.'
+  type: BaseAgent
+- agent_id: agent3
+  profile: 'I am a researcher deeply engaged in the study of intercellular signaling,
+    foraging behavior in eusocial species, and the mathematical modeling of complex
+    biological systems. My recent work has focused on understanding the energy efficiency
+    of different signaling mechanisms, revealing how direct transport can outperform
+    diffusion under certain conditions. This insight has implications for long-range
+    cellular communication and the optimization of signaling pathways.
+
+
+    In addition to signaling, I have developed models to analyze the dynamics of group
+    foraging, demonstrating how communication strategies can lead to inefficiencies
+    in finite populations. This work bridges the gap between biological behavior and
+    mathematical theory, particularly in the context of multi-agent systems.
+
+
+    My research also extends to Turing pattern formation in reaction-diffusion-advection
+    systems, where I explore how stochastic dynamics can influence synaptogenesis
+    in organisms like *C. elegans*. By applying advanced mathematical techniques,
+    I have shown how noise can enhance the emergence of spontaneous patterns, contributing
+    to our understanding of developmental processes.
+
+
+    Furthermore, I have investigated cover times in search processes, providing new
+    insights into how multiple searchers can efficiently explore spatial regions.
+    My findings challenge existing assumptions in the literature and offer a universal
+    formula for cover times that is applicable across various contexts.
+
+
+    Overall, my work integrates theoretical modeling with biological applications,
+    aiming to uncover the underlying principles that govern complex systems in nature.
+    I am passionate about advancing our understanding of these phenomena and contributing
+    to interdisciplinary research that bridges biology, mathematics, and computational
+    science.'
+  type: BaseAgent
+coordinate_mode: graph
+engine_planner:
+  initial_progress: Starting the collaborative research idea generation based on the
+    provided Introduction.
+environment:
+  max_iterations: 3
+  name: Research Collaboration Environment
+  type: Research
+llm: together_ai/meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo
+memory:
+  type: SharedMemory
+metrics:
+  diversity_of_perspectives: true
+  engagement_level: true
+  evaluate_llm: gpt-4o-mini
+  relevance: true
+output:
+  file_path: result/graph_research_Llama3.1_70B.jsonl
+  format: jsonl
+relationships:
+- - agent1
+  - agent2
+  - collaborate with
+- - agent1
+  - agent3
+  - collaborate with
+- - agent2
+  - agent3
+  - collaborate with
+task:
+  content: "\n            Dear Research Team,\n\n            You are collaborating\
+    \ to generate a new research idea based on the following Introduction:\n\n   \
+    \         **Introduction**\n\n             Introduction\nUniversal cross-lingual\
+    \ sentence embeddings map\nthe sentences from multiple languages into a\nshared\
+    \ embedding space, where semantically sim-\nilar sentences across languages are\
+    \ close to each\nother. These embeddings have a wide spectrum\nof applications\
+    \ such as multi-lingual document re-\ntrieval (Artetxe and Schwenk, 2019a; Lin\
+    \ et al.,\n2020), multi-lingual question answering (Asai\net al., 2021a,b; Kumar\
+    \ et al., 2022), unsupervised\nmachine translation (Tran et al., 2020), and zero-\n\
+    shot transfer learning (Phang et al., 2020).\nAs shown in Figure 1 (a), without\
+    \ \uFB01netuning\non downstream tasks, the embedding space of pre-\ntrained multilingual\
+    \ language models such as m-\nBERT (Devlin et al., 2019) or XLM-R (Conneau\net\
+    \ al., 2020) separate the embeddings of each lan-\nguage into different clusters.\
+    \ To align cross-lingual\n1Our code is publicly available at https://github.\n\
+    com/yaushian/mSimCSE .\n(a) XLM-R without \uFB01netun-\ning.\n(b) XLM-R \uFB01\
+    ntuned on En-\nglish NLI data.\nFigure 1: We visualize the sentence embeddings\
+    \ on\nXNLI corpus, where blue dots and green dots denote\nthe sentences from English\
+    \ and Swahili respectively.\nHere, red dots, black dots, and purple dots denote\
+    \ the\nparallel sentences from different languages. In (a),\nthe sentence embeddings\
+    \ from different languages are\nclearly separated into two clusters. In (b), after\
+    \ English\nNLI training, the embedding space becomes indistin-\nguishable for\
+    \ different languages, and the parallel sen-\ntences are aligned to each other.\n\
+    sentence embeddings, previous work (Artetxe and\nSchwenk, 2019a; Chidambaram et\
+    \ al., 2019; Feng\net al., 2020) \uFB01netunes multilingual language mod-\nels\
+    \ with billions of parallel data. However, it is\nnon-trivial to obtain numerous\
+    \ parallel data for all\nlanguages. One potential direction to alleviate the\n\
+    need for parallel data is to enhance cross-lingual\ntransfer of sentence embeddings.\n\
+    Pre-trained multilingual language models (Pires\net al., 2019; Phang et al., 2020)\
+    \ have shown im-\npressive performance on cross-lingual zero-shot\ntransfer (Pires\
+    \ et al., 2019) that a model \uFB01netuned\non a source language can generalize\
+    \ to target lan-\nguages. This implies the representations \uFB01netuned\non downstream\
+    \ tasks are universal across various\nlanguages. In this work, we explore various\
+    \ cross-\nlingual transfer settings on sentence retrieval tasks,\nespecially in\
+    \ the setting of using English data only.\nWe propose multilingual-SimCSE (mSimCSE)\n\
+    which extends SimCSE (Gao et al., 2021), a fa-\nmous sentence embedding method\
+    \ on English, to\nmultilingual for cross-lingual transfer. SimCSE isarXiv:2211.06127v1\
+    \  [cs.CL]  11 Nov 2022a contrastive learning (Chopra et al., 2005; Hadsell\n\
+    et al., 2006; Chen et al., 2020a) method that pulls\ncloser semantically similar\
+    \ sentences (i.e. positive\nsentence pairs) in embeddings space. As done in\n\
+    SimCSE, we obtain positive training pairs by either\nnatural language inference\
+    \ (NLI) (Conneau et al.,\n2017; Reimers and Gurevych, 2019) supervision or\nunsupervised\
+    \ data augmentation using dropout. We\nalso investigate model performance when\
+    \ a small\namount of parallel data or cross-lingual NLI data\nare available.\n\
+    In our experiments.\nWe use our method to \uFB01netune XLM-Roberta-large\n(XLM-R)\
+    \ (Conneau et al., 2020). We examine the\nperformance of different hyperparameters\
+    \ in Ap-\npendix A\nTraining Data for Different mSimCSE Strate-\ngies In unsupervised\
+    \ mSimCSE and English NLI\nsupervised mSimCSE, we use the pre-processed\nEnglish\
+    \ Wikipedia and English NLI training tuples\ndownloaded from the SimCSE codebase\
+    \ respec-\ntively. In all the tables in this paper, the subscripts\nofmSimCSE\
+    \ denote the languages that we use\nto train our model. In cross-lingual NLI supervi-\n\
+    sion,mSimCSE en;fr denotes we use English and\ntranslated French NLI data to train\
+    \ our model and\nmSimCSE allmeans that we use all the languages\nin XNLI (Conneau\
+    \ et al., 2018) dataset.\nIn supervised \uFB01netuning, mSimCSE swdenotes\nthat\
+    \ we use the translation pairs of English and\nSwahili. For each language, we\n\
+    \n            **Your Task**\n\n            1. **Literature Review**: Analyze the\
+    \ Introduction provided and conduct a brief literature review to understand the\
+    \ current state of research in this area.\n\n            2. **Brainstorming**:\
+    \ Collaboratively brainstorm potential research ideas that build upon or address\
+    \ gaps in the Introduction.\n\n            3. **Summarization**: Summarize your\
+    \ collective ideas.\n\n            4. **Formulate a New Research Idea**: Develop\
+    \ a new research proposal in the format of the '5q', defined below:\n\n      \
+    \         **Here is a high-level summarized insight of a research field Machine\
+    \ Learning.**\n\n               **Here are the five core questions:**\n\n    \
+    \           **[Question 1] - What is the problem?**\n\n               Formulate\
+    \ the specific research question you aim to address. Only output one question\
+    \ and do not include any more information.\n\n               **[Question 2] -\
+    \ Why is it interesting and important?**\n\n               Explain the broader\
+    \ implications of solving this problem for the research community.\n         \
+    \      Discuss how such a paper will affect future research.\n               Discuss\
+    \ how addressing this question could advance knowledge or lead to practical applications.\n\
+    \n               **[Question 3] - Why is it hard?**\n\n               Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \       Explain why naive or straightforward approaches may fail.\n          \
+    \     Identify any technical, theoretical, or practical obstacles that need to\
+    \ be overcome. MAKE IT CLEAR.\n\n               **[Question 4] - Why hasn't it\
+    \ been solved before?**\n\n               Identify gaps or limitations in previous\
+    \ research or existing solutions.\n               Discuss any barriers that have\
+    \ prevented this problem from being solved until now.\n               Explain\
+    \ how your approach differs from or improves upon prior work. MAKE IT CLEAR.\n\
+    \n               **[Question 5] - What are the key components of my approach and\
+    \ results?**\n\n               Outline your proposed methodology in detail, including\
+    \ the method, dataset, and metrics that you plan to use.\n               Describe\
+    \ the expected outcomes. MAKE IT CLEAR.\n\n            Please work together to\
+    \ produce the '5q' for your proposed research idea.\n\n            Good luck!\n\
+    \            "
+  output_format: "You should answer the task in the fllowing format:\n           \
+    \     **[Question 1] - What is the problem?**\n\n                Formulate the\
+    \ specific research question you aim to address. Only output one question and\
+    \ do not include any more information.\n\n                **[Question 2] - Why\
+    \ is it interesting and important?**\n\n                Explain the broader implications\
+    \ of solving this problem for the research community.\n                Discuss\
+    \ how such a paper will affect future research.\n                Discuss how addressing\
+    \ this question could advance knowledge or lead to practical applications.\n\n\
+    \                **[Question 3] - Why is it hard?**\n\n                Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \        Explain why naive or straightforward approaches may fail.\n         \
+    \       Identify any technical, theoretical, or practical obstacles that need\
+    \ to be overcome. MAKE IT CLEAR.\n\n                **[Question 4] - Why hasn't\
+    \ it been solved before?**\n\n                Identify gaps or limitations in\
+    \ previous research or existing solutions.\n                Discuss any barriers\
+    \ that have prevented this problem from being solved until now.\n            \
+    \    Explain how your approach differs from or improves upon prior work. MAKE\
+    \ IT CLEAR.\n\n                **[Question 5] - What are the key components of\
+    \ my approach and results?**\n\n                Outline your proposed methodology\
+    \ in detail, including the method, dataset, and metrics that you plan to use.\n\
+    \                Describe the expected outcomes. MAKE IT CLEAR."

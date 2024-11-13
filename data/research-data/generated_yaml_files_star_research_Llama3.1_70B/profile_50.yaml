@@ -1,0 +1,226 @@
+agents:
+- agent_id: agent1
+  profile: 'I am a researcher deeply engaged in the field of generative models, particularly
+    focusing on enhancing the capabilities of Generative Adversarial Networks (GANs)
+    and diffusion models for image generation. My recent work has led to the development
+    of innovative architectures like DeshuffleGAN, which employs a self-supervised
+    deshuffling task to improve the learning of spatial structures in images, resulting
+    in more realistic outputs. I have also tackled the issue of codebook collapse
+    in discrete variational autoencoders (dVAEs) by introducing evidential deep learning
+    (EdVAE), which enhances reconstruction performance and codebook utilization.
+
+
+    My exploration of disentangled representation learning culminated in the FactorQVAE
+    model, which combines discrete representation learning with optimization-based
+    disentanglement, outperforming previous methods on key metrics. Additionally,
+    I have investigated the generalizability of self-supervised tasks across different
+    GAN architectures, demonstrating the effectiveness of deshuffling in improving
+    image generation quality.
+
+
+    More recently, I have shifted my focus to diffusion models, where I introduced
+    ProtoDiffusion, a method that leverages learned class prototypes to accelerate
+    training while maintaining high generation quality. My work also extends to text-guided
+    image generation, where I fine-tuned a diffusion model specifically for textile
+    pattern generation, showcasing its potential to revolutionize design processes
+    in the textile industry.
+
+
+    Through my research, I aim to push the boundaries of generative modeling, contributing
+    to both theoretical advancements and practical applications in computer vision.'
+  type: BaseAgent
+- agent_id: agent2
+  profile: 'I am a researcher specializing in the intersection of machine learning
+    and dynamical systems, with a particular focus on uncertainty quantification and
+    representation learning. My recent work has explored the development of Neural
+    Ordinary Differential Equations (N-ODEs) and their Bayesian counterparts, which
+    allow for robust prediction uncertainty quantification while maintaining the expressive
+    power of deterministic models. I have also contributed to the field of probabilistic
+    deep state-space models, where I leverage neural networks to model complex dynamical
+    systems with unknown parametric forms.
+
+
+    My research extends to innovative methods for closed-form predictive distribution
+    modeling, where I integrate evidential deep learning to enhance uncertainty quantification
+    capabilities. I have developed techniques for efficient moment matching in Neural
+    Stochastic Differential Equations (NSDEs) and proposed novel algorithms for bandit
+    problems, combining Bayesian and frequentist principles to improve decision-making
+    in non-stationary environments.
+
+
+    Additionally, I am passionate about disentangled representation learning and have
+    introduced models that facilitate the independent representation of generative
+    factors. My work emphasizes the importance of interpretability in machine learning,
+    as I strive to bridge the gap between black-box models and human-understandable
+    dynamics through symbolic regression.
+
+
+    Overall, my research aims to advance the understanding and application of machine
+    learning in dynamic environments, ensuring that models not only perform well but
+    also provide reliable uncertainty estimates and insights into the underlying processes
+    they represent.'
+  type: BaseAgent
+- agent_id: agent3
+  profile: 'I am a researcher dedicated to advancing the fields of image processing
+    and machine learning, with a particular focus on generative models and deep learning
+    architectures. My recent work has explored innovative solutions to challenges
+    in image inpainting, where I developed frameworks that effectively separate the
+    tasks of image reconstruction and artifact removal, significantly improving both
+    visual quality and quantitative metrics.
+
+
+    I have also contributed to the evolution of Generative Adversarial Networks (GANs)
+    through the introduction of the DeshuffleGAN, which enhances the learning of spatial
+    structures in images via self-supervised tasks. This work has demonstrated substantial
+    improvements in image generation quality across various datasets. My research
+    extends to depth estimation, where I reformulated the problem as a ranking task,
+    leveraging existing literature to enhance performance.
+
+
+    In addition, I have explored the integration of probabilistic models in federated
+    learning, addressing the critical need for uncertainty quantification in safety-critical
+    applications. My work on multi-label ranking has introduced novel methods that
+    utilize the inherent ranking information of labels, achieving state-of-the-art
+    results in both synthetic and real-world datasets.
+
+
+    Overall, my research aims to bridge the gap between theoretical advancements and
+    practical applications, providing robust solutions that enhance the capabilities
+    of machine learning systems in real-world scenarios. I am passionate about leveraging
+    AI to solve complex problems and contribute to the ongoing evolution of intelligent
+    systems.'
+  type: BaseAgent
+coordinate_mode: graph
+engine_planner:
+  initial_progress: Starting the collaborative research idea generation based on the
+    provided Introduction.
+environment:
+  max_iterations: 3
+  name: Research Collaboration Environment
+  type: Research
+llm: together_ai/meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo
+memory:
+  type: SharedMemory
+metrics:
+  diversity_of_perspectives: true
+  engagement_level: true
+  evaluate_llm: gpt-4o-mini
+  relevance: true
+output:
+  file_path: result/star_research_Llama3.1_70B.jsonl
+  format: jsonl
+relationships:
+- - agent1
+  - agent2
+  - collaborate with
+- - agent1
+  - agent3
+  - collaborate with
+task:
+  content: "\n            Dear Research Team,\n\n            You are collaborating\
+    \ to generate a new research idea based on the following Introduction:\n\n   \
+    \         **Introduction**\n\n            ABSTRACT\nThe Language of Thought Hypothesis\
+    \ suggests that human cognition operates\non a structured, language-like system\
+    \ of mental representations. While neural\nlanguage models can naturally benefit\
+    \ from the compositional structure inherently\nand explicitly expressed in language\
+    \ data, learning such representations from\nnon-linguistic general observations,\
+    \ like images, remains a challenge. In this\nwork, we introduce the Neural Language\
+    \ of Thought Model (NLoTM), a novel\napproach for unsupervised learning of LoTH-inspired\
+    \ representation and genera-\ntion. NLoTM comprises two key components: (1) the\
+    \ Semantic Vector-Quantized\nVariational Autoencoder, which learns hierarchical,\
+    \ composable discrete represen-\ntations aligned with objects and their properties,\
+    \ and (2) the Autoregressive LoT\nPrior, an autoregressive transformer that learns\
+    \ to generate semantic concept tokens\ncompositionally, capturing the underlying\
+    \ data distribution. We evaluate NLoTM\non several 2D and 3D image datasets, demonstrating\
+    \ superior performance in\ndownstream tasks, out-of-distribution generalization,\
+    \ and image generation quality\ncompared to patch-based VQ-V AE and continuous\
+    \ object-centric representations.\nOur work presents a significant step towards\
+    \ creating neural networks exhibiting\nmore human-like understanding by developing\
+    \ LoT-like representations and offers\ninsights into the intersection of cognitive\
+    \ science and machine learning.\n1 I NTRODUCTION\nThe Language of Thought Hypothesis\
+    \ (LoTH) (Fodor et al., 1975) suggests that human cognition is\nbased on a structured,\
+    \ language-like system of mental representations, often referred to as \u201C\
+    Mentalese\u201D.\nMentalese comprises word-like units that form sentence-like\
+    \ structures, which convey meaning. The\nmeaning of these mental \u201Csentences\u201D\
+    \ is systematically determined by the meanings of their constituent\n\u201Cwords\u201D\
+    \ and their specific arrangement. From a computational viewpoint, while neural\
+    \ language\nmodels (Bengio et al., 2000; Brown et al., 2020; Bommasani et al.,\
+    \ 2021) can benefit from the\ncompositional and symbolic structure inherently\
+    \ expressed in the language data they are trained on, it\nremains unclear how\
+    \ we can learn such LoT-like structure from non-linguistic general observations,\n\
+    such as images, videos, and audio signals. The significance of this ability is\
+    \ further highlighted by the\nfact that infants learn these structures from observing\
+    \ objects and events before they acquire language\nskills (Spelke, 2022).\nHow\
+    \ can we create neural networks that learn to develop such language of thought\
+    \ representations\nin an unsupervised way? To address this, we outline the following\
+    \ three properties as the desired\ncharacteristics of a neural language of thought\
+    \ model.\nFirst, when perceiving a visual scene, humans do not simply represent\
+    \ it as a monolithic vector of\nfeatures. Instead, we view the scene structurally\
+    \ and semantically, recognizing it as a composition\nof meaningful components\
+    \ such as objects and their attributes, including shape, color, and position\n\
+    (Palmer, 1977; Singer, 2007; Spelke & Kinzler, 2007). Our observation here is\
+    \ that in line with\nthe LoTH, these visual attributes can be likened to words,\
+    \ objects to sentences, and the scene to a\nparagraph. Recent works, particularly\
+    \ those focused on object-centric representations (Greff et al.,\n2020), have\
+    \ demonstrated that this structural decomposition facilitates the benefits associated\
+    \ with the\nLoTH such as relational reasoning (Wu et al., 2021; Yoon et al., 2023;\
+    \ Webb et al., 2023a;b) and out-\nof-distribution generalization (Dittadi et al.,\
+    \ 2022; Yoon et al., 2023) due to increased compositional\ngeneralization.\n\u2217\
+    Correspondence to sungjin.ahn@kaist.ac.kr\n1arXiv:2402.01203v2  [cs.LG]  16 Apr\
+    \ 2024Table 1: Desiderata for Neural Language of Thought Models and Related Models\n\
+    VAE VQ-VAE Slot Attention SysBinder NLoTM (Ours)\nCompositionality\n(Semantic\
+    \ Scene Decomposition)Factor \u2718 Object Object & Factor Object & Factor\nSymbolic\n\
+    (Discrete Concept Abstraction)\u2718 \u2713 (Patch Concept) \u2718 \u2718 \u2713\
+    \ (Semantic Concept)\nProductivity\n(Probabilistic Compositional Generation)\u2713\
+    \ \u2713\n\n            **Your Task**\n\n            1. **Literature Review**:\
+    \ Analyze the Introduction provided and conduct a brief literature review to understand\
+    \ the current state of research in this area.\n\n            2. **Brainstorming**:\
+    \ Collaboratively brainstorm potential research ideas that build upon or address\
+    \ gaps in the Introduction.\n\n            3. **Summarization**: Summarize your\
+    \ collective ideas.\n\n            4. **Formulate a New Research Idea**: Develop\
+    \ a new research proposal in the format of the '5q', defined below:\n\n      \
+    \         **Here is a high-level summarized insight of a research field Machine\
+    \ Learning.**\n\n               **Here are the five core questions:**\n\n    \
+    \           **[Question 1] - What is the problem?**\n\n               Formulate\
+    \ the specific research question you aim to address. Only output one question\
+    \ and do not include any more information.\n\n               **[Question 2] -\
+    \ Why is it interesting and important?**\n\n               Explain the broader\
+    \ implications of solving this problem for the research community.\n         \
+    \      Discuss how such a paper will affect future research.\n               Discuss\
+    \ how addressing this question could advance knowledge or lead to practical applications.\n\
+    \n               **[Question 3] - Why is it hard?**\n\n               Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \       Explain why naive or straightforward approaches may fail.\n          \
+    \     Identify any technical, theoretical, or practical obstacles that need to\
+    \ be overcome. MAKE IT CLEAR.\n\n               **[Question 4] - Why hasn't it\
+    \ been solved before?**\n\n               Identify gaps or limitations in previous\
+    \ research or existing solutions.\n               Discuss any barriers that have\
+    \ prevented this problem from being solved until now.\n               Explain\
+    \ how your approach differs from or improves upon prior work. MAKE IT CLEAR.\n\
+    \n               **[Question 5] - What are the key components of my approach and\
+    \ results?**\n\n               Outline your proposed methodology in detail, including\
+    \ the method, dataset, and metrics that you plan to use.\n               Describe\
+    \ the expected outcomes. MAKE IT CLEAR.\n\n            Please work together to\
+    \ produce the '5q' for your proposed research idea.\n\n            Good luck!\n\
+    \            "
+  output_format: "You should answer the task in the fllowing format:\n           \
+    \     **[Question 1] - What is the problem?**\n\n                Formulate the\
+    \ specific research question you aim to address. Only output one question and\
+    \ do not include any more information.\n\n                **[Question 2] - Why\
+    \ is it interesting and important?**\n\n                Explain the broader implications\
+    \ of solving this problem for the research community.\n                Discuss\
+    \ how such a paper will affect future research.\n                Discuss how addressing\
+    \ this question could advance knowledge or lead to practical applications.\n\n\
+    \                **[Question 3] - Why is it hard?**\n\n                Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \        Explain why naive or straightforward approaches may fail.\n         \
+    \       Identify any technical, theoretical, or practical obstacles that need\
+    \ to be overcome. MAKE IT CLEAR.\n\n                **[Question 4] - Why hasn't\
+    \ it been solved before?**\n\n                Identify gaps or limitations in\
+    \ previous research or existing solutions.\n                Discuss any barriers\
+    \ that have prevented this problem from being solved until now.\n            \
+    \    Explain how your approach differs from or improves upon prior work. MAKE\
+    \ IT CLEAR.\n\n                **[Question 5] - What are the key components of\
+    \ my approach and results?**\n\n                Outline your proposed methodology\
+    \ in detail, including the method, dataset, and metrics that you plan to use.\n\
+    \                Describe the expected outcomes. MAKE IT CLEAR."

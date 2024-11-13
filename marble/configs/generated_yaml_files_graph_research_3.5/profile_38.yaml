@@ -1,0 +1,205 @@
+agents:
+- agent_id: agent1
+  profile: 'I am a researcher dedicated to exploring the intricacies of sample compression
+    theory and its implications for machine learning, particularly in the context
+    of deep learning. My recent work focuses on developing a comprehensive framework
+    for deriving sample compression bounds that extend beyond the traditional zero-one
+    loss, allowing for real-valued losses. This advancement is crucial as it addresses
+    the limitations of existing methods, particularly when applied to complex models
+    like neural networks and decision forests.
+
+
+    Through my research, I have empirically validated the tightness and versatility
+    of these new bounds, demonstrating their effectiveness across various model types.
+    I am particularly excited about the Pick-To-Learn (P2L) meta-algorithm, which
+    I have integrated into my work to transform training methods into sample-compressed
+    predictors. My goal is to provide robust generalization guarantees that can enhance
+    the performance and efficiency of machine learning models, ultimately contributing
+    to the broader understanding of how we can leverage sample compression in practical
+    applications.'
+  type: BaseAgent
+- agent_id: agent2
+  profile: 'I am a researcher deeply engaged in the intersection of machine learning,
+    statistical theory, and data-driven decision-making. My work spans a variety of
+    topics, including the theoretical foundations of Lipschitz continuity in metrics,
+    the development of local Support Vector Machines (L$^3$-SVMs) with strong generalization
+    guarantees, and the exploration of decentralized machine learning frameworks that
+    prioritize user privacy.
+
+
+    I have a keen interest in adversarial robustness in deep neural networks, where
+    I proposed a novel defense mechanism that enhances model stability against adversarial
+    attacks. My research also delves into the learning of binary decision trees, where
+    I introduced a method that simultaneously optimizes discrete and continuous parameters,
+    yielding competitive performance in both supervised and unsupervised settings.
+
+
+    In the realm of probabilistic forecasting, I conducted a systematic study of proper
+    scoring rules for multivariate time series, revealing critical insights into their
+    reliability. I also contributed to the development of a new model for multivariate
+    time series prediction based on copula theory, achieving state-of-the-art results
+    across various tasks.
+
+
+    My recent work includes the introduction of innovative datasets like Cumulo for
+    cloud classification and RepLiQA for robust evaluation of language models, addressing
+    the challenges of data leakage in model training. I am passionate about leveraging
+    large language models to automate data insight discovery and improve decision-making
+    processes. Overall, my research aims to push the boundaries of machine learning
+    theory and its practical applications, fostering advancements that benefit both
+    academia and industry.'
+  type: BaseAgent
+- agent_id: agent3
+  profile: 'I am a researcher deeply engaged in the intersection of machine learning,
+    interpretability, and PAC-Bayesian theory. My recent work focuses on developing
+    binary activated neural networks that serve as interpretable predictors for regression
+    tasks on tabular data. I emphasize the importance of explainability and interpretability,
+    advocating for a unified approach that leverages the strengths of both concepts.
+    My contributions include theoretical advancements in domain adaptation, where
+    I have derived tighter PAC-Bayesian bounds and developed novel algorithms that
+    enhance performance across various tasks.
+
+
+    I have also explored the theoretical underpinnings of Variational Autoencoders
+    (VAEs) and generative models, providing statistical guarantees that improve their
+    practical applications. My research extends to the development of algorithms that
+    utilize sample compression theory, ensuring generalization across different types
+    of models, including decision trees and neural networks.
+
+
+    In addition, I have proposed innovative methods for explainable AI, such as Phoneme
+    Discretized Saliency Maps, which enhance the interpretability of AI-generated
+    voice detection. My work is driven by a commitment to making machine learning
+    models not only effective but also understandable, particularly in high-stakes
+    decision-making contexts. Through my research, I aim to bridge the gap between
+    complex models and their interpretability, ensuring that machine learning can
+    be both powerful and transparent.'
+  type: BaseAgent
+coordinate_mode: graph
+engine_planner:
+  initial_progress: Starting the collaborative research idea generation based on the
+    provided Introduction.
+environment:
+  max_iterations: 3
+  name: Research Collaboration Environment
+  type: Research
+llm: gpt-3.5-turbo
+memory:
+  type: SharedMemory
+metrics:
+  diversity_of_perspectives: true
+  engagement_level: true
+  evaluate_llm: gpt-4o-mini
+  relevance: true
+output:
+  file_path: result/graph_research_gpt3.5.jsonl
+  format: jsonl
+relationships:
+- - agent1
+  - agent2
+  - collaborate with
+- - agent1
+  - agent3
+  - collaborate with
+- - agent2
+  - agent3
+  - collaborate with
+task:
+  content: "\n            Dear Research Team,\n\n            You are collaborating\
+    \ to generate a new research idea based on the following Introduction:\n\n   \
+    \         **Introduction**\n\n             Introduction\nList learning is a natural\
+    \ generalization of supervised classification, in which, instead of predicting\
+    \ the\ncorrect label, the learner outputs a small list of labels, one of which\
+    \ should be the correct one. This approach\ncan be viewed as giving the learner\
+    \ more than one guess at the correct label.\nThere are many settings in which\
+    \ one may prefer the list learning approach to the classical one. For\nexample,\
+    \ recommendation systems often suggest a short list of products to users, with\
+    \ the hope that the\ncustomer will be interested in one of them (see Figure 1).\
+    \ Another example is the top- kloss function in\nwhich the model gets kguesses\
+    \ for each sample. This loss function is often used in ML competitions and\ncan\
+    \ be seen as a variant of list learning. Additionally, list learning addresses\
+    \ label ambiguity; for example,\nin computer vision recognition problems, it is\
+    \ often impossible to determine if a certain image is of a pond\nor a river. As\
+    \ a result, training a model for such problems by penalizing it for every mistake\
+    \ can be too\nrestrictive. However, using a top- kapproach seems like a reasonable\
+    \ alternative. This approach has been\nstudied in recent works such as Lapin,\
+    \ Hein, and Schiele (2015) and Yan, Luo, Liu, Li, and Zheng (2018),\nwhich demonstrate\
+    \ its usefulness in certain problems.\nList learning has also found applications\
+    \ in theoretical machine learning. For example in Brukhim,\nCarmon, Dinur, Moran,\
+    \ and Yehudayoff (2022) it was an essential part of establishing the equivalence\n\
+    \xA9 S. Hanneke, S. Moran & T. Waknine.arXiv:2403.10889v1  [cs.LG]  16 Mar 2024HANNEKE\
+    \ MORAN WAKNINE\nFigure 1: Amazon recommendation system gives their users a short\
+    \ list of books based on their past reading,\naiming that one of those books will\
+    \ capture their interest.\nbetween finite Daniely-Shwartz (DS) dimension and multiclass\
+    \ learnability. Consequently, list learning\nhas been studied in several recent\
+    \ works in learning theory. For example, Charikar and Pabbaraju (2022)\ncharacterized\
+    \ list PAC learnability by using a list variant of the DS dimension, and Moran,\
+    \ Sharon, Tsubari,\nand Yosebashvili (2023) characterized list online learnability\
+    \ using a list variant of the Littlestone dimension.\nAnother recent application\
+    \ of list learning is in the realm of multiclass boosting; Brukhim, Hanneke, and\n\
+    Moran (2023) employed it to devise the first boosting algorithm whose sample complexity\
+    \ is independent\nof the label space\u2019s size.\nA natural question that has\
+    \ not yet been systematically addressed is the identification of fundamental\n\
+    principles in list PAC learning. In the binary case, PAC learning is guided by\
+    \ fundamental algorithmic prin-\nciples, notably Empirical Risk Minimization,\
+    \ and Occam\u2019s Razor principles such as compression bounds. In\nthis work,\
+    \ we ask which of these foundational principles remains applicable in the domain\
+    \ of list learning.\n1.1. Our Contribution\nIn this section we summarize our main\
+    \ methods for simultaneously handling multiple instances of\na task than addressing\
+    \ them one by one. As an example, consider an n\xD7nmatrix Aand the objective\
+    \ of\ncalculating its product with an input column vector x, where the computational\
+    \ resource Cis the number\nof arithmetic operations. For a single vector x, it\
+    \ is easy to see that \u0398(n2)operations are necessary and\nsufficient. However,\
+    \ if instead of one input vector x, there are ninput vectors x1, . . . , x nthen\
+    \ one can do\nbetter than n\xD7\u0398(n2)\n\n            **Your Task**\n\n   \
+    \         1. **Literature Review**: Analyze the Introduction provided and conduct\
+    \ a brief literature review to understand the current state of research in this\
+    \ area.\n\n            2. **Brainstorming**: Collaboratively brainstorm potential\
+    \ research ideas that build upon or address gaps in the Introduction.\n\n    \
+    \        3. **Summarization**: Summarize your collective ideas.\n\n          \
+    \  4. **Formulate a New Research Idea**: Develop a new research proposal in the\
+    \ format of the '5q', defined below:\n\n               **Here is a high-level\
+    \ summarized insight of a research field Machine Learning.**\n\n             \
+    \  **Here are the five core questions:**\n\n               **[Question 1] - What\
+    \ is the problem?**\n\n               Formulate the specific research question\
+    \ you aim to address. Only output one question and do not include any more information.\n\
+    \n               **[Question 2] - Why is it interesting and important?**\n\n \
+    \              Explain the broader implications of solving this problem for the\
+    \ research community.\n               Discuss how such a paper will affect future\
+    \ research.\n               Discuss how addressing this question could advance\
+    \ knowledge or lead to practical applications.\n\n               **[Question 3]\
+    \ - Why is it hard?**\n\n               Discuss the challenges and complexities\
+    \ involved in solving this problem.\n               Explain why naive or straightforward\
+    \ approaches may fail.\n               Identify any technical, theoretical, or\
+    \ practical obstacles that need to be overcome. MAKE IT CLEAR.\n\n           \
+    \    **[Question 4] - Why hasn't it been solved before?**\n\n               Identify\
+    \ gaps or limitations in previous research or existing solutions.\n          \
+    \     Discuss any barriers that have prevented this problem from being solved\
+    \ until now.\n               Explain how your approach differs from or improves\
+    \ upon prior work. MAKE IT CLEAR.\n\n               **[Question 5] - What are\
+    \ the key components of my approach and results?**\n\n               Outline your\
+    \ proposed methodology in detail, including the method, dataset, and metrics that\
+    \ you plan to use.\n               Describe the expected outcomes. MAKE IT CLEAR.\n\
+    \n            Please work together to produce the '5q' for your proposed research\
+    \ idea.\n\n            Good luck!\n            "
+  output_format: "You should answer the task in the fllowing format:\n           \
+    \     **[Question 1] - What is the problem?**\n\n                Formulate the\
+    \ specific research question you aim to address. Only output one question and\
+    \ do not include any more information.\n\n                **[Question 2] - Why\
+    \ is it interesting and important?**\n\n                Explain the broader implications\
+    \ of solving this problem for the research community.\n                Discuss\
+    \ how such a paper will affect future research.\n                Discuss how addressing\
+    \ this question could advance knowledge or lead to practical applications.\n\n\
+    \                **[Question 3] - Why is it hard?**\n\n                Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \        Explain why naive or straightforward approaches may fail.\n         \
+    \       Identify any technical, theoretical, or practical obstacles that need\
+    \ to be overcome. MAKE IT CLEAR.\n\n                **[Question 4] - Why hasn't\
+    \ it been solved before?**\n\n                Identify gaps or limitations in\
+    \ previous research or existing solutions.\n                Discuss any barriers\
+    \ that have prevented this problem from being solved until now.\n            \
+    \    Explain how your approach differs from or improves upon prior work. MAKE\
+    \ IT CLEAR.\n\n                **[Question 5] - What are the key components of\
+    \ my approach and results?**\n\n                Outline your proposed methodology\
+    \ in detail, including the method, dataset, and metrics that you plan to use.\n\
+    \                Describe the expected outcomes. MAKE IT CLEAR."

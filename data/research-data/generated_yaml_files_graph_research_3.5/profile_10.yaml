@@ -1,0 +1,217 @@
+agents:
+- agent_id: agent1
+  profile: 'I am a researcher passionate about the intersection of natural language
+    processing (NLP) and machine learning, with a particular focus on leveraging advanced
+    models like Transformers and large language models (LLMs) for innovative applications.
+    My recent work includes developing novel fine-dining recipes using auto-regressive
+    language models, showcasing the potential of AI in culinary creativity. I have
+    also explored the challenges of multilingual mental health support, creating a
+    comprehensive dataset that evaluates LLM performance across multiple languages,
+    highlighting the nuances that can affect model accuracy.
+
+
+    In addition to my work in NLP, I have contributed to the field of graph learning,
+    addressing the limitations of deep graph neural networks (GNNs) through my research
+    on over-smoothing and over-squashing. My proposed Stochastic Jost and Liu Curvature
+    Rewiring (SJLR) algorithm offers a computationally efficient solution to enhance
+    representation learning in GNNs. I am also dedicated to improving text classification
+    through innovative regularization techniques, such as Orthogonal Matching Pursuit,
+    which balances sparsity and accuracy.
+
+
+    My research is driven by a commitment to advancing machine learning methodologies
+    and their applications across diverse domains, from culinary arts to mental health
+    and graph analysis. I strive to create tools and frameworks that not only push
+    the boundaries of current technologies but also provide practical solutions to
+    real-world challenges.'
+  type: BaseAgent
+- agent_id: agent2
+  profile: 'I am a researcher deeply engaged in the intersection of graph theory and
+    machine learning, with a particular focus on graph neural networks (GNNs) and
+    graph kernels. Over the years, I have contributed to the development of novel
+    algorithms and frameworks that enhance the understanding and application of structured
+    data. My work spans a wide range of topics, from proposing new graph kernels that
+    leverage message passing to creating libraries like GraKeL, which unifies various
+    graph kernels for practical use in machine learning pipelines.
+
+
+    Recently, I have explored the limitations of standard GNNs and developed more
+    expressive architectures, such as k-hop GNNs and Path Neural Networks, which can
+    capture fundamental graph properties and distinguish between non-isomorphic graphs.
+    My research also extends to dynamic graphs, where I have proposed models that
+    predict graph evolution over time, demonstrating the effectiveness of GNNs in
+    real-world applications, including epidemiological predictions during the COVID-19
+    pandemic.
+
+
+    In addition to my theoretical contributions, I have focused on practical implementations,
+    such as the Message Passing Attention network for document understanding and the
+    time-parameterized convolutional neural network for irregularly sampled time series.
+    My goal is to bridge the gap between theory and application, providing robust
+    solutions that can be readily utilized in various domains, from social networks
+    to bioinformatics. I am passionate about advancing the field of graph learning
+    and continuously seek to uncover new insights that can drive innovation in machine
+    learning.'
+  type: BaseAgent
+- agent_id: agent3
+  profile: 'I am a researcher with a strong focus on graph-based methodologies and
+    their applications in various domains, including natural language processing,
+    social networks, and machine learning. My work spans a diverse range of topics,
+    from developing innovative algorithms for graph isomorphism and influence maximization
+    to creating advanced frameworks for graph kernels and neural networks.
+
+
+    One of my notable contributions is the Continuous Bag-of-Skip-grams (CBOS) method,
+    which enhances word representation quality, particularly for the modern Greek
+    language. I have also explored the intricacies of Bitcoin''s blockchain, developing
+    heuristics to identify CoinJoin transactions, which are crucial for maintaining
+    user privacy.
+
+
+    In the realm of graph neural networks (GNNs), I have proposed several architectures,
+    including k-hop GNNs, which improve expressive power by aggregating information
+    from a broader neighborhood. My research on graph autoencoders and variational
+    autoencoders has led to the realization that simpler linear models can achieve
+    competitive performance, challenging the necessity of complex architectures.
+
+
+    Additionally, I have delved into the dynamics of social networks, proposing models
+    to predict the evolution of dynamic graphs and exploring the effectiveness of
+    various neural architecture search techniques. My work emphasizes the importance
+    of interpretability and efficiency in machine learning models, striving to bridge
+    the gap between theoretical advancements and practical applications. Through my
+    research, I aim to contribute to a deeper understanding of structured data and
+    its implications across multiple fields.'
+  type: BaseAgent
+coordinate_mode: graph
+engine_planner:
+  initial_progress: Starting the collaborative research idea generation based on the
+    provided Introduction.
+environment:
+  max_iterations: 3
+  name: Research Collaboration Environment
+  type: Research
+llm: gpt-3.5-turbo
+memory:
+  type: SharedMemory
+metrics:
+  diversity_of_perspectives: true
+  engagement_level: true
+  evaluate_llm: gpt-4o-mini
+  relevance: true
+output:
+  file_path: result/graph_research_gpt3.5.jsonl
+  format: jsonl
+relationships:
+- - agent1
+  - agent2
+  - collaborate with
+- - agent1
+  - agent3
+  - collaborate with
+- - agent2
+  - agent3
+  - collaborate with
+task:
+  content: "\n            Dear Research Team,\n\n            You are collaborating\
+    \ to generate a new research idea based on the following Introduction:\n\n   \
+    \         **Introduction**\n\n             \n\n1 Introduction\n\nGraph Structure\
+    \ Learning (GSL) is a burgeoning field of research that strives to unveil the\
+    \ underlying patterns and relationships within graph-structured data\_Jin et\_\
+    al. (2020); Fatemi et\_al. (2021). In GSL, the primary focus lies in unraveling\
+    \ the latent relationships and dependencies that may not be immediately discernible\
+    \ from the raw data. By generating these novel graph structures, GSL empowers\
+    \ us to gain a more comprehensive understanding of the data, thereby facilitating\
+    \ various downstream tasks, such as node classification\_Zhao et\_al. (2021a).\n\
+    \n\nIn recent years, graph neural networks (GNNs) have indeed captured significant\
+    \ attention and popularity due to their remarkable capacity to model and leverage\
+    \ relationships within graph-structured data\_Garg et\_al. (2020); Buterez et\_\
+    al. (2022). GNNs excel in learning node-level representations by effectively aggregating\
+    \ and propagating information from neighboring nodes in a graph. This exceptional\
+    \ capability has sparked a revolution in the analysis of graph-structured data,\
+    \ enabling a more comprehensive understanding of the underlying node-wise connection\
+    \ patterns and interactions.\n\n\nThe ability to capture and leverage the intricate\
+    \ dependencies within graphs has undoubtedly propelled graph neural networks (GNNs)\
+    \ to the forefront of graph structure learning\_Zhou et\_al. (2023). Notably,\
+    \ approaches like SLAPS Fatemi et\_al. (2021), Nodeformer Wu et\_al. (2022), and\
+    \ GT Shi et\_al. (2021) incorporate neural networks that collaborate with GNNs\
+    \ to generate novel graph structures. These models undergo co-optimization, ensuring\
+    \ a seamless and integrated learning process. Moreover, recent studies such as\
+    \ SEGSL\_Zou et\_al. (2023) and CoGSL Liu et\_al. (2022a) have introduced dynamic\
+    \ methods for learning the graph structure. These approaches adaptively learn\
+    \ the graph structure based on predictions or representations generated by optimized\
+    \ GNNs.\n\n\nWhile graph neural networks (GNNs) have demonstrated their high effectiveness,\
+    \ it is important to acknowledge that many of these approaches heavily depend\
+    \ on explicit graph structures, such as node links, as supervision signals for\
+    \ learning accurate representations. However, real-world graph domains often encounter\
+    \ challenges such as data noise and sparsity, which can compromise the reliability\
+    \ of these explicit graph structures.\n\n\nTo illustrate, let\u2019s consider\
+    \ a social network dataset where certain links are missing or incomplete due to\
+    \ privacy settings or limited data availability\_Dai et\_al. (2022). Additionally,\
+    \ in recommender systems, the user-item interaction graph may involve cold-start\
+    \ users or items, resulting in highly sparse links\_Lin et\_al. (2021). Furthermore,\
+    \ various types of bias present in recommender systems introduce noise into the\
+    \ data\_Wang et\_al. (2021b). In such cases, relying solely on explicit graph\
+    \ structures as supervision signals can lead to representations that are either\
+    \ inaccurate or biased. These challenges necessitate the development of more robust\
+    \ graph structure learning framework that can adapt to and overcome the impact\
+    \ of data imperfections in graph-structured data. \n\n\n\nContributions. In light\
+    \ of the challenges outlined earlier, this study seeks to explore how large language\
+    \ models (LLMs) can contribute to reasoning about the underlying graph structures.\
+    \ We introduce our proposed model, GraphEdit, which is designed to effectively\
+    \ refine graph structures. Our model\u2019s objective is twofold: first, to identify\
+    \ and address noisy connections between irrelevant nodes, and second, to uncover\
+    \ implicit node-wise dependencies. To achieve these goals, our model leverages\
+    \ the rich textual data associated with nodes in graph-structured data. By incorporating\
+    \ the text understanding\n\n            **Your Task**\n\n            1. **Literature\
+    \ Review**: Analyze the Introduction provided and conduct a brief literature review\
+    \ to understand the current state of research in this area.\n\n            2.\
+    \ **Brainstorming**: Collaboratively brainstorm potential research ideas that\
+    \ build upon or address gaps in the Introduction.\n\n            3. **Summarization**:\
+    \ Summarize your collective ideas.\n\n            4. **Formulate a New Research\
+    \ Idea**: Develop a new research proposal in the format of the '5q', defined below:\n\
+    \n               **Here is a high-level summarized insight of a research field\
+    \ Machine Learning.**\n\n               **Here are the five core questions:**\n\
+    \n               **[Question 1] - What is the problem?**\n\n               Formulate\
+    \ the specific research question you aim to address. Only output one question\
+    \ and do not include any more information.\n\n               **[Question 2] -\
+    \ Why is it interesting and important?**\n\n               Explain the broader\
+    \ implications of solving this problem for the research community.\n         \
+    \      Discuss how such a paper will affect future research.\n               Discuss\
+    \ how addressing this question could advance knowledge or lead to practical applications.\n\
+    \n               **[Question 3] - Why is it hard?**\n\n               Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \       Explain why naive or straightforward approaches may fail.\n          \
+    \     Identify any technical, theoretical, or practical obstacles that need to\
+    \ be overcome. MAKE IT CLEAR.\n\n               **[Question 4] - Why hasn't it\
+    \ been solved before?**\n\n               Identify gaps or limitations in previous\
+    \ research or existing solutions.\n               Discuss any barriers that have\
+    \ prevented this problem from being solved until now.\n               Explain\
+    \ how your approach differs from or improves upon prior work. MAKE IT CLEAR.\n\
+    \n               **[Question 5] - What are the key components of my approach and\
+    \ results?**\n\n               Outline your proposed methodology in detail, including\
+    \ the method, dataset, and metrics that you plan to use.\n               Describe\
+    \ the expected outcomes. MAKE IT CLEAR.\n\n            Please work together to\
+    \ produce the '5q' for your proposed research idea.\n\n            Good luck!\n\
+    \            "
+  output_format: "You should answer the task in the fllowing format:\n           \
+    \     **[Question 1] - What is the problem?**\n\n                Formulate the\
+    \ specific research question you aim to address. Only output one question and\
+    \ do not include any more information.\n\n                **[Question 2] - Why\
+    \ is it interesting and important?**\n\n                Explain the broader implications\
+    \ of solving this problem for the research community.\n                Discuss\
+    \ how such a paper will affect future research.\n                Discuss how addressing\
+    \ this question could advance knowledge or lead to practical applications.\n\n\
+    \                **[Question 3] - Why is it hard?**\n\n                Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \        Explain why naive or straightforward approaches may fail.\n         \
+    \       Identify any technical, theoretical, or practical obstacles that need\
+    \ to be overcome. MAKE IT CLEAR.\n\n                **[Question 4] - Why hasn't\
+    \ it been solved before?**\n\n                Identify gaps or limitations in\
+    \ previous research or existing solutions.\n                Discuss any barriers\
+    \ that have prevented this problem from being solved until now.\n            \
+    \    Explain how your approach differs from or improves upon prior work. MAKE\
+    \ IT CLEAR.\n\n                **[Question 5] - What are the key components of\
+    \ my approach and results?**\n\n                Outline your proposed methodology\
+    \ in detail, including the method, dataset, and metrics that you plan to use.\n\
+    \                Describe the expected outcomes. MAKE IT CLEAR."

@@ -1,0 +1,268 @@
+agents:
+- agent_id: agent1
+  profile: 'I am a researcher dedicated to advancing the fields of machine learning
+    and artificial intelligence, particularly in the context of polymer property prediction,
+    urban planning, feature transformation, and biomarker discovery. My recent work
+    focuses on developing innovative frameworks that address the limitations of existing
+    methodologies. For instance, I introduced the Traceable Group-wise Reinforcement
+    Generation Perspective to enhance polymer property predictions by automating descriptor
+    generation and selection, ensuring both optimality and explainability.
+
+
+    In urban planning, I proposed the Dual-stage Urban Flows (DSUF) framework, which
+    leverages normalizing flows to generate functional zones and land-use configurations
+    while capturing the intricate relationships among different urban zones. This
+    approach not only improves the stability and interpretability of the planning
+    process but also streamlines the design of urban environments.
+
+
+    My research also tackles the challenge of unsupervised feature transformation
+    learning (UFTL) by integrating graph, contrastive, and generative learning techniques.
+    This paradigm allows for the effective capture of complex feature interactions
+    without relying on expensive supervised feedback.
+
+
+    Additionally, I am passionate about biomarker discovery, where I developed a framework
+    that automates the identification of effective biomarker subsets through a multi-agent
+    system and an encoder-evaluator-decoder learning paradigm. This work aims to reduce
+    the reliance on extensive human effort while enhancing the efficiency and robustness
+    of biomarker identification.
+
+
+    Through my research, I strive to create impactful solutions that bridge the gap
+    between complex scientific challenges and practical applications, ultimately contributing
+    to advancements in personalized medicine and sustainable urban development.'
+  type: BaseAgent
+- agent_id: agent2
+  profile: 'I am a researcher at the intersection of urban planning and artificial
+    intelligence (AI), dedicated to leveraging AI to address complex challenges in
+    urban environments. My work explores how AI can enhance urban planning from various
+    perspectives, including sustainability, economic development, and disaster management.
+    I have developed innovative frameworks for urban resource scheduling, traffic
+    demand forecasting, and online point-of-interest recommendations, utilizing deep
+    learning and reinforcement learning techniques to improve predictive accuracy
+    and operational efficiency.
+
+
+    My recent research has focused on feature selection and representation learning,
+    where I have introduced novel generative frameworks that automate the identification
+    of optimal feature subsets and enhance model performance. I have also tackled
+    the challenges of anomaly detection in cyber-physical systems and root cause analysis,
+    proposing frameworks that utilize causal discovery and graph-based methods to
+    improve system reliability.
+
+
+    I am particularly passionate about creating explainable and efficient models that
+    can adapt to dynamic environments, as demonstrated in my work on mobile user profiling
+    and spatial data characterization. By integrating deep learning with traditional
+    urban planning principles, I aim to contribute to the development of smart cities
+    that are responsive to the needs of their inhabitants. My goal is to bridge the
+    gap between urban planning and AI, fostering a collaborative approach that drives
+    sustainable urban development.'
+  type: BaseAgent
+- agent_id: agent3
+  profile: 'I am a researcher dedicated to advancing the fields of feature selection,
+    feature transformation, and biomarker discovery through innovative machine learning
+    methodologies. My recent work has focused on transforming traditional feature
+    selection processes into deep generative learning tasks, allowing for the identification
+    of optimal feature subsets without the computational burden of conventional methods.
+    By leveraging deep variational transformers and reinforcement learning, I have
+    developed frameworks that not only enhance model performance but also provide
+    explainable and efficient solutions to feature selection challenges.
+
+
+    In my exploration of polymer property prediction, I introduced a Traceable Group-wise
+    Reinforcement Generation Perspective, which automates the descriptor generation
+    process while ensuring meaningful interactions among features. This approach addresses
+    the limitations of existing methods by combining generation and selection in a
+    cohesive manner.
+
+
+    Additionally, I have pioneered an evolutionary framework for automated feature
+    transformation, integrating large language models with evolutionary algorithms
+    to efficiently navigate vast feature spaces. This work aims to enhance the AI
+    readiness of data across various scientific domains, including material performance
+    screening.
+
+
+    My commitment to biomarker discovery is reflected in my development of a generative
+    framework that automates the identification of effective biomarker subsets, significantly
+    reducing the reliance on extensive human effort and domain expertise. Through
+    these contributions, I strive to bridge the gap between complex data challenges
+    and practical, scalable solutions, ultimately advancing the capabilities of machine
+    learning in real-world applications.'
+  type: BaseAgent
+- agent_id: agent4
+  profile: 'I am a researcher at the intersection of urban planning and artificial
+    intelligence (AI), dedicated to exploring how these two fields can synergistically
+    enhance each other. My work emphasizes the importance of sustainable urban development,
+    leveraging AI to address critical challenges such as automated land-use configuration
+    and dynamic geo-human interactions. I have developed innovative frameworks, such
+    as the deep interactive reinforcement learning model for online point-of-interest
+    recommendations and the Community Sensing Without Aggregation (CSWA) paradigm,
+    which enables efficient environmental monitoring without compromising data privacy.
+
+
+    My research also delves into advanced feature selection and representation learning
+    techniques, where I have introduced generative models and reinforcement learning
+    approaches to optimize feature spaces and enhance model performance. I am particularly
+    interested in the application of large language models (LLMs) in graph data analysis,
+    aiming to bridge the gap between LLMs and graph neural networks for improved relationship
+    mining.
+
+
+    Through my work, I strive to create robust, explainable, and efficient AI systems
+    that can adapt to complex real-world scenarios, from anomaly detection in cyber-physical
+    systems to sound source localization. I am passionate about pushing the boundaries
+    of what AI can achieve in urban planning and beyond, and I am committed to developing
+    solutions that are not only effective but also sustainable and socially responsible.'
+  type: BaseAgent
+coordinate_mode: graph
+engine_planner:
+  initial_progress: Starting the collaborative research idea generation based on the
+    provided Introduction.
+environment:
+  max_iterations: 3
+  name: Research Collaboration Environment
+  type: Research
+llm: gpt-3.5-turbo
+memory:
+  type: SharedMemory
+metrics:
+  diversity_of_perspectives: true
+  engagement_level: true
+  evaluate_llm: gpt-4o-mini
+  relevance: true
+output:
+  file_path: result/graph_research_gpt3.5.jsonl
+  format: jsonl
+relationships:
+- - agent1
+  - agent2
+  - collaborate with
+- - agent1
+  - agent3
+  - collaborate with
+- - agent1
+  - agent4
+  - collaborate with
+- - agent2
+  - agent3
+  - collaborate with
+- - agent2
+  - agent4
+  - collaborate with
+- - agent3
+  - agent4
+  - collaborate with
+task:
+  content: "\n            Dear Research Team,\n\n            You are collaborating\
+    \ to generate a new research idea based on the following Introduction:\n\n   \
+    \         **Introduction**\n\n             Introduction\nClassic machine learning\
+    \ on tabular data is highly dependent on the structure of the model, the\nactivation\
+    \ function [ 1], and most importantly, the quality of the training data [ 2,3]\
+    \ (as depicted in\nFigure 1(a)). Traditionally, optimizing tabular data has required\
+    \ extensive manual intervention by\ndomain experts [4, 5], which is time-consuming\
+    \ and labor-intensive. Current research is focused on\nautomatically transforming\
+    \ the original feature spaces through a series of mathematical operations [ 6],\n\
+    thereby minimizing the reliance on human expertise and streamlining the data preparation\
+    \ phase.\n\u2217Corresponding Author\nPreprint. Under review.arXiv:2406.07404v1\
+    \  [cs.LG]  11 Jun 2024The mainstream of existing automated feature transformation\
+    \ adopts an iterative perspective: 1)\nexpansion-reduction approaches [7\u2013\
+    9] randomly combine and generate features through mathemati-\ncal transformations,\
+    \ then employ feature selection techniques to isolate high-quality features. Those\n\
+    approaches are highly stochastic, lacked stability, and could not learn strategy\
+    \ from transformation\nsteps. 2) iterative-feedback approaches [10,11] aim at\
+    \ refining the feature space with the trans-\nformation towards reinforcement\
+    \ learning [ 12\u201314] and evolutionary algorithms [ 15]. Although\nthose results\
+    \ in terms of\n1-RAE for the Housing Boston dataset and F1-score for the Messidor_features\
+    \ dataset, respectively.\nWe can observe that the transformed features generated\
+    \ by our model consistently achieved the\nhighest performance in regression and\
+    \ classification tasks among each downstream machine learning\nmethod. Therefore,\
+    \ this experiment validates the effectiveness of our model in generating informative\n\
+    and robust features for various downstream models.\nA.1.4 Case Study on Generated\
+    \ Features\nTable 4: Top-10 important features on original and transformed Housing\
+    \ Boston and Wine Quality\nWhite datasets\nHousing Boston TCTO\u2212gTCTO\nfeature\
+    \ importance feature importance feature importance\nlstat 0.362 quan_trans(lstat)\
+    \ 0.144 v18:p\n|v17| 0.080\nrm 0.276 lstat 0.135 sta(v17) 0.077\ndis 0.167 quan_trans(rm)\
+    \ 0.126 sta(p\n|v17|) 0.054\ncrim 0.072 rm 0.119 sta(v16) 0.054\nrad 0.032 (dis+(...))-quan(lstat)\
+    \ 0.076 sta(p\u221Av18) 0.053\nblack 0.032 (dis*(...))+(...)+(dis+...) 0.050 v16:1\n\
+    sinv12\u2212v00.053\nage 0.030 (dis+...)+(...)-(zn+(...)) 0.048 sta(v24) 0.050\n\
+    nox 0.011 (dis+...)-(...)+quan(rm) 0.028 min(v5) 0.044\nptratio 0.007 (dis+..lstat)-(...+rad)\
+    \ 0.016 v17:p\n|v16| 0.037\nindus 0.005 (dis+..crim)-(...+rad) 0.015 v12 0.025\n\
+    1-RAE:0.414 Sum:0.993 1-RAE:0.474 Sum:0.757 1-RAE:0.494 Sum:0.527\nWine Quality\
+    \ White TCTO\u2212gTCTO\nfeature importance feature importance feature importance\n\
+    alcohol 0.118 quan_trans(alcohol) 0.043 v2+v30 0.026\ndensity 0.104 alcohol 0.036\
+    \ sin (sin ( f0)) +v30 0.025\nvolatile 0.099 ((den...)+(alc...)/(...)) 0.028 v5+v30\
+    \ 0.024\nfree sulfur 0.093 quan_trans(density) 0.028 sin (f0) +v30 0.023\ntotal\
+    \ sulfur 0.092 density 0.028 v2 0.023\nchlorides 0.091 (den/(...))+(dens...)/(...)\
+    \ 0.026 v3+v30 0.023\nresidual 0.087 (den/(...)+((...)/tan(...)) 0.024 v6+v30\
+    \ 0.021\npH 0.082 (den/...)-(...+stand(...)) 0.023 v7+v30 0.021\ncitric acid 0.081\
+    \ (citr/(...)+(...)/(tanh(...)) 0.023 v0+v30 0.021\nfixed acidity 0.078 (free/(...)+(...)/tanh(...))\
+    \ 0.023 v11+v30 0.021\nF1-score:0.536 Sum:0.924 F1-score:0.543 Sum:0.282 F1-score:0.559\
+    \ Sum:0.228\n15This experiment aims to answer the question: Can our model reuse\
+    \ the high-value sub-transformation\nand generate a high-quality feature space?\
+    \ Table 4 presents the Top-10 most important features\ngenerated by the original\
+    \ dataset, our proposed method, and its feature-centric variants (i.e., TCTO\u2212\
+    g).\nWe can first observe that TCTO has reused many high-value sub-transformations,\
+    \ such as node v17\nin Housing Boston and node v30in Wine Quality White. Compared\
+    \ to TCTO\u2212g, the graph-based\nmodel tends to reuse important intermediate\
+    \ nodes, transforming them to generate more significant\nfeatures. A possible\
+    \ reason for this is that our model effectively utilizes historical information\
+    \ from\nthe graph, identifying optimal substructures and exploring and transforming\
+    \ these crucial nodes,\nthereby utilizing the historical sub-transformations.\
+    \ Another point to note is that the transformed\nfeature\u2019s importance score\
+    \ in our model tends to be more balanced compared to the original dataset\nand\
+    \ its variant, e.g., the sum of the top-10 feature importance is lower.\n\n  \
+    \          **Your Task**\n\n            1. **Literature Review**: Analyze the\
+    \ Introduction provided and conduct a brief literature review to understand the\
+    \ current state of research in this area.\n\n            2. **Brainstorming**:\
+    \ Collaboratively brainstorm potential research ideas that build upon or address\
+    \ gaps in the Introduction.\n\n            3. **Summarization**: Summarize your\
+    \ collective ideas.\n\n            4. **Formulate a New Research Idea**: Develop\
+    \ a new research proposal in the format of the '5q', defined below:\n\n      \
+    \         **Here is a high-level summarized insight of a research field Machine\
+    \ Learning.**\n\n               **Here are the five core questions:**\n\n    \
+    \           **[Question 1] - What is the problem?**\n\n               Formulate\
+    \ the specific research question you aim to address. Only output one question\
+    \ and do not include any more information.\n\n               **[Question 2] -\
+    \ Why is it interesting and important?**\n\n               Explain the broader\
+    \ implications of solving this problem for the research community.\n         \
+    \      Discuss how such a paper will affect future research.\n               Discuss\
+    \ how addressing this question could advance knowledge or lead to practical applications.\n\
+    \n               **[Question 3] - Why is it hard?**\n\n               Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \       Explain why naive or straightforward approaches may fail.\n          \
+    \     Identify any technical, theoretical, or practical obstacles that need to\
+    \ be overcome. MAKE IT CLEAR.\n\n               **[Question 4] - Why hasn't it\
+    \ been solved before?**\n\n               Identify gaps or limitations in previous\
+    \ research or existing solutions.\n               Discuss any barriers that have\
+    \ prevented this problem from being solved until now.\n               Explain\
+    \ how your approach differs from or improves upon prior work. MAKE IT CLEAR.\n\
+    \n               **[Question 5] - What are the key components of my approach and\
+    \ results?**\n\n               Outline your proposed methodology in detail, including\
+    \ the method, dataset, and metrics that you plan to use.\n               Describe\
+    \ the expected outcomes. MAKE IT CLEAR.\n\n            Please work together to\
+    \ produce the '5q' for your proposed research idea.\n\n            Good luck!\n\
+    \            "
+  output_format: "You should answer the task in the fllowing format:\n           \
+    \     **[Question 1] - What is the problem?**\n\n                Formulate the\
+    \ specific research question you aim to address. Only output one question and\
+    \ do not include any more information.\n\n                **[Question 2] - Why\
+    \ is it interesting and important?**\n\n                Explain the broader implications\
+    \ of solving this problem for the research community.\n                Discuss\
+    \ how such a paper will affect future research.\n                Discuss how addressing\
+    \ this question could advance knowledge or lead to practical applications.\n\n\
+    \                **[Question 3] - Why is it hard?**\n\n                Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \        Explain why naive or straightforward approaches may fail.\n         \
+    \       Identify any technical, theoretical, or practical obstacles that need\
+    \ to be overcome. MAKE IT CLEAR.\n\n                **[Question 4] - Why hasn't\
+    \ it been solved before?**\n\n                Identify gaps or limitations in\
+    \ previous research or existing solutions.\n                Discuss any barriers\
+    \ that have prevented this problem from being solved until now.\n            \
+    \    Explain how your approach differs from or improves upon prior work. MAKE\
+    \ IT CLEAR.\n\n                **[Question 5] - What are the key components of\
+    \ my approach and results?**\n\n                Outline your proposed methodology\
+    \ in detail, including the method, dataset, and metrics that you plan to use.\n\
+    \                Describe the expected outcomes. MAKE IT CLEAR."

@@ -5,8 +5,12 @@ import yaml
 
 # Define input directories and output directory
 profile_dbs_dir = "./profile_dbs"
+model = "together_ai/meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo"#"gpt-4o-mini"
 intro_logging_path = "intro_logging.jsonl"
-output_dir = "generated_yaml_files"
+coordinate_mode = "chain"
+output_dir = f"generated_yaml_files_{coordinate_mode}_research_Llama3.1_70B"
+file_path = f"result/{coordinate_mode}_research_Llama3.1_70B.jsonl"
+
 
 # Create the output directory if it doesn't exist
 os.makedirs(output_dir, exist_ok=True)
@@ -25,7 +29,7 @@ with open(intro_logging_path, "r") as intro_file:
             continue
 
 # Iterate over each profile directory
-for i in range(1, 101):
+for i in range(1, 51):
     profile_dir = os.path.join(profile_dbs_dir, f"profile_{i}")
     profile_db_path = os.path.join(profile_dir, "ProfileDB.json")
 
@@ -48,9 +52,13 @@ for i in range(1, 101):
         })
 
     # Create fully connected relationships
-    for j in range(len(agent_ids)):
-        for k in range(j + 1, len(agent_ids)):
-            relationships.append([f"agent{j + 1}", f"agent{k + 1}", "collaborate with"])
+    if coordinate_mode == "graph":
+        for j in range(len(agent_ids)):
+            for k in range(j + 1, len(agent_ids)):
+                relationships.append([f"agent{j + 1}", f"agent{k + 1}", "collaborate with"])
+    else:
+        for j in range(1, len(agent_ids)):
+            relationships.append([f"agent1", f"agent{j + 1}", "collaborate with"])
 
     # Select an introduction for the task
     introduction = introductions[(i - 1) % len(introductions)]
@@ -59,7 +67,7 @@ for i in range(1, 101):
     yaml_data = {
         "coordinate_mode": "graph",
         "relationships": relationships,
-        "llm": "gpt-3.5-turbo",
+        "llm": model,
         "environment": {
             "type": "Research",
             "name": "Research Collaboration Environment",
@@ -163,7 +171,7 @@ for i in range(1, 101):
         },
         "output": {
             "format": "jsonl",
-            "file_path": "result/discussion_output.jsonl"
+            "file_path": file_path
         }
     }
 

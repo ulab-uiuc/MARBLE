@@ -1,0 +1,416 @@
+agents:
+- agent_id: agent1
+  profile: 'I am a researcher dedicated to enhancing human-robot collaboration, particularly
+    in the context of agile robots operating in close proximity to humans. My work
+    addresses the safety and performance challenges that arise from this collaboration.
+    I have developed a novel human-robot doubles table tennis scenario as a testbed
+    to explore these dynamics. Through user studies, I have uncovered critical insights
+    into how robot attributes, such as competency and communication, influence team
+    dynamics, perceived safety, and trust. Notably, I found that while robot competency
+    boosts perceived trust, vocalizing intentions can paradoxically hinder team performance
+    and safety perceptions.
+
+
+    In addition to my focus on collaboration, I am also advancing robot learning methodologies.
+    I have created a diffusion modeling approach that is offline, constraint-guided,
+    and capable of expressing diverse agile behaviors. My kinematic constraint gradient
+    guidance (KCGG) technique effectively directs the sampling process to minimize
+    constraint violations while maintaining trajectory fidelity. This approach has
+    shown significant improvements in performance for time-sensitive tasks, such as
+    simulated air hockey and real table tennis, outperforming traditional imitation
+    learning methods.
+
+
+    Through my research, I aim to pave the way for safe, efficient, and trustworthy
+    interactions between humans and agile robots, ultimately enhancing their collaborative
+    potential in various applications.'
+  type: BaseAgent
+- agent_id: agent2
+  profile: "I am a researcher dedicated to enhancing the capabilities of autonomous\
+    \ robots through advanced trajectory prediction and generation techniques. My\
+    \ recent work focuses on unifying these tasks to create a versatile framework\
+    \ that significantly improves performance in dynamic environments. One of my notable\
+    \ contributions is the development of Trajectory Conditional Flow Matching (T-CFM),\
+    \ which leverages flow matching techniques to efficiently generate trajectories.\
+    \ This approach not only achieves a remarkable 100\xD7 speed-up compared to traditional\
+    \ diffusion models but also enhances predictive accuracy by 35% and planning performance\
+    \ by 142%.\n\nIn addition to T-CFM, I have explored the challenges of target tracking\
+    \ in complex scenarios, such as drug-trafficking interdiction, through my work\
+    \ on Constrained Agent-based Diffusion for Enhanced Multi-Agent Tracking (CADENCE).\
+    \ This method utilizes a novel cross-attention based diffusion model to generate\
+    \ multimodal track hypotheses, significantly improving prediction accuracy across\
+    \ various time horizons.\n\nMy research also delves into reinforcement learning\
+    \ for motion planning in adversarial pursuit-evasion games, where I propose a\
+    \ hierarchical architecture that combines high-level diffusion models with low-level\
+    \ RL algorithms. This innovative approach has demonstrated a 51.2% improvement\
+    \ over baseline methods, showcasing the potential of integrating different modeling\
+    \ techniques to enhance robotic decision-making.\n\nOverall, my work aims to push\
+    \ the boundaries of what autonomous systems can achieve, particularly in real-time\
+    \ decision-making and complex operational environments."
+  type: BaseAgent
+- agent_id: agent3
+  profile: 'I am a researcher dedicated to advancing the capabilities of robots in
+    dynamic environments, particularly in the realm of sports. My work focuses on
+    developing innovative methods for estimating external contact forces in continuum
+    robots, utilizing fiber Bragg grating sensors to achieve accurate and efficient
+    force estimations. I have also explored the complexities of ball trajectory prediction
+    in sports like tennis and ping pong, where I combined data-driven approaches with
+    analytical models to enhance prediction accuracy.
+
+
+    One of my notable contributions is the integration of multi-camera systems with
+    factor graphs for real-time 3D localization of tennis balls, which significantly
+    improves trajectory prediction by incorporating human pose data. Additionally,
+    I have pioneered a zero-shot knowledge transfer framework that distills expert
+    navigation strategies from web videos, enabling robots to effectively navigate
+    in real-world scenarios, such as wheelchair tennis.
+
+
+    My recent work emphasizes the importance of sample efficiency and constraint incorporation
+    in robot learning. By developing a diffusion modeling approach with kinematic
+    constraint gradient guidance, I have demonstrated significant improvements in
+    performance for agile tasks like table tennis and air hockey. My research aims
+    to bridge the gap between complex robotic tasks and practical applications, ultimately
+    enhancing the interaction between robots and their environments.'
+  type: BaseAgent
+- agent_id: agent4
+  profile: "I am a researcher dedicated to advancing the fields of autonomous tracking,\
+    \ robotics, and environmental science. My work primarily focuses on developing\
+    \ innovative solutions for complex tracking and navigation challenges, particularly\
+    \ in dynamic and adversarial environments. One of my recent contributions is the\
+    \ CADENCE framework, which enhances multi-agent tracking by leveraging past sparse\
+    \ state information to predict adversary locations effectively. \n\nI have also\
+    \ explored the intersection of reinforcement learning and motion planning, proposing\
+    \ a hierarchical architecture that integrates diffusion models to improve path\
+    \ planning in pursuit-evasion scenarios. My research extends to visual servoing\
+    \ systems, where I developed a feature-based SLAM method that enables trajectory\
+    \ tracking without external pose information, demonstrating superior performance\
+    \ in unknown environments.\n\nIn addition to robotics, I have delved into the\
+    \ challenges of vision-language models, creating the GlyphPattern dataset to evaluate\
+    \ abstract pattern recognition capabilities. My work in multi-agent reinforcement\
+    \ learning has shown promising results in collaborative tracking of evasive agents,\
+    \ achieving significant improvements in detection rates.\n\nFurthermore, I have\
+    \ investigated the mechanics of plant pathogen dispersion, revealing how leaf\
+    \ elasticity and raindrop momentum influence spore transport. This research not\
+    \ only enhances our understanding of plant-pathogen interactions but also contributes\
+    \ to better crop disease management strategies.\n\nOverall, my interdisciplinary\
+    \ approach combines theoretical modeling with practical applications, aiming to\
+    \ address real-world challenges in tracking, navigation, and environmental sustainability."
+  type: BaseAgent
+- agent_id: agent5
+  profile: 'I am a researcher dedicated to advancing robotics in sports, particularly
+    focusing on agile robots capable of high-speed interactions, such as in wheelchair
+    tennis. My work emphasizes the critical aspects of real-time localization and
+    trajectory prediction, especially in the context of high-speed ball dynamics influenced
+    by factors like the Magnus effect. I have developed innovative approaches that
+    integrate multi-camera systems with factor graphs to enhance 3D ball localization
+    and predict hidden states like velocity and spin, achieving significant improvements
+    in prediction accuracy.
+
+
+    My research also explores the design of flexible and adaptive controllers for
+    agile mobile manipulation tasks, utilizing probabilistic movement primitives and
+    online refinement procedures based on human feedback. I am particularly interested
+    in knowledge transfer frameworks that distill expert navigation strategies from
+    web videos into robotic systems, enabling effective real-world applications.
+
+
+    Safety and trust in human-robot collaboration are paramount in my studies, where
+    I investigate how robot attributes impact team dynamics and performance in proximate
+    settings. My recent work includes developing a diffusion modeling approach that
+    enhances sample efficiency and incorporates constraints for agile tasks, demonstrating
+    its effectiveness in both simulated and real-world environments.
+
+
+    Ultimately, my goal is to inspire further research in human-scale robot athletics
+    and establish a foundation for autonomous robots that can compete alongside humans
+    in sports, pushing the boundaries of what is possible in robotic capabilities.'
+  type: BaseAgent
+- agent_id: agent6
+  profile: 'I am a researcher dedicated to advancing robotic learning systems, particularly
+    in the context of real-world applications. My recent work focuses on a sophisticated
+    table tennis robot that showcases the integration of optimized perception, high-speed
+    control, and robust training methodologies. This system not only demonstrates
+    the ability to engage in complex rallies with human players but also excels in
+    returning the ball to precise targets.
+
+
+    In my research, I emphasize the importance of addressing latency issues, understanding
+    distribution shifts between training and deployment, and ensuring the robustness
+    of perception systems. I believe that sharing design decisions and insights is
+    crucial for the advancement of the field, which is why I provide a comprehensive
+    overview of my system''s architecture and the challenges encountered during development.
+    My work also explores the sensitivity of policy hyper-parameters and the implications
+    of action space choices on performance.
+
+
+    Through my research, I aim to contribute to the broader understanding of robotic
+    learning and its practical applications, fostering innovation in how robots interact
+    with their environments. You can view a demonstration of my work and experimental
+    results in the video linked in my publication.'
+  type: BaseAgent
+- agent_id: agent7
+  profile: 'I am a robotics researcher dedicated to advancing the field of robot learning,
+    particularly in the context of real-world applications. My recent work focuses
+    on developing innovative approaches to goal-conditioned control, leveraging both
+    imitation learning and reinforcement learning techniques. I have successfully
+    demonstrated the potential of iterative imitation learning in dynamic environments,
+    such as high-speed table tennis, where my robots can perform on par with amateur
+    human players.
+
+
+    My research also explores the integration of constraint-guided diffusion modeling
+    to enhance sample efficiency and adaptability in agile tasks. By employing techniques
+    like kinematic constraint gradient guidance, I have achieved significant improvements
+    in performance metrics across various domains, including simulated air hockey
+    and real table tennis.
+
+
+    A key aspect of my work is addressing the challenges of sim-to-real transfer,
+    particularly in human-robot interaction scenarios. Through my Iterative-Sim-to-Real
+    (i-S2R) framework, I have developed methods that refine both human behavior models
+    and robotic policies iteratively, enabling robots to engage effectively with human
+    players in real-time.
+
+
+    I am passionate about creating comprehensive robotic systems that combine optimized
+    perception, low-latency control, and robust training paradigms. My ultimate goal
+    is to achieve human-level performance in complex tasks, as evidenced by my robot''s
+    ability to compete successfully in table tennis matches against a range of human
+    skill levels. I believe that by sharing insights from my research, I can contribute
+    to the broader robotics community and inspire further advancements in this exciting
+    field.'
+  type: BaseAgent
+- agent_id: agent8
+  profile: 'I am a researcher dedicated to advancing the field of robotics, particularly
+    in the context of human-robot collaboration and learning from demonstration (LfD).
+    My work focuses on enabling robots to understand and adapt to human behaviors,
+    preferences, and the dynamic nature of their environments. I have developed a
+    Bayesian framework for LfD that captures the heterogeneity in human decision-making,
+    allowing robots to learn from diverse demonstrations effectively.
+
+
+    My research also addresses critical challenges in real-world applications, such
+    as wildfire management, where I proposed a model-predictive control algorithm
+    for unmanned aerial vehicles (UAVs) to assist firefighters by intelligently coordinating
+    their actions based on fire dynamics. Additionally, I have explored the integration
+    of advanced scheduling algorithms to optimize human-robot collaboration in manufacturing
+    settings, demonstrating significant improvements in efficiency and task performance.
+
+
+    I am particularly interested in the intersection of explainable AI and robotics,
+    striving to create systems that not only perform tasks but also provide transparent
+    insights into their decision-making processes. My recent work on federated learning
+    emphasizes the importance of personalization in AI systems, ensuring that they
+    can adapt to individual user preferences without compromising privacy.
+
+
+    Through my research, I aim to democratize robotics, making it accessible for non-experts
+    to teach robots new tasks and enabling them to learn and adapt in real-time. I
+    believe that the future of robotics lies in creating systems that can seamlessly
+    integrate into human environments, enhancing our capabilities while ensuring safety
+    and trust.'
+  type: BaseAgent
+coordinate_mode: graph
+engine_planner:
+  initial_progress: Starting the collaborative research idea generation based on the
+    provided Introduction.
+environment:
+  max_iterations: 3
+  name: Research Collaboration Environment
+  type: Research
+llm: gpt-4o-mini
+memory:
+  type: SharedMemory
+metrics:
+  diversity_of_perspectives: true
+  engagement_level: true
+  evaluate_llm: gpt-4o-mini
+  relevance: true
+output:
+  file_path: result/graph_research_gpt4o-mini.jsonl
+  format: jsonl
+relationships:
+- - agent1
+  - agent2
+  - collaborate with
+- - agent1
+  - agent3
+  - collaborate with
+- - agent1
+  - agent4
+  - collaborate with
+- - agent1
+  - agent5
+  - collaborate with
+- - agent1
+  - agent6
+  - collaborate with
+- - agent1
+  - agent7
+  - collaborate with
+- - agent1
+  - agent8
+  - collaborate with
+- - agent2
+  - agent3
+  - collaborate with
+- - agent2
+  - agent4
+  - collaborate with
+- - agent2
+  - agent5
+  - collaborate with
+- - agent2
+  - agent6
+  - collaborate with
+- - agent2
+  - agent7
+  - collaborate with
+- - agent2
+  - agent8
+  - collaborate with
+- - agent3
+  - agent4
+  - collaborate with
+- - agent3
+  - agent5
+  - collaborate with
+- - agent3
+  - agent6
+  - collaborate with
+- - agent3
+  - agent7
+  - collaborate with
+- - agent3
+  - agent8
+  - collaborate with
+- - agent4
+  - agent5
+  - collaborate with
+- - agent4
+  - agent6
+  - collaborate with
+- - agent4
+  - agent7
+  - collaborate with
+- - agent4
+  - agent8
+  - collaborate with
+- - agent5
+  - agent6
+  - collaborate with
+- - agent5
+  - agent7
+  - collaborate with
+- - agent5
+  - agent8
+  - collaborate with
+- - agent6
+  - agent7
+  - collaborate with
+- - agent6
+  - agent8
+  - collaborate with
+- - agent7
+  - agent8
+  - collaborate with
+task:
+  content: "\n            Dear Research Team,\n\n            You are collaborating\
+    \ to generate a new research idea based on the following Introduction:\n\n   \
+    \         **Introduction**\n\n             \n\nI INTRODUCTION\n\n\nRobot learning\
+    \ has made inspiring progress in recent years, resulting in robots that can cook\_\
+    [1], clean up\_[2], or even perform backflips\_[3]. While the capabilities of\
+    \ learned robot policies have increased dramatically, achieving human-level performance\
+    \ in terms of accuracy, speed and generality still remains a grand challenge in\
+    \ many domains. One such domain is table tennis \u2013 a physically demanding\
+    \ sport which requires human players to undergo years of training to achieve an\
+    \ advanced level of proficiency. Indeed, competitive matches are often breathtakingly\
+    \ dynamic, involving complex motion, rapid eye-hand coordination, and high-level\
+    \ strategies that adapt to the opponent\u2019s strengths and weaknesses. For a\
+    \ robotic table tennis system to mimic these abilities it needs high-speed motion,\
+    \ precise control, real-time decision-making and human-robot interaction. Thanks\
+    \ to these demanding requirements, table tennis provides a rich environment to\
+    \ advance robotic capabilities and has served as a benchmark for robotics research\
+    \ since the 1980s [4]. Numerous table tennis robots have been developed since\
+    \ and progress has been made on returning the ball to the opponent\u2019s side\_\
+    [5], hitting to a target position\_[6], smashing\_[7], cooperative rallying\_\
+    [8], and many other critical aspects of table tennis\_[9]. Yet no prior work has\
+    \ tackled the competitive game in which a robot plays a full game of table tennis\
+    \ against a previously unseen human opponent.\n\n\nIn this paper, we present the\
+    \ first learned robot agent that can play competitive table tennis at human level,\
+    \ as depicted in Figure\_1. The robot uses a combination of techniques (known\
+    \ and novel) in order to acquire skills at different levels of abstraction. Table\
+    \ tennis players must be prepared to return balls across a wide variety of positions,\
+    \ speeds, and spins (i.e.\_angular velocities) and competitive players must know\
+    \ how to manipulate these factors to set up advantageous plays or exploit opponent\
+    \ weaknesses. Thus, there are two levels of play: the high level strategic decisions\
+    \ and the low level physical skills required to execute those strategies. This\
+    \ organization adds an additional layer of challenge to robotic sports where,\
+    \ unlike a purely strategic game like chess or go, the policy not only needs to\
+    \ decide the most advantageous move, but also needs to have the physical skills\
+    \ to perform it and may even have to choose a less strategically optimal action\
+    \ if it is not confident in successful execution. To address this challenge, we\
+    \ propose a hierarchical and modular policy architecture. Our system consists\
+    \ of multiple low-level skill policies and a high-level controller that selects\
+    \ between them. Each low-level skill policy specializes in a specific aspect of\
+    \ table tennis, such as forehand topspin, backhand targeting, or forehand serve.\
+    \ Training is efficient \u2014 each skill builds on top of the same foundation\
+    \ policy for a given category (e.g. forehand, backhand), and once a good skill\
+    \ has been trained it can always be subsequently specialized. In addition to learning\
+    \ the policy itself, we collect and store information both offline and online\
+    \ about the strengths, weaknesses, and limitations of each low-level skill. The\
+    \ resulting skill descriptors provide the robot with important information regarding\
+    \ its abilities and shortcomings. In turn, a high-level controller, responsible\
+    \ for\n\n            **Your Task**\n\n            1. **Literature Review**: Analyze\
+    \ the Introduction provided and conduct a brief literature review to understand\
+    \ the current state of research in this area.\n\n            2. **Brainstorming**:\
+    \ Collaboratively brainstorm potential research ideas that build upon or address\
+    \ gaps in the Introduction.\n\n            3. **Summarization**: Summarize your\
+    \ collective ideas.\n\n            4. **Formulate a New Research Idea**: Develop\
+    \ a new research proposal in the format of the '5q', defined below:\n\n      \
+    \         **Here is a high-level summarized insight of a research field Machine\
+    \ Learning.**\n\n               **Here are the five core questions:**\n\n    \
+    \           **[Question 1] - What is the problem?**\n\n               Formulate\
+    \ the specific research question you aim to address. Only output one question\
+    \ and do not include any more information.\n\n               **[Question 2] -\
+    \ Why is it interesting and important?**\n\n               Explain the broader\
+    \ implications of solving this problem for the research community.\n         \
+    \      Discuss how such a paper will affect future research.\n               Discuss\
+    \ how addressing this question could advance knowledge or lead to practical applications.\n\
+    \n               **[Question 3] - Why is it hard?**\n\n               Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \       Explain why naive or straightforward approaches may fail.\n          \
+    \     Identify any technical, theoretical, or practical obstacles that need to\
+    \ be overcome. MAKE IT CLEAR.\n\n               **[Question 4] - Why hasn't it\
+    \ been solved before?**\n\n               Identify gaps or limitations in previous\
+    \ research or existing solutions.\n               Discuss any barriers that have\
+    \ prevented this problem from being solved until now.\n               Explain\
+    \ how your approach differs from or improves upon prior work. MAKE IT CLEAR.\n\
+    \n               **[Question 5] - What are the key components of my approach and\
+    \ results?**\n\n               Outline your proposed methodology in detail, including\
+    \ the method, dataset, and metrics that you plan to use.\n               Describe\
+    \ the expected outcomes. MAKE IT CLEAR.\n\n            Please work together to\
+    \ produce the '5q' for your proposed research idea.\n\n            Good luck!\n\
+    \            "
+  output_format: "You should answer the task in the fllowing format:\n           \
+    \     **[Question 1] - What is the problem?**\n\n                Formulate the\
+    \ specific research question you aim to address. Only output one question and\
+    \ do not include any more information.\n\n                **[Question 2] - Why\
+    \ is it interesting and important?**\n\n                Explain the broader implications\
+    \ of solving this problem for the research community.\n                Discuss\
+    \ how such a paper will affect future research.\n                Discuss how addressing\
+    \ this question could advance knowledge or lead to practical applications.\n\n\
+    \                **[Question 3] - Why is it hard?**\n\n                Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \        Explain why naive or straightforward approaches may fail.\n         \
+    \       Identify any technical, theoretical, or practical obstacles that need\
+    \ to be overcome. MAKE IT CLEAR.\n\n                **[Question 4] - Why hasn't\
+    \ it been solved before?**\n\n                Identify gaps or limitations in\
+    \ previous research or existing solutions.\n                Discuss any barriers\
+    \ that have prevented this problem from being solved until now.\n            \
+    \    Explain how your approach differs from or improves upon prior work. MAKE\
+    \ IT CLEAR.\n\n                **[Question 5] - What are the key components of\
+    \ my approach and results?**\n\n                Outline your proposed methodology\
+    \ in detail, including the method, dataset, and metrics that you plan to use.\n\
+    \                Describe the expected outcomes. MAKE IT CLEAR."

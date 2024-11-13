@@ -1,0 +1,613 @@
+agents:
+- agent_id: agent1
+  profile: 'I am a researcher dedicated to advancing the fields of optimization, machine
+    learning, and robotics. My recent work focuses on developing efficient algorithms
+    for training deep neural networks, particularly through innovative Levenberg-Marquardt
+    variants that leverage subsampled Gauss-Newton and natural gradient methods. I
+    have explored the learning dynamics of large language models, providing insights
+    into how training examples influence model predictions, which has led to improved
+    alignment performance in these systems.
+
+
+    In robotics, I have investigated cooperative task allocation for networked mobile
+    manipulators, proposing adaptive control strategies that ensure motion synchronization
+    despite uncertainties. My work also extends to the realm of network function virtualization,
+    where I developed a dynamic auto-scaling algorithm that balances performance and
+    operational costs for 5G networks.
+
+
+    Additionally, I have contributed to the understanding of unbiased learning-to-rank
+    algorithms, addressing challenges in handling biased feedback in recommender systems.
+    My research emphasizes the importance of integrating marketing and manufacturing
+    knowledge in product design, as well as tackling popularity bias in sequential
+    recommendation systems through structural causal models.
+
+
+    Overall, my work aims to bridge theoretical advancements with practical applications,
+    ensuring that the algorithms and models I develop are not only innovative but
+    also applicable to real-world challenges across various domains.'
+  type: BaseAgent
+- agent_id: agent2
+  profile: 'I am a researcher with a strong focus on graph theory, algorithm design,
+    and machine learning, particularly in the context of optimizing computational
+    efficiency and understanding complex structures. My recent work has significantly
+    advanced the field of Gomory-Hu trees, where I improved the running time for computing
+    these succinct representations of pairwise minimum cuts to a groundbreaking quadratic
+    time complexity. I have also contributed to the development of cut-equivalent
+    trees, enhancing existing algorithms to achieve faster runtimes.
+
+
+    In addition to my work on graph structures, I have explored dynamic algorithms,
+    particularly in maintaining maximal independent sets in evolving graphs, where
+    I introduced a randomized algorithm with a remarkably efficient update time. My
+    research extends to distance sensitivity oracles, where I developed a new structure
+    that optimizes space and query efficiency.
+
+
+    I am also deeply interested in the intersection of machine learning and graph
+    theory, as evidenced by my studies on biases in large pretrained language models
+    and the development of tools to quantify and mitigate these biases. My work on
+    Selective Prompt Anchoring (SPA) addresses challenges in code generation by large
+    language models, demonstrating significant improvements in performance.
+
+
+    Overall, my research aims to bridge theoretical advancements with practical applications,
+    providing efficient algorithms and tools that can be utilized across various domains,
+    from computational graph theory to machine learning.'
+  type: BaseAgent
+- agent_id: agent3
+  profile: "I am a researcher deeply engaged in the exploration of quantum dynamics\
+    \ and many-body physics, particularly within the context of Bose-Einstein condensates\
+    \ and Rydberg atoms. My recent work has focused on the intricate interplay between\
+    \ light and matter, investigating phenomena such as the dynamics of bright solitary\
+    \ waves in attractive Bose-Einstein condensates and the coherent manipulation\
+    \ of ion crystals through Rydberg excitations. \n\nI have developed theoretical\
+    \ frameworks for understanding complex quantum systems, including the implementation\
+    \ of entangling quantum gates using dipolar interactions among Rydberg states,\
+    \ and the dynamics of Rydberg-dressed Bose-Einstein condensates in optical lattices.\
+    \ My research also delves into the quantum melting of one-dimensional crystals\
+    \ and the emergence of chaotic dynamics in Rydberg-dressed systems, revealing\
+    \ rich phase structures and stability properties.\n\nAdditionally, I am passionate\
+    \ about advancing quantum information applications, as demonstrated by my work\
+    \ on photon transistors and the generation of stable high-dimensional optical\
+    \ pulses in cold Rydberg gases. Through these studies, I aim to bridge the gap\
+    \ between theoretical insights and experimental realizations, contributing to\
+    \ the development of quantum technologies and enhancing our understanding of quantum\
+    \ many-body systems. My goal is to continue pushing the boundaries of knowledge\
+    \ in quantum physics, exploring new avenues for manipulation and control in complex\
+    \ quantum systems."
+  type: BaseAgent
+- agent_id: agent4
+  profile: "I am a researcher deeply engaged in the intersection of large language\
+    \ models and public opinion analysis. My recent work focuses on harnessing the\
+    \ capabilities of advanced models like GPT-4o to predict the heat levels of public\
+    \ opinion events. In my latest study, I meticulously processed and classified\
+    \ over 62,000 pieces of Chinese hot event data, employing innovative clustering\
+    \ techniques to categorize these events into distinct heat levels. \n\nThrough\
+    \ rigorous evaluation, I explored the predictive accuracy of various large language\
+    \ models, revealing promising results, particularly in predicting low-heat events.\
+    \ While the overall accuracy remains a challenge, my findings highlight the potential\
+    \ of these models in public opinion analysis, especially as we refine our datasets\
+    \ and methodologies. I am excited about the future of this research area, as I\
+    \ believe that with more robust data, we can significantly enhance the predictive\
+    \ capabilities of large language models in understanding public sentiment and\
+    \ its dynamics."
+  type: BaseAgent
+- agent_id: agent5
+  profile: 'I am a researcher dedicated to harnessing the power of large language
+    models (LLMs) for innovative applications in public opinion analysis and multimodal
+    data processing. My recent work focuses on predicting the heat levels of public
+    opinion events using advanced LLMs, where I analyzed over 62,000 Chinese hot event
+    data points. By employing clustering techniques, I categorized these events into
+    distinct heat levels and evaluated the predictive accuracy of models like GPT-4o
+    and DeepseekV2. While the overall prediction accuracy was modest, I found promising
+    results for low-heat events, indicating the potential for future research in this
+    area.
+
+
+    Additionally, I have developed an adaptive fine-tuning algorithm for multimodal
+    large models that optimizes training efficiency and generalization. This algorithm
+    utilizes semantic clustering to select high-potential data for training, significantly
+    reducing training time while maintaining performance. My experiments with the
+    InternLM-XComposer2-VL-7B model demonstrated that my approach not only preserved
+    general-purpose capabilities but also achieved superior results on various remote
+    sensing datasets.
+
+
+    Through my research, I aim to contribute to the understanding and application
+    of LLMs in real-world scenarios, paving the way for more effective tools in public
+    opinion analysis and beyond.'
+  type: BaseAgent
+- agent_id: agent6
+  profile: "I am a researcher deeply engaged in the intersection of large language\
+    \ models and public opinion analysis. My recent work focuses on harnessing the\
+    \ capabilities of advanced models like GPT-4o to predict the heat levels of public\
+    \ opinion events. In my latest study, I meticulously processed and classified\
+    \ over 62,000 pieces of Chinese hot event data, employing innovative clustering\
+    \ techniques to categorize these events into distinct heat levels. \n\nThrough\
+    \ rigorous evaluation, I explored the predictive accuracy of various large language\
+    \ models, revealing promising results, particularly in predicting low-heat events.\
+    \ While the overall accuracy remains a challenge, my findings highlight the potential\
+    \ of these models in public opinion analysis, especially as we refine our datasets\
+    \ and methodologies. I am excited about the future of this research area, as I\
+    \ believe that with more robust data, we can significantly enhance the predictive\
+    \ capabilities of large language models in understanding public sentiment and\
+    \ its dynamics."
+  type: BaseAgent
+coordinate_mode: graph
+engine_planner:
+  initial_progress: Starting the collaborative research idea generation based on the
+    provided Introduction.
+environment:
+  max_iterations: 3
+  name: Research Collaboration Environment
+  type: Research
+llm: gpt-3.5-turbo
+memory:
+  type: SharedMemory
+metrics:
+  diversity_of_perspectives: true
+  engagement_level: true
+  evaluate_llm: gpt-4o-mini
+  relevance: true
+output:
+  file_path: result/chain_research_gpt3.5.jsonl
+  format: jsonl
+relationships:
+- - agent1
+  - agent2
+  - collaborate with
+- - agent1
+  - agent3
+  - collaborate with
+- - agent1
+  - agent4
+  - collaborate with
+- - agent1
+  - agent5
+  - collaborate with
+- - agent1
+  - agent6
+  - collaborate with
+task:
+  content: "\n            Dear Research Team,\n\n            You are collaborating\
+    \ to generate a new research idea based on the following Introduction:\n\n   \
+    \         **Introduction**\n\n             INTRODUCTION\nTheemergenceoflargelanguagemodels(LLMs)has\n\
+    broughtsignificantadvancementstothefieldof\nartificialintelligence,demonstratingremarkable\n\
+    capabilitiesacrossvariousnaturallanguageprocessingtasks.\nForinstance,modelslikeChatGPT[1]andGPT-4[2]exhibit\n\
+    strongzero-shotandfew-shot[3]learningabilities,whichallow\nthemtogeneralizewellacrossmanydomains.However,when\n\
+    appliedtospecializedfieldssuchashealthcare,law,and\nhydrology,thesegeneral-purposemodelsoftenexperience\n\
+    performancedegradation,sincetheirinsufficienttrainingin\ndomain-specificknowledgeresultsinalackofunderstanding\n\
+    oftaskswithinthesespecializedareas..\nToaddressthisissue,researchershavebegunexploring\n\
+    specializedtrainingandfine-tuningofLLMsforspecific\ndomains,andnotableachievementshavebeenmade.For\n\
+    example,inthemedicalfield[4-s],GoogleandDeepMind\nintroducedMed-PaLM[5],amodeldesignedformedical\n\
+    dialogue,whichexcelsintaskssuchasmedicalquestion\nanswering,diagnosticadvice,andpatienteducation.Hanetal.\n\
+    proposedMedAlpaca[6],amodelfine-tunedonalargecorpus\nofmedicaldatabasedonStanfordAlpaca[7],aimedatserving\n\
+    medicalquestionansweringandconsultationscenarios.Wang\netal.developedBenTsao[8],whichwasfine-tunedusing\n\
+    Chinesesyntheticdatageneratedfrommedicalknowledge\ngraphsandliterature,providingaccurateChinesemedical\n\
+    consultationservices.Inthelegalfield,Zhouetal.introduced\nLaWGPT[9],whichwasdevelopedthroughsecondarypre-\n\
+    trainingandinstructionfine-tuningonlarge-scaleChinese\nlegalcorpora,enablingrobustlegalquestionanswering\n\
+    capabilities.Inthefieldofhydrology,Renetal.proposed\nWaterGPT[10],amodelbasedonQwen-7B-Chat[11]and\n\
+    Qwen2-7B-Chat[12],whichsuccessfullyachievedknowledge-\nbasedquestionansweringandintelligenttoolinvocation\n\
+    withinthehydrologydomainthroughextensivesecondarypre-\ntrainingandinstructionfine-tuningondomain-specificdata.\n\
+    WiththesuccessofLLMsinvariousfields,researchers\nhavegraduallystartedtoexplorethedevelopmentofdomain-\n\
+    specificmultimodalmodels.Forinstance,inthemedicalfield,\nWangetal.introducedXrayGLM[13]toaddresschallengesin\n\
+    interpretingvariousmedicalimages.Lietal.proposed\nLLaVA-Med[14],aimingtobuildalargelanguageandvisionT2\n\
+    modelwithGPT-4levelcapabilitiesinthebiomedicaldomain.\nInthefieldofremotesensing,real-worldtasksoftenrequire\n\
+    multi-facetedcomprehensiveanalysistoachieveeffective\nsolutions.Therefore,practicalapplicationstypically\n\
+    necessitatemulti-taskcollaborationforaccuratejudgment.\nDespitesignificantadvancementsindeeplearning[15,16]within\n\
+    theremotesensingfield,mostcurrentresearchstillfocuseson\naddressingsingletasksanddesigningarchitecturesfor\n\
+    individualtasks[17],whichlimitsthecomprehensiveprocessing\nofremotesensingimages[18,19].Consequently,multi-modal\n\
+    largemodelsmayexhibitexceptionalperformanceinthe\nremotesensingdomain.\nInthefieldofremotesensing,significantprogresshasalso\n\
+    beenmadebyresearchers.Forexample,Liuetal.introduced\nRemoteCLIP[20],thefirstvision-languagefoundationmodel\n\
+    specificallydesignedforremotesensing,aimedatlearning\nrobustvisualfeatureswithrichsemanticsandgenerating\n\
+    alignedtextualembeddingsforvariousdownstreamtasks.\nZhangetal.proposedanovelframeworkfordomain-specific\n\
+    pre-trainingofvision-languagemodels,DVLM[21],andtrained\ntheGeoRSCLIPmodelforremotesensing.Theyalsocreated\n\
+    apairedimage-textdatasetcalledRS5Mforthispurpose.Hu\netal.releasedahigh-qualityremotesensingimagecaption\n\
+    dataset,RSICap[22],topromotethedevelopmentoflarge\nvision-languagemodelsintheremotesensingdomain,and\n\
+    providedtheRSIEvalbenchmarkdatasetforcomprehensive\nevaluationofthesemodels'performance.Kuckrejaetal.\n\
+    introducedGeoChat[23],amultimodalmodelspecifically\ndesignedforremotesensing,capableofhandlingvarious\n\
+    remotesensingimagesandperformingvisualquestion\nansweringandsceneclassificationtasks.Theyalsoproposed\n\
+    theRSmultimodalinstructionfollowingdataset,which\nincludes318kmultimodalinstructions,andthegeo-bench\n\
+    evaluationdatasetforassessingtheperformanceof\nmultimodalmodelsinremotesensing.Zhangetal.proposed\n\
+    EarthGPT[24],whichseamlesslyintegratesmulti-sensorimage\nunderstandingandvariousremotesensingvisualtaskswithin\n\
+    asingleframework.EarthGPTcancomprehendoptical,\nsyntheticapertureradar(SAR),andinfraredimagesunder\n\
+    naturallanguageinstructions,andaccomplisharangeoftasks\nincludingremotesensingsceneclassification,image\n\
+    description,visualquestionanswering,objectdescription,\nvisuallocalization,andobjectdetection.Liuetal.introduced\n\
+    theChange-Agentplatform[25],whichintegratesamulti-level\nchangeinterpretationmodel(MCI)andalargelanguage\n\
+    model(LLM)toprovidecomprehensiveandinteractive\nremotesensingchangeanalysis,achievingstate-of-the-art\n\
+    performanceinchangedetectionanddescriptionwhile\nofferinganewpathwayforintelligentremotesensing\n\
+    applications.\nHowever,mostcurrentresearchfocusesondirecttraining\nusinglargemultimodaldatasets,leadingtosignificant\n\
+    computationalresourceconsumption.Studieshaveshownthat\nfine-tuningonasmallamountofhigh-qualitydatacanachieve\n\
+    goodresults.Forinstance,Weietal.demonstratedthatafter\nfine-tuningInstructionGPT-4[26]on6%ofselecteddata,its\n\
+    performancesurpassedtheoriginalMiniGPT-4acrossvarioustasks.Regardingtheselectionofhigh-qualityfine-tuning\n\
+    datasets,Kungetal.proposedtheActiveInstructionTuning\nmethod[27],provingthatdatasetswithhighpromptuncertainty\n\
+    possessstrongergeneralizationabilities.Yangetal.proposed\naSelf-Distillationmethod[28]tomitigatethecatastrophic\n\
+    forgettingphenomenonafterLLMfine-tuning.Yuetal.\nintroducedWaveCoder[29],whichprojectsdatasetsintovector\n\
+    spaceandusesKCenterGreedyforclusteringtoselectcore\ndatasets.Althoughmanystudieshaveexploredhowtoselect\n\
+    high-qualitydatasets,noalgorithmhaseffectivelyfiltered\nhigh-qualitydatasetssuitableforfine-tuningmultimodal\n\
+    models,allowingthemodeltosignificantlyenhancedomain-\nspecificcapabilitieswhileretaininggeneralizationabilities.\n\
+    Toaddressthisgap,weproposeanoveladaptivefine-\ntuningalgorithmformultimodallargemodels,capableof\n\
+    automaticallycategorizingandfilteringremotesensing\nmultimodalinstructiondatasetstoidentifyhigh-qualitydata\n\
+    fortrainingfrommassiveremotesensingdatasets.Thecore\nstepsofthealgorithmincludeprojectingthelarge-scaledata\n\
+    intosemanticvectorspaceandusingtheMiniBatchKMeans\nalgorithmforautomatedclustering.Eachdataclusteristhen\n\
+    processedbyintroducingperturbationparameterstothe\noriginaldataandcalculatingthetranslationaldifferences\n\
+    betweentheoriginalandperturbeddatainthemultimodal\nmodel'svectorspace.Thisdifferenceservesasa\n\
+    generalizationperformancemetric,determiningthequalityof\nthedataset.Finally,throughalayerofranking,weselectthe\n\
+    batchofdatasetswiththehighestgeneralizationperformance\nmetricsfortraining.\n\
+    Fig.1.Varioustasksthatourremotesensingmulti-modal\nlargemodelcancomplete\nWeutilizetheRSmultimodalinstruction-followingdataset\n\
+    proposedbyGeoChatfortrainingandadopttheEvaluation\nBenchmarkfromGeoChatalongwithMMBench_DEV_EN[30],\n\
+    MME[31],andSEEDBench_IMG[32]asevaluationdatasetsfor\ndomain-specificandgeneraldomains,respectively.Through3\n\
+    comparisonswithrandomselection,theWaveCoderalgorithm,\nandourproposedalgorithmontheGeoChatclassification\n\
+    dataset,ourresultsdemonstratethatouralgorithm\noutperformsotherbaselinemethods,maximizingdomain\n\
+    capabilityenhancementwhilepreservinggeneralizationability.\nAdditionally,ouralgorithm'sselectedone-thirddataset\n\
+    reducestrainingtimebyapproximatelytwo-thirdscompared\ntotrainingontheentiredataset,withonlya1%average\n\
+    decreaseinperformanceintheremotesensingdomain,while\nsignificantlymaintaininggeneralizationcapability.The\n\
+    multimodallargemodelwetrainedexcelsinvariousremote\nsensingimagequestion-answeringandcomprehensiontasks\n\
+    (Figure1).\nThemaincontributionsofthispaperareasfollows:\n1.Weproposeanewmultimodalinstructionfine-tuning\n\
+    datasetqualitymetric\u2014generalizationperformancemetric.\n2.Weintroduceanovelalgorithmthatselectshigh-quality\n\
+    remotesensingmultimodalfine-tuningdatasetstoachieve\nfasterandmoreefficienttrainingresults.\n\
+    3.Bytrainingonsmalldatasets,wecomparetheeffectsof\nbaselinealgorithmsandouralgorithminbothgeneraland\n\
+    remotesensingdomains,validatingthatouralgorithm\nachievesfavorableresultsintheremotesensingdomain.\n\
+    II.DATASETCREATION\nA.TrainingData\nTheRSmultimodalinstructionfollowingdatasetisa\n\
+    multimodalinstruction-followingdatasetdesignedforremote\nsensingimageunderstanding.Itintegratesvarioustaskssuch\n\
+    asimagedescription,visualquestionanswering,andvisual\ndialogue,aimingtoenhancethemodel'sabilitytohandle\n\
+    complexreasoning,objectattributeunderstanding,andspatial\nrelationships.Thedatasetcontainsatotalof318,000\n\
+    instructionpairs.\nB.EvaluationDatasets\nOurevaluationdatasetsincludetwoparts:theremote\n\
+    sensingevaluationdatasetandthegeneralmultimodal\nevaluationdataset.\n(1)RemoteSensingEvaluationDatasets:\n\
+    LRBEN(LandUseandLandCoverRemoteSensing\nBenchmarkDataset):Thisdatasetisdesignedforlanduseand\n\
+    landcoverclassificationtasksinremotesensing.Itincludes\nhigh-resolutionimagesannotatedforvarioustypesofland\n\
+    cover,suchasurbanareas,forests,waterbodies,and\nagriculturalfields.LRBENisusedtobenchmarkmodels'\n\
+    performanceinvisualquestionanswering,sceneclassification,\nandothertasksinremotesensing.\n\
+    UCMercedLandUseDataset:Thisdatasetcontainsaerial\nimageryofvariouslanduseclasses,suchasagricultural,\n\
+    residential,andcommercialareas.Theimagesarehigh-\nresolutionandcover21differentclasses,eachwith100\n\
+    images,makingitsuitableforsceneclassificationtasks.Itis\nwidelyusedforevaluatingremotesensingmodels'abilityto\n\
+    classifyandunderstanddifferentlandusetypes.\nAID(AerialImageDataset):AIDisalarge-scaledatasetforaerialsceneclassification.Itcontainsimagesfromvarious\n\
+    scenes,suchasindustrialareas,residentialareas,and\ntransportationhubs.Thedatasetisdesignedtohelpin\n\
+    developingandbenchmarkingalgorithmsforscene\nclassification,imageretrieval,andotherremotesensingtasks.\n\
+    AIDincludesasignificantnumberofimagesforeachcategory,\nprovidingacomprehensivebenchmarkforevaluatingmodel\n\
+    performance.C.GeneralMultimodalEvaluationDatasets:\nMMBench_DEV_EN:MMBenchisabenchmarksuitefor\n\
+    evaluatingthemultimodalunderstandingcapabilitiesoflarge\nvision-languagemodels(LVLMs).Itcontainsapproximately\n\
+    2974multiple-choicequestionscovering20capability\ndimensions.Eachquestionissingle-choice,ensuringthe\n\
+    reliabilityandreproducibilityoftheevaluationresults.\nMMBenchusesastrategycalledcyclicevaluationtomore\n\
+    reliablytesttheperformanceofvision-languagemodels.\nMME(Multi-ModalEvaluation):MMEisacomprehensive\n\
+    evaluationbenchmarkforlargemultimodallanguagemodels,\naimingtosystematicallydevelopaholisticevaluationprocess.\n\
+    TheMMEdatasetincludesupto30ofthelatestmultimodal\nlargelanguagemodelsandconsistsof14sub-taskstotestthe\n\
+    models'perceptualandcognitiveabilities.TheMMEdata\nannotationsareallmanuallydesignedtoavoidpotentialdata\n\
+    leakageissuesthatmightarisefromusingpublicdatasets.\nSEEDBench_IMG:SEEDBenchisanimagedataset\n\
+    specificallydesignedfortrainingandevaluatingmultimodal\nmodels.Itcontainshigh-qualityimagedatawithdetailed\n\
+    annotations,suitableforvariousmultimodaltaskssuchas\nimageclassification,objectdetection,andsceneunderstanding.\n\
+    TheSEEDBenchdatasetaimstoassistresearchersin\ndevelopingandoptimizingmultimodalmodelsbyprovidinga\n\
+    comprehensivebenchmark.\nIII. METHODS\nA.AdaptiveSelf-TuningforMultimodalModels\n\
+    Fig.2.AdaptiveSelf-TuningforMultimodalModels\nalgorithmflow\n4\nFig.3.CompleteprocessofAdaptiveSelf-TuningforMultimodalModelsalgorithm\n\
+    Inreal-worldscenarios,thevolumeofinstructionfine-\ntuningdataisoftenlargeandcontinuallyexpanding,leading\n\
+    toincreasedtrainingcosts.Additionally,asthedatavolume\ngrows,dataconflictsalsobecomemorepronounced,often\n\
+    resultinginpoorertrainingoutcomes.Toaddressthisissue,\nweproposeanewalgorithmthatenableslargemodelsto\n\
+    autonomouslyselectdatatobetteradapttodomain-specific\ntasks.Thecoreofthisalgorithmistoallowthemodelto\n\
+    independentlyidentifythemostgeneralizabletaskinstructions,\nachievingoptimalperformancewithaminimalamountof\n\
+    trainingdata.TheflowchartofthisprocessisshowninFigure\n2.Thecompletetrainingandinferenceprocessofour\n\
+    algorithmisillustratedinFigure3.\nB.SelectionofGeneralizableTasks\nTheautonomousselectionoftaskinstructiondatasetswith\n\
+    greatergeneralizationhasbeenaresearchhotspot.For\ninstance,Sid-dhantandLipton'sworkonuncertainty-based\n\
+    activelearning[33]providessignificantinsights.\nInspiredbythesestudies,weproposeanewgeneralization\n\
+    measure:vectorspacetranslationdifference.Sincelarge\nmodelspredictthenextwordbasedoncontext,changesinthe\n\
+    contextvectoraffectsubsequentcontentgeneration.We\nevaluatetheuncertaintyofinstructionsbyrandomlydeleting\n\
+    wordsfromtheinstructioncontextasperturbationinformation\nandobservingthedegreeofchangeinthemodel'svector\n\
+    space.Generally,entrieswithstrongeruncertaintyyieldbetter\ngeneralizationeffectsaftertraining.Specifically,thevector\n\
+    spacetranslationdifferencemeasuresthetranslation\ndifferenceinthevectorspaceofthemodel'sprojectionvectors\n\
+    whengivencompleteandperturbedtaskinstructions,\nassessingthegeneralizationoftheinstruction.Thisquantifies\n\
+    themodel'sresponsivenesstouncertaininstructions,enabling\nbetterevaluationofthemodel'sgeneralizationperformance.ThedetailedflowchartisshowninFigure4,andthe\n\
+    specificstepsareasfollows:\n1. ForthemassivedatapoolX,weusethebge-large-\nen-v1.5[34]modeltoprojecteachdataentryintoectorspace,\n\
+    andthenperform automatedclusteringusingthe\nMiniBatchKMeansalgorithm.Specifically,weperform\n\
+    clusteringcalculationsfordifferentnumbersofclustersusing\ntheMiniBatchKMeansalgorithm,recordtheSSE(Sumof\n\
+    SquaredErrors)andsilhouettecoefficientforeachcluster\nnumber,andselecttheoptimalnumberofclustersbasedon\n\
+    thehighestsilhouettecoefficient.Thedataiseventually\ndividedintopclusters.Thespecificstepsareasfollows:\n\
+    \uFF081\uFF09Dataprojectionontovectorspace:\n) BGE(X  Vi i\uF03D\nHere,Xirepresentstheithdataiteminthedatapool,andVi\n\
+    representsthevectorrepresentationprojectedthroughthebge-\nlarge-en-v1.5model.\n\
+    \uFF082\uFF09CalculationoftheSumofSquaredErrors(SSE):\n2p\n1j|| || SSE\uF0E5\uF0E5\
+    \n\uF03D\uF0CE\uF02D \uF03D\njiCVj iV\uF06D\nHere,krepresentsthenumberofclusters,Cjdenotesthe\n\
+    jthcluster,and\u03BCjisthecentroidofthejthcluster.Vi\nrepresentsthevectorbelongingtothejthcluster.TheSSE\n\
+    measuresthesumofthedistancesbetweendatapointsand\ntheirrespectiveclustercentroids,servingasoneofthe\n\
+    indicatorstoevaluateclusteringperformance.AsmallerSSE\nindicatesthatthepointswithinaclusteraremoretightly\n\
+    grouped.ByplottingtheSSEvaluesfordifferentnumbersof\nclustersp,onecanpreliminarilyassessthereasonablerange\n\
+    forthenumberofclusters.\n\uFF083\uFF09CalculationoftheSilhouetteCoefficient:5\n\
+    b(i)) max(a(i),a(i)-b(i)s(i)\uF03D\nHere,a(i)representstheaveragedistancefromdatapointi\n\
+    toallotherpointswithinthesamecluster,andb(i)represents\ntheaveragedistancefromdatapointitothenearestpointsina\n\
+    differentcluster.ThesilhouettecoefficientSfortheentire\ndatasetistheaverageofthesilhouettescoress(i)foralldata\n\
+    points:\n\uF0E5\n\uF03D\uF03Dn\niis S\n1)(n1\nHere,nrepresentsthetotalnumberofdatapoints.\n\
+    \uFF084\uFF09Selectionoftheoptimalnumberofclusters:\n)( max arg kS p\nk\uF03D\n\
+    Here,S(k)representsthesilhouettecoefficientfordifferent\nnumbersofclustersk,andpistheoptimalnumberofclusters\n\
+    thatmaximizesS(k).\n2.Forthegivenp-thclusterandtheK-thoriginalinstruction\nI0,addaperturbationparametern(i.e.,thenumberofwords\n\
+    randomlydeletedfromeachinstruction).GenerateN\nperturbedinstructionsrandomly,denotedasI1toIN.\n\
+    3.Then,concatenatetheinputimageX0andanswerwithI0\ntoINandprojectthemintothevectorspaceofthemultimodal\n\
+    largemodel,asshowninthefollowingformula:\n)I,f(x = E , )I,f(x = E ... )I,f(x =\
+    \ EN 0 N 1-N 0 1-N 10 1\n4.FortheinstructionsI0toINandtheircorresponding\nimagesandanswers,calculatetheEuclideandistances\n\
+    betweentheprojectionvectorsE0toENandtheperturbed\nvectorsE1toENsequentially,asfollows:\n\
+    20 N 20 1-N 20 1 || E-E|| ,|| E - E|| ... ||E-E ||\n5.SumtheEuclideandistancesbetweentheperturbed\n\
+    vectorsE1toENandE0,thencalculatetheaveragevalueasthe\ngeneralizationmeasure,wherenrepresentstheperturbation\n\
+    parametervalue,andKrepresentstheK-thdataentry.\n\uF0E5\n\uF03D\uF02D \uF03DN\n\
+    iiEE\n120 kn, || ||N1  S\n6.Finally,sorteachinstructioninthep-thclusterbasedon\n\
+    theirgeneralizationmeasures.\n)S, .... Sort(Skn, k1,\nFig.4.AdaptiveSelf-TuningforMultimodalModels\n\
+    CalculatingGeneralizationIndexProcessC.Selectionofoptimaldisturbanceparameters\n\
+    Toselecttheoptimaldisturbanceparametern,weobserve\ntherelativeembeddingdifferenceswhenaddingdifferent\n\
+    disturbanceparameterstodeterminethebestvalueforn.\nThespecificstepsareasfollows:\n\
+    1.First,forthegivenK-thoriginalinstructionI0,\nsequentiallyaddrandomparametersfrom1ton,resultingin\n\
+    disturbedinstructionsI1toIn.\n2.Then,concatenatetheinputimageX0andtheanswer\n\
+    withI0toInrespectively,andprojectthemintothevector\nspaceofthemultimodallargemodeltoobtainvectorsE0toEn.\n\
+    Theformulaisasfollows:\n3.FortheobtainedvectorsE0toEn,sequentiallycalculate\n\
+    theEuclideandistancebetweeneachperturbedvectorE1toEn\nandtheoriginalvectorE0toEn.Theformulaisasfollows:\n\
+    20 n 20 1-n 20 1 || E-E|| ,|| E - E|| ... ||E-E ||\n4.Then,calculatetheaverageembeddingdifferenceSn,kfor\n\
+    theKentriesunderthedisturbanceparametern.Sequentially\ncalculatetherelativeembeddingdifferencesDn,Kfrom1ton,\n\
+    andselectthedisturbanceparameterwiththemaximum\nrelativeembeddingdifferenceastheoptimaldisturbance\n\
+    parameter.Theformulaisasfollows,whereKrepresentsthe\np-thdatapoolcontainingKentries,andnrepresentsthe\n\
+    disturbanceparameter:\n\uF0E5\n\uF03D\uF02D\uF03DK\nii iEE\n120 n Kn, || ||  S\n\
+    K1,-n Kn, kn, S S D \uF02D\uF03D\n)) D,... D( |(Kn, K1, MaxnPn\uF03D\nFig.5.AdaptiveSelf-TuningforMultimodalModels\n\
+    algorithmselectsthebestdisturbanceparameternprocess\nD.Comparealgorithms\nAlgorithm1:RandomSampling\n\
+    Therandomsamplingmethodinvolvesrandomlyselectinga\nsubsetofthedatasetfortraining.Thisapproachoftencaptures\n\
+    themostdiverseandbroadlyrepresentativedatafromthe\ndataset.Therefore,weusetherandomsamplingalgorithmas\n\
+    ourbaselineforcomparison.\nAlgorithm2:KCenterGreedyClusteringAlgorithm\nWaveCoderproposesamethodforselectingacoredataset\n\
+    usingtheKCenterGreedyclusteringalgorithm.Inthis\napproach,weusethebge-visualized-m3[35]modeltoproject6\n\
+    eachimage-textpairintovectorspace,thenapplythe\nKCenterGreedyalgorithmforclustering,andselecta\n\
+    representativesubsetofthedataset.\nIV.EXPERIMENTSANDANALYSIS\nA.TrainingDetails\n\
+    WeperformedLoRA[36]fine-tuningontheInternLM-\nXComposer2-VL-7B[37]modelusingtheRSmultimodal\n\
+    instructionfollowingdataset.Thefine-tuningparametersare\nasfollows:\nTABLEI\n\
+    TRAINPARAMETERS\nHyperparameter Value\nPrecision fp16\nEpochs 3\nMaxlength 4096\n\
+    Batchsize 8\nWeight_decay 0.1\nWarmup_ratio 0.01\nB.ExperimentonDisturbanceParameterSettings\n\
+    Tovalidatetheeffectivenessofouralgorithm,weuseda\nsubsetofclustereddatafocusedonclassificationtasks,\n\
+    containing3.2kentries,asthetrainingset.Wefirstevaluated\ntheoptimaldisturbanceparameterusingouralgorithm,andthe\n\
+    relativevectorembeddingdifferencesareshowninFigure6.\nFig.6.Relativevectorembeddingdifferenceunderdifferent\n\
+    disturbanceparameters\nAsshowninthefigure,theoptimaldisturbanceparameter\nis2,withthevaluegraduallyconvergingandthechange\n\
+    magnitudedecreasing,approachingzeroafter4.\nTherefore,wesettheoptimaldisturbanceparameterto2.\n\
+    Tofurtherverifythis,weusedouralgorithmtorankthe\ngeneralizabilityofthetrainingsetwithdisturbanceparameters\n\
+    from1to4.Weselectedthetop5000entrieswiththehighest\ngeneralizabilityfortrainingandevaluatedtheperformanceon\n\
+    theUCMercedandAIDdatasets.Theresultsareshownin\nFigure7.\nFig.7.Modeltrainingeffectunderdifferentdisturbance\n\
+    parameters\nFromthefigure,itisevidentthatthemodelachievesthe\nbesttrainingperformancewhenthedisturbanceparameteris\n\
+    setto2,reachinganaccuracyof86.57%ontheUCMerced\ndataset,whichis4pointshigherthanwhenthedisturbance\n\
+    parameteris1or3.OntheAIDdataset,italsoachieved\n77.93%,only0.04pointslowerthanwhenthedisturbance\n\
+    parameteris3.Overall,themodelachievesoptimaltraining\nperformancewhenthedisturbanceparameterissetto2.\n\
+    C.ComparisonofAlgorithmPerformance\nTofurthervalidatetheeffectivenessofouralgorithm,we\n\
+    comparedrandomsampling,theKCenterGreedyclustering\nalgorithm,andouralgorithm.Weselected5000dataentries\n\
+    fortrainingineachcaseandcomparedthemodel's\nperformanceontheUCMercedandAIDdatasets.Theresults\n\
+    areshowninTable2.\nTABLEII\nCOMPARISONOFTRAININGEFFECTSOFDIFFERENT\nALGORITHMMODELSUNDER5000PIECESOFDATA\n\
+    TABLEIII\nCOMPARISONOFTRAININGEFFECTSOFDIFFERENT\nALGORITHMMODELSUNDERDIFFERENTSCALESOFDATAMethod\
+    \ AID UCMerced Avg.\nBaseline(random) 77.43 85.90 81.67\nKCenterGreedy 78.07\u2191\
+    0.64 82.00\u21933.90 80.04\u21931.63\nOurs 77.93\u21910.50 86.57\u21910.67 82.25\u2191\
+    0.58\nMethod Size AID UCMerced Avg.\nBaseline\n(random)10k 78.10 87.52 82.81\n\
+    Ours 10k 78.73\u21910.63 89.29\u21911.77 84.04\u21911.20\nDirect 32k 81.37\u2191\
+    3.27 90.71\u21913.19 86.04\u21913.237\nTABLEIV\nCOMPARISONOFGENERALPERFORMANCEOFDIFFERENTALGORITHMMODELSUNDERDIFFERENTSCALESOFDATA\n\
+    Asshowninthetable,ouralgorithmimprovesthebaseline\nalgorithm(randomsampling)by0.50ontheUCMerced\n\
+    datasetand0.67ontheAIDdataset,withanaverage\nimprovementof0.58.Incontrast,theKCenterGreedy\n\
+    clusteringalgorithmimprovesby0.64ontheUCMerced\ndatasetbutdecreasesby3.90ontheAIDdataset,resultingin\n\
+    anoveralldecreaseof1.63comparedtothebaselinealgorithm.\nOverall,ouralgorithmachievesthebesttrainingperformance.\n\
+    Tofurtherobservetheimprovementofouralgorithmover\nthebaselinealgorithm,wetestedthetrainingperformanceon\n\
+    adatasetof10,000entriesandontheentireclassification\ndataset.TheresultsareshowninTable3.\n\
+    Asshowninthetable,whenthedatasetsizeisexpandedto\n10,000entries,ouralgorithmshowsevengreateradvantages,\n\
+    improvingby0.63ontheAIDdatasetandby1.77ontheUC\nMerceddatasetcomparedtothebaselinealgorithm,withan\n\
+    overallimprovementof1.20.Theaverageimprovementof\n0.58from5000to10,000entriesisnearlydouble,indicating\n\
+    thattheperformanceimprovementbroughtbyouralgorithm\nincreaseswiththedatasetsize.Additionally,whentrainingon\n\
+    theentire32kdataset,ouralgorithm,usingonly10kentries,is\nonly1.42pointslowerontheUCMerceddatasetand2.64\n\
+    pointslowerontheAIDdataset,withanoverallaverage\ndecreaseof2.00.Thisresultdemonstratesthatouralgorithm\n\
+    cansignificantlyapproximatetheperformanceoftrainingon\ntheentiredatasetwithjustone-thirdofthedata.\n\
+    Furthermore,wecomparedtheperformanceofmodels\ntrainedwithouralgorithmandthebaselinealgorithmin\n\
+    generaldomains.TheresultsareshowninTable4.\nAsshowninthetable,ouralgorithmalsoretainsthebest\n\
+    generaldomaincapabilities,demonstrating superior\nperformanceovertherandomsamplingmethodonthe\n\
+    MMBench_DEV_en,SEEDBench,andMMEdatasets,\nachievingscoresof84.38,75.45,and2276.30,respectively.\n\
+    TheperformanceonMMBench_DEV_enandSEEDBench\nexceedsthatoftheoriginalmodel,withimprovementsof0.41\n\
+    and33.60,respectively.Incontrast,whiledirecttrainingon\nthe 32k dataset shows\
+    \ an improvement on\nMMBench_DEV_en,itslightlydeclinesonSEEDBench.\nOverall,ourmethodsignificantlyenhancesperformance\n\
+    metricsintheremotesensingdomainwhilemaintainingthe\nmodel'sgeneralcapabilities,demonstratingitseffectiveness\n\
+    andsuperiority.D.Optimaltrainingdataratio\nTodeterminetheoptimaltrainingdataratio,weconducted\n\
+    adetailedcomparisonoftrainingdurationsandmodel\nperformancefordifferentdatavolumes(5000,10000,15000,\n\
+    and32000samples).Theexperimentalresultsareshownin\nFigure8.\nFig.8.Comparisonoftrainingtimeandmodelperformance\n\
+    underdifferentsizesofdatasets\nAsillustratedinFigure8,increasingthetrainingdata\n\
+    volumeleadstoimprovedmodelperformanceonboththe\nAIDandUCMerceddatasets.Specifically,with5000samples,\n\
+    theperformanceontheAIDdatasetis77.93,andontheUC\nMerceddataset,itis86.57.Whenthedatavolumeisincreased\n\
+    to10000samples,theperformanceontheAIDandUC\nMerceddatasetsrisesto78.73and89.29,respectively.Further\n\
+    increasingthedatavolumeto15000and32000samples\nresultsinperformancelevelsof79.80and81.37,aswellas\n\
+    89.33and90.71.Thisindicatesthatmoredatagenerally\nimprovesmodelperformance,buttheperformancegain\n\
+    graduallydiminishes.\nThetrainingdurationdatashowasignificantincrease\nwiththedatavolume.Forinstance,trainingwith5000samples\n\
+    takes2.88hours,whiletrainingwith32000samplesincreases\nto32.14hours,anadditional29.26hours.Method\
+    \ Model Size MMBench Seedbench MME\n/ InternLM-XComposer2-VL-7B / 83.97 75.9 2242.70\n\
+    Baseline\n(random)InternLM-XComposer2-VL-7B 10k 84.22\u21910.25 75.13\u21930.77\
+    \ 2272.01\u219129.31\nOurs InternLM-XComposer2-VL-7B 10k 84.38\u21910.41 75.45\u2193\
+    0.45 2276.30\u219133.60\nDirect InternLM-XComposer2-VL-7B 32k 84.57\u21910.60\
+    \ 75.14\u21930.76 2245.15\u21912.450\n8\nTABLEV\nCOMPARETHEEVALUATIONRESULTSOFDIFFERENTMODELSONAIDANDUCMERCEDDATASETS\n\
+    TABLEVI\nCOMPARETHEEVALUATIONRESULTSOFDIFFERENTMODELSONTHELRBENDATASET\nBycomparingmodelperformanceandtrainingdurations\n\
+    acrossdifferentdatavolumes,wefoundthatwith10000\nsamples,themodel'sperformanceisclosetoitspeak,while\n\
+    thetrainingdurationissignificantlylowercomparedto15000\nand32000samples.Specifically,theperformancedifference\n\
+    between10000and32000samplesisanaverageof2.13,with\nareductionincomputationcostby22.18hours.\n\
+    Insummary,with10000samples,themodelachievesa\nhighperformancewhilesignificantlyreducingtrainingtime\n\
+    andcomputationalresources.Thus,10000samplesrepresenttheoptimalbalancebetweenperformanceandcomputational\n\
+    cost.Thisindicatesthatusingapproximately1/3ofthetotal\ndatasetachievesbettertrainingresultswhilesubstantially\n\
+    loweringthecomputationalcost.\nE.FinalPerformanceofOurAlgorithm\nUsingouralgorithmforautomaticclustering,wedivided\n\
+    theRSmultimodalinstructionfollowingdatasetinto7\ncategories,asshowninthevectorspacevisualizationin\n\
+    Figure9.\nFig.9.RSdatasetclusteringinvectorspace.Model AID UCMerced Avg.\nMiniGPTv2[38]4.76\
+    \ 12.90 8.83\nQwen-VL-Chat[39]62.90 52.60 57.75\nLLaVA-1.5[40]68.00 51.00 59.5\n\
+    InternLM-XComposer2-VL-7B 62.87 65.38 64.13\nGeoChat 72.03 84.43 78.23\nOurs 77.19\
+    \ 89.86 83.53\nModelRSVQA-LR\nRural/Urban Presence Compare Avg.\nLLaVA-1.5 59.22\
+    \ 73.16 65.19 65.86\nInternLM-XComposer2-VL-7B 69.00 52.62 70.80 64.14\nMiniGPTv2\
+    \ 60.02 51.64 67.64 59.77\nInstructBLIP[41]62.62 48.83 63.92 59.12\nMplug-Owl2[42]57.99\
+    \ 74.04 65.04 65.69\nQwen-VL-Chat 62.00 47.65 54.64 58.73\nSkyEyeGPT[43]88.93\
+    \ 88.63 75.00 84.16\nRSGPT 94.00 91.17 91.70 92.29\nGeoChat 91.09 90.33 94.00\
+    \ 91.81\nLHRS-Bot[44]89.07 88.51 90.00 89.19\nOurs 89.00 91.91 91.78 90.909\n\
+    Wethenselected15,000dataentriesfromeachcategory,\ntotaling105,000entriesfortraining.Themodelwastrained\n\
+    forthreeepochs,andtheresultsareshowninTables5and\n6.\nAsshowninthetables,themodeltrainedwithonly105k\n\
+    entriesachieved77.19ontheAIDdatasetand89.86onthe\nUCMerceddataset,whichare5.16and5.43pointshigher\n\
+    thanGeoChat,respectively.OntheLRBENdataset,it\nachievedanaverageof90.90,only0.91pointslowerthan\n\
+    GeoChat.Observingtheperformanceoftheoriginal\nmodelsontheAID,UCMerced,andLRBENdatasets,we\n\
+    findthatouroriginalmodelInternLM-XComposer2-VL-\n7BoutperformsGeoChat'soriginalmodelLLaVA-1.5by\n\
+    anaverageof4.63onAIDandUCMerced.Aftertraining,\nourmodeloutperformsGeoChatby5.3onthesedatasets.\n\
+    OntheLRBENdataset,InternLM-XComposer2-VL-7B\nscores1.72pointslowerthanLLaVA-1.5,andourfinal\n\
+    trainedmodelscores0.91pointslowerthanGeoChat.Theseresultsindicatethattheperformanceofthe\n\
+    originalmodelhasadirectpositiveimpactonthefinal\ntrainingperformance.However,thekeyfindingisthatby\n\
+    selectinghigh-quality,generalizabledatasets,ouralgorithm\ncanachieveresultscomparabletothoseobtainedfrom\n\
+    trainingonthefulldataset,usingonlyone-thirdofthedata.\nThisdemonstratestheeffectivenessandefficiencyofour\n\
+    methodinenhancingmodelperformance.\nF.AblationStudy\nTofurtherevaluatetheperformanceofouralgorithm,we\n\
+    comparedtheresultsoftrainingontheentiredatasetversus\na105ksubsetselectedbyouralgorithm,bothusing\n\
+    InternLM-XComposer2-VL-7Bontwo3090GPUsforone\nepoch.TheresultsareshowninTables7,8,and9.Notably,\n\
+    trainingonthe105kdatasettookapproximately35hours,\nwhiletrainingonthefull318kdatasetrequiredaround110\n\
+    hours,morethanthreetimesthetimeconsumption.\nTABLEVII\nCOMPARETHEEVALUATIONRESULTSOFMODELSTRAINEDONDATASETSOFDIFFERENTSCALESONAIDANDUCMERCED\n\
+    TABLEVIII\nCOMPARETHEEVALUATIONEFFECTSOFMODELSTRAINEDONDATASETSOFDIFFERENTSCALESONLRBEN\n\
+    TABLEIX\nCOMPARETHEEVALUATIONEFFECTSOFMODELSTRAINEDONDATASETSOFDIFFERENTSCALESINGENERALFIELDS\n\
+    AsseeninTables7and8,theperformancedifference\nbetweentrainingontheentiredatasetandthe1/3subset\n\
+    selectedbyouralgorithmisminimalinremotesensing\ntasks.OntheAIDdataset,ouralgorithmevenachievedan\n\
+    accuracythatis0.53%higherthantrainingonthefull\ndataset.Ouralgorithmreachedanaccuracyof80.64onthe\n\
+    AIDandUCMercedevaluationdatasets,whichisonly\n0.87%lowerthantrainingonthefulldataset.Onthe\n\
+    RSVQA-LRdataset,ouralgorithmaveragedanaccuracyof\n80.59,just1.42%lowerthanthefulldatasettraining.\n\
+    ItisworthnotingthatthetrainingresultsontheUC\nMercedandAIDdatasetsarenotashighasthoseachieved\n\
+    bytrainingonasingletypeofdatasetasdescribedin\nSection4.3.Thisindicatesthattrainingondatasetsof\n\
+    differenttypestogethercanleadtosignificantdataconflicts.However,ourmethodachievesahigherscoreontheAID\n\
+    datasetcomparedtotrainingontheentiredataset,\nsuggestingthatselectinghigh-qualitysubsetscanalleviate\n\
+    someofthedataconflicts.\nIt'sworthnotingthatingeneral-domaintasks,our\nalgorithmretainedmoreperformancethantrainingdirectly\n\
+    onthefulldataset,achievingscoresof83.78,74.92,and\n2121.01onMMBench,Seedbench,andMME,\n\
+    respectively\u2014allhigherthantheperformancescoresofthe\nmodeltrainedonthefulldataset.Additionally,onthe\n\
+    SeedbenchandMMEdatasets,theaccuracylossfrom\ntrainingonthefulldatasetwasnearlytwicethatoftheloss\n\
+    fromouralgorithm.\nInsummary,ouralgorithmsavesmorethantwicethe\ntrainingtimewhilemaximizingtheretentionofgeneral-Method\
+    \ Size AID UCMerced Avg.\nOurs 105k 75.60 85.67 80.64\nDirect 318k 75.07\u2193\
+    0.53 87.95\u21912.28 81.51\u21910.87\nMethodRSVQA-LR\nRural/Urban Presence Compare\
+    \ Avg.\nOurs 90.00 90.73 91.05 90.59\nDirect 92.00\u21912.00 91.57\u21910.84 92.45\u2191\
+    1.40 92.01\u21911.42\nMethodModel Size MMBench Seedbench MME\n/ InternLM-XComposer2-VL-7B\
+    \ / 83.97 75.9 2242.70\nOurs InternLM-XComposer2-VL-7B 105k 83.78\u21930.19 74.92\u2193\
+    0.98 2121.01\u2193121.69\nDirect InternLM-XComposer2-VL-7B 318k 83.75\u21930.22\
+    \ 74.18\u21931.72 1982.90\u2193259.8010\ndomaincapabilities,withonlyabouta1%accuracylossin\n\
+    theremotesensingdomain.\nV. CONCLUSION\nThisstudyaddressestheissueofdataselectionfor\n\
+    multimodallargemodelsinvariousdomaintasksby\nproposinganadaptivefine-tuningalgorithm.Mostcurrent\n\
+    researchdirectlytrainsonlarge-scalemultimodaldata,\nwhichnotonlyrequiressubstantialcomputationalresources\n\
+    butalsoresultsinsignificantperformancedegradation\nwhenrandomlyselectingasmallsubsetofdata.Toresolve\n\
+    this,wefirstprojectthelarge-scaledataintovectorspace\nandusetheMiniBatchKMeansalgorithmforautomated\n\
+    clustering.Then,wemeasurethegeneralizabilityofthe\ndatabycalculatingthetranslationdifferenceinthe\n\
+    multimodallargemodel'svectorspacebetweentheoriginal\nandperturbeddata,andautonomouslyselectdatawithhigh\n\
+    generalizabilityfortraining.\nOurexperiments,basedontheInternLM-XComposer2-\n\
+    VL-7Bmodel,wereconductedontheremotesensing\nmultimodaldatasetproposedbyGeoChat.Theresultsshow\n\
+    thatusingtheadaptivefine-tuningalgorithm,ourmethod\noutperformstherandomsamplingandKCenterGreedy\n\
+    clusteringalgorithmsintrainingwitha5,000-entrydataset,\nachievingthebestdomainandgeneralperformancewitha\n\
+    10,000-entrydataset.Ultimately,usingonly105,000data\nentries\u2014one-thirdoftheGeoChatdataset\u2014\
+    andtrainingon\nasingle3090GPU,ourmodelachievedperformancesof\n89.86ontheUCMerceddatasetand77.19ontheAID\n\
+    dataset,whichare5.43and5.16pointshigherthan\nGeoChat,respectively.OntheLRBENevaluationdataset,\n\
+    ourmodelwasonly0.91pointsloweronaverage.\nFurthermore,comparingtheperformanceofmodelstrained\n\
+    onthefulldatasetversusourone-thirddataset,wefound\nthatourapproachreducedtrainingtimebymorethan\n\
+    68.2%whilemaintaininggeneral-domaincapabilitieswith\nonlya1%averagedecreaseinremotesensingaccuracy.\n\
+    Insummary,ouradaptivefine-tuningalgorithm\neffectivelyselectshigh-qualitydata,enhancingmodel\n\
+    performanceinspecificdomainswhilemaintaininggeneral\nperformanceunderlimitedcomputationalresources.This\n\
+    algorithmhassignificantpracticalvaluefortraining\nmultimodallargemodels,especiallyinscenarioswith\n\
+    constrainedcomputationalresources. REFERENCES\n[1]Bahrini,A.,Khamoshifar,M.,Abbasimehr,H.,etal.\n\
+    (2023).ChatGPT:Applications,opportunities,andthreats.\nIn2023SystemsandInformationEngineeringDesign\n\
+    Symposium(SIEDS)(pp.274-279).IEEE.\n[2]Achiam,J.,Adler,S.,Agarwal,S.,etal.(2023).GPT-\n\
+    4technicalreport.arXivpreprintarXiv:2303.08774.\n[3]Brown,T.B.(2020).Languagemodelsarefew-shot\n\
+    learners.arXivpreprintArXiv:2005.14165.\n[4]Ren,Y.,Li,W.,Shi,L.,Ding,J.,Du,J.,&Chen,T.\n\
+    (2024).FUO_ED:Adatasetforevaluatingtheperformance\noflargelanguagemodelsindiagnosingcomplexcasesof\n\
+    fever of unknown origin. SSRN.\nhttps://doi.org/10.2139/ssrn.4952379\n[5]Singhal,K.,Azizi,S.,Tu,T.,etal.(2022).Large\n\
+    languagemodelsencodeclinicalknowledge.arXivpreprint\narXiv:2212.13138.\n[6]Han,T.,Adams,L.C.,Papaioannou,J.M.,etal.\n\
+    (2023).MedAlpaca--anopen-sourcecollectionofmedical\nconversationalAImodelsandtrainingdata.arXivpreprint\n\
+    arXiv:2304.08247.\n[7]Taori,R.,Gulrajani,I.,Zhang,T.,etal.(2023).\nStanfordAlpaca:Aninstruction-followingLLaMAmodel.\n\
+    arXivpreprintarXiv:2309.16609.\n[8]Wang,H.,Liu,C.,Xi,N.,etal.(2023).Huatuo:\n\
+    TuningLLaMAmodelwithChinesemedicalknowledge.\narXivpreprintarXiv:2304.06975.\n\
+    [9]Zhou,Z.,Shi,J.X.,Song,P.X.,etal.(2024).\nLawGPT:AChineselegalknowledge-enhancedlarge\n\
+    languagemodel.arXivpreprintarXiv:2406.04614.\n[10]Ren,Y.I.,Zhang,T.Y.,Dong,X.R.,etal.(2024).\n\
+    WaterGPT:Trainingalargelanguagemodeltobecomea\nhydrologyexpert.AvailableatSSRN4863665.\n\
+    [11]Bai,J.,Bai,S.,Chu,Y.,etal.(2023).Qwentechnical\nreport.arXivpreprintarXiv:2309.16609.\n\
+    [12]Yang,A.,Yang,B.,Hui,B.,etal.(2024).Qwen2\ntechnicalreport.arXivpreprintarXiv:2407.10671.\n\
+    [13]Wang,R.,Duan,Y.,Li,J.,etal.(2023).XrayGLM:\nThefirstChinesemedicalmultimodalmodelthatchest\n\
+    radiographs summarization. arXiv preprint\narXiv:2408.12345.\n[14]Li,C.,Wong,C.,Zhang,S.,etal.(2024).Llava-Med:\n\
+    Trainingalargelanguage-and-visionassistantfor\nbiomedicineinoneday.AdvancesinNeuralInformation\n\
+    ProcessingSystems,36.\n[15]Zhang,T.,Qin,C.,Li,W.,etal.(2023).Waterbody\nextractionoftheWeiheRiverBasinbasedonMF-\n\
+    SegFormerappliedtoLandsat8OLIdata.RemoteSensing,\n15(19),4697.\n[16]Chen,K.,Liu,C.,Chen,H.,etal.(2024).\n\
+    RSPrompter:Learningtopromptforremotesensing\ninstancesegmentationbasedonvisualfoundationmodel.\n\
+    IEEETransactionsonGeoscienceandRemoteSensing.\n[17]Su,H.,Qiu,J.,Tang,Z.,etal.(2024).Retrieving\n\
+    globaloceansubsurfacedensitybycombiningremote\nsensingobservationsandmultiscalemixedresidual11\n\
+    transformer.IEEETransactionsonGeoscienceandRemote\nSensing.\n[18]Qin,C.H.,Li,W.B.,Zhang,T.Y.,etal.(2024).\n\
+    ImprovedDeepLabv3+basedfloodwaterbodyextraction\nmodelforSARimagery.InIGARSS2024-2024IEEE\n\
+    InternationalGeoscienceandRemoteSensingSymposium\n(pp.1196-1199).IEEE.\n[19]Zhang,T.,Li,W.,Feng,X.,etal.(2024).Super-\n\
+    resolutionwaterbodyextractionbasedonMF-SegFormer.\nInIGARSS2024-2024IEEEInternationalGeoscienceand\n\
+    RemoteSensingSymposium(pp.9848-9852).IEEE.\n[20]Liu,F.,Chen,D.,Guan,Z.,etal.(2024).\n\
+    RemoteCLIP:Avisionlanguagefoundationmodelfor\nremotesensing.IEEETransactionsonGeoscienceand\n\
+    RemoteSensing.\n[21]Zhang,Z.,Zhao,T.,Guo,Y.,etal.(2023).RS5M:A\nlargescalevision-languagedatasetforremotesensing\n\
+    vision-languagefoundationmodel.arXivpreprint\narXiv:2306.11300.\n[22]Hu,Y.,Yuan,J.,Wen,C.,etal.(2023).RSGPT:A\n\
+    remotesensingvisionlanguagemodelandbenchmark.\narXivpreprintarXiv:2307.15266.\n\
+    [23]Kuckreja,K.,Danish,M.S.,Naseer,M.,etal.(2024).\nGeoChat:Groundedlargevision-languagemodelfor\n\
+    remotesensing.InProceedingsoftheIEEE/CVF\nConferenceonComputerVisionandPatternRecognition\n\
+    (pp.27831-27840).\n[24]Zhang,W.,Cai,M.,Zhang,T.,etal.(2024).\nEarthGPT:Auniversalmulti-modallargelanguagemodel\n\
+    formulti-sensorimagecomprehensioninremotesensing\ndomain.IEEETransactionsonGeoscienceandRemote\n\
+    Sensing.\n[25]Zhang,W.,Cai,M.,Zhang,T.,etal.(2024).\nEarthGPT:Auniversalmulti-modallargelanguagemodel\n\
+    formulti-sensorimagecomprehensioninremotesensing\ndomain.IEEETransactionsonGeoscienceandRemote\n\
+    Sensing.\n[26]Wei,L.,Jiang,Z.,Huang,W.,etal.(2023).\nInstructionGPT-4:A200-instructionparadigmforfine-\n\
+    tuningMiniGPT-4.arXivpreprintarXiv:2308.12067.\n[27]Kung,P.N.,Yin,F.,Wu,D.,etal.(2023).Active\n\
+    instructiontuning:Improvingcross-taskgeneralizationby\ntrainingonpromptsensitivetasks.arXivpreprint\n\
+    arXiv:2311.00288.\n[28]Yang,Z.,Pang,T.,Feng,H.,etal.(2024).Self-\ndistillationbridgesdistributiongapinlanguagemodelfine-\n\
+    tuning.arXivpreprintarXiv:2402.13669.\n[29]Yu,Z.,Zhang,X.,Shang,N.,etal.(2023).\n\
+    WaveCoder:Widespreadandversatileenhancedinstruction\ntuningwithrefineddatageneration.arXivpreprint\n\
+    arXiv:2312.14187.\n[30]Liu,Y.,Duan,H.,Zhang,Y.,etal.(2023).\nMMBench:Isyourmulti-modalmodelanall-aroundplayer?\n\
+    arXivpreprintarXiv:2307.06281.\n[31]Sun,Y.,Hu,Q.,Wu,Z.,etal.(2024).MME:A\ncomprehensiveevaluationbenchmarkformultimodallarge\n\
+    languagemodels.arXivpreprintarXiv:2408.12345.[32]Li,B.,Ge,Y.,Ge,Y.,etal.(2024).SEED-Bench:\n\
+    Benchmarkingmultimodallargelanguagemodels.In\nProceedingsoftheIEEE/CVFConferenceonComputer\n\
+    VisionandPatternRecognition(pp.13299-13308).\n[33]Siddhant,A.,&Lipton,Z.C.(2018).DeepBayesian\n\
+    activelearningfornaturallanguageprocessing:Resultsofa\nlarge-scale empirical study.\
+    \ arXiv preprint\narXiv:1808.05697.\n[34]Xiao,S.,Liu,Z.,Zhang,P.,&Muennighoff,N.\n\
+    (2023).C-Pack:Packagedresourcestoadvancegeneral\nChineseembedding.arXivpreprintarXiv:2309.07597.\n\
+    [35]Chen,J.,Xiao,S.,Zhang,P.,etal.(2024).BGEM3-\nembedding:Multi-lingual,multi-functionality,multi-\n\
+    granularitytextembeddingsthroughself-knowledge\ndistillation.arXivpreprintarXiv:2402.03216.\n\
+    [36]Hu,E.J.,Shen,Y.,Wallis,P.,etal.(2021).LoRA:\nLow-rankadaptationoflargelanguagemodels.arXiv\n\
+    preprintarXiv:2106.09685.\n[37]Dong,X.,Zhang,P.,Zang,Y.,etal.(2024).\nInternLM-XComposer2:Masteringfree-formtext-image\n\
+    compositionandcomprehensioninvision-languagelarge\nmodel.arXivpreprintarXiv:2401.16420.\n\
+    [38]Chen,J.,Zhu,D.,Shen,X.,etal.(2023).MiniGPT-\nv2:Largelanguagemodelasaunifiedinterfaceforvision-\n\
+    language multi-task learning. arXiv preprint\narXiv:2310.09478.\n[39]Bai,J.,Bai,S.,Yang,S.,etal.(2023).Qwen-VL:A\n\
+    versatilevision-languagemodelforunderstanding,\nlocalization,textreading,andbeyond.arXivpreprint\n\
+    arXiv:2401.09712.\n[40]Liu,H.,Li,C.,Li,Y.,etal.(2024).Improved\nbaselineswithvisualinstructiontuning.InProceedingsof\n\
+    theIEEE/CVFConferenceonComputerVisionandPattern\nRecognition(pp.26296-26306).\n\
+    [41]Chen,W.,Wei,X.,Zhang,L.,etal.(2024).MME:\nInstructBLIP:Towardsgeneral-purposevision-language\n\
+    modelswithinstruction tuning.arXiv preprint\narXiv:2402.04257.\n[42]Ye,Q.,Xu,H.,Ye,J.,etal.(2024).MPlug-OWL2:\n\
+    Revolutionizingmulti-modallargelanguagemodelwith\nmodalitycollaboration.InProceedingsoftheIEEE/CVF\n\
+    ConferenceonComputerVisionandPatternRecognition\n(pp.13040-13051).\n[43]Zhan,Y.,Xiong,Z.,Yuan,Y.(2024).SkyEyeGPT:\n\
+    Unifyingremotesensingvision-languagetasksvia\ninstructiontuningwithlargelanguagemodel.arXiv\n\
+    preprintarXiv:2401.09712.\n[44]Muhtar,D.,Li,Z.,Gu,F.,etal.(2024).LHRS-Bot:\nEmpoweringremotesensingwithVGI-enhancedlarge\n\
+    multimodal language model. arXiv preprint\narXiv:2402.02544\n\n            **Your\
+    \ Task**\n\n            1. **Literature Review**: Analyze the Introduction provided\
+    \ and conduct a brief literature review to understand the current state of research\
+    \ in this area.\n\n            2. **Brainstorming**: Collaboratively brainstorm\
+    \ potential research ideas that build upon or address gaps in the Introduction.\n\
+    \n            3. **Summarization**: Summarize your collective ideas.\n\n     \
+    \       4. **Formulate a New Research Idea**: Develop a new research proposal\
+    \ in the format of the '5q', defined below:\n\n               **Here is a high-level\
+    \ summarized insight of a research field Machine Learning.**\n\n             \
+    \  **Here are the five core questions:**\n\n               **[Question 1] - What\
+    \ is the problem?**\n\n               Formulate the specific research question\
+    \ you aim to address. Only output one question and do not include any more information.\n\
+    \n               **[Question 2] - Why is it interesting and important?**\n\n \
+    \              Explain the broader implications of solving this problem for the\
+    \ research community.\n               Discuss how such a paper will affect future\
+    \ research.\n               Discuss how addressing this question could advance\
+    \ knowledge or lead to practical applications.\n\n               **[Question 3]\
+    \ - Why is it hard?**\n\n               Discuss the challenges and complexities\
+    \ involved in solving this problem.\n               Explain why naive or straightforward\
+    \ approaches may fail.\n               Identify any technical, theoretical, or\
+    \ practical obstacles that need to be overcome. MAKE IT CLEAR.\n\n           \
+    \    **[Question 4] - Why hasn't it been solved before?**\n\n               Identify\
+    \ gaps or limitations in previous research or existing solutions.\n          \
+    \     Discuss any barriers that have prevented this problem from being solved\
+    \ until now.\n               Explain how your approach differs from or improves\
+    \ upon prior work. MAKE IT CLEAR.\n\n               **[Question 5] - What are\
+    \ the key components of my approach and results?**\n\n               Outline your\
+    \ proposed methodology in detail, including the method, dataset, and metrics that\
+    \ you plan to use.\n               Describe the expected outcomes. MAKE IT CLEAR.\n\
+    \n            Please work together to produce the '5q' for your proposed research\
+    \ idea.\n\n            Good luck!\n            "
+  output_format: "You should answer the task in the fllowing format:\n           \
+    \     **[Question 1] - What is the problem?**\n\n                Formulate the\
+    \ specific research question you aim to address. Only output one question and\
+    \ do not include any more information.\n\n                **[Question 2] - Why\
+    \ is it interesting and important?**\n\n                Explain the broader implications\
+    \ of solving this problem for the research community.\n                Discuss\
+    \ how such a paper will affect future research.\n                Discuss how addressing\
+    \ this question could advance knowledge or lead to practical applications.\n\n\
+    \                **[Question 3] - Why is it hard?**\n\n                Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \        Explain why naive or straightforward approaches may fail.\n         \
+    \       Identify any technical, theoretical, or practical obstacles that need\
+    \ to be overcome. MAKE IT CLEAR.\n\n                **[Question 4] - Why hasn't\
+    \ it been solved before?**\n\n                Identify gaps or limitations in\
+    \ previous research or existing solutions.\n                Discuss any barriers\
+    \ that have prevented this problem from being solved until now.\n            \
+    \    Explain how your approach differs from or improves upon prior work. MAKE\
+    \ IT CLEAR.\n\n                **[Question 5] - What are the key components of\
+    \ my approach and results?**\n\n                Outline your proposed methodology\
+    \ in detail, including the method, dataset, and metrics that you plan to use.\n\
+    \                Describe the expected outcomes. MAKE IT CLEAR."
