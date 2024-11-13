@@ -76,14 +76,13 @@ class DBEnvironment(BaseEnvironment):
         print("Starting Docker containers...")
 
         # Run docker-compose up in detached mode
-        subprocess.run(["docker", "compose", "-f", os.path.join(self.current_dir, "db_env_docker", "docker-compose.yml"), "down", "-v"], shell=False, check=True)
+        subprocess.run(["docker", "compose", "down", "-v"], cwd=os.path.join(self.current_dir, "db_env_docker"), shell=False, check=True)
 
         # Then, run "docker-compose up
-        subprocess.run(["docker", "compose", "-f", os.path.join(self.current_dir, "db_env_docker", "docker-compose.yml"), "up", "-d", "--remove-orphans"], check=True)
+        subprocess.run(["docker", "compose", "up", "-d", "--remove-orphans"], cwd=os.path.join(self.current_dir, "db_env_docker"), check=True)
 
         # anomalies
 
-        import pdb; pdb.set_trace()
         anomalies = config.get('anomalies', [])
 
         is_db_up = False
@@ -95,18 +94,17 @@ class DBEnvironment(BaseEnvironment):
             except:
                 pass
         print(f'DB up and running')
-        import pdb; pdb.set_trace()
+
 
         if anomalies:
-            import pdb; pdb.set_trace()
+
             for anomaly in anomalies:
                 anomaly_type = anomaly['anomaly']
                 threads = anomaly['threads']
                 ncolumn = anomaly['ncolumn']
                 colsize = anomaly['colsize']
 
-                import pdb; pdb.set_trace()
-                subprocess.run(["python", os.path.join(self.current_dir, "db_env_docker", "anomaly_trigger/main.py"), "--anomaly", anomaly_type, "--threads", f"{threads}", "--ncolumn", f"{ncolumn}", "--colsize", f"{colsize}"], check=True)
+                subprocess.run(["python", "main.py", "--anomaly", anomaly_type, "--threads", f"{threads}", "--ncolumn", f"{ncolumn}", "--colsize", f"{colsize}"], cwd=os.path.join(self.current_dir, "db_env_docker", "anomaly_trigger"), check=True)
 
         # Register the actions available in this environment
         self.register_action(
@@ -366,7 +364,7 @@ class DBEnvironment(BaseEnvironment):
             return False  # Return False if connection fails
 
     def terminate(self) -> None:
-        subprocess.run(["docker", "compose", "-f", os.path.join(self.current_dir, "db_env_docker", "docker-compose.yml"), "down"], check=True)
+        subprocess.run(["docker", "compose", "down"], cwd=os.path.join(self.current_dir, "db_env_docker"), check=True)
 
 if __name__ == "__main__":
     env = DBEnvironment(config={

@@ -9,3 +9,7 @@ python anomaly_trigger/main.py --anomaly MISSING_INDEXES --threads 100 --ncolumn
 python anomaly_trigger/main.py --anomaly MISSING_INDEXES --threads 100 --ncolumn 20 --nrow 100 --colsize 100 ended at 1731450429
 python anomaly_trigger/main.py --anomaly MISSING_INDEXES --threads 100 --ncolumn 20 --nrow 100 --colsize 100 started at 1731451172
 python anomaly_trigger/main.py --anomaly MISSING_INDEXES --threads 100 --ncolumn 20 --nrow 100 --colsize 100 ended at 1731451234
+python anomaly_trigger/main.py --anomaly MISSING_INDEXES --threads 100 --ncolumn 20 --nrow 100 --colsize 100 started at 1731457645
+python anomaly_trigger/main.py --anomaly MISSING_INDEXES --threads 100 --ncolumn 20 --nrow 100 --colsize 100 ended at 1731457706
+python anomaly_trigger/main.py --anomaly MISSING_INDEXES --threads 100 --ncolumn 20 --nrow 100 --colsize 100 started at 1731457855
+python anomaly_trigger/main.py --anomaly MISSING_INDEXES --threads 100 --ncolumn 20 --nrow 100 --colsize 100 ended at 1731457916

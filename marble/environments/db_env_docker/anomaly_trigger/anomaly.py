@@ -31,11 +31,11 @@ def restart():
 def restart_postgresql():
     # Directly execute the restart command locally
     try:
-        os.chdir("../db_env_docker")
+        os.chdir("..")
         os.system("docker compose restart postgres_db")
         print("PostgreSQL Service Rebooted")
     except Exception as e:
-        print(f"本地命令执行出错：{e}")
+        print(f"Local command error：{e}")
 
 # create a table
 def create_table(table_name,colsize, ncolumns):
