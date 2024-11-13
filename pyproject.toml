@@ -16,6 +16,11 @@ litellm = "^1.51.0"
 types-pyyaml = "6.0.12.20240917"
 types-requests = "2.32.0.20240914"
 scikit-learn = "^1.5.2"
+flask = "^3.0.3"
+javascript = "^1!1.2.1"
+names = "^0.3.0"
+levenshtein = "^0.26.1"
+waitress = "^3.0.1"
 
 
 [tool.poetry.group.dev.dependencies]
