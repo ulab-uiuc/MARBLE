@@ -1,0 +1,56 @@
+system: |
+  Currently you are playing a werewolf game, and it is your turn to make your sheriff election speech. You receive the message from the judge, along with details of the players who have spoken before you. Now it is your turn to speak. Reflect on the previous speeches, your role, and your strategy before making your decision.
+
+user: |
+
+  <<public_chat>>
+
+  "Here's the current game state:"
+
+  <<game_state>>
+
+  "Election Information:"
+  You are the <<speech_position>> to speak.
+
+  The speech sequence is <<speech_sequence>>.
+  "Here are the speeches made before you:"
+  <<election_info>>
+
+  "Now, as a candidate (or potential candidate) for sheriff, it is your turn to speak. Organize your thoughts and follow these steps to make your decision:"
+
+  1. Reflect on your position in the speaking order. Have the players before you made strong, high-quality speeches? Did any of them target you specifically (e.g., claiming to have information about your role)? If so, should you respond directly? Record your reflections in speech_analysis.
+  2. Consider your goal for this speech. Are you trying to win the sheriff position, defend yourself against accusations, or shift the conversation and gain trust? Think about what you want to achieve and how to best approach this. Record your goal and strategy in speech_goal.
+  3. Based on your analysis and goal, outline the key points you want to cover in your speech. Do you want to reveal your role, offer a plan for sheriff if elected, or suggest a new direction for the discussion? Think about whether you want to withdraw from the election but still offer a valuable speech. Record your speech plan in speech_outline.
+  4. Finally, decide whether you will continue running for sheriff or withdraw, and summarize your speech in action. Include your final decision on whether you want to stay in the election or drop out, and provide the content of your speech.
+
+tools:
+  - type: "function"
+    function:
+      name: "sheriff_speech"
+      description: "You are asked to make your speech during the sheriff election in this werewolf game. Follow the user's instructions to organize your thoughts, form a strategy, and make your decision, storing your thought process and speech content in the appropriate fields."
+      parameters:
+        type: "object"
+        properties:
+          speech_analysis:
+            type: "string"
+            description: "Your reflection on the players who spoke before you, whether their speeches were high-quality, and whether they targeted you or provided valuable information."
+          speech_goal:
+            type: "string"
+            description: "Your goal for this speech. Are you trying to win the sheriff election, defend yourself, or gain trust from others? This field should capture the main purpose of your speech."
+          speech_outline:
+            type: "string"
+            description: "An outline of your key talking points for the speech. Are you revealing your role, responding to others, offering a sheriff plan, or withdrawing from the election while still contributing to the discussion?"
+          final_thought:
+            type: "string"
+            description: "Your final reasoning and thoughts after considering the situation and your speech strategy."
+          action:
+            type: "object"
+            properties:
+              continue_running:
+                type: "boolean"
+                description: "Whether you decide to continue running for sheriff. True if you stay in the election, False if you choose to withdraw."
+              speech_content:
+                type: "string"
+                description: "The final version of your speech, summarizing your main points and addressing any concerns or strategies you outlined."
+            required: ["continue_running", "speech_content"]
+        required: ["speech_analysis", "speech_goal", "speech_outline", "final_thought", "action"]

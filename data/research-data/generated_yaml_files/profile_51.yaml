@@ -1,0 +1,341 @@
+agents:
+- agent_id: agent1
+  profile: 'I am a researcher dedicated to advancing the fields of speech processing,
+    emotion recognition, and mental health analysis, with a particular focus on the
+    intersection of technology and social issues. My recent work has centered on developing
+    innovative applications that leverage audio and speech data to address critical
+    challenges, such as early detection of Autism Spectrum Disorder (ASD) through
+    code-switched speech analysis. By employing hierarchical feature fusion methods,
+    I aim to enhance classification accuracy, which is vital for timely intervention.
+
+
+    In addition to ASD detection, I have explored the efficacy of pre-trained models
+    in speech emotion recognition, demonstrating the superiority of speaker recognition
+    embeddings in capturing nuanced speech characteristics. My research also delves
+    into the mental health implications of childhood sexual abuse, utilizing social
+    media data to identify and classify mental health issues among survivors.
+
+
+    I am passionate about creating systems that not only improve technical performance
+    but also contribute to societal well-being. For instance, my work on audio violence
+    detection and humor detection emphasizes the importance of multimodal approaches,
+    while my studies on substance misuse highlight the need for understanding public
+    sentiment through social media analysis.
+
+
+    Overall, my goal is to bridge the gap between advanced machine learning techniques
+    and real-world applications, ensuring that my research has a meaningful impact
+    on individuals and communities facing various challenges.'
+  type: BaseAgent
+- agent_id: agent2
+  profile: 'I am a researcher with a strong focus on the intersection of communication
+    networks, machine learning, and natural language processing (NLP). My work spans
+    a variety of topics, including the analysis of Gaussian half-duplex diamond relay
+    networks, where I investigate the contributions of individual relays to network
+    capacity. I have also delved into the interpretability of attention mechanisms
+    in NLP models, revealing that attention weights often do not correlate with model
+    outputs as expected, which challenges the notion of transparency in these systems.
+
+
+    In the realm of healthcare, I explore the integration of electronic medical records
+    (EMRs) with machine learning to enhance predictive performance while ensuring
+    model interpretability. My research includes developing probabilistic group testing
+    methods for distributed computing, which efficiently identify unreliable workers
+    in a network of nodes.
+
+
+    I am particularly interested in community-based group testing and its applications
+    in biomedical research, where I have proposed algorithms that outperform existing
+    methods. My work also extends to document-level information extraction, where
+    I introduced the SciREX dataset to facilitate advancements in this area.
+
+
+    Additionally, I have contributed to understanding model predictions through influence
+    functions and have developed methods to identify training data artifacts, which
+    are crucial for improving model robustness. My goal is to create models that not
+    only perform well but also provide meaningful insights and explanations, ultimately
+    advancing the fields of communication networks and NLP.'
+  type: BaseAgent
+- agent_id: agent3
+  profile: 'I am a researcher dedicated to advancing the field of audio and sports
+    data analysis through innovative visualization and machine learning techniques.
+    My recent work has focused on leveraging unstructured data, particularly cricket
+    commentary, to extract and visualize player strengths and weaknesses, enabling
+    the development of tailored strategies for athletes. I have also made significant
+    contributions to spectral clustering, introducing a framework that integrates
+    pairwise constraints into semidefinite spectral clustering, enhancing its applicability
+    in real-world scenarios.
+
+
+    In the realm of audio analysis, I have developed FastAST, a framework that optimizes
+    audio classification models for efficiency without sacrificing accuracy. My research
+    extends to multilingual audio-visual question answering (AVQA), where I introduced
+    the MERA framework to facilitate AVQA across multiple languages, significantly
+    reducing the need for manual annotations.
+
+
+    I am particularly passionate about mental health applications, having created
+    FuSeR, a novel framework for depression detection from speech that combines non-semantic
+    features to achieve state-of-the-art performance. My exploration of foundation
+    models has led to advancements in environmental audio deepfake detection and singing
+    voice deepfake detection, where I demonstrated the effectiveness of speaker recognition
+    models.
+
+
+    Through my work, I aim to bridge the gap between complex data structures and practical
+    applications, providing open access to datasets and code to foster collaboration
+    and further research in these critical areas.'
+  type: BaseAgent
+- agent_id: agent4
+  profile: 'I am a researcher dedicated to advancing the fields of audio processing,
+    machine learning, and their applications in real-world scenarios. My recent work
+    focuses on multilingual content analysis, where I developed a real-time spoken
+    language detection system that achieves 91.8% accuracy with minimal data requirements.
+    I have also explored the intersection of cybersecurity and machine learning, proposing
+    a stochastic approach using Markov Decision Processes to predict risky states
+    in critical cloud infrastructures.
+
+
+    In the realm of generative models, I introduced imdpGAN, a differentially private
+    GAN that balances privacy and data specificity, showcasing its effectiveness on
+    various datasets. My research extends to adversarial robustness, where I conducted
+    a comprehensive study of black-box adversarial attacks and defenses, emphasizing
+    the need for secure deep learning models.
+
+
+    I am particularly passionate about emotion recognition and stress detection, leveraging
+    pre-trained models to enhance performance across multiple languages and contexts.
+    My work on audio deepfake detection and audio abuse detection highlights the importance
+    of multilingual models in improving robustness and generalizability.
+
+
+    Additionally, I have developed innovative frameworks like CoLLAB for seamless
+    model merging across languages and VoxMed, a UI-assisted classifier for respiratory
+    disease diagnosis using digital stethoscope recordings. My goal is to create impactful
+    solutions that address pressing challenges in healthcare, security, and communication,
+    ultimately improving user experiences and outcomes in diverse applications.'
+  type: BaseAgent
+- agent_id: agent5
+  profile: 'I am a researcher with a strong focus on the intersection of social media,
+    misinformation, and machine learning. My recent work has delved into the dynamics
+    of rumor spread on platforms like Twitter, where I developed a Graph Convolutional
+    Network (GCN) approach to identify potential rumor spreaders, achieving notable
+    performance metrics such as an F1-Score of 0.864. I am particularly interested
+    in the implications of misinformation, especially during crises like the COVID-19
+    pandemic, where I proposed a mobility-based SIR model to understand epidemic spread,
+    integrating population distribution and connectivity factors.
+
+
+    In addition to my work on misinformation, I have explored hate speech classification,
+    developing metrics to quantify the severity of hate terms and employing Stable
+    Hate Rule mining to visualize co-occurring hate terms. My research also extends
+    to the analysis of online conversations, where I found that toxic comments can
+    perpetuate further toxicity in discussions.
+
+
+    I am passionate about leveraging advanced machine learning techniques, including
+    deep learning and graph-based methods, to tackle pressing societal issues. My
+    framework, DEAP-FAKED, exemplifies this by combining natural language processing
+    with knowledge graph encoding to detect fake news effectively. Through my research,
+    I aim to contribute to the development of scalable solutions that can mitigate
+    the impact of misinformation and promote healthier online discourse.'
+  type: BaseAgent
+- agent_id: agent6
+  profile: 'I am a researcher dedicated to advancing the field of environmental audio
+    deepfake detection (EADD) and exploring the capabilities of foundation models
+    in audio analysis. My recent work has focused on optimizing the use of these models
+    by addressing the challenges posed by high-dimensional representations. I discovered
+    that instead of relying solely on traditional dimensionality reduction techniques,
+    randomly selecting a subset of representation values can maintain or even enhance
+    model performance while significantly reducing computational demands.
+
+
+    In my exploration of singing voice deepfake detection (SVDD), I conducted a comprehensive
+    comparison between music foundation models (MFMs) and speech foundation models
+    (SFMs). My findings revealed that SFMs, particularly those trained for speaker
+    recognition, excel in capturing the nuances of singing voices. This led to the
+    development of FIONA, a novel framework that synergizes the strengths of both
+    MFMs and SFMs, achieving state-of-the-art results in SVDD.
+
+
+    Additionally, I have investigated the potential of multimodal foundation models
+    for emotion recognition from non-verbal sounds. By leveraging the joint pre-training
+    of these models, I proposed MATA, a framework that enhances emotion recognition
+    by aligning representations across modalities. My work has consistently pushed
+    the boundaries of performance on benchmark datasets, demonstrating the effectiveness
+    of innovative approaches in audio analysis. I am passionate about harnessing the
+    power of foundation models to tackle complex challenges in audio processing and
+    contribute to the growing field of deepfake detection and emotion recognition.'
+  type: BaseAgent
+coordinate_mode: graph
+engine_planner:
+  initial_progress: Starting the collaborative research idea generation based on the
+    provided Introduction.
+environment:
+  max_iterations: 3
+  name: Research Collaboration Environment
+  type: Research
+llm: gpt-3.5-turbo
+memory:
+  type: SharedMemory
+metrics:
+  diversity_of_perspectives: true
+  engagement_level: true
+  evaluate_llm: gpt-4o-mini
+  relevance: true
+output:
+  file_path: result/discussion_output.jsonl
+  format: jsonl
+relationships:
+- - agent1
+  - agent2
+  - collaborate with
+- - agent1
+  - agent3
+  - collaborate with
+- - agent1
+  - agent4
+  - collaborate with
+- - agent1
+  - agent5
+  - collaborate with
+- - agent1
+  - agent6
+  - collaborate with
+- - agent2
+  - agent3
+  - collaborate with
+- - agent2
+  - agent4
+  - collaborate with
+- - agent2
+  - agent5
+  - collaborate with
+- - agent2
+  - agent6
+  - collaborate with
+- - agent3
+  - agent4
+  - collaborate with
+- - agent3
+  - agent5
+  - collaborate with
+- - agent3
+  - agent6
+  - collaborate with
+- - agent4
+  - agent5
+  - collaborate with
+- - agent4
+  - agent6
+  - collaborate with
+- - agent5
+  - agent6
+  - collaborate with
+task:
+  content: "\n            Dear Research Team,\n\n            You are collaborating\
+    \ to generate a new research idea based on the following Introduction:\n\n   \
+    \         **Introduction**\n\n             Introduction\nThe recent advancements\
+    \ in singing voice synthesis, exempli-\nfied by models such as VISinger [1] and\
+    \ DiffSinger [2], have\nbrought significant progress to the field of singing voice\
+    \ gener-\nation. However, these developments have also raised concerns\namong\
+    \ artists, record companies, and publishing houses. The\npotential for unauthorized\
+    \ synthetic reproductions that closely\nimitate a singer\u2019s voice threatens\
+    \ the commercial value of the\noriginal artists. As society becomes increasingly\
+    \ aware of these\nissues, there is a pressing need to develop accurate methods\
+    \ consider capturing the musical in-\nformation, such as pitch, rhythms, and so\
+    \ on.\n3. SingGraph detection training framework\nThe SingGraph detection training\
+    \ framework, as shown in Fig-\nure 1, consists of two key components: singing\
+    \ voice augmen-\ntation techniques, including RawBoost and Beat matching, and\n\
+    the core SingGraph model. We use Demucs1to separate a\nmixed singing song xinto\
+    \ instrumental xinsand vocal xvoc\ncomponents. Following separation, we apply\
+    \ data augmenta-\ntion to create augmented instrumental x\u2032insand vocal x\u2032\
+    voc\ntracks. The SingGraph model then processes these augmented\ninputs to verify\
+    \ whether the input is a genuine singing perfor-\nmance or a fake singing recording.\n\
+    3.1. Singing voice augmentation\nTo boost performance, we leverage RawBoost for\
+    \ vocal aug-\nmentation and beat matching for instrumental augmentation.\n3.1.1.\
+    \ Beat matching for instrumental.\nIn this part, we will introduce a data augmentation\
+    \ method\nbased on music domain knowledge. Musical compositions con-\nsist of\
+    \ various elements, including chord progressions, timbre,\nand beats, with beats\
+    \ being essential for setting the musical\nstructure and alignment. In the audio\
+    \ domain, mixup [17] is\na favored augmentation technique that blends pairs of\
+    \ audio\ntracks to expand the training dataset. However, mixing in-\nstrumental\
+    \ and vocal tracks with differing tempos can lead to\na disordered and unattractive\
+    \ outcome. We propose the beat\nmatching for instrumental augmentation to correspond\
+    \ to vo-\ncals as shown in Figure 1-(b). Firstly, we employ a cutting-\nedge beat\
+    \ tracking model ALL-in-one [18] to determine each\nmusic track\u2019s tempo and\
+    \ downbeat map. We then organize each\ntrack into tempo-specific groups. During\
+    \ training, we randomly\nselect an instrumental x\u2032\ninsto replace the original\
+    \ pair instru-\nmental xinsfrom the same tempo group to maintain consis-\ntent\
+    \ tempos. Additionally, we conduct downbeat alignment to\nchoose an appropriate\
+    \ downbeat as the starting point for mixing\nsinging voices. This pre-processing\
+    \ strategy enhances our abil-\nity to choose suitable music data for mixing, creating\
+    \ tracks that\nare harmoniously aligned in terms of tempo and downbeat.\n1https://github.com/facebookresearch/demucs3.1.2.\
+    \ RawBoost for vocal.\nWe introduce a trick, inspired by stationary signal-independent\n\
+    additive noise with random coloration. This trick significantly\nboosts speech\
+    \ deepfake detection by RawBoost [13,19]. There-\nfore, it is reasonable to adopt\
+    \ it for vocal augmentation in\nSingFake scenario, as the vocal part of singing\
+    \ also belongs\nto speech. As depicted in Figure 1-(a), the vocal input of the\n\
+    model, x\u2032voc, is generated by the equation:\nx\u2032\nvoc=xvoc+gsi\nsnr\xB7\
+    zsi (1)\nwhere zsirepresents white noise wthat has been processed\nthrough a finite\
+    \ impulse response (FIR) filter, adjusted by a gain\nparameter gsi\nsnrbased on\
+    \ a random signal-to-noise ratio.\n3.2. SingGraph model\nThis section introduces\
+    \ the proposed novel SingGraph model.\nThe SingGraph model, depicted in Figure\
+    \ 1-(c), integrates in-\nstrumental and vocal encoders based on self-supervised\
+    \ learn-\ning (SSL) models with a graph-based back-end model. This\nback-end leverages\
+    \ graph neural networks [20\u201322], which have\nled to significant advancements\
+    \ in various applications, includ-\ning speaker verification [22] and spoofing\
+    \ detection [3, 20, 23],\nby employing a structure of interconnected nodes and\
+    \ edges.\nIt encompasses components for aggregating singing voice fea-\ntures,\
+    \ modeling\n\n            **Your Task**\n\n            1. **Literature Review**:\
+    \ Analyze the Introduction provided and conduct a brief literature review to understand\
+    \ the current state of research in this area.\n\n            2. **Brainstorming**:\
+    \ Collaboratively brainstorm potential research ideas that build upon or address\
+    \ gaps in the Introduction.\n\n            3. **Summarization**: Summarize your\
+    \ collective ideas.\n\n            4. **Formulate a New Research Idea**: Develop\
+    \ a new research proposal in the format of the '5q', defined below:\n\n      \
+    \         **Here is a high-level summarized insight of a research field Machine\
+    \ Learning.**\n\n               **Here are the five core questions:**\n\n    \
+    \           **[Question 1] - What is the problem?**\n\n               Formulate\
+    \ the specific research question you aim to address. Only output one question\
+    \ and do not include any more information.\n\n               **[Question 2] -\
+    \ Why is it interesting and important?**\n\n               Explain the broader\
+    \ implications of solving this problem for the research community.\n         \
+    \      Discuss how such a paper will affect future research.\n               Discuss\
+    \ how addressing this question could advance knowledge or lead to practical applications.\n\
+    \n               **[Question 3] - Why is it hard?**\n\n               Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \       Explain why naive or straightforward approaches may fail.\n          \
+    \     Identify any technical, theoretical, or practical obstacles that need to\
+    \ be overcome. MAKE IT CLEAR.\n\n               **[Question 4] - Why hasn't it\
+    \ been solved before?**\n\n               Identify gaps or limitations in previous\
+    \ research or existing solutions.\n               Discuss any barriers that have\
+    \ prevented this problem from being solved until now.\n               Explain\
+    \ how your approach differs from or improves upon prior work. MAKE IT CLEAR.\n\
+    \n               **[Question 5] - What are the key components of my approach and\
+    \ results?**\n\n               Outline your proposed methodology in detail, including\
+    \ the method, dataset, and metrics that you plan to use.\n               Describe\
+    \ the expected outcomes. MAKE IT CLEAR.\n\n            Please work together to\
+    \ produce the '5q' for your proposed research idea.\n\n            Good luck!\n\
+    \            "
+  output_format: "You should answer the task in the fllowing format:\n           \
+    \     **[Question 1] - What is the problem?**\n\n                Formulate the\
+    \ specific research question you aim to address. Only output one question and\
+    \ do not include any more information.\n\n                **[Question 2] - Why\
+    \ is it interesting and important?**\n\n                Explain the broader implications\
+    \ of solving this problem for the research community.\n                Discuss\
+    \ how such a paper will affect future research.\n                Discuss how addressing\
+    \ this question could advance knowledge or lead to practical applications.\n\n\
+    \                **[Question 3] - Why is it hard?**\n\n                Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \        Explain why naive or straightforward approaches may fail.\n         \
+    \       Identify any technical, theoretical, or practical obstacles that need\
+    \ to be overcome. MAKE IT CLEAR.\n\n                **[Question 4] - Why hasn't\
+    \ it been solved before?**\n\n                Identify gaps or limitations in\
+    \ previous research or existing solutions.\n                Discuss any barriers\
+    \ that have prevented this problem from being solved until now.\n            \
+    \    Explain how your approach differs from or improves upon prior work. MAKE\
+    \ IT CLEAR.\n\n                **[Question 5] - What are the key components of\
+    \ my approach and results?**\n\n                Outline your proposed methodology\
+    \ in detail, including the method, dataset, and metrics that you plan to use.\n\
+    \                Describe the expected outcomes. MAKE IT CLEAR."

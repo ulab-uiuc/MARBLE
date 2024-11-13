@@ -1,0 +1,183 @@
+agents:
+- agent_id: agent1
+  profile: "I am a researcher dedicated to enhancing pedestrian trajectory prediction\
+    \ and addressing challenges in truck parking management. My work focuses on integrating\
+    \ social interactions and environmental factors to improve the accuracy of trajectory\
+    \ predictions. One of my recent contributions is the RNTransformer, a novel model\
+    \ that incorporates crowd trip information to capture global social dynamics,\
+    \ significantly enhancing the performance of various local pedestrian trajectory\
+    \ prediction models. \n\nAdditionally, I have developed the Regional Temporal\
+    \ Graph Neural Network (RegT-GCN) to tackle the issue of insufficient truck parking\
+    \ spaces along freight corridors. This framework leverages spatio-temporal dependencies\
+    \ and historical data to predict parking usage across multiple sites, providing\
+    \ a comprehensive solution to improve parking management. My research aims to\
+    \ contribute to safer and more efficient urban environments, whether through accurate\
+    \ pedestrian trajectory predictions or effective truck parking strategies. I am\
+    \ passionate about applying advanced machine learning techniques to real-world\
+    \ problems, ultimately enhancing traffic safety and efficiency."
+  type: BaseAgent
+- agent_id: agent2
+  profile: 'I am a researcher specializing in stylized text-to-image generation, with
+    a keen interest in bridging the gap between textual descriptions and visual representation.
+    My recent work introduces InstaStyle, a novel approach that enables the generation
+    of high-fidelity stylized images using just a single reference image. I discovered
+    that the inversion noise from a stylized reference image carries essential style
+    signals, which I harness through DDIM inversion and a diffusion model to create
+    new images that accurately reflect the desired style.
+
+
+    Understanding the challenges posed by the inherent ambiguity of textual prompts,
+    I also developed a learnable style token that refines these prompts, enhancing
+    the precision of style conveyance. My research not only demonstrates superior
+    performance against existing benchmarks but also explores creative avenues such
+    as style combination through mixed inversion noise. I am passionate about pushing
+    the boundaries of generative models and contributing to the evolving landscape
+    of AI-driven creativity.'
+  type: BaseAgent
+- agent_id: agent3
+  profile: "I am a researcher dedicated to enhancing intelligent transportation systems,\
+    \ particularly in the realm of cooperative freeway traffic control. My recent\
+    \ work centers around developing a deep neuroevolution model, known as ES-CTC,\
+    \ which integrates ramp metering, differential variable speed limits, and lane\
+    \ change control to optimize freeway traffic flow. By leveraging graph convolutional\
+    \ networks, I aim to extract meaningful spatial patterns from traffic sensor data,\
+    \ facilitating better communication among various control agents through a knowledge-sharing\
+    \ layer. \n\nMy approach addresses the challenges of delayed rewards and action\
+    \ asynchronism by employing evolutionary strategies to train agents under stochastic\
+    \ traffic conditions. The promising results from my simulations demonstrate that\
+    \ ES-CTC not only improves traffic management but also outperforms existing methods.\
+    \ I am passionate about applying advanced machine learning techniques to real-world\
+    \ transportation challenges, striving to contribute to more efficient and effective\
+    \ traffic systems."
+  type: BaseAgent
+coordinate_mode: graph
+engine_planner:
+  initial_progress: Starting the collaborative research idea generation based on the
+    provided Introduction.
+environment:
+  max_iterations: 3
+  name: Research Collaboration Environment
+  type: Research
+llm: gpt-3.5-turbo
+memory:
+  type: SharedMemory
+metrics:
+  diversity_of_perspectives: true
+  engagement_level: true
+  evaluate_llm: gpt-4o-mini
+  relevance: true
+output:
+  file_path: result/discussion_output.jsonl
+  format: jsonl
+relationships:
+- - agent1
+  - agent2
+  - collaborate with
+- - agent1
+  - agent3
+  - collaborate with
+- - agent2
+  - agent3
+  - collaborate with
+task:
+  content: "\n            Dear Research Team,\n\n            You are collaborating\
+    \ to generate a new research idea based on the following Introduction:\n\n   \
+    \         **Introduction**\n\n             Introduction\nAutonomous vehicles (A\
+    \ Vs) are transforming the trans-\nportation systems. A V is a complex system\
+    \ integrating a\npipeline of modules such as perception of obstacles, plan-\n\
+    ning of driving behaviors, and controlling of the physical\nvehicle [1, 3]. Specifically,\
+    \ trajectory prediction in the per-\nception module predicts the future trajectories\
+    \ of nearby\nmoving objects. The prediction is essential for the plan-\nning module\
+    \ and affects A V\u2019s driving behavior. Therefore,\naccurate trajectory prediction\
+    \ is critical for safe A V driving.\nMany studies propose trajectory prediction\
+    \ models based\non deep neural networks [8, 10, 11, 13, 21, 23, 24, 27, 32, 33,\n\
+    35, 38, 41, 42]. They evaluate the models on benchmarks\ncollected from real world\
+    \ using the average \u21132distance be-\ntween ground truth and predicted trajectories\
+    \ as the key\nmetric. However, few studies evaluate trajectory prediction\nmodels\
+    \ from the perspective of security or analyze the ro-\nbustness against adversarial\
+    \ examples. For trajectory pre-\ndiction, if the adversary can control the position\
+    \ of a vehi-\ncle close to the target A V , e.g., by driving the vehicle along\n\
+    a crafted trajectory, the adversary can influence the A V\u2019s\ntrajectory prediction\
+    \ and driving behaviors.To bridge this gap, we propose new white/black box ad-\n\
+    versarial attacks on trajectory prediction, which adds minor\nperturbation on\
+    \ normal trajectories to maximize the pre-\ndiction error. Compared with adversarial\
+    \ attacks on im-\nage/video classification, attacking trajectory prediction is\n\
+    unique in two aspects. First, the attack requires natural-\nness [40] of the adversarial\
+    \ examples. Adversarial trajec-\ntories are natural if they obey physical rules\
+    \ and are possi-\nble to happen in the real world. With naturalness, the tra-\n\
+    jectories can be reproduced by the attacker-controlled ve-\nhicle in the real\
+    \ world and cannot be easily classified as\nanomaly by A Vs. To realize naturalness,\
+    \ we enforce con-\nstraints on physical properties (e.g., velocity and accelera-\n\
+    tion) of the perturbed trajectory during optimization solv-\ning. Second, we need\
+    \ to define optimization objectives that\nare semantically-attractive for attackers\
+    \ targeting trajectory\nprediction. To this end, we find multiple attractive attack\n\
+    dimensions can co-exist even for the same scenario (e.g.,\ncausing the predicted\
+    \ trajectory to deviate laterally or lon-\ngitudinally are both of interest to\
+    \ attackers in A V context).\nThus, in our attack design we consider different\
+    \ metrics of\nprediction error as optimization objectives, e.g., average lat-\n\
+    eral/longitudinal deviation to four different directions.\nWe evaluate the proposed\
+    \ attacks on 10 different com-\nbinations of prediction models [18, 20, 30] and\
+    \ trajectory\ndatasets [2,5,16]. The results.\nE. Attack Real-world A V System\n\
+    Our attack is effective on real A V software, Baidu Apollo\n6.0 [3], which uses\
+    \ an LSTM predictor on 2 seconds of his-\ntory trajectory in a frequency of 10\
+    \ Hz. Figure 13 shows\nthat the adversarial trajectory spoofs fake lane changing\
+    \ (in\nthe left figure), resulting in a brake of the right Apollo A V\n(in LGSVL\
+    \ simulator [28]). Second, history length and fre-\nquency are system-specific\
+    \ settings, and prediction models\nmostly choose 2-3 seconds of history and 2-10\
+    \ Hz. Al-\nthough we showed different values for the two parameters\nin Tab.1,\
+    \ we did not observe a clear correlation between the\nparameters and prediction\
+    \ accuracy. We can openly discuss\nthis question as future work. methods, which\
+    \ require parameters about\nevolution speed and maximum iterations. When tuning\
+    \ the\nparameters, we monitor the objective loss over time. The\nparameters are\
+    \ proper if the loss is overall decreasing and\nstays low stably in\n\n      \
+    \      **Your Task**\n\n            1. **Literature Review**: Analyze the Introduction\
+    \ provided and conduct a brief literature review to understand the current state\
+    \ of research in this area.\n\n            2. **Brainstorming**: Collaboratively\
+    \ brainstorm potential research ideas that build upon or address gaps in the Introduction.\n\
+    \n            3. **Summarization**: Summarize your collective ideas.\n\n     \
+    \       4. **Formulate a New Research Idea**: Develop a new research proposal\
+    \ in the format of the '5q', defined below:\n\n               **Here is a high-level\
+    \ summarized insight of a research field Machine Learning.**\n\n             \
+    \  **Here are the five core questions:**\n\n               **[Question 1] - What\
+    \ is the problem?**\n\n               Formulate the specific research question\
+    \ you aim to address. Only output one question and do not include any more information.\n\
+    \n               **[Question 2] - Why is it interesting and important?**\n\n \
+    \              Explain the broader implications of solving this problem for the\
+    \ research community.\n               Discuss how such a paper will affect future\
+    \ research.\n               Discuss how addressing this question could advance\
+    \ knowledge or lead to practical applications.\n\n               **[Question 3]\
+    \ - Why is it hard?**\n\n               Discuss the challenges and complexities\
+    \ involved in solving this problem.\n               Explain why naive or straightforward\
+    \ approaches may fail.\n               Identify any technical, theoretical, or\
+    \ practical obstacles that need to be overcome. MAKE IT CLEAR.\n\n           \
+    \    **[Question 4] - Why hasn't it been solved before?**\n\n               Identify\
+    \ gaps or limitations in previous research or existing solutions.\n          \
+    \     Discuss any barriers that have prevented this problem from being solved\
+    \ until now.\n               Explain how your approach differs from or improves\
+    \ upon prior work. MAKE IT CLEAR.\n\n               **[Question 5] - What are\
+    \ the key components of my approach and results?**\n\n               Outline your\
+    \ proposed methodology in detail, including the method, dataset, and metrics that\
+    \ you plan to use.\n               Describe the expected outcomes. MAKE IT CLEAR.\n\
+    \n            Please work together to produce the '5q' for your proposed research\
+    \ idea.\n\n            Good luck!\n            "
+  output_format: "You should answer the task in the fllowing format:\n           \
+    \     **[Question 1] - What is the problem?**\n\n                Formulate the\
+    \ specific research question you aim to address. Only output one question and\
+    \ do not include any more information.\n\n                **[Question 2] - Why\
+    \ is it interesting and important?**\n\n                Explain the broader implications\
+    \ of solving this problem for the research community.\n                Discuss\
+    \ how such a paper will affect future research.\n                Discuss how addressing\
+    \ this question could advance knowledge or lead to practical applications.\n\n\
+    \                **[Question 3] - Why is it hard?**\n\n                Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \        Explain why naive or straightforward approaches may fail.\n         \
+    \       Identify any technical, theoretical, or practical obstacles that need\
+    \ to be overcome. MAKE IT CLEAR.\n\n                **[Question 4] - Why hasn't\
+    \ it been solved before?**\n\n                Identify gaps or limitations in\
+    \ previous research or existing solutions.\n                Discuss any barriers\
+    \ that have prevented this problem from being solved until now.\n            \
+    \    Explain how your approach differs from or improves upon prior work. MAKE\
+    \ IT CLEAR.\n\n                **[Question 5] - What are the key components of\
+    \ my approach and results?**\n\n                Outline your proposed methodology\
+    \ in detail, including the method, dataset, and metrics that you plan to use.\n\
+    \                Describe the expected outcomes. MAKE IT CLEAR."

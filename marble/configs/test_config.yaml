@@ -1,4 +1,4 @@
-coordinate_mode: graph
+coordinate_mode: chain
 relationships:
   - [agent1, agent2, "reports_to"]
   - [agent1, agent3, "manages"]
@@ -8,11 +8,11 @@ relationships:
 environment:
   type: Web
   name: "Web Simulation Environment"
-  max_iterations: 1
+  max_iterations: 5
   # Add other environment-specific configurations here
 
 task:
-  content: "Find new about the latest trends in AI."
+  content: "Find new about the latest trends in AI and have agent1 to summarize it in the end."
 
 agents:
   - type: BaseAgent
@@ -34,6 +34,7 @@ agents:
     agent_id: agent4
     # strategy: default
     profile: "You are a creative and innovative team member. You will use twitter to search results for the task."
+
     # Additional agent-specific configurations
 
 memory:

@@ -1,0 +1,198 @@
+coordinate_mode: chain
+
+relationships:
+  - [agent1, agent2, "parent"]
+  - [agent1, agent3, "parent"]
+  - [agent1, agent4, "parent"]
+  - [agent1, agent5, "parent"]
+
+# relationships:
+#   - [agent1, agent2, "collaborate with"]
+#   - [agent1, agent3, "collaborate with"]
+#   - [agent1, agent4, "collaborate with"]
+#   - [agent1, agent5, "collaborate with"]
+#   - [agent2, agent3, "collaborate with"]
+#   - [agent2, agent4, "collaborate with"]
+#   - [agent2, agent5, "collaborate with"]
+#   - [agent3, agent4, "collaborate with"]
+#   - [agent3, agent5, "collaborate with"]
+#   - [agent4, agent5, "collaborate with"]
+
+llm: "gpt-3.5-turbo"
+
+environment:
+  type: Research
+  name: "Research Collaboration Environment"
+  max_iterations: 3
+
+task:
+  content: |
+    Dear Research Team,
+
+    You are collaborating to generate a new research idea based on the following Introduction:
+
+    **Introduction**
+
+    Interactive systems based on general-purpose LLMs have become widely popular due to their
+    impressive instruction-following capabilities (OpenAI, 2023). Furthermore, tuning these models on
+    downstream tasks has been shown to transform them into domain experts (Rozière et al., 2023;
+    Luo et al., 2023).
+
+    Maintaining separate fine-tuned models for each task presents several limitations, such as a significantly higher memory footprint and the inability to leverage information across tasks, which could enhance both in-domain and out-of-domain performance. As a result, merging different homologous models (models fine-tuned from the same backbone) is gaining traction for its cost-effectiveness, knowledge sharing, and space efficiency (Yadav et al., 2024; Yu et al., 2023). The homologous models differ from each other in terms of delta parameters, i.e., the difference between the fine-tuned model and backbone model parameters.
+
+    In this paper, we introduce a novel approach for merging homologous models, termed Drop and rEscaLe via sampLing with mAgnitude (DELLA). This approach consists of three steps: (Step-1) involves delta parameter drops to reduce interference among model parameters. We propose MAGPRUNE, a novel pruning method that samples delta parameters based on their magnitudes; (Step-2) further reduces interference through sign-based delta parameter selection; and (Step-3) fuses the selected delta parameters.
+
+    On three different homologous (expert) models considered for merging (LM, Math, Code) and their corresponding benchmark datasets (AlpacaEval, GSM8K, MBPP), DELLA outperforms baseline Experiments.
+
+    We compare the performance of DELLA against the DARE baseline to show that magnitude sampling improves the selection of delta parameters to retain and better maintain the model’s task performance. We vary the drop rate p in [0.3, 0.5, 0.7, 0.8, 0.9, 0.91, 0.92, 0.93, 0.94] and apply the DARE and DELLA to get models after removing the proportion of delta parameters. We then evaluate the model’s performance on its corresponding SFT task. Table 6 shows the comparison between DARE, random ranking, and MAGPRUNE.
+
+    **Results**
+
+    A.3 Pruning Rate Hyperparameter Search for Model Merging
+
+    Table 7 shows the results of the pruning rate hyperparameter search for each merging combination. While both MAGPRUNE and DARE can maintain the performance of individual expert model performance up to a high drop rate of 0.9, our findings indicate that a drop rate of 0.5 works best for LM+Math, Math+Code, and LM+Math+Code. For LM+Code, a drop rate of 0.7 is optimal. Thus, we can infer that while dropping delta parameters helps reduce interference during merging, dropping too many parameters may lead to the loss of information useful for effective merging.
+
+    **Appendix**
+
+    A.1 Importance of GPT-4-as-a-judge for Math Tasks - Example
+
+    Question: Each person in a certain household consumes 0.2 kg of rice every meal. Supposing 5 members of the household eat rice every lunch and dinner, how many weeks will a 42 kg bag of rice last?
+
+    Generated Answer: 1.
+
+    **Your Task**
+
+    1. **Literature Review**: Analyze the Introduction provided and conduct a brief literature review to understand the current state of research in this area.
+
+    2. **Brainstorming**: Collaboratively brainstorm potential research ideas that build upon or address gaps in the Introduction.
+
+    3. **Summarization**: Summarize your collective ideas.
+
+    4. **Formulate a New Research Idea**: Develop a new research proposal in the format of the '5q', defined below:
+
+       **Here is a high-level summarized insight of a research field Machine Learning.**
+
+       **Here are the five core questions:**
+
+       **[Question 1] - What is the problem?**
+
+       Formulate the specific research question you aim to address. Only output one question and do not include any more information.
+
+       **[Question 2] - Why is it interesting and important?**
+
+       Explain the broader implications of solving this problem for the research community.
+       Discuss how such a paper will affect future research.
+       Discuss how addressing this question could advance knowledge or lead to practical applications.
+
+       **[Question 3] - Why is it hard?**
+
+       Discuss the challenges and complexities involved in solving this problem.
+       Explain why naive or straightforward approaches may fail.
+       Identify any technical, theoretical, or practical obstacles that need to be overcome. MAKE IT CLEAR.
+
+       **[Question 4] - Why hasn't it been solved before?**
+
+       Identify gaps or limitations in previous research or existing solutions.
+       Discuss any barriers that have prevented this problem from being solved until now.
+       Explain how your approach differs from or improves upon prior work. MAKE IT CLEAR.
+
+       **[Question 5] - What are the key components of my approach and results?**
+
+       Outline your proposed methodology in detail, including the method, dataset, and metrics that you plan to use.
+       Describe the expected outcomes. MAKE IT CLEAR.
+
+    Please work together to produce the '5q' for your proposed research idea.
+
+    Good luck!
+
+  output_format: |
+    You should answer the task in the fllowing format:
+       **[Question 1] - What is the problem?**
+
+       Formulate the specific research question you aim to address. Only output one question and do not include any more information.
+
+       **[Question 2] - Why is it interesting and important?**
+
+       Explain the broader implications of solving this problem for the research community.
+       Discuss how such a paper will affect future research.
+       Discuss how addressing this question could advance knowledge or lead to practical applications.
+
+       **[Question 3] - Why is it hard?**
+
+       Discuss the challenges and complexities involved in solving this problem.
+       Explain why naive or straightforward approaches may fail.
+       Identify any technical, theoretical, or practical obstacles that need to be overcome. MAKE IT CLEAR.
+
+       **[Question 4] - Why hasn't it been solved before?**
+
+       Identify gaps or limitations in previous research or existing solutions.
+       Discuss any barriers that have prevented this problem from being solved until now.
+       Explain how your approach differs from or improves upon prior work. MAKE IT CLEAR.
+
+       **[Question 5] - What are the key components of my approach and results?**
+
+       Outline your proposed methodology in detail, including the method, dataset, and metrics that you plan to use.
+       Describe the expected outcomes. MAKE IT CLEAR.
+
+
+agents:
+  - type: BaseAgent
+    agent_id: agent1
+    profile: |
+      I am a researcher with a diverse background in terahertz imaging technologies, cloud computing for medical image analysis, and algebraic geometry. My recent work focuses on developing innovative terahertz imaging methods for nondestructive testing of multilayer heat shields, which have significant applications in aerospace. By employing a frequency-modulated continuous wave system and continuous wavelet transform, I have demonstrated a high-precision approach to detect defects in composite materials.
+
+      In addition to my work in imaging, I have explored the potential of cloud computing to enhance medical image analysis. I am particularly interested in creating a secure, user-friendly cloud-based framework that allows clinicians and researchers to leverage advanced algorithms without needing to access the underlying code. This framework aims to improve usability and scalability while ensuring the privacy of proprietary algorithms.
+
+      My research also delves into the mathematical aspects of cluster categories and their applications in algebraic geometry. I have constructed skewed-gentle algebras to establish connections between tagged curves and string objects, contributing to our understanding of cluster categories arising from marked surfaces. My work on 3-Calabi-Yau categories has further advanced the field by proving key conjectures and providing finite presentations for braid twist groups.
+
+      Overall, my interdisciplinary research combines practical applications with theoretical advancements, aiming to bridge the gap between technology and mathematics.
+  - type: BaseAgent
+    agent_id: agent2
+    profile: |
+      I am a researcher dedicated to the intersection of artificial intelligence and healthcare, particularly focusing on the development of autonomous systems for monitoring elderly patients with dementia in smart home environments. My recent work has led to the creation of an AIoT system that utilizes sensor data to perform real-time abnormal activity monitoring and trend prediction of disease-related activities. By employing Random Forest models, I achieved over 99% accuracy in activity inference and 94% in abnormal activity detection, demonstrating the effectiveness of my approach.
+
+      In addition to my work in healthcare, I have delved into the complexities of causal variable discovery in multi-label data. This research addresses the challenges posed by intricate causal relationships, distinguishing between common causal variables shared across multiple labels and label-specific variables. I developed a theoretical framework and an algorithm that enhances multi-label feature selection, achieving minimal redundancy and maximum relevance.
+
+      My passion lies in leveraging advanced machine learning techniques to create impactful solutions that improve the quality of life for vulnerable populations while also contributing to the broader understanding of causal relationships in data. I am committed to pushing the boundaries of AI applications in real-world scenarios, ensuring that my research not only advances academic knowledge but also translates into practical benefits for society.
+  - type: BaseAgent
+    agent_id: agent3
+    profile: |
+      I am a researcher dedicated to advancing the field of spiking neural networks (SNNs) and their applications in real-world scenarios, particularly in auditory processing and machine learning. My work is inspired by biological systems, and I strive to create models that mimic the efficiency and functionality of the human brain. Recently, I developed a spiking neural network model for precise sound localization, leveraging the interaural time difference cues to enhance performance in noisy environments. This model has been successfully implemented in real-time robotic systems, achieving remarkable accuracy.
+
+      In addition to auditory localization, I have explored speaker verification in multi-talker scenarios, proposing a unified framework that optimizes speaker attention and representation through multi-task learning. My research also addresses the limitations of traditional deep learning methods, introducing innovative local learning techniques that significantly reduce memory usage while maintaining competitive accuracy.
+
+      I am particularly interested in the intersection of large language models (LLMs) and evolutionary algorithms, exploring how these technologies can enhance algorithm selection and optimization processes. My work on developing frameworks that autonomously design evolutionary operators showcases the potential of LLMs in automating complex problem-solving tasks.
+
+      Through my research, I aim to push the boundaries of SNNs, making them more applicable for tasks such as speech recognition and temporal signal processing. I believe that by harnessing the principles of biological computation, we can create more efficient and powerful neural networks that are capable of operating in real-world environments.
+  - type: BaseAgent
+    agent_id: agent4
+    profile: |
+      I am a researcher with a diverse background in mathematical modeling, optimization, and photonic systems. My work spans various domains, including the study of eigenvalues in projective spaces, the application of multi-factorial optimization for large-scale virtual machine placement, and the exploration of lasing and coherent perfect absorption in $\mathcal{PT}$-symmetric systems. I have delved into the topological properties of photonic superlattices, revealing their potential for mode-division multiplexing, and investigated the implications of non-Hermitian systems on multi-mode interference.
+
+      My research also extends to coding theory, where I applied Baranyai's theorem to construct locally decodable codes, emphasizing the combinatorial techniques that underpin these developments. I have explored the spectral signatures of CPA-lasers, highlighting the differences between singular value and eigenvalue spectra, and examined spectral phase transitions in non-Hermitian Hamiltonians, particularly in the context of parity-time symmetry.
+
+      Recently, I have focused on the architectural support for FPGA-based accelerators in heterogeneous multicore systems, proposing innovative solutions for efficient interfacing and data reuse. My work aims to bridge theoretical insights with practical applications, contributing to advancements in both computational efficiency and optical technologies. Through my research, I strive to push the boundaries of knowledge in these interdisciplinary fields, fostering new approaches and solutions to complex problems.
+  - type: BaseAgent
+    agent_id: agent5
+    profile: |
+      I am a researcher deeply engaged in the fields of evolutionary algorithms, machine learning, and spiking neural networks. My work primarily focuses on enhancing optimization techniques and developing innovative frameworks for complex problem-solving. Recently, I have explored the integration of machine learning models with evolutionary algorithms to improve their performance, particularly in multi-objective optimization scenarios. For instance, I introduced BiLO-CPDP, a bi-level programming approach that automates the discovery of effective models for cross-project defect prediction, significantly outperforming existing techniques.
+
+      In my research, I have also developed novel methods for 3D molecule generation, such as the GOAT framework, which utilizes optimal transport principles to efficiently generate high-quality molecular structures. My interest in spiking neural networks has led me to propose new neuron models, like the Contextual Embedding Leaky Integrate-and-Fire (CE-LIF) model, which enhances memory storage and temporal processing capabilities.
+
+      I am particularly passionate about addressing the challenges posed by large-scale multi-objective optimization problems (LSMOPs). My recent work includes the development of GAN-based frameworks for learning manifold structures, which significantly improve the performance of evolutionary algorithms in high-dimensional spaces. Through my research, I aim to bridge the gap between theoretical advancements and practical applications, contributing to the evolution of intelligent systems that can tackle real-world challenges efficiently.
+
+memory:
+  type: SharedMemory
+
+metrics:
+  evaluate_llm: "gpt-4o-mini"
+  engagement_level: true
+  relevance: true
+  diversity_of_perspectives: true
+
+engine_planner:
+  initial_progress: "Starting the collaborative research idea generation based on the provided Introduction."
+
+output:
+  format: jsonl
+  file_path: "result/discussion_output.jsonl"

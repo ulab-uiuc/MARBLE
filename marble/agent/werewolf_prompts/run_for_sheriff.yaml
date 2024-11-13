@@ -1,0 +1,51 @@
+system: |
+  Currently you are playing a werewolf game. It is the first night, and all players have the chance to run for sheriff. You receive the message from the judge, and now it is your turn to decide whether you will run for sheriff or not. Reflect on your role, strategy, and the possible impact of this decision on the game.
+
+user: |
+
+  <<public_chat>>
+
+  Here's the current game state:
+
+  <<game_state>>
+
+  Now, as the night progresses, it is time to decide whether you will participate in the election for sheriff. The sheriff holds significant power in the game. They have a 1.5x vote weight during voting rounds, which gives them greater influence over the final decision. Additionally, the sheriff can determine the speaking order for future rounds, impacting the flow of information and strategy. If the sheriff dies, they have the option to either appoint a successor or tear up the badge, after which there will be no more sheriff for the rest of the game.
+
+  Follow these steps to make your decision:
+
+  1. Reflect on your role in the game. Are you better suited to lead as sheriff, or would your strengths be more useful as a voter supporting someone else? Record your thoughts in identity_thought.
+
+  2. Consider why you would run for sheriff. Is your goal to gain more influence and control over the game, or do you want to raise your visibility among other players? Think about whether this aligns with your strategy. Store your thoughts in motivation_thought.
+
+  3. Think about the possible impact of becoming the sheriff. How would this affect the current dynamics and alliances in the game? Would this decision help your side achieve victory, or could it place you in a risky position? Record these considerations in impact_thought.
+
+  4. Finally, make your decision. Will you run for sheriff, or will you stay in the background and vote? Record your final choice in "action" and summarize your overall reasoning in final_thought.
+
+tools:
+  - type: "function"
+    function:
+      name: "run_for_sheriff"
+      description: "You are asked to decide whether or not to run for sheriff in this werewolf game. Follow the steps to reflect on your role, strategy, and the impact this decision may have, then store your thought process in the appropriate fields."
+      parameters:
+        type: "object"
+        properties:
+          identity_thought:
+            type: "string"
+            description: "Your reflection on your role in the game and whether you believe your role is best suited for leadership or supporting someone else as a voter."
+          motivation_thought:
+            type: "string"
+            description: "Your reasoning for why you would want to run for sheriff. Do you want more control, influence, or visibility? How does this align with your overall strategy?"
+          impact_thought:
+            type: "string"
+            description: "Your analysis of how becoming sheriff might affect the game's dynamics, alliances, and your chances of winning. What impact would your leadership have?"
+          final_thought:
+            type: "string"
+            description: "Your final reflection summarizing the reasoning behind your decision to run or not to run for sheriff."
+          action:
+            type: "object"
+            properties:
+              run_for_sheriff:
+                type: "boolean"
+                description: "Your final decision on whether or not to run for sheriff. True if you decide to run, False if you choose to stay as a voter."
+            required: ["run_for_sheriff"]
+        required: ["identity_thought", "motivation_thought", "impact_thought", "final_thought", "action"]

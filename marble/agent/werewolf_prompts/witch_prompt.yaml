@@ -1,0 +1,63 @@
+system: |
+  Currently you are playing a werewolf game. Currently you receive the message from the judge, and it is your turn to take action. Read instructions and game history from the user carefully, and decide your instruction.
+
+user: |
+
+  <<public_chat>>
+
+  Here's the current game state:
+
+  <<game_state>>
+
+  Now, as a witch, it is your turn to take action.
+  <<night info>>
+  <<poison info>>
+  <<antidote info>>
+
+  Now, please make your decision. You cannot use both poison and antidote in the same night. As the witch, you hold significant power in the game. You possess two potions: one to save a player (the antidote) and one to eliminate a player (the poison). The antidote allows you to prevent a player from dying if they were attacked, while the poison lets you kill one player you suspect to be a werewolf. However, you cannot use both in the same night. Your decisions can drastically shift the balance of power between the good and evil sides, so careful consideration is necessary.
+
+  Follow these steps to decide your action:
+
+  1. Reflect on the player's death. Based on their past behavior, what role do you think they most likely had? Were they killed by werewolves, or was it a self-inflicted "self-knife" by the werewolves? Record your thoughts in werewolf or not.
+  2. If they were killed by the werewolves, what role do you think they were? A seer, guard, villager, or perhaps yourself? Write down your reasoning in death profile.
+  3. Decide whether to use the antidote. Based on your assumption, is this player valuable enough to save with the antidote? What will happen to the game if you save them? Are there any commands or advice from other trusted players that might guide your decision? Note your thoughts in use_antidote_thought.
+  4. Now consider using the poison. Your poison can kill one player during the night. The available target of the poison is <<Player alive info>>. From your perspective, who is most likely a werewolf? Is this a good opportunity to use the poison? (If you believe you are going to die tonight, this might be a good chance to take the risk and use it.) How will the game play out if you do this? Are there any commands or guidance from other trusted players that might influence your action? Record your reasoning in use_poison_thought.
+  5. Finally, what is your decision? Record your final choice in "action" and summarize your overall reasoning in final_thought. Please be aware that you can choose to use neither poison nor antidote.
+
+tools:
+  - type: "function"
+    function:
+      name: "witch_action"
+      description: "You are asked to make witch decision during this werewolf game. Follow the user's instruction to think this problem and gradually make your decision, and store your thought process in corresponding places."
+      parameters:
+        type: "object"
+        properties:
+          werewolf_or_not:
+            type: "string"
+            description: "Your reasoning on whether the person who died was killed by werewolves or it was a self-inflicted 'self-knife' by the werewolves."
+          death_profile:
+            type: "string"
+            description: "Your analysis of the role the dead player most likely had (e.g., seer, guard, or another role), and your reasoning for it."
+          use_antidote_thought:
+            type: "string"
+            description: "Your thought process about whether or not to use the antidote to save the dead player, including potential consequences of using it and any influence from trusted players."
+          use_poison_thought:
+            type: "string"
+            description: "Your thought process about whether or not to use the poison to kill another player, who is likely a werewolf, and the potential impact of using it."
+          final_thought:
+            type: "string"
+            description: "Your final reasoning and conclusion after considering both the antidote and poison, summarizing the decision-making process."
+          action:
+            type: "object"
+            properties:
+              use_antidote:
+                type: "boolean"
+                description: "Whether or not you choose to use the antidote to save the dead player. You cannot set both use_antidote and use_poison to true."
+              use_poison:
+                type: "boolean"
+                description: "Whether or not you choose to use the poison to kill another player. You cannot set both use_antidote and use_poison to true."
+              poison_target:
+                type: "string"
+                description: "If you use poison, this is the target (player ID) chosen from the list of alive players above. If you do not use poison, set this to None."
+            required: ["use_antidote", "use_poison", "poison_target"]
+        required: ["werewolf_or_not", "death_profile", "use_antidote_thought", "use_poison_thought", "final_thought", "action"]

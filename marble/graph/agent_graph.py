@@ -49,6 +49,10 @@ class AgentGraph:
                 raise ValueError(f"Invalid relationship format: {rel}. Expected 3 elements.")
             node1, node2, relationship = rel  # Correctly unpacking the list
             self.add_relationship(node1, node2, relationship)
+            if structure_config.coordination_mode == 'tree':
+                if relationship == 'parent':
+                    self.agents[node2].parent = self.agents[node1]
+                    self.agents[node1].children.append(self.agents[node2])
 
 
     # def _build_graph(self, structure: Dict[str, List[str]]) -> None:
@@ -303,5 +307,5 @@ class AgentGraph:
             self.logger.error("No root agents found in the graph.")
             return None
         else:
-            self.logger.error("Multiple root agents found in the graph.")
-            return None
+            self.logger.error("Multiple root agents found in the graph. return the first one.")
+            return roots[0]

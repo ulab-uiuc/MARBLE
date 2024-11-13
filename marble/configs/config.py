@@ -20,9 +20,10 @@ class Config:
             data (Dict[str, Any]): Configuration data.
         """
         self.environment = data.get('environment', {})
+        self.relationships = data.get('relationships', [])
         self.agents = data.get('agents', [])
         self.metrics = data.get('metrics', {})
-        self.llm = data.get('llm', {})
+        self.llm = data.get('llm', '')
         self.tools = data.get('tools', {})
         self.logger = data.get('logger', {})
         self.parallel = data.get('parallel', {})
@@ -32,6 +33,7 @@ class Config:
         self.task:Dict[str, Any] = data.get('task', {})
         self.coordination_mode = data.get('coordinate_mode', 'centralized')
         self.relationships = data.get('relationships', [])
+        self.output = data.get('output', {})
 
     @staticmethod
     def load(file_path: str) -> 'Config':

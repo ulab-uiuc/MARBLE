@@ -1,0 +1,74 @@
+system: |
+  You are participating in a werewolf game. It is your turn to speak. In this phase, each player takes turns to share their insights, analyze the current situation, and decide who should be banished. Your role is crucial in influencing the flow of the game, whether you aim to gain trust, deflect suspicion, or push a particular agenda. Read the instructions carefully and decide your action.
+
+user: |
+
+  <<public_chat>>
+
+  Here's the current game state:
+
+  <<game_state>>
+
+  Now, it is your turn to speak.
+  You are the <<speech_position>> player to speak this round.
+  Here is what the players before you have said:
+  <<speech_info>>
+
+  At this stage, each player is expected to share their opinions and reveal any information they have gathered, helping the group make an informed decision about who to banish next. Follow these steps to organize your thoughts and decide your action:
+
+  0. Based on your current role and objectives, what do you need to achieve in order to win? Do you need to gain more trust, deflect suspicion, or accomplish something else? Break down your ultimate goal into smaller, actionable steps you need to complete during this round of speech. Record your plan in role_objectives.
+
+  1. Think about your speaking position. You are the <<speech_position>> player to speak. What have the previous players said? Is there anything that directly impacts your position (e.g., claims against you, information about your role)? Should you respond to their claims? If so, how should you respond? Store your analysis in response_plan.
+
+  2. Evaluate the statements made by the players who spoke before you. Whose words seem credible? Who seems suspicious, possibly a werewolf? Should you ally with someone or criticize another player’s statements? Analyze each player’s speech in speech_analysis.
+
+  3. What is your main goal for this round? Do you want to provide information, reveal your role, or shift the game's momentum to gain trust? Should you claim a specific role, mislead other players, or offer false information? Based on this, decide what you will say. Record this in goal_strategy.
+
+  4. How do you think your speech will be perceived? Will it make you appear more trustworthy, or will it raise suspicion? Consider how others will react to what you say. Record your perception_analysis.
+
+  5. **Additional Considerations Based on Your Role**:
+     - If you are the **seer** (or claiming to be one):
+       - Should you reveal who you checked last night and the results of your checks from the previous night? Why or why not? Should you direct the guard or witch on who to protect tonight?
+     - If you are the **guard** (or claiming to be one):
+       - Should you reveal whom you protected last night and who you plan to protect tonight? Will you speak the truth or lie about your protection? Should you coordinate with the witch and the seer?
+     - If you are the **witch**(or claiming to be one, not recommended, since rel witch have a poison which can kill you at night):
+       - Should you reveal your identity? If so, should you reveal who you saved last night (if it was a peaceful night)? Should you discuss the plan for future nights? Will you tell the truth or lie about your actions?
+     - If you are the **sheriff**:
+       - Should you reveal your "badge flow" (i.e., who you would pass the sheriff badge to if you were to die)? If you are also the seer, should you reveal who you plan to check tonight? Should you declare what you will do with the badge based on your findings (e.g., pass it to a trusted player, or destroy it if you find a werewolf)?
+     - **If you are a werewolf** :
+       - Should you claim to be a different role? If so, what role should you claim? Has anyone else already claimed this role? How would this affect your credibility? Will this claim deflect suspicion from you or raise doubts? How will other players react to this claim, and will it help you survive longer? What risks are involved if someone else counterclaims or reveals your lie?
+
+  6. Based on the above, create a detailed outline of your speech in speech_outline.
+
+  7. What is your final decision? Write your complete speech content in action, including your final thoughts on how it should impact the game.
+
+tools:
+  - type: "function"
+    function:
+      name: "speech_action"
+      description: "You are asked to make a speech during this round of the werewolf game. Follow the user's instructions and carefully plan your speech, storing your thought process in the corresponding fields."
+      parameters:
+        type: "object"
+        properties:
+          role_objectives:
+            type: "string"
+            description: "The main objectives you need to accomplish during this speech based on your role and overall win conditions."
+          response_plan:
+            type: "string"
+            description: "Your plan to respond to any claims or information from previous speakers that impacts you directly."
+          speech_analysis:
+            type: "string"
+            description: "Your analysis of the previous speakers' statements. Who seems trustworthy, who seems suspicious, and why?"
+          goal_strategy:
+            type: "string"
+            description: "Your strategy for this round of speech. Do you want to provide new information, reveal your role, or shift the game's momentum? Should you claim a specific role or mislead others?"
+          perception_analysis:
+            type: "string"
+            description: "Your thoughts on how your speech will be perceived by other players. Will it make you seem more trustworthy or suspicious?"
+          speech_outline:
+            type: "string"
+            description: "A detailed outline of your speech based on the points above."
+          action:
+            type: "string"
+            description: "Your complete speech content for this round, including final decisions about how you want to influence the game."
+        required: ["role_objectives", "response_plan", "speech_analysis", "goal_strategy", "perception_analysis", "speech_outline", "action"]

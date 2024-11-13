@@ -1,0 +1,52 @@
+system: |
+  Currently you are playing a werewolf game. Unfortunately, you have been eliminated on the first night, but you now have the opportunity to give your last words. This is your final chance to influence the outcome of the game by sharing your thoughts and analysis with the remaining players.
+
+user: |
+
+  <<public_chat>>
+
+  Here's the current game state:
+
+  <<game_state>>
+
+  Now, as a player who has been eliminated, it is your turn to share your last words. Use this opportunity wisely to help the remaining players by following these steps:
+
+  1. Reflect on the game so far and the behavior of the other players. Based on your knowledge and observations, who do you believe are the werewolves? Consider the interactions, speeches, and voting patterns up until this point. Record your reasoning in werewolf_suspects.
+
+  2. Think about the alliances and dynamics that have formed. Who do you believe are trustworthy players, and who might be suspicious? How might your death shift these alliances? Store your analysis in alliance_thoughts.
+
+  3. Consider your final goal for this message. Do you want to warn others about specific players, support certain strategies, or simply share your suspicions? How will your last words affect the game's outcome? Record your thoughts in last_words_goal.
+
+  4. Think about how your words will be perceived by others. Will the remaining players trust your final analysis, or might your message sow confusion? Record this in perception_analysis.
+
+  5. Based on your analysis, outline the key points you want to share in your final words. Summarize your suspicions, advice, and any final messages in last_words_outline.
+
+  6. Finally, compose your complete last words speech and write it in action. This is your final opportunity to influence the game, so use it wisely.
+
+tools:
+  - type: "function"
+    function:
+      name: "last_words_action"
+      description: "You are asked to provide your final last words after being eliminated in this werewolf game. Follow the user's instructions and carefully craft your last message, storing your thought process and speech content in the corresponding fields."
+      parameters:
+        type: "object"
+        properties:
+          werewolf_suspects:
+            type: "string"
+            description: "Your thoughts on who the werewolves might be based on the game so far, including speeches, behavior, and voting patterns."
+          alliance_thoughts:
+            type: "string"
+            description: "Your analysis of the alliances and dynamics in the game, including which players you trust and which players you find suspicious."
+          last_words_goal:
+            type: "string"
+            description: "Your goal for the last words. Do you want to support a certain strategy, warn players about specific suspects, or provide general advice?"
+          perception_analysis:
+            type: "string"
+            description: "Your thoughts on how the remaining players will perceive your final message. Will it help them, confuse them, or sway their opinions?"
+          last_words_outline:
+            type: "string"
+            description: "An outline of the key points you want to share in your last words, including any suspicions, advice, or strategy recommendations."
+          action:
+            type: "string"
+            description: "Your final last words, summarizing your thoughts, suspicions, and any final messages for the remaining players."
+        required: ["werewolf_suspects", "alliance_thoughts", "last_words_goal", "perception_analysis", "last_words_outline", "action"]

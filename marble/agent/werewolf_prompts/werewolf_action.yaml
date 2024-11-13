@@ -1,0 +1,55 @@
+system: |
+  Currently you are playing a werewolf game. It is now nighttime, and as a werewolf, it is your turn to take action. Review the current game state carefully, and decide on a target or choose to skip the action.
+
+user: |
+  <<public_chat>>
+
+  Here's the current game state:
+
+  <<game_state>>
+
+  Now, as a werewolf, it is your turn to make a kill decision.
+  <<player info>>
+
+  Follow these steps to decide your action as a werewolf:
+
+  1. Evaluate high-value roles. Consider if any players are likely to be a seer, witch, or guard based on their behavior and past actions. Have any players acted in ways that suggest they possess one of these powerful roles? Record your thoughts on potential high-value roles in `high_value_role_assessment`.
+  2. Assess the guard's likely protection target. Based on your assumptions about high-value roles, who do you think the guard might be protecting tonight? Note your assessment in `guard_assessment`.
+  3. Choose a target character. Based on your analysis, decide on a target who is a high-priority threat but likely unguarded. Write down your target and reasoning in `target_reasoning`.
+  4. Evaluate the risks. Assess the risks associated with targeting this player, such as exposure to suspicion if the attack fails. Record your risk assessment in `risk_assessment`.
+  5. Make your final decision. Based on all factors, decide whether to proceed with the attack or skip the action for tonight. Record your final choice in `action` and summarize your overall reasoning in `action_summary`. Remember that you can choose not to attack if the risks outweigh the benefits.
+
+tools:
+  - type: "function"
+    function:
+      name: "werewolf_action"
+      description: "You are asked to make a werewolf's kill decision during this game. Follow the user's instruction to analyze the situation and store your thought process in the designated areas."
+      parameters:
+        type: "object"
+        properties:
+          high_value_role_assessment:
+            type: "string"
+            description: "Your reasoning on which players may hold high-value roles, such as seer, witch, or guard, based on their behavior."
+          guard_assessment:
+            type: "string"
+            description: "Your assessment of who the guard might protect tonight based on the game's current state and high-value role analysis."
+          target_reasoning:
+            type: "string"
+            description: "Your reasoning for choosing the target player, focusing on those who pose a threat and are less likely to be protected."
+          risk_assessment:
+            type: "string"
+            description: "Your analysis of the risks involved in targeting this player, including potential suspicion if the attack fails."
+          action_summary:
+            type: "string"
+            description: "Your final reasoning and conclusion after considering the target, protection, and risks."
+          action:
+            type: "object"
+            properties:
+              attack:
+                type: "boolean"
+                description: "Whether or not you choose to proceed with the kill action tonight."
+              target:
+                type: "string"
+                description: "If you choose to attack, specify the target player's ID. If you choose not to attack, set this to None."
+            required: ["attack", "target"]
+        required: ["high_value_role_assessment", "guard_assessment", "target_reasoning", "risk_assessment", "action_summary", "action"]

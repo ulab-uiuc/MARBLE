@@ -1,0 +1,55 @@
+system: |
+  Currently, it is nighttime in a werewolf game. The werewolves are required to reach a consensus on their kill target. This time, you have received information on the target choices and reasoning from two other werewolf players from the previous round. You must consider this input and come to a decision together. Note that you have a maximum of {rounds_remaining} rounds to agree on a target; otherwise, the kill action will be skipped.
+
+user: |
+  <<public_chat>>
+
+  Here's the current game state:
+
+  <<game_state>>
+
+  Now, as a werewolf, it is your turn to make a kill decision.
+  <<allies_target_info>>
+
+  You must come to a consensus within <<rounds_remaining>> rounds(include this one, which means 1 round remaining means last round). Follow these steps to evaluate and update your decision:
+
+  1. Review the choices and reasoning of the other werewolves. Read the target selections and thought processes provided by your fellow werewolves. Analyze their choice of target and rationale, such as whether they believe the target is a high-value role like the seer, witch, or guard. Note your understanding and level of agreement with their perspective in `ally_assessment`.
+  2. Reevaluate the current game situation. Based on your own analysis and the perspectives from your allies, reconsider the game state. Does your original target choice still align with the best interests of the werewolf team, or is a different target more suitable? Write your updated evaluation in `updated_game_assessment`.
+  3. Anticipate other roles' reactions. Consider the potential response from villagers or special roles if you choose a particular target. What might happen if your target is successfully killed? Or, if the attack fails, who might face suspicion? Record your thoughts in `reaction_assessment`.
+  4. Seek consensus. Since reaching a decision is crucial, consider if you are willing to adjust your choice to align with the group. If you are open to compromise or insist on your target, explain your reasons in `consensus_thoughts`.
+  5. Finalize your decision. After weighing all considerations, choose your final target. Record your decision, including any explanations, in `action_summary`. If you remain undecided, you may choose to abstain, but note the reason.
+
+tools:
+  - type: "function"
+    function:
+      name: "werewolf_consensus_action"
+      description: "You are asked to make a consensus-based kill decision as a werewolf. Review the ally information and follow the user's instructions to decide and document your thought process in the designated areas."
+      parameters:
+        type: "object"
+        properties:
+          ally_assessment:
+            type: "string"
+            description: "Your assessment of the other werewolves' choices and reasoning, indicating your understanding and agreement level."
+          updated_game_assessment:
+            type: "string"
+            description: "Your updated evaluation of the game state after considering both your original reasoning and the input from allies."
+          reaction_assessment:
+            type: "string"
+            description: "Your analysis of the anticipated reactions from other roles if a specific target is chosen, including the potential consequences of a successful or failed attack."
+          consensus_thoughts:
+            type: "string"
+            description: "Your willingness to compromise on a target choice or reasons for maintaining your original decision."
+          action_summary:
+            type: "string"
+            description: "Your final decision and reasoning, summarizing the outcome of the consensus process and your final choice."
+          action:
+            type: "object"
+            properties:
+              attack:
+                type: "boolean"
+                description: "Indicates whether you choose to proceed with the kill action tonight. If there is no consensus, this may be set to false."
+              target:
+                type: "string"
+                description: "The ID of the final chosen target player if an attack is decided. If there is no attack, set this to None."
+            required: ["attack", "target"]
+        required: ["ally_assessment", "updated_game_assessment", "reaction_assessment", "consensus_thoughts", "action_summary", "action"]
