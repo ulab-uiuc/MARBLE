@@ -1267,13 +1267,13 @@ use = ["tensorflow", "tensorflow-hub", "tensorflow-text"]
 
 [[package]]
 name = "litellm"
-version = "1.52.1"
+version = "1.52.6"
 description = "Library to easily interface with LLM API providers"
 optional = false
 python-versions = "!=2.7.*,!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,!=3.5.*,!=3.6.*,!=3.7.*,>=3.8"
 files = [
-    {file = "litellm-1.52.1-py3-none-any.whl", hash = "sha256:a76133fc6d14a3157275d9ae850b9f18312ae93ae313092d6cf9e9d35f2c72f2"},
-    {file = "litellm-1.52.1.tar.gz", hash = "sha256:750056e0329c5c742193b8f2104133da1e69b2fcc534827e18f7b536af56315c"},
+    {file = "litellm-1.52.6-py3-none-any.whl", hash = "sha256:9b3e9fb51f7e2a3cc8b50997b346c55aae9435a138d9a656f18e262750a1bfe1"},
+    {file = "litellm-1.52.6.tar.gz", hash = "sha256:d67c653f97bd07f503b975c167de1e25632b7bc6bb3c008c46921e4acc81ec60"},
 ]
 
 [package.dependencies]
@@ -3955,4 +3955,4 @@ test = ["big-O", "importlib-resources", "jaraco.functools", "jaraco.itertools", 
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.9, <3.12"
-content-hash = "c8f5820a6efc0fcab43ea7d21c627d38c32d01d0dac79403c2bb3909005a5f00"
+content-hash = "aee9d02b0f9aeffb53177251487598f67223a450fb000c86961d2e45245ee33f"
