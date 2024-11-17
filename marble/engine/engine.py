@@ -593,20 +593,17 @@ class Engine:
         """
         Select the initial agent to start the chain.
         """
-        # 1. 如果是coding环境，选择analyst作为起点
         if isinstance(self.environment, CodingEnvironment):
             for agent in self.agents:
                 if isinstance(agent, AnalystAgent):
                     return agent
         
-        # 2. 从relationships中找到起点
         all_relationships = self.graph.relationships
         if all_relationships:
             for source, target, relationship in all_relationships:
                 if relationship == "delegates_to":
                     return self.graph.get_agent(source)
         
-        # 3. 回退到第一个agent
         if self.agents:
             return self.agents[0]
             
@@ -620,7 +617,6 @@ class Engine:
         self.logger.info(f"Agent '{agent.agent_id}' is executing task.")
         tasks = []
 
-        # 特殊处理CodingAgent
         is_coding_agent = isinstance(agent, (AnalystAgent, CoderAgent, TestorAgent))
         
         if agent.children:
@@ -639,7 +635,6 @@ class Engine:
                         communications.append(communication)
                     children_results += child_result
             
-            # CodingAgent可能需要依赖前一个agent的结果
             if is_coding_agent:
                 own_result, communication = agent.act(task)
             else:
@@ -664,7 +659,6 @@ class Engine:
             if "agent_id" in result and "result" in result:
                 agent_id = result["agent_id"]
                 res_content = result["result"]
-                # 处理CodingAgent的特殊输出格式
                 if isinstance(self.environment, CodingEnvironment):
                     if "analysis" in res_content:
                         res_content = f"Analysis: {res_content['analysis']}"
@@ -685,7 +679,6 @@ class Engine:
         summary = "Agents' Results Summary:\n"
         
         if isinstance(self.environment, CodingEnvironment):
-            # 按照分析->实现->测试的顺序组织结果
             for result in agents_results:
                 for agent_id, content in result.items():
                     if isinstance(content, dict):
