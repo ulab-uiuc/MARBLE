@@ -9,7 +9,6 @@ class AnalystAgent(BaseAgent):
     def __init__(self, config: Dict[str, Union[Any, Dict[str, Any]]], env: CodingEnvironment, shared_memory: Union[SharedMemory, None] = None):
         super().__init__(config, env, shared_memory)
         self.env = env
-        # 更新系统消息以包含分析师角色
         self.system_message += "\nAs a senior software analyst, you analyze coding tasks and provide clear implementation suggestions."
 
     def act(self, task: str) -> Any:
@@ -36,11 +35,10 @@ class AnalystAgent(BaseAgent):
         
         analysis = result.content if result.content else ""
         
-        # 计算token使用量
+
         messages = [{"role": "system", "content": self.system_message}, {"role": "user", "content": task}, {"role": "assistant", "content": analysis}]
         self.token_usage += token_counter(model=self.llm, messages=messages)
         
-        # 更新内存
         self.memory.update(self.agent_id, {
             "type": "analysis",
             "task": task,
@@ -54,7 +52,7 @@ class AnalystAgent(BaseAgent):
         )
 
     def plan_next_phase(self, analysis_result: Any) -> Tuple[Optional[str], Optional[str]]:
-        """规划下一个阶段，通常是将任务传递给CoderAgent"""
+
         return self.plan_next_agent(analysis_result, self.agent_graph.agents)
 
 class CoderAgent(BaseAgent):
@@ -102,7 +100,6 @@ class CoderAgent(BaseAgent):
             temperature=0.7
         )[0]
         
-        # 计算token使用量
         for result in [code_result, doc_result]:
             messages = [{"role": "system", "content": self.system_message}, {"role": "user", "content": task}, {"role": "assistant", "content": result.content if result.content else ""}]
             self.token_usage += token_counter(model=self.llm, messages=messages)
@@ -110,7 +107,7 @@ class CoderAgent(BaseAgent):
         if not code_result.content or not doc_result.content:
             return {"success": False, "error": "Failed to generate content"}
             
-        # 更新内存
+
         self.memory.update(self.agent_id, {
             "type": "implementation",
             "task": task,
@@ -158,14 +155,13 @@ class TestorAgent(BaseAgent):
             temperature=0.7
         )[0]
         
-        # 计算token使用量
         messages = [{"role": "system", "content": self.system_message}, {"role": "user", "content": task}, {"role": "assistant", "content": test_analysis_result.content if test_analysis_result.content else ""}]
         self.token_usage += token_counter(model=self.llm, messages=messages)
         
         if not test_analysis_result.content:
             return {"success": False, "error": "Failed to generate test analysis"}
             
-        # 更新内存
+
         self.memory.update(self.agent_id, {
             "type": "test_analysis",
             "task": task,
@@ -206,14 +202,12 @@ class TestorAgent(BaseAgent):
             temperature=0.7
         )[0]
         
-        # 计算token使用量
         messages = [{"role": "system", "content": self.system_message}, {"role": "user", "content": task}, {"role": "assistant", "content": test_result.content if test_result.content else ""}]
         self.token_usage += token_counter(model=self.llm, messages=messages)
         
         if not test_result.content:
             return {"success": False, "error": "Failed to generate test content"}
         
-        # 更新内存
         self.memory.update(self.agent_id, {
             "type": "test_implementation",
             "task": task,
