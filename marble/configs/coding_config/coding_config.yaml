@@ -1,0 +1,103 @@
+coordinate_mode: chain
+
+relationships:
+  - [analyst1, coder1, "delegates_to"]
+  - [coder1, testor1, "delegates_to"]
+
+llm: "gpt-3.5-turbo"
+
+environment:
+  type: Coding
+  name: "Coding Environment"
+  max_iterations: 3
+  workspace_path: "workspace"
+
+task:
+  content: |
+    Dear Development Team,
+
+    You are collaborating to implement a software solution based on the following requirements:
+
+    **Requirements**
+
+    Implement a merge sort algorithm in Python. The implementation should include:
+    1. A main merge sort function
+    2. A helper function for merging two sorted arrays
+    3. The ability to sort a list of numbers in ascending order
+
+    **Your Task**
+
+    1. **Analysis Phase**:
+       - Analyze the requirements
+       - Break down the implementation steps
+       - Identify potential edge cases
+       - Suggest optimal approach
+
+    2. **Implementation Phase**:
+       - Write clean, efficient code
+       - Include proper documentation
+       - Follow Python best practices
+       - Consider performance implications
+
+    3. **Testing Phase**:
+       - Create comprehensive test cases
+       - Test edge cases
+       - Verify sorting correctness
+       - Validate performance
+
+    Please work together to deliver a high-quality implementation.
+
+    Good luck!
+  
+  output_format: |
+    The output should follow this format:
+    
+    **Analysis**:
+    [Analysis details]
+
+    **Implementation**:
+    ```python
+    [Code implementation]
+    ```
+
+    **Tests**:
+    ```python
+    [Test cases]
+    ```
+
+agents:
+  - type: AnalystAgent
+    agent_id: analyst1
+    profile: |
+      I am a senior software analyst responsible for analyzing coding tasks and providing implementation suggestions. 
+      My expertise includes algorithm analysis, performance optimization, and system design. I focus on breaking down 
+      complex problems into manageable components and identifying potential challenges before implementation.
+
+  - type: CoderAgent
+    agent_id: coder1
+    profile: |
+      I am an expert programmer responsible for implementing solutions based on analyst's suggestions. 
+      I specialize in writing clean, efficient, and well-documented code following Python best practices. 
+      My focus is on creating maintainable and performant implementations.
+
+  - type: TestorAgent
+    agent_id: testor1
+    profile: |
+      I am a test engineer responsible for ensuring code quality through comprehensive testing. 
+      I specialize in creating thorough test suites, identifying edge cases, and validating both 
+      functional correctness and performance characteristics of implementations.
+
+memory:
+  type: SharedMemory
+
+metrics:
+  code_quality: true
+  documentation_quality: true
+  test_coverage: true
+
+engine_planner:
+  initial_progress: "Starting the merge sort implementation analysis."
+
+output:
+  format: jsonl
+  file_path: "result/coding_output.jsonl"

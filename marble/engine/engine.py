@@ -6,18 +6,18 @@ The core engine module that coordinates agents within the environment.
 import json
 from typing import Any, Dict, List, Optional, Union
 
-from marble.agent import BaseAgent
+from marble.agent import BaseAgent, AnalystAgent, CoderAgent, TestorAgent
 from marble.configs.config import Config
 from marble.engine.engine_planner import EnginePlanner
-from marble.environments import BaseEnvironment, ResearchEnvironment, WebEnvironment
+from marble.environments import BaseEnvironment, ResearchEnvironment, WebEnvironment, CodingEnvironment
 from marble.evaluator.evaluator import Evaluator
 from marble.graph.agent_graph import AgentGraph
 from marble.memory.base_memory import BaseMemory
 from marble.memory.shared_memory import SharedMemory
 from marble.utils.logger import get_logger
 
-EnvType = Union[BaseEnvironment, WebEnvironment, ResearchEnvironment]
-AgentType = Union[BaseAgent]
+EnvType = Union[BaseEnvironment, WebEnvironment, ResearchEnvironment, CodingEnvironment]
+AgentType = Union[BaseAgent, AnalystAgent, CoderAgent, TestorAgent]
 
 class Engine:
     """
@@ -33,6 +33,7 @@ class Engine:
         """
         self.logger = get_logger(self.__class__.__name__)
         self.config = config
+        self.memory = self._initialize_memory(config.memory)
         # Initialize Environment
         self.environment = self._initialize_environment(config.environment)
         # Initialize Agents
@@ -42,7 +43,7 @@ class Engine:
         for agent in self.agents:
             agent.set_agent_graph(self.graph)
         # Initialize Memory
-        self.memory = self._initialize_memory(config.memory)
+ 
         # Initialize Evaluator
         self.evaluator = Evaluator(metrics_config=config.metrics)
         self.task = config.task.get('content', '')
@@ -80,12 +81,15 @@ class Engine:
         elif env_type == "Research":
             env3 = ResearchEnvironment(name="Research Environment", config=env_config)
             return env3
+        elif env_type == "Coding":
+            env4 = CodingEnvironment(name="Coding Environment", config=env_config)
+            return env4
         else:
             raise ValueError(f"Unsupported environment type: {env_type}")
 
     def _initialize_agents(self, agent_configs: List[Dict[str, Any]]) -> List[BaseAgent]:
         """
-        Initialize agents based on configurations.
+        Initialize agents based on configurations and environment type.
 
         Args:
             agent_configs (List[dict]): List of agent configurations.
@@ -95,11 +99,30 @@ class Engine:
         """
         agents = []
         llm = self.config.llm
+
+        # Check if we're using CodingEnvironment
+        is_coding_env = isinstance(self.environment, CodingEnvironment)
+        
         for agent_config in agent_configs:
             agent_type = agent_config.get("type")
-            agent = BaseAgent(config=agent_config, env=self.environment, model=llm)
+            agent: Optional[BaseAgent] = None
+            
+            if is_coding_env:
+                # Initialize specialized coding agents based on their type
+                if agent_type == "AnalystAgent":
+                    agent = AnalystAgent(config=agent_config, env=self.environment, shared_memory=self.memory)
+                elif agent_type == "CoderAgent":
+                    agent = CoderAgent(config=agent_config, env=self.environment, shared_memory=self.memory)
+                elif agent_type == "TestorAgent":
+                    agent = TestorAgent(config=agent_config, env=self.environment, shared_memory=self.memory)
+            
+            # If not a coding environment or no specialized agent matched, use BaseAgent
+            if agent is None:
+                agent = BaseAgent(config=agent_config, env=self.environment, model=llm)
+            
             agents.append(agent)
             self.logger.debug(f"Agent '{agent.agent_id}' of type '{agent_type}' initialized.")
+
         return agents
 
     def _initialize_memory(self, memory_config: Dict[str, Any]) -> Union[SharedMemory, BaseMemory]:
@@ -566,25 +589,47 @@ class Engine:
             self.logger.info("Tree-based coordination simulation completed.")
             self._write_to_jsonl(summary_data)
 
+    def _select_initial_agent(self) -> Optional[BaseAgent]:
+        """
+        Select the initial agent to start the chain.
+        """
+        # 1. 如果是coding环境，选择analyst作为起点
+        if isinstance(self.environment, CodingEnvironment):
+            for agent in self.agents:
+                if isinstance(agent, AnalystAgent):
+                    return agent
+        
+        # 2. 从relationships中找到起点
+        all_relationships = self.graph.relationships
+        if all_relationships:
+            for source, target, relationship in all_relationships:
+                if relationship == "delegates_to":
+                    return self.graph.get_agent(source)
+        
+        # 3. 回退到第一个agent
+        if self.agents:
+            return self.agents[0]
+            
+        self.logger.error("No agents available to start the chain.")
+        return None
+
     def _execute_agent_task_recursive(self, agent: BaseAgent, task: str) -> Any:
         """
         Recursively execute tasks starting from the given agent.
-
-        Args:
-            agent (BaseAgent): The agent to execute task.
-            task (str): The task to execute.
-
-        Returns:
-            Any: The result of the agent's execution.
         """
         self.logger.info(f"Agent '{agent.agent_id}' is executing task.")
         tasks = []
+
+        # 特殊处理CodingAgent
+        is_coding_agent = isinstance(agent, (AnalystAgent, CoderAgent, TestorAgent))
+        
         if agent.children:
             # Agent assigns tasks to children
             tasks_for_children = agent.plan_tasks_for_children(task)
             tasks.append(tasks_for_children)
             children_results = []
             communications = []
+            
             for child in agent.children:
                 child_task = tasks_for_children.get(child.agent_id, "")
                 if child_task:
@@ -593,13 +638,16 @@ class Engine:
                     if communication:
                         communications.append(communication)
                     children_results += child_result
-            # Agent may also act itself
-            own_result, communication = agent.act(task)
+            
+            # CodingAgent可能需要依赖前一个agent的结果
+            if is_coding_agent:
+                own_result, communication = agent.act(task)
+            else:
+                own_result, communication = agent.act(task)
+                
             if communication:
                 communications.append(communication)
             communications_str = "\n".join(communications) if communications else None
-            # # Combine results
-            # combined_result = agent.summarize_results(children_results, own_result)
             results = [{'agent_id':agent.agent_id, 'result':own_result}] + children_results
             return results, communications_str, tasks
         else:
@@ -607,24 +655,55 @@ class Engine:
             result, communication = agent.act(task)
             return [{'agent_id':agent.agent_id, 'result':result}], communication, tasks
 
-    def _select_initial_agent(self) -> Optional[BaseAgent]:
+    def _format_results(self, results: List[Dict[str, Any]]) -> str:
         """
-        Select the initial agent to start the chain.
-
-        Returns:
-            Optional[BaseAgent]: The initial agent, or None if not found.
+        Formats results into a string, with special handling for coding agents.
         """
-        # For simplicity, select an agent based on some criteria.
-        # Here, we'll select the agent with the highest priority or a predefined agent.
-        # Alternatively, we could prompt the LLM to select the starting agent.
+        results_str = []
+        for result in results:
+            if "agent_id" in result and "result" in result:
+                agent_id = result["agent_id"]
+                res_content = result["result"]
+                # 处理CodingAgent的特殊输出格式
+                if isinstance(self.environment, CodingEnvironment):
+                    if "analysis" in res_content:
+                        res_content = f"Analysis: {res_content['analysis']}"
+                    elif "code" in res_content:
+                        res_content = f"Implementation: {res_content['code']}\nDocumentation: {res_content['documentation']}"
+                    elif "test_code" in res_content:
+                        res_content = f"Test Implementation: {res_content['test_code']}"
+                results_str.append(f"AgentID: {agent_id}: Result: {res_content}")
+            else:
+                for agent_id, res_content in result.items():
+                    results_str.append(f"Agent {agent_id}: Result: {res_content}")
+        return "\n".join(results_str)
 
-        # Example: Select agent1 as the starting agent
-        starting_agent_id = 'agent1'
-        if starting_agent_id in [agent.agent_id for agent in self.agents]:
-            return self.graph.get_agent(starting_agent_id)
+    def _summarize_results(self, agents_results: List[Dict[str, Any]]) -> str:
+        """
+        Summarize the agents' results into a string, with special handling for coding agents.
+        """
+        summary = "Agents' Results Summary:\n"
+        
+        if isinstance(self.environment, CodingEnvironment):
+            # 按照分析->实现->测试的顺序组织结果
+            for result in agents_results:
+                for agent_id, content in result.items():
+                    if isinstance(content, dict):
+                        if "analysis" in content:
+                            summary += f"Analysis from {agent_id}:\n{content['analysis']}\n\n"
+                        elif "code" in content:
+                            summary += f"Implementation from {agent_id}:\n{content['code']}\n"
+                            summary += f"Documentation:\n{content['documentation']}\n\n"
+                        elif "test_code" in content:
+                            summary += f"Test Implementation from {agent_id}:\n{content['test_code']}\n\n"
+                    else:
+                        summary += f"- {agent_id}: {content}\n"
         else:
-            self.logger.error(f"Starting agent '{starting_agent_id}' not found.")
-            return None
+            for result in agents_results:
+                summary += f"- {result}\n"
+
+        self.logger.debug(f"Summarized agents' results:\n{summary}")
+        return summary
 
     def start(self) -> None:
         """
@@ -658,24 +737,7 @@ class Engine:
         # Placeholder for any additional termination conditions
         return False
 
-    def _summarize_results(self, agents_results: List[Dict[str, Any]]) -> str:
-        """
-        Summarize the agents' results into a string.
-
-        Args:
-            agents_results (Dict[str, Any]): The results from all agents.
-
-        Returns:
-            str: The summary string.
-        """
-        summary = "Agents' Results Summary:\n"
-        # for agent_id, result in agents_results.items():
-        #     summary += f"- {agent_id}: {result}\n"
-        for result in agents_results:
-            summary += f"- {result}\n"
-
-        self.logger.debug(f"Summarized agents' results:\n{summary}")
-        return summary
+    
 
     def _write_to_jsonl(self, summary_data: Dict[str, Any]) -> None:
         """
@@ -730,20 +792,7 @@ class Engine:
         except Exception:
             return "\n".join(json.dumps(item) for item in agent_tasks)
 
-    def _format_results(self, results: List[Dict[str, Any]]) -> str:
-        """
-        Formats results into a string.
-        """
-        results_str = []
-        for result in results:
-            if "agent_id" in result and "result" in result:
-                agent_id = result["agent_id"]
-                res_content = result["result"]
-                results_str.append(f"AgentID: {agent_id}: Result: {res_content}")
-            else:
-                for agent_id, res_content in result.items():
-                    results_str.append(f"Agent {agent_id}: Result: {res_content}")
-        return "\n".join(results_str)
+    
 
     def _get_totoal_token_usage(self) -> int:
         """
