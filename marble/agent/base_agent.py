@@ -9,12 +9,12 @@ from typing import Any, Dict, List, Optional, Tuple, TypeVar, Union
 
 from litellm import token_counter
 
-from marble.environments import BaseEnvironment, WebEnvironment
+from marble.environments import BaseEnvironment, WebEnvironment, CodingEnvironment
 from marble.llms.model_prompting import model_prompting
 from marble.memory import BaseMemory, SharedMemory
 from marble.utils.logger import get_logger
 
-EnvType = Union[BaseEnvironment, WebEnvironment]
+EnvType = Union[BaseEnvironment, WebEnvironment, CodingEnvironment]
 AgentType = TypeVar('AgentType', bound='BaseAgent')
 
 def convert_to_str(result):

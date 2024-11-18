@@ -1,0 +1,118 @@
+coordinate_mode: star
+
+relationships:
+  - [agent1, agent2, "supervises"]
+  - [agent1, agent3, "supervises"]
+  - [agent1, agent4, "supervises"]
+  - [agent2, agent3, "collaborates with"]
+  - [agent2, agent4, "collaborates with"]
+  - [agent3, agent4, "collaborates with"]
+
+llm: "gpt-4"
+
+environment:
+  type: Coding
+  name: "Software Development Environment"
+  workspace_dir: "workspace"
+  max_iterations: 5
+
+task:
+  content: |
+    Software Development Task:
+    
+    Create a simple Python calculator application with the following requirements:
+    
+    1. Implementation requirements:
+       - Basic arithmetic operations (add, subtract, multiply, divide)
+       - Input validation
+       - Error handling
+       - Command-line interface
+    
+    2. Project structure:
+       - calculator.py (main implementation)
+       - test_calculator.py (unit tests)
+       - README.md (documentation)
+    
+    3. Development process:
+       - Manager: Create project structure and assign tasks
+       - Developer: Implement core functionality
+       - Tester: Write and execute tests
+       - Reviewer: Code review and final testing
+    
+    Please work together to complete this task following software engineering best practices.
+
+  output_format: |
+    The final deliverable should include:
+    1. All source code files
+    2. Test results
+    3. Code review feedback
+    4. Final approval status
+
+agents:
+  - type: BaseAgent
+    agent_id: agent1
+    profile: |
+      I am a Project Manager with expertise in software development lifecycle management. 
+      My responsibilities include:
+      - Creating and maintaining project structure
+      - Task assignment and coordination
+      - Progress monitoring
+      - Resource allocation
+      - Ensuring project delivery according to requirements
+      
+      I have strong organizational skills and experience in managing software development teams.
+
+  - type: BaseAgent
+    agent_id: agent2
+    profile: |
+      I am a Senior Software Developer specialized in Python development.
+      My responsibilities include:
+      - Implementing core functionality
+      - Writing clean, efficient, and maintainable code
+      - Following coding best practices and standards
+      - Collaborating with testers and reviewers
+      - Documentation
+      
+      I have extensive experience in software development and problem-solving.
+
+  - type: BaseAgent
+    agent_id: agent3
+    profile: |
+      I am a Quality Assurance Engineer focused on software testing.
+      My responsibilities include:
+      - Designing and implementing test cases
+      - Writing unit tests and integration tests
+      - Identifying and reporting bugs
+      - Verifying bug fixes
+      - Ensuring code quality and reliability
+      
+      I have strong analytical skills and attention to detail in testing.
+
+  - type: BaseAgent
+    agent_id: agent4
+    profile: |
+      I am a Senior Code Reviewer with expertise in code quality and best practices.
+      My responsibilities include:
+      - Performing code reviews
+      - Ensuring code quality standards
+      - Identifying potential improvements
+      - Validating test coverage
+      - Final approval of code changes
+      
+      I have deep knowledge of software architecture and coding standards.
+
+memory:
+  type: SharedMemory
+
+metrics:
+  evaluate_llm: "gpt-4"
+  code_quality: true
+  test_coverage: true
+  collaboration_effectiveness: true
+
+engine_planner:
+  initial_progress: "Starting the software development project with team coordination."
+
+output:
+  format: jsonl
+  file_path: "result/development_output.jsonl"
