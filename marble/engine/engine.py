@@ -437,7 +437,6 @@ class Engine:
                 agent_profiles = self.graph.get_agent_profiles()
                 # Current agent chooses the next agent
                 next_agent_id, plan = current_agent.plan_next_agent(result, agent_profiles)
-                print("*****************************HERE!!!!!!!!!!!*****************************")
                 print(f"Next agent: {next_agent_id}, Plan: {plan}")
                 current_agent = self.graph.get_agent(next_agent_id)
                 task = plan

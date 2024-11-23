@@ -102,13 +102,13 @@ class WorldSimulationEnvironment(BaseEnvironment):
     def _offer_price_handler(self, price: int, reason: Optional[str] = None) -> Dict[str, Any]:
         # Logic for offering a price
         response = {"success": True, "offered_price": price, "reason": reason or "No reason provided"}
-        print("*********************action handler _offer_price_handler*********************")
+        # print("*********************action handler _offer_price_handler*********************") # debug info
         print(f"Offer Price: {price}, Reason: {reason}")
         return response
 
     def _accept_offer_handler(self) -> Dict[str, Any]:
         # Logic for accepting an offer
-        print("*********************action handler _accept_offer_handler*********************")
+        # print("*********************action handler _accept_offer_handler*********************") # debug info
         response = {"success": True, "message": "Offer accepted. Negotiation concluded."}
         print("Accept Offer")
         self.done = True
@@ -116,28 +116,28 @@ class WorldSimulationEnvironment(BaseEnvironment):
 
     def _reject_and_counter_handler(self, counter_price: int, reason: Optional[str] = None) -> Dict[str, Any]:
         # Logic for rejecting an offer and countering with a new price
-        print("*********************action handler _reject_and_counter_handler*********************")
+        # print("*********************action handler _reject_and_counter_handler*********************") # debug info
         response = {"success": True, "counter_price": counter_price, "reason": reason or "No reason provided"}
         print(f"Reject and Counter Offer: {counter_price}, Reason: {reason}")
         return response
 
     def _provide_information_handler(self, info_type: str, details: str) -> Dict[str, Any]:
         # Logic for providing information
-        print("*********************action handler _provide_information_handler*********************")
+        # print("*********************action handler _provide_information_handler*********************") # debug info
         response = {"success": True, "info_type": info_type, "details": details}
         print(f"Provide Information: {info_type}, Details: {details}")
         return response
 
     def _inquire_intentions_handler(self, question: str) -> Dict[str, Any]:
         # Logic for inquiring intentions
-        print("*********************action handler _inquire_intentions_handler*********************")
+        # print("*********************action handler _inquire_intentions_handler*********************") # debug info
         response = {"success": True, "question": question, "response": "Response from the other party."}
         print(f"Inquire Intentions: {question}")
         return response
 
     def _end_negotiation_handler(self) -> Dict[str, Any]:
         # Logic for ending the negotiation without an agreement
-        print("*********************action handler _end_negotiation_handler*********************")
+        # print("*********************action handler _end_negotiation_handler*********************") # debug info
         response = {"success": True, "message": "Negotiation ended without agreement."}
         print("End Negotiation")
         self.done = True
