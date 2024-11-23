@@ -181,6 +181,36 @@ class Evaluator:
             self.metrics["task_evaluation"] = ratings
         else:
             self.logger.error("Failed to parse research ratings.")
+    
+    def evaluate_task_world(self, task: str, result: str) -> None:
+        """
+        Evaluate the final world idea based on Effectiveness of Strategies, Progress and Outcome and Interaction Dynamics
+
+        Args:
+            task (str): The task description.
+            result (str): The final world idea.
+        """
+        # Get the world evaluation prompt
+        world_prompt_template = self.evaluation_prompts["world"]["task_evaluation"]["prompt"]
+        # Fill in the placeholders {task} and {result}
+        prompt = world_prompt_template.format(task=task, result=result)
+        # Call the language model
+        llm_response = model_prompting(
+            llm_model=self.llm,
+            messages=[{"role": "user", "content": prompt}],
+            return_num=1,
+            max_token_num=512,
+            temperature=0.0,
+            top_p=None,
+            stream=None,
+        )[0]
+        # Parse the ratings from llm_response.content
+        ratings = self.parse_research_ratings(llm_response.content)
+        # Update the metrics
+        if ratings:
+            self.metrics["task_evaluation"] = ratings
+        else:
+            self.logger.error("Failed to parse world ratings")
 
     def parse_research_ratings(self, assistant_answer: str) -> Dict[str, int]:
         """

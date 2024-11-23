@@ -1,0 +1,93 @@
+coordinate_mode: chain
+
+relationships:
+  - [agent1, agent2, "parent"]
+
+llm: "gpt-3.5-turbo"
+
+environment:
+  type: WorldSimulation
+  name: "Bargaining Environment"
+  max_iterations: 3
+
+task:
+  content: |
+    The goal of this simulation is to recreate a realistic bargaining scenario between two agents—a buyer and a seller—around the negotiation for a used 2011 Toyota Corolla. 
+    The car’s initial asking price is $15,000. The buyer aims to negotiate the price down, leveraging any perceived issues with the car, market pricing comparisons, or potential competing options. 
+    Meanwhile, the seller wants to keep the price as close to the original asking price as possible, using arguments related to the car’s condition, demand, and any added value. 
+    Each agent has limited turns to reach a deal, adding time pressure that could influence concessions.
+    The agents are encouraged to actively use the tools provided, such as offering a price, rejecting and countering offers, providing information, or ending the negotiation, to achieve their respective goals. 
+    The simulation should focus on effective tool usage to simulate a realistic bargaining process.
+
+  output_format: |
+    You should respond to the task in the following format:
+
+    **[Iteration Summary]**
+    The buyer offered a price of $13,000, citing market conditions. The seller countered with $14,000, emphasizing the car's excellent condition. Both agents are actively using tools to justify their positions.
+
+    **[Agent Actions and Tools Used]**
+    - **Agent 1 (Buyer)**:
+      - Action Taken: Offer Price
+      - Tool Parameters: {"price": 13000, "reason": "Market data suggests the car is worth around $13,000."}
+      - Result: Tool executed successfully. Offer was made and rejected by the seller.
+    - **Agent 2 (Seller)**:
+      - Action Taken: Reject and Counter
+      - Tool Parameters: {"counter_price": 14000, "reason": "The car is in excellent condition with recent upgrades."}
+      - Result: Tool executed successfully. Counter offer was presented to the buyer.
+
+    **[Key Strategies and Observations]**
+    - Buyer’s Strategy: The buyer focused on market comparisons to argue for a lower price.
+    - Seller’s Strategy: The seller emphasized the car’s condition and recent upgrades to justify a higher price.
+    - Time Pressure: Both agents seem aware of the limited turns and are responding quickly.
+    - Negotiation Dynamics: The buyer is assertive, but the seller is holding firm.
+
+    **[Progress Towards Agreement]**
+    - Current Buyer Offer: $13,000
+    - Current Seller Demand: $14,000
+    - Likelihood of Agreement: Medium
+
+agents:
+  - type: BaseAgent
+    agent_id: agent1
+    profile: |
+      You are a discerning buyer with a detailed shopping list, looking specifically to buy a 2011 Toyota Corolla. 
+      Your main objective is to negotiate the price down, ideally below $15,000. 
+      You are encouraged to actively use available tools such as offering a price, rejecting offers, or requesting information to strengthen your position during negotiation. 
+      Use strategies like highlighting depreciation factors, repair costs, or competing options in the market. 
+      Remember, time is limited, so act efficiently and take advantage of every tool to secure the best deal.
+
+      You should always respond in the specified output format to ensure clarity and structure. The format includes the following sections:
+      - Action: Your selected action from the provided tools.
+      - Reasoning: Your justification for taking the action.
+      - Action Parameters: The details needed for the chosen action.
+      - Expected Outcome: Your anticipation of what will happen next.
+   
+  - type: BaseAgent
+    agent_id: agent2
+    profile: |
+      You are a motivated seller with a 2011 Toyota Corolla available for sale. 
+      Your main objective is to negotiate the price as close as possible to $15,000. 
+      Actively use tools such as providing information, counter-offering, or accepting offers to maximize the sale price during negotiation. 
+      Focus on emphasizing the car's strong points (e.g., condition, low mileage, upgrades) while countering the buyer's attempts to lower the price. 
+      Given the limited time, ensure that your actions are efficient and leverage every tool to justify your asking price.
+
+      You should always respond in the specified output format to ensure clarity and structure. The format includes the following sections:
+      - Action: Your selected action from the provided tools.
+      - Reasoning: Your justification for taking the action.
+      - Action Parameters: The details needed for the chosen action.
+      - Expected Outcome: Your anticipation of what will happen next.
+    
+
+memory:
+  type: SharedMemory
+
+metrics:
+  evaluate_llm: "gpt-3.5-turbo"
+  agreement_reached: true
+
+engine_planner:
+  initial_progress: "Starting the bargaining negotiation simulation based on the provided Introduction."
+
+output:
+  format: jsonl
+  file_path: "result/discussion_output.jsonl"

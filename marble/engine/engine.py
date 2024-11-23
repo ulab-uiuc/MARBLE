@@ -9,14 +9,14 @@ from typing import Any, Dict, List, Optional, Union
 from marble.agent import BaseAgent
 from marble.configs.config import Config
 from marble.engine.engine_planner import EnginePlanner
-from marble.environments import BaseEnvironment, ResearchEnvironment, WebEnvironment
+from marble.environments import BaseEnvironment, ResearchEnvironment, WebEnvironment, WorldSimulationEnvironment
 from marble.evaluator.evaluator import Evaluator
 from marble.graph.agent_graph import AgentGraph
 from marble.memory.base_memory import BaseMemory
 from marble.memory.shared_memory import SharedMemory
 from marble.utils.logger import get_logger
 
-EnvType = Union[BaseEnvironment, WebEnvironment, ResearchEnvironment]
+EnvType = Union[BaseEnvironment, WebEnvironment, ResearchEnvironment, WorldSimulationEnvironment]
 AgentType = Union[BaseAgent]
 
 class Engine:
@@ -80,6 +80,9 @@ class Engine:
         elif env_type == "Research":
             env3 = ResearchEnvironment(name="Research Environment", config=env_config)
             return env3
+        elif env_type == "WorldSimulation":
+            env4 = WorldSimulationEnvironment(name="World Simulation Environment", config=env_config)
+            return env4
         else:
             raise ValueError(f"Unsupported environment type: {env_type}")
 
@@ -429,6 +432,8 @@ class Engine:
                 agent_profiles = self.graph.get_agent_profiles()
                 # Current agent chooses the next agent
                 next_agent_id, plan = current_agent.plan_next_agent(result, agent_profiles)
+                print("*****************************HERE!!!!!!!!!!!*****************************")
+                print(f"Next agent: {next_agent_id}, Plan: {plan}")
                 current_agent = self.graph.get_agent(next_agent_id)
                 task = plan
                 chain_length += 1
@@ -474,6 +479,10 @@ class Engine:
             summary_data["total_milestones"] = self.evaluator.metrics["total_milestones"]
             if self.environment.name == 'Research Environment':
                 self.evaluator.evaluate_task_research(self.task, iteration_data["summary"])
+                summary_data['task_evaluation'] = self.evaluator.metrics["task_evaluation"]
+                self.logger.info("Engine graph-based coordination loop completed.")
+            elif self.environment.name == 'World Simulation Environment':
+                self.evaluator.evaluate_task_world(self.task, iteration_data["summary"])
                 summary_data['task_evaluation'] = self.evaluator.metrics["task_evaluation"]
                 self.logger.info("Engine graph-based coordination loop completed.")
             self.logger.info("Chain-based coordination simulation completed.")
