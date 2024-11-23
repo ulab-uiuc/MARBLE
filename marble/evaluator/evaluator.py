@@ -181,7 +181,7 @@ class Evaluator:
             self.metrics["task_evaluation"] = ratings
         else:
             self.logger.error("Failed to parse research ratings.")
-    
+
     def evaluate_task_world(self, task: str, result: str) -> None:
         """
         Evaluate the final world idea based on Effectiveness of Strategies, Progress and Outcome and Interaction Dynamics

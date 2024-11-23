@@ -1,5 +1,7 @@
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, Optional
+
 from marble.environments.base_env import BaseEnvironment
+
 
 class WorldSimulationEnvironment(BaseEnvironment):
     def __init__(self, config: Dict[str, Any], name: str = "WorldSimulationEnvironment"):

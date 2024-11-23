@@ -9,7 +9,12 @@ from typing import Any, Dict, List, Optional, Union
 from marble.agent import BaseAgent
 from marble.configs.config import Config
 from marble.engine.engine_planner import EnginePlanner
-from marble.environments import BaseEnvironment, ResearchEnvironment, WebEnvironment, WorldSimulationEnvironment
+from marble.environments import (
+    BaseEnvironment,
+    ResearchEnvironment,
+    WebEnvironment,
+    WorldSimulationEnvironment,
+)
 from marble.evaluator.evaluator import Evaluator
 from marble.graph.agent_graph import AgentGraph
 from marble.memory.base_memory import BaseMemory
