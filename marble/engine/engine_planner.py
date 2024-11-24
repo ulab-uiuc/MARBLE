@@ -161,9 +161,11 @@ class EnginePlanner:
 
         prompt += (
             "\nRespond with a JSON object containing a single key 'continue' set to true or false.\n"
+            "Some times the results will have a key call success and its value is true, but this does not mean the task is completed, This only means the tool execute successfully.\n"
+            "You should analyze the results and decide whether the task is completed or not.\n"
             "Example:\n"
             "{\n"
-            '  "continue": true\n'
+            '  "continue": True\n'
             "}"
         )
 

@@ -1,0 +1,234 @@
+agents:
+- agent_id: agent1
+  profile: 'I am a researcher deeply engaged in the fields of combinatorics, graph
+    theory, and number theory, with a particular focus on problems related to geometric
+    progressions, Ramsey theory, and graph invariants. My work has explored the existence
+    of $k$-GP-free sequences, where I have contributed to understanding the conditions
+    under which such sequences can be constructed with bounded gaps. I have also investigated
+    quasirandomness in graphs, providing insights into the relationship between labeled
+    copies of subgraphs and edge distributions.
+
+
+    My research extends to the study of rotor-router networks, where I have classified
+    universal rotor types and introduced new classes of rotors to better understand
+    their properties. Additionally, I have made significant strides in the area of
+    zero-sum sequences in finite abelian groups, proving upper bounds for the smallest
+    integers that guarantee zero-sum subsequences.
+
+
+    I have also tackled problems in the realm of graph colorings, particularly addressing
+    Tomescu''s conjecture and its implications for connected graphs. My recent work
+    includes developing probabilistic constructions for hypergraphs and exploring
+    the hat-guessing number of various graph classes, contributing to a deeper understanding
+    of these intriguing mathematical structures.
+
+
+    Overall, my research is characterized by a blend of theoretical exploration and
+    practical applications, aiming to uncover new relationships and bounds within
+    combinatorial mathematics. I am passionate about advancing our understanding of
+    these complex topics and contributing to the broader mathematical community.'
+  type: BaseAgent
+- agent_id: agent2
+  profile: I am a researcher specializing in federated learning and optimization techniques.
+    My recent work focuses on enhancing the gradient estimation process in scenarios
+    where traditional gradient information is unavailable. Recognizing the limitations
+    of isotropic sampling methods, I developed a non-isotropic sampling approach that
+    leverages historical trajectories of solutions to improve convergence rates in
+    zeroth-order federated settings. This innovative method not only encourages exploration
+    of promising regions in the objective landscape but also maintains efficiency
+    in communication and local computation. Through rigorous numerical experiments,
+    I have demonstrated the effectiveness of my approach compared to commonly-used
+    zeroth-order optimization algorithms. My goal is to contribute to the advancement
+    of distributed learning frameworks, making them more robust and efficient for
+    real-world applications.
+  type: BaseAgent
+- agent_id: agent3
+  profile: I am a researcher specializing in federated learning and optimization techniques.
+    My recent work focuses on enhancing the gradient estimation process in scenarios
+    where traditional gradient information is unavailable. Recognizing the limitations
+    of isotropic sampling methods, I developed a non-isotropic sampling approach that
+    leverages historical trajectories of solutions to improve convergence rates in
+    zeroth-order federated settings. This innovative method not only encourages exploration
+    of promising regions in the objective landscape but also maintains efficiency
+    in communication and local computation. Through rigorous numerical experiments,
+    I have demonstrated the effectiveness of my approach compared to commonly-used
+    zeroth-order federated optimization algorithms. My goal is to contribute to the
+    advancement of distributed learning frameworks, making them more robust and efficient
+    for real-world applications.
+  type: BaseAgent
+- agent_id: agent4
+  profile: 'I am a researcher deeply engaged in the intersection of blockchain technology,
+    machine learning, and graph neural networks (GNNs). My recent work focuses on
+    enhancing the reliability and security of blockchain systems, particularly through
+    the development of the Hybrid Blockchain Reliability Prediction model (H-BRP),
+    which personalizes peer selection for users in decentralized networks. I also
+    explore the complexities of multivariate time series forecasting with the Multi-Level
+    Construal Neural Network (MLCNN), which leverages psychological theories to improve
+    predictive accuracy.
+
+
+    My research extends to the analysis of cryptocurrency transactions from a network
+    perspective, where I provide a comprehensive survey of existing literature and
+    identify future directions. I am particularly interested in Decentralized Autonomous
+    Organizations (DAOs) and their integration with blockchain technologies, aiming
+    to bridge gaps in current research.
+
+
+    In addition to blockchain, I have developed innovative frameworks like FedGL for
+    federated graph learning, which addresses the challenges of isolated data islands
+    while ensuring privacy. My work on risk-aware stock recommendation through Split
+    Variational Adversarial Training (SVAT) demonstrates my commitment to applying
+    machine learning techniques to real-world financial challenges.
+
+
+    I am also dedicated to improving the security of non-fungible tokens (NFTs) by
+    identifying vulnerabilities in smart contracts and proposing solutions through
+    tools like NFTGuard. My recent contributions to fair GNNs through demographic-agnostic
+    methods highlight my focus on ethical AI practices. Overall, my research aims
+    to push the boundaries of technology while addressing critical issues in security,
+    reliability, and fairness.'
+  type: BaseAgent
+coordinate_mode: graph
+engine_planner:
+  initial_progress: Starting the collaborative research idea generation based on the
+    provided Introduction.
+environment:
+  max_iterations: 3
+  name: Research Collaboration Environment
+  type: Research
+llm: gpt-3.5-turbo
+memory:
+  type: SharedMemory
+metrics:
+  diversity_of_perspectives: true
+  engagement_level: true
+  evaluate_llm: gpt-4o-mini
+  relevance: true
+output:
+  file_path: result/discussion_output.jsonl
+  format: jsonl
+relationships:
+- - agent1
+  - agent2
+  - collaborate with
+- - agent1
+  - agent3
+  - collaborate with
+- - agent1
+  - agent4
+  - collaborate with
+- - agent2
+  - agent3
+  - collaborate with
+- - agent2
+  - agent4
+  - collaborate with
+- - agent3
+  - agent4
+  - collaborate with
+task:
+  content: "\n            Dear Research Team,\n\n            You are collaborating\
+    \ to generate a new research idea based on the following Introduction:\n\n   \
+    \         **Introduction**\n\n             Introduction\nFine-tuning pre-trained\
+    \ large language models (LLMs) has\nbecome the de-facto standard in the current\
+    \ paradigms of\nnatural language processing (NLP) (Raffel et al., 2023; Sanh\n\
+    et al., 2022). First-order (FO) optimizers, e.g., SGD (Amari,\n1993) and Adam\
+    \ (Kingma & Ba, 2014), have been the pre-\ndominant choices for LLM fine-tuning.\
+    \ However, as LLMs\ncontinue to scale, they encounter significant memory over-\n\
+    head due to the back-propagation (BP) required for FO gra-\ndient computation.\
+    \ For example, computing the gradient of\nthe LLM OPT-13B requires 12\xD7more\
+    \ memory cost than\nthe model inference. This leads to the challenge of achiev-\n\
+    ingmemory-efficient fine-tuning in LLMs. Advancements in\naddressing this challenge\
+    \ could also facilitate technological\nbreakthroughs in related areas, such as\
+    \ on-device training,\nwhere memory efficiency is in high demand (Han et al.,\n\
+    2015; Zhu et al., 2023).\nTo enhance memory efficiency, an emerging solution is\
+    \ to\nreplace a BP-required FO optimization method with a BP-\nfreeoptimizer during\
+    \ LLM fine-tuning. This was initially\nproposed by Malladi et al. (2023), where\
+    \ the FO gradient\nis approximated using a finite difference of function values.\n\
+    Despite its new application to LLM fine-tuning, the under-\nlying optimization\
+    \ principle used in Malladi et al. (2023) is\ncommonly known as zeroth-order (ZO)\
+    \ optimization , and\nthe function value-based gradient estimate is referred to\
+    \ as\nthe ZO gradient estimate (Flaxman et al., 2005; Nesterov &\nSpokoiny, 2017;\
+    \ Duchi et al., 2015; Ghadimi & Lan, 2013;\nLiu et al., 2020). Malladi et al.\
+    \ (2023) employed the clas-\nsical ZO stochastic gradient descent (ZO-SGD) algorithm\n\
+    (Ghadimi & Lan, 2013), termed MeZO, to fine-tune the\npre-trained LLMs and leveraged\
+    \ the BP-free characteris-\ntics of ZO optimization to reduce memory costs. However,\n\
+    from the perspective of ZO optimization, in addition to ZO-\nSGD, many other ZO\
+    \ optimization Related Work\nParameter-efficient fine-tuning (PEFT). Early ef-\n\
+    forts (Houlsby et al., 2019; Lin et al., 2020) involved\ninserting trainable adapters,\
+    \ which are compact feed-\nforward networks, between the layers of the pre-trained\n\
+    model. More recently, various PEFT strategies have been\nproposed. For instance,\
+    \ Adapter -based background, the RGE \u02C6\u2207f(x)can be inter-\npreted as\
+    \ an approximation of the FO gradient \u2207f(x)using\nthe directional derivative.\n\
+    Forward gradient: A missing BP-free baseline in LLM\nfine-tuning. As a byproduct\
+    \ of connecting RGE to (1),\n3Revisiting Zeroth-Order Optimization for Memory-Efficient\
+    \ LLM Fine-Tuning: A Benchmark\nwe obtain the directional derivative-based gradient\
+    \ estimate,\n\u2207f(x)\u2248f\u2032(x,u)u, which is known as the forward gradi-\n\
+    ent(Forward-Grad ) (Baydin et al., 2022; Ren et al., 2022).\nDifferent from RGE\
+    \ that relies solely on the finite differ-\nence of function values, Forward-Grad\
+    \ requires the use of\nforward mode automatic differentiation (AD) but eliminates\n\
+    the need for backward evaluation in the implementation of\ndeep model fine-tuning\
+    \ or training. In other words, Forward-\nGrad is BP-free and can serve as another\
+    \ alternative gradient\nestimation method that improves the memory efficiency\
+    \ of\nLLM fine-tuning. We stress that Forward-Grad is a possibly\noverlooked BP-free\
+    \ optimizer. Given its unbiasedness as\nshown in (1), it could serve as an upper\
+    \ performance bound\nfor ZO optimization in theory.\nA focused spectrum of ZO\
+    \ optimization Appendix\nA. Zeroth-Order Optimization Algorithms\nZeroth-order\
+    \ optimization addresses the minimization or\nmaximization of an objective function\
+    \ f:Rn\u2192Rwithout\nthe use of derivatives:\nmin\nx\u2208Rnf(x)\nThese Results\
+    \ of OPT-13B on the tasks COPA and WinoGrande\nfine-tuned using ZO/FO optimizers\
+    \ in different PEFT settings.\nat the cost of additional memory consumption. This\
+    \ is\nnot surprising considering that ZO-Adam has the highest\nalgorithmic complexity,\
+    \ as explained in Sec. 3.\nSecond , Forward-Grad is a competitive method compared\n\
+    to the ZO results are\n\n            **Your Task**\n\n            1. **Literature\
+    \ Review**: Analyze the Introduction provided and conduct a brief literature review\
+    \ to understand the current state of research in this area.\n\n            2.\
+    \ **Brainstorming**: Collaboratively brainstorm potential research ideas that\
+    \ build upon or address gaps in the Introduction.\n\n            3. **Summarization**:\
+    \ Summarize your collective ideas.\n\n            4. **Formulate a New Research\
+    \ Idea**: Develop a new research proposal in the format of the '5q', defined below:\n\
+    \n               **Here is a high-level summarized insight of a research field\
+    \ Machine Learning.**\n\n               **Here are the five core questions:**\n\
+    \n               **[Question 1] - What is the problem?**\n\n               Formulate\
+    \ the specific research question you aim to address. Only output one question\
+    \ and do not include any more information.\n\n               **[Question 2] -\
+    \ Why is it interesting and important?**\n\n               Explain the broader\
+    \ implications of solving this problem for the research community.\n         \
+    \      Discuss how such a paper will affect future research.\n               Discuss\
+    \ how addressing this question could advance knowledge or lead to practical applications.\n\
+    \n               **[Question 3] - Why is it hard?**\n\n               Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \       Explain why naive or straightforward approaches may fail.\n          \
+    \     Identify any technical, theoretical, or practical obstacles that need to\
+    \ be overcome. MAKE IT CLEAR.\n\n               **[Question 4] - Why hasn't it\
+    \ been solved before?**\n\n               Identify gaps or limitations in previous\
+    \ research or existing solutions.\n               Discuss any barriers that have\
+    \ prevented this problem from being solved until now.\n               Explain\
+    \ how your approach differs from or improves upon prior work. MAKE IT CLEAR.\n\
+    \n               **[Question 5] - What are the key components of my approach and\
+    \ results?**\n\n               Outline your proposed methodology in detail, including\
+    \ the method, dataset, and metrics that you plan to use.\n               Describe\
+    \ the expected outcomes. MAKE IT CLEAR.\n\n            Please work together to\
+    \ produce the '5q' for your proposed research idea.\n\n            Good luck!\n\
+    \            "
+  output_format: "You should answer the task in the fllowing format:\n           \
+    \     **[Question 1] - What is the problem?**\n\n                Formulate the\
+    \ specific research question you aim to address. Only output one question and\
+    \ do not include any more information.\n\n                **[Question 2] - Why\
+    \ is it interesting and important?**\n\n                Explain the broader implications\
+    \ of solving this problem for the research community.\n                Discuss\
+    \ how such a paper will affect future research.\n                Discuss how addressing\
+    \ this question could advance knowledge or lead to practical applications.\n\n\
+    \                **[Question 3] - Why is it hard?**\n\n                Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \        Explain why naive or straightforward approaches may fail.\n         \
+    \       Identify any technical, theoretical, or practical obstacles that need\
+    \ to be overcome. MAKE IT CLEAR.\n\n                **[Question 4] - Why hasn't\
+    \ it been solved before?**\n\n                Identify gaps or limitations in\
+    \ previous research or existing solutions.\n                Discuss any barriers\
+    \ that have prevented this problem from being solved until now.\n            \
+    \    Explain how your approach differs from or improves upon prior work. MAKE\
+    \ IT CLEAR.\n\n                **[Question 5] - What are the key components of\
+    \ my approach and results?**\n\n                Outline your proposed methodology\
+    \ in detail, including the method, dataset, and metrics that you plan to use.\n\
+    \                Describe the expected outcomes. MAKE IT CLEAR."

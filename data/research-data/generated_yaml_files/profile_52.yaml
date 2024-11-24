@@ -1,0 +1,249 @@
+agents:
+- agent_id: agent1
+  profile: "I am a researcher dedicated to advancing the fields of graph theory and\
+    \ molecular design, with a particular focus on deep generative models for drug\
+    \ discovery. My work encompasses a range of innovative approaches, from the Sombor\
+    \ index of quasi-tree graphs to the development of novel frameworks like Ligand\
+    \ Neural Network (L-Net) and DeepLigBuilder+. \n\nThrough L-Net, I have pioneered\
+    \ a method for generating drug-like molecules with high-quality 3D structures,\
+    \ directly addressing the limitations of existing models. My research emphasizes\
+    \ the importance of fine-grained molecular representations, leading to the creation\
+    \ of FineMolTex, which integrates motif-level insights into molecular graph learning.\
+    \ This framework has shown remarkable improvements in downstream tasks, significantly\
+    \ enhancing our understanding of molecular properties.\n\nI have also explored\
+    \ the potential of sequential graph generators for de novo molecular design, demonstrating\
+    \ their efficiency in generating larger molecules while maintaining high validity\
+    \ rates. My work on DeepLigBuilder+ further bridges the gap between structure-based\
+    \ design and synthetic feasibility, providing a comprehensive solution for drug\
+    \ discovery.\n\nRecently, I have delved into the relationship between graph neural\
+    \ networks (GNNs) and diffusion processes, proposing a general diffusion framework\
+    \ that unifies various GNN architectures. This exploration has led to the development\
+    \ of HiD-Net, a robust graph diffusion network that enhances performance across\
+    \ diverse graph structures.\n\nOverall, my research aims to push the boundaries\
+    \ of molecular design and graph theory, contributing to more efficient and effective\
+    \ drug discovery processes."
+  type: BaseAgent
+- agent_id: agent2
+  profile: "I am a researcher deeply engaged in the study of topological materials\
+    \ and their unique properties, particularly focusing on higher-order topological\
+    \ insulators and their manifestations in various systems. My recent work has explored\
+    \ the intricate relationship between symmetry and topology, leading to the development\
+    \ of new symmetry indicators that enhance our understanding of topological phases\
+    \ in both two and three dimensions. I have employed tight-binding models and k\xB7\
+    p models to investigate the bulk, surface, and hinge states of antiperovskite\
+    \ materials, revealing gapless hinge states and their implications for material\
+    \ design.\n\nIn addition to my theoretical contributions, I have ventured into\
+    \ the realm of machine learning, particularly in emotion recognition from speech.\
+    \ By experimenting with various neural network architectures, I have developed\
+    \ a multi-modal approach that integrates audio and visual data, achieving notable\
+    \ improvements in prediction accuracy. My work also extends to bioinformatics,\
+    \ where I address the challenges of analyzing high-dimensional microbiome data\
+    \ through innovative statistical models, significantly enhancing computational\
+    \ efficiency.\n\nOverall, my research is characterized by a strong interdisciplinary\
+    \ approach, bridging condensed matter physics, machine learning, and bioinformatics,\
+    \ with the goal of uncovering new insights and applications in these rapidly evolving\
+    \ fields."
+  type: BaseAgent
+- agent_id: agent3
+  profile: 'I am a researcher dedicated to advancing the intersection of molecular
+    representation learning and graph neural networks (GNNs). My recent work emphasizes
+    the importance of fine-grained molecular motifs in understanding molecular properties,
+    leading to the development of FineMolTex, a framework that integrates both coarse
+    and fine-grained knowledge through innovative pre-training tasks. This approach
+    has shown remarkable improvements in downstream tasks, particularly in drug discovery.
+
+
+    I have also explored the challenges of graph contrastive learning (GCL), proposing
+    the PrOvable Training (POT) method to address imbalances in node training. My
+    research extends to ensuring fairness in pre-trained graph models (PGMs) through
+    the GraphPAR framework, which enhances model fairness without compromising performance.
+
+
+    Recognizing the vulnerabilities of GNNs to adversarial attacks, I have investigated
+    the potential of large language models (LLMs) to bolster GNN robustness. My work
+    on LLM4RGNN demonstrates how LLMs can enhance graph structure inference, improving
+    GNN resilience against topology attacks.
+
+
+    Additionally, I introduced GraphTranslator, a novel approach that bridges GNNs
+    and LLMs, enabling them to tackle both predefined and open-ended tasks effectively.
+    My ongoing research aims to define and explore Graph Foundation Models (GFMs),
+    a new paradigm in graph machine learning that leverages the strengths of foundation
+    models for diverse graph tasks.
+
+
+    Through my work, I strive to push the boundaries of graph learning, making significant
+    contributions to both theoretical understanding and practical applications in
+    the field.'
+  type: BaseAgent
+- agent_id: agent4
+  profile: 'I am a researcher deeply engaged in the intersection of quantum mechanics,
+    graph theory, and machine learning, with a particular focus on enhancing the capabilities
+    of quantum parameter estimation and graph neural networks (GNNs). My recent work
+    explores the nuances of quantum sensing in dissipative environments, revealing
+    how non-Markovian effects can significantly boost estimation precision. I have
+    also pioneered methods that leverage thermodynamic criticality to enhance quantum
+    sensing at finite temperatures, expanding the boundaries of quantum metrology.
+
+
+    In the realm of graph neural networks, I have developed innovative frameworks
+    such as GraLSP, which integrates local structural patterns into neighborhood aggregation,
+    and CaGCN, a model designed for confidence calibration in GNNs. My research addresses
+    critical issues like structural unfairness in GNNs, proposing solutions that enhance
+    representation learning for low-degree nodes. I have also contributed to the field
+    of heterogeneous information networks through the RHINE model, which tailors embedding
+    strategies to different types of relationships, and HeCo, a self-supervised learning
+    mechanism that captures both local and high-order structures.
+
+
+    My work is driven by a commitment to bridging theoretical insights with practical
+    applications, as evidenced by my exploration of causal relationships in dynamic
+    graphs and the development of frameworks that facilitate knowledge distillation
+    in semi-supervised learning. I am passionate about advancing our understanding
+    of complex systems and improving the performance and fairness of machine learning
+    models in real-world applications.'
+  type: BaseAgent
+coordinate_mode: graph
+engine_planner:
+  initial_progress: Starting the collaborative research idea generation based on the
+    provided Introduction.
+environment:
+  max_iterations: 3
+  name: Research Collaboration Environment
+  type: Research
+llm: gpt-3.5-turbo
+memory:
+  type: SharedMemory
+metrics:
+  diversity_of_perspectives: true
+  engagement_level: true
+  evaluate_llm: gpt-4o-mini
+  relevance: true
+output:
+  file_path: result/discussion_output.jsonl
+  format: jsonl
+relationships:
+- - agent1
+  - agent2
+  - collaborate with
+- - agent1
+  - agent3
+  - collaborate with
+- - agent1
+  - agent4
+  - collaborate with
+- - agent2
+  - agent3
+  - collaborate with
+- - agent2
+  - agent4
+  - collaborate with
+- - agent3
+  - agent4
+  - collaborate with
+task:
+  content: "\n            Dear Research Team,\n\n            You are collaborating\
+    \ to generate a new research idea based on the following Introduction:\n\n   \
+    \         **Introduction**\n\n             Introduction\nMolecular Relational\
+    \ Learning (MRL) (Lee et al.,\n2023a), aiming to understand interactions between\n\
+    molecular pairs , has gained significant interest\ndue to its wide range of applications\
+    \ (Roden\net al., 2020). For example, Drug-Drug Interactions\n*Equal contribution.\n\
+    \u2020Corresponding author. Xiang Wang is also affiliated with\nInstitute of Dataspace,\
+    \ Hefei Comprehensive National Science\nCenter.(DDIs) are critical in pharmacology\
+    \ and drug de-\nvelopment (Lin et al., 2020), while solute-solvent\ninteractions\
+    \ (SSIs) are fundamental in solution\nchemistry and the design of chemical processes\n\
+    (Varghese and Mushrif, 2019; Chung et al., 2022).\nHowever, the exhaustive experimental\
+    \ validation of\nthese interactions is notoriously time-consuming\nand costly.\
+    \ In response, adopting large language\nmodels (LLMs) (Brown et al., 2020; Taylor\
+    \ et al.,\n2022), known for their vast knowledge repositories\nand advanced logical\
+    \ inference capabilities, has\nemerged as an efficient and effective alternative\
+    \ for\nMRL (Park et al., 2022; Jha et al., 2022a).\nDespite their promise, a primary\
+    \ concern of cur-\nrent LLM-based paradigm is the insufficient data\nexploitation\
+    \ . Specifically, they predominantly rely\non the textual data such as SMILES\
+    \ (Simplified\nMolecular Input Line Entry System) and property\ndescriptions,\
+    \ thus not fully harnessing the wealth of\nstructural information inherent in\
+    \ molecular graphs\n(Sagawa and Kojima, 2023), as indicated in Figure\n1 (a).\
+    \ Current studies have indicated that it is chal-\nlenging for LLMs to fully understand\
+    \ the complex\ngraphs based solely on textual data, hence, it\u2019s cru-\ncial\
+    \ to explicitly model these structures given their\nsignificance in MRL (Park\
+    \ et al., 2022).\nCompounding this concern is the absence of a\nunified framework\
+    \ for LLM-based MRL (Livne\net al., 2023; Pei et al., 2023). Concretely, this\
+    \ ab-\nsence impedes the sharing and integration of inter-\naction mechanisms\
+    \ learned across various datasets,\nleading to a fragmentation in collective insights.\
+    \ Es-\npecially, it poses a catastrophic challenge for tasks\nwith a limited number\
+    \ of labeled pairs (Chung et al.,\n2022), where LLMs often struggle with due to\
+    \ the\nhigh risk of overfitting, as illustrated in Figure 1\n(b). Worse still,\
+    \ such limited datasets are prevalent\nin MRL since the experimental acquisition\
+    \ is often\nconstrained by high costs (Lee et al., 2023a).\nTo overcome these\
+    \ limitations, in this work,\nwe propose MolTC , a unified multi-modal frame-arXiv:2402.03781v6\
+    \  [q-bio.QM]  10 Jun 2024The first molecule is <n-octane> ,\nitsSMILES is <SMILES1>\
+    \ ,\nwhile the second molecule is \n<Methylpyridine> , its SMILES \nis <SM ILES2>\
+    \ . What is the \nsolvation Gibbs free energy of \nthis molecule pairs?\nIf the\
+    \ first is the solute and \nthe second is the solvent, \nthe  Gibbs free energy\
+    \ of \nthis pair is -4.7345892  .Tokenizer\nLLMInput  Prompt\nTokenizer\nLLM 1Dataset:\n\
+    CombiSolv\nNumber of Pairs:\n100,000\nTarget  Response\nAppropriate FittingInput\
+    \  Prompt\nTokenizer\nLLM\nTarget  Response\nOverfitting\nDataset:\nFreeSolv\n\
+    Number of Pairs:\n643\nNo\nSharing\nLLMThe SMILES \nof the first \nmolecule is\
+    \  \n<SMILES1> .\nHere is its\nembedding: \nTokenizer\nLLM<Hidden Rep1>TASK  1\
+    \ TASK  2\nProjector\nThe first \nproperty is \n< Property 1 > . The second \n\
+    property is \n< Property 2 > . Hence, the \ninteraction is \n[Interaction] .\n\
+    Broad -grained  Chain -of-Thought\nGraph\nEncoderFine-grained  Chain -of-Thought\n\
+    For\nQuantified \nPropertyIt is \nabove \n4.0 and \nbelow  \n5.0,above\n4.5 and\n\
+    below\n5.0.Hence, \nit is   \n4.7349 .\nThe SMILES \nof the first \nmolecule is\
+    \  \n<SMILES2> .\nHere is its\nembedding: \nTokenizer<Hidden Rep2>\nProjectorGraph\n\
+    Encoder\n(a) Current Methods (c) The Framework of  Our MolTCFigure 1: Comparison\
+    \ between the current appendix. The datasets offer four-\ndimensional molecular\
+    \ information, comprising\natom type, chirality tag, bond type, and bond direc-\n\
+    tion. Key observations from Table 2 include:\nObs.3: MolTC continues to lead in\
+    \ quantitative\nanalysis tasks,\n\n            **Your Task**\n\n            1.\
+    \ **Literature Review**: Analyze the Introduction provided and conduct a brief\
+    \ literature review to understand the current state of research in this area.\n\
+    \n            2. **Brainstorming**: Collaboratively brainstorm potential research\
+    \ ideas that build upon or address gaps in the Introduction.\n\n            3.\
+    \ **Summarization**: Summarize your collective ideas.\n\n            4. **Formulate\
+    \ a New Research Idea**: Develop a new research proposal in the format of the\
+    \ '5q', defined below:\n\n               **Here is a high-level summarized insight\
+    \ of a research field Machine Learning.**\n\n               **Here are the five\
+    \ core questions:**\n\n               **[Question 1] - What is the problem?**\n\
+    \n               Formulate the specific research question you aim to address.\
+    \ Only output one question and do not include any more information.\n\n      \
+    \         **[Question 2] - Why is it interesting and important?**\n\n        \
+    \       Explain the broader implications of solving this problem for the research\
+    \ community.\n               Discuss how such a paper will affect future research.\n\
+    \               Discuss how addressing this question could advance knowledge or\
+    \ lead to practical applications.\n\n               **[Question 3] - Why is it\
+    \ hard?**\n\n               Discuss the challenges and complexities involved in\
+    \ solving this problem.\n               Explain why naive or straightforward approaches\
+    \ may fail.\n               Identify any technical, theoretical, or practical\
+    \ obstacles that need to be overcome. MAKE IT CLEAR.\n\n               **[Question\
+    \ 4] - Why hasn't it been solved before?**\n\n               Identify gaps or\
+    \ limitations in previous research or existing solutions.\n               Discuss\
+    \ any barriers that have prevented this problem from being solved until now.\n\
+    \               Explain how your approach differs from or improves upon prior\
+    \ work. MAKE IT CLEAR.\n\n               **[Question 5] - What are the key components\
+    \ of my approach and results?**\n\n               Outline your proposed methodology\
+    \ in detail, including the method, dataset, and metrics that you plan to use.\n\
+    \               Describe the expected outcomes. MAKE IT CLEAR.\n\n           \
+    \ Please work together to produce the '5q' for your proposed research idea.\n\n\
+    \            Good luck!\n            "
+  output_format: "You should answer the task in the fllowing format:\n           \
+    \     **[Question 1] - What is the problem?**\n\n                Formulate the\
+    \ specific research question you aim to address. Only output one question and\
+    \ do not include any more information.\n\n                **[Question 2] - Why\
+    \ is it interesting and important?**\n\n                Explain the broader implications\
+    \ of solving this problem for the research community.\n                Discuss\
+    \ how such a paper will affect future research.\n                Discuss how addressing\
+    \ this question could advance knowledge or lead to practical applications.\n\n\
+    \                **[Question 3] - Why is it hard?**\n\n                Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \        Explain why naive or straightforward approaches may fail.\n         \
+    \       Identify any technical, theoretical, or practical obstacles that need\
+    \ to be overcome. MAKE IT CLEAR.\n\n                **[Question 4] - Why hasn't\
+    \ it been solved before?**\n\n                Identify gaps or limitations in\
+    \ previous research or existing solutions.\n                Discuss any barriers\
+    \ that have prevented this problem from being solved until now.\n            \
+    \    Explain how your approach differs from or improves upon prior work. MAKE\
+    \ IT CLEAR.\n\n                **[Question 5] - What are the key components of\
+    \ my approach and results?**\n\n                Outline your proposed methodology\
+    \ in detail, including the method, dataset, and metrics that you plan to use.\n\
+    \                Describe the expected outcomes. MAKE IT CLEAR."
