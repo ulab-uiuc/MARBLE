@@ -8,29 +8,29 @@ relationships:
   - [agent2, agent4, "collaborates with"]
   - [agent3, agent4, "collaborates with"]
 
-llm: "gpt-4"
+llm: "gpt-3.5-turbo"
 
 environment:
   type: Coding
   name: "Software Development Environment"
   workspace_dir: "workspace"
-  max_iterations: 5
+  max_iterations: 10
 
 task:
   content: |
     Software Development Task:
     
-    Create a simple Python calculator application with the following requirements:
+    Create a Python Snake Game with the following requirements:
     
     1. Implementation requirements:
-       - Basic arithmetic operations (add, subtract, multiply, divide)
-       - Input validation
-       - Error handling
-       - Command-line interface
+       - The game should be a simple 2D snake game with a snake that moves around the screen and eats food.
+       - The snake should grow in length when it eats food.
+       - The game should be terminal based.
+       - The game should be playable by pressing the arrow keys.
     
     2. Project structure:
-       - calculator.py (main implementation)
-       - test_calculator.py (unit tests)
+       - snake.py (main implementation)
+       - test_snake.py (unit tests)
        - README.md (documentation)
     
     3. Development process:
@@ -100,6 +100,7 @@ agents:
       - Final approval of code changes
       
       I have deep knowledge of software architecture and coding standards.
+      I have to call "review_code" action to review the code.
 
 memory:
   type: SharedMemory
