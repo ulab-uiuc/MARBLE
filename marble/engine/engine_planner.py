@@ -35,7 +35,10 @@ class EnginePlanner:
         self.config = config
         self.current_progress = config.get('initial_progress', '')
         self.task = task
-        self.model = model
+        if isinstance(model, dict):
+            self.model = model.get("model", "gpt-3.5-turbo")
+        else:
+            self.model = model
         self.token_usage = 0
         self.logger.info("EnginePlanner initialized.")
 
@@ -89,7 +92,7 @@ class EnginePlanner:
         )
         messages = [{"role": "system", "content": system_message}, {"role": "user", "content": prompt}]
         response = model_prompting(
-            llm_model=self.model,
+            llm_model="gpt-3.5-turbo",
             messages=messages,
             return_num=1,
             max_token_num=1024,
@@ -127,7 +130,7 @@ class EnginePlanner:
             str: The summarized output.
         """
         response = model_prompting(
-            llm_model=self.model,
+            llm_model="gpt-3.5-turbo",
             messages=[{"role": "user", "content": f"Summarize the output of the agents for the task: {task}\n\nNow here is some result of thr agent: {summary}, please summarize it. You should follow the use of the following format: {output_format}"}],
             return_num=1,
             max_token_num=1024,
@@ -168,7 +171,7 @@ class EnginePlanner:
 
         messages = [{"role": "system", "content": prompt}]
         response = model_prompting(
-            llm_model=self.model,
+            llm_model="gpt-3.5-turbo",
             messages=messages,
             return_num=1,
             max_token_num=256,
