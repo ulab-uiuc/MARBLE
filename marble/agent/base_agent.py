@@ -674,7 +674,8 @@ class BaseAgent:
         prompt += (
             "\nBased on the result and the agent profiles provided, select the most suitable agent to continue the task and provide a brief plan for the next agent to execute. "
             "Respond in the following format:\n"
-            "{\"agent_id\": \"<next_agent_id>\", \"planning_task\": \"<description of the next planning task>\"}"
+            "{\"agent_id\": \"<next_agent_id>\", \"planning_task\": \"<description of the next planning task>\"}\n"
+            "You must follow the json format or the system will crash as we fail to interpret the response."
         )
 
         # Use the LLM to select the next agent and create a planning task
@@ -693,6 +694,11 @@ class BaseAgent:
 
         try:
             assert isinstance(response, str)
+            # check if response is a json, or is a text + json
+            if response[0] == '{':
+                response_data: Dict[str, Any] = json.loads(response)
+            else:
+                response_data: Dict[str, Any] = json.loads(response[response.find('{'):response.rfind('}')+1])
             response_data: Dict[str, Any] = json.loads(response)
             next_agent_id = response_data.get("agent_id")
             planning_task = response_data.get("planning_task")
