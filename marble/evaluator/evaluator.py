@@ -80,6 +80,7 @@ class Evaluator:
             stream=None,
         )[0]
         # Parse the score from result.content
+        assert isinstance(result.content, str)
         score = self.parse_score(result.content)
         # Update the metric
         self.metrics["communication_score"].append(score)
@@ -114,6 +115,7 @@ class Evaluator:
             stream=None,
         )[0]
         # Parse the score from result.content
+        assert isinstance(result.content, str)
         score = self.parse_score(result.content)
         # Update the metric
         self.metrics["planning_score"].append(score)
@@ -141,6 +143,7 @@ class Evaluator:
             stream=None,
         )[0]
         # Parse the milestones from result.content
+        assert isinstance(result.content, str)
         milestones = self.parse_milestones(result.content)
         # Update the metrics
         self.metrics["total_milestones"] += len(milestones)
@@ -175,6 +178,7 @@ class Evaluator:
             stream=None,
         )[0]
         # Parse the ratings from llm_response.content
+        assert isinstance(llm_response.content, str)
         ratings = self.parse_research_ratings(llm_response.content)
         # Update the metrics
         if ratings:
@@ -199,8 +203,8 @@ class Evaluator:
             try:
                 ratings = json.loads(json_str)
                 # Ensure ratings are integers
-                ratings = {k: int(v) for k, v in ratings.items()}
-                return ratings
+                ratings_dict: Dict[str, int] = {k: int(v) for k, v in ratings.items()}
+                return ratings_dict
             except json.JSONDecodeError:
                 self.logger.error("Failed to parse JSON from assistant's answer.")
                 return {}
@@ -276,6 +280,7 @@ class Evaluator:
 
             # Parse the JSON block
             milestones = json.loads(cleaned_answer)
+            assert isinstance(milestones, list)
             return milestones
         except json.JSONDecodeError:
             self.logger.error("Failed to parse JSON from assistant's answer.")

@@ -63,9 +63,9 @@ class WebEnvironment(BaseEnvironment):
         # Clean up whitespace
         lines = (line.strip() for line in text.splitlines())
         chunks = (phrase.strip() for line in lines for phrase in line.split("  "))
-        text = ' '.join(chunk for chunk in chunks if chunk)
+        text_ret = ' '.join(chunk for chunk in chunks if chunk)
 
-        return text
+        return text_ret
 
     def _fetch_webpage_handler(self, url: str = "") -> Dict[str, Any]:
         """

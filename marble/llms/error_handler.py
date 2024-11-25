@@ -2,12 +2,12 @@ import math
 import time
 from functools import wraps
 
-from beartype.typing import Any, Callable, List, Optional, TypeVar, cast
+from beartype.typing import Any, Callable, List, Optional, TypeVar, cast, Union, Set
 from pydantic import BaseModel
 
 INF = float(math.inf)
 
-T = TypeVar('T', bound=Callable[..., Optional[List[Any]]])
+T = TypeVar('T', bound=Callable[..., Union[Optional[List[Any]], Set[str]]])
 
 
 def api_calling_error_exponential_backoff(
