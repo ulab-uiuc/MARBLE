@@ -21,7 +21,7 @@ keybert = "^0.8.5"
 arxiv = "^2.1.3"
 bs4 = "^0.0.2"
 pypdf2 = "^3.0.1"
-tqdm = "^4.67.0"
+tqdm = "^4.67.1"
 semanticscholar = "^0.8.4"
 requests = "^2.32.3"
 
