@@ -69,6 +69,10 @@ tools:
             type: "string"
             description: "A detailed outline of your speech based on the points above."
           action:
-            type: "string"
-            description: "Your complete speech content for this round, including final decisions about how you want to influence the game."
+            type: "object"
+            properties:
+              speech_content:
+                type: "string"
+                description: "The final version of your speech, summarizing your main points and addressing any concerns or strategies you outlined."
+            required: ["speech_content"]
         required: ["role_objectives", "response_plan", "speech_analysis", "goal_strategy", "perception_analysis", "speech_outline", "action"]

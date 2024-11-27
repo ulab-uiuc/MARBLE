@@ -1,0 +1,2 @@
+openai_api_key: "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"
+system_prompt_path: marble\\agent\\werewolf_prompts\\system_prompt.yaml
