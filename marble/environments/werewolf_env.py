@@ -3,7 +3,7 @@ import os
 import sys
 import random
 import time
-
+import names
 import yaml
 from typing import Any, Dict
 from threading import Condition, Lock
@@ -12,7 +12,6 @@ from marble.agent.werewolf_agent import WerewolfAgent
 from marble.utils.eventbus import EventBus
 from colorama import Fore, Style, init  # 引入 colorama 库
 
-from ..agent.werewolf_agent import WerewolfAgent
 
 
 
@@ -30,6 +29,7 @@ class WerewolfEnv:
         init(autoreset=True)  # 初始化 colorama 自动重置颜色
         self.name = name
         self.agents = []
+
         # 加载配置文件
         with open(config_path, 'r', encoding='utf-8') as f:
             config = yaml.safe_load(f)
@@ -44,9 +44,10 @@ class WerewolfEnv:
             system_prompt = yaml.safe_load(f)
 
         game_introduction = system_prompt.get("game_introduction", "")
-        self.condition = Condition(Lock())  # Condition 内部封装了一个可重入锁
-        self.current_event = None  # 当前正在处理的事件类型
+        self.condition = Condition(Lock())
+        self.current_event = None
         self.event_completed = False
+
         # 所有角色介绍
         role_introductions = {
             "wolf": system_prompt.get("werewolf_introduction", ""),
@@ -56,9 +57,14 @@ class WerewolfEnv:
             "guard": system_prompt.get("guard_introduction", "")
         }
 
+        self.scores = {
+            "villager": {"total": 0, "details": []},
+            "werewolf": {"total": 0, "details": []},
+        }
         # 初始化 EventBus
         self.event_bus = EventBus()
         self.event_bus.subscribe(self, self.receive_action)
+
         # 创建 werewolf_log 文件夹（如果不存在）
         base_log_dir = "werewolf_log"
         if not os.path.exists(base_log_dir):
@@ -67,60 +73,73 @@ class WerewolfEnv:
         # 创建当前时间命名的子文件夹，用于存储该场游戏的数据
         timestamp = time.strftime("%Y%m%d_%H%M%S")
         game_log_dir = os.path.join(base_log_dir, f"game_{timestamp}")
-        os.makedirs(game_log_dir)  # 创建游戏日志文件夹
+        os.makedirs(game_log_dir)
+
         # 定义 shared memory 文件路径
         self.shared_memory_path = os.path.join(game_log_dir, "shared_memory.json")
 
-        # 角色列表，包含狼人、平民、特殊角色
-        roles = ['wolf', 'wolf', 'wolf', 'villager', 'villager', 'villager', 'seer', 'witch', 'guard']
-        random.shuffle(roles)  # 随机打乱角色分配
+        # 加载角色和配置选项
+        roles = self.config.get("roles", ['wolf', 'wolf', 'wolf', 'villager', 'villager', 'villager', 'seer', 'witch', 'guard'])
+        randomize_roles = self.config.get("randomize_roles", True)
+        if randomize_roles:
+            random.shuffle(roles)
+
+        num_players = len(roles)  # 游戏玩家数量
+        use_random_names = self.config.get("use_random_names", False)
 
         # 初始化 shared memory
         self.shared_memory = {
             "public_state": {
                 "days": 0,
                 "day/night": "night",
-                "alive_players": [],  # 存活玩家，稍后会填充
-                "sheriff": None,  # 初始没有警长
-                "event_log": game_introduction,  # 公开事件日志初始化为game_introduction内容
+                "alive_players": [],
+                "sheriff": None,
+                "event_log": game_introduction,
                 "speech_order": {},
                 "day_cache": []
             },
             "private_state": {
-                "players": {},  # 每个玩家的状态和身份
+                "players": {},
                 "guard_last_night_protect": None,
-                "werewolf_action": {  # 狼人行动部分的初始化
-                    "rounds_remaining": 5,  # 初始总共 5 轮
-                    "alive_werewolves": [],  # 存活狼人名单，稍后会填充
-                    "round_targets": [],  # 每一轮的狼人选择目标，稍后填充
+                "werewolf_action": {
+                    "rounds_remaining": 5,
+                    "alive_werewolves": [],
+                    "round_targets": [],
                     "final_target": None
                 },
-                "night_cache": [],  # 每晚的主要事件记录，格式为列表
-                "event_log": game_introduction  # 私密事件日志初始化为game_introduction内容
+                "night_cache": []
             },
-            "public_event_log": game_introduction,  # 初始化为game_introduction内容
-            "private_event_log": game_introduction  # 初始化为game_introduction内容
+            "public_event_log": game_introduction,
+            "private_event_log": game_introduction
         }
-
-        # 创建 9 个 WerewolfAgent，角色随机分配
-        for i in range(9):
-            agent_id = f"agent_{i + 1}"
+        used_names = set()  # 用于记录已经使用过的名字
+        for i in range(num_players):
+            # 确保生成的名字唯一
+            while True:
+                agent_id = names.get_first_name() if use_random_names else f"agent_{i + 1}"
+                if agent_id not in used_names:
+                    used_names.add(agent_id)
+                    break 
             role = roles[i]
 
-            # 基础的 agent_config（不包含角色介绍）
             agent_config = {
                 "agent_id": agent_id,
-                "openai_api_key": self.config.get("openai_key")  # 这里是基础配置
+                "openai_api_key": self.config.get("openai_key")
             }
 
-            # 创建 WerewolfAgent 实例，将日志存储路径传入
-            agent = WerewolfAgent(config=agent_config, role=role, log_path=game_log_dir, event_bus=self.event_bus, shared_memory= self.shared_memory, env = self)
-            self.agents.append(agent)  # 将 agent 加入 agents 列表
-
-            # 将 agent 添加到存活玩家列表
+            agent = WerewolfAgent(
+                config=agent_config,
+                role=role,
+                log_path=game_log_dir,
+                event_bus=self.event_bus,
+                shared_memory=self.shared_memory,
+                env=self,
+                number=i+1
+            )
+            self.agents.append(agent)
             self.shared_memory["public_state"]["alive_players"].append(agent_id)
 
-            # 初始化每个玩家的私密状态（身份、状态、个人事件日志）
+            # 初始化每个玩家的私密状态
             personal_event_log = (
                 f"{game_introduction}\n\n"
                 f"--- Role Introductions ---\n"
@@ -133,32 +152,28 @@ class WerewolfEnv:
             )
 
             status = {
-                "health": 1,  # 默认血量为 1
-                "protection_count": 0,  # 默认守护数量为 0
-                "poison_count": 1 if role == "witch" else 0,  # 女巫有 1 个毒药
-                "antidote_count": 1 if role == "witch" else 0,  # 女巫有 1 个解药
-                "badge_count": 0  # 默认警徽数量为 0
+                "health": 1,
+                "protection_count": 0,
+                "poison_count": 1 if role == "witch" else 0,
+                "antidote_count": 1 if role == "witch" else 0,
+                "badge_count": 0
             }
 
-            # 如果角色为预言家，添加 `seer_history`
             if role == "seer":
-                status["check_history"] = {}  # 初始化为空字典
+                status["check_history"] = {}
 
             self.shared_memory["private_state"]["players"][agent_id] = {
-                "role": role,  # 记录角色身份
+                "role": role,
                 "status": status,
-                "personal_event_log": personal_event_log  # 个人事件日志
+                "personal_event_log": personal_event_log
             }
 
-        # 初始化警长信息为 None，表示没有警长
-        self.shared_memory["public_state"]["sheriff"] = None
-
-        # 将共享内存写入 shared_memory.json 文件
+        # 写入共享内存到 JSON
         with open(self.shared_memory_path, 'w', encoding='utf-8') as f:
             json.dump(self.shared_memory, f, indent=4)
 
-        # 打印环境初始化日志
-        self._log_system(f"Werewolf environment '{self.name}' initialized with 9 agents and shared memory.")
+        # 打印初始化日志
+        self._log_system(f"Werewolf environment '{self.name}' initialized with {num_players} agents and shared memory.")
         self._log_system(f"Game data stored in: {game_log_dir}")
 
     def _log_system(self, message: str):
@@ -187,7 +202,7 @@ class WerewolfEnv:
             player_id (str): 玩家ID。
             message (str): 玩家发言内容。
         """
-        print(f"{Fore.BLUE}[{player_id}]: {message}{Style.RESET_ALL}")
+        print(f"{Fore.BLUE}[{player_id} ({self.get_player_role(player_id)})]: {message}{Style.RESET_ALL}")
 
     def publish_event(self, event: dict):
         """
@@ -216,7 +231,7 @@ class WerewolfEnv:
                 f"but current event is '{self.current_event}'. No action taken."
             )
 
-    def start(self) -> None:
+    def start(self) -> dict:
         """
         Start the werewolf game environment and run the simulation in a day-night cycle.
         """
@@ -225,7 +240,7 @@ class WerewolfEnv:
         self.log_event(is_private=False, agent_id="system", content=start_message)
 
         try:
-            while not self.should_terminate():
+            while not self.should_terminate()["terminated"]:
                 # Start a new day-night cycle
                 self.shared_memory["public_state"]["days"] += 1
                 current_day = self.shared_memory["public_state"]["days"]
@@ -239,9 +254,7 @@ class WerewolfEnv:
                 self.night()
 
                 # Check termination condition after night phase
-                if self.should_terminate():
-                    termination_message = "SYSTEM: Game termination condition met after night phase."
-                    self.log_event(is_private=False, agent_id="system", content=termination_message)
+                if self.should_terminate()["terminated"]:
                     try:
                         with open(self.shared_memory_path, 'w', encoding='utf-8') as f:
                             json.dump(self.shared_memory, f, indent=4)
@@ -258,24 +271,27 @@ class WerewolfEnv:
                 self.day()
 
                 # Check termination condition after day phase
-                if self.should_terminate():
+                game_result = self.should_terminate()
+                if game_result["terminated"]:
                     termination_message = "SYSTEM: Game termination condition met after day phase."
                     self._log_system(termination_message)
-                    self.log_event(is_private=False, agent_id="system", content=termination_message)
                     try:
                         with open(self.shared_memory_path, 'w', encoding='utf-8') as f:
                             json.dump(self.shared_memory, f, indent=4)
                         self._log_system(f"Shared memory successfully written to {self.shared_memory_path}")
                     except Exception as e:
                         self._log_system(f"Failed to write shared memory to {self.shared_memory_path}: {e}")
-                    break
-
-            game_complete_message = "SYSTEM: Werewolf game completed."
-            self.log_event(is_private=False, agent_id="system", content=game_complete_message)
+                    return game_result
 
         except Exception as e:
             error_message = f"An error occurred during the game cycle: {e}"
             self._log_system(error_message)
+            try:
+                with open(self.shared_memory_path, 'w', encoding='utf-8') as f:
+                    json.dump(self.shared_memory, f, indent=4)
+                self._log_system(f"Shared memory successfully written to {self.shared_memory_path}")
+            except Exception as e:
+                self._log_system(f"Failed to write shared memory to {self.shared_memory_path}: {e}")
             raise
 
     def night(self) -> None:
@@ -286,7 +302,7 @@ class WerewolfEnv:
         try:
             # 记录当前夜晚编号
             current_night = self.shared_memory["public_state"]["days"]  # 第几夜（游戏回合数 +1）
-            
+            self.reset_guard_protection()
             # 在 night_cache 中添加一个新的字典以记录当前夜晚
             night_event = {}
             self.shared_memory["private_state"]["night_cache"].append(night_event)
@@ -386,6 +402,12 @@ class WerewolfEnv:
                 if deceased:
                     self._log_event("Announcing deceased from the night. No last words will be given.")
                 self.update_alive_players()
+                seer_id = self.get_player_id("seer")[0]
+                if seer_id in self.shared_memory["public_state"]["alive_players"]:
+                    self.scores["villager"]["total"] += 1
+                    self.scores["villager"]["details"].append(
+                        f"Day {current_day}: Seer {seer_id} survived. Villagers +1 point."
+                    )
                 if self.shared_memory["public_state"]["sheriff"]:
                     self._log_event("Sheriff is deciding the speech order.")
                     speech_order = self.sheriff_decide_speech_order()
@@ -428,7 +450,7 @@ class WerewolfEnv:
             self._log_system(f"Shared memory dumped to {self.shared_memory_path}_error_dump.json for debugging.")
             raise
 
-    def should_terminate(self) -> bool:
+    def should_terminate(self) -> dict:
         """
         Checks if the game should terminate based on the number of remaining players
         and their roles. The game ends if:
@@ -436,10 +458,12 @@ class WerewolfEnv:
         2. All non-werewolf players are eliminated (werewolf victory).
 
         Returns:
-            bool: True if the game should end, otherwise False.
+            dict: Contains game termination status and relevant details.
+                - "terminated" (bool): True if the game ends, False otherwise.
+                - "result" (str): The result of the game (e.g., "Villagers win", "Werewolves win").
+                - "details" (str): Detailed game summary.
         """
         self._log_system("Checking if the game should terminate.")
-
 
         # 获取存活玩家和狼人数量
         alive_players = self.shared_memory["public_state"]["alive_players"]
@@ -460,36 +484,76 @@ class WerewolfEnv:
         self._log_system(f"Number of werewolves: {werewolf_count}")
         self._log_system(f"Number of non-werewolves: {non_werewolf_count}")
 
+        # 定义返回结果
+        result = {
+            "terminated": False,
+            "result": None,
+            "details": None
+        }
+
         # 检查游戏终止条件
         if werewolf_count > 0 and non_werewolf_count == 0:
-            # 狼人胜利
-            termination_message = (
-                f"Game ends: All non-werewolf players are eliminated. Werewolves win!"
+            result["terminated"] = True
+            result["result"] = "Werewolves win"
+            result["details"] = {
+                "game_status": "Game ends: All non-werewolf players are eliminated.",
+                "winner": "Werewolves",
+                "alive_players": alive_players,
+                "werewolf_count": werewolf_count,
+                "non_werewolf_count": non_werewolf_count
+            }
+            self.shared_memory["public_state"]["game_result"] = result["result"]
+
+        elif werewolf_count == 0:
+            result["terminated"] = True
+            result["result"] = "Villagers win"
+            result["details"] = {
+                "game_status": "Game ends: All werewolves are eliminated.",
+                "winner": "Villagers",
+                "alive_players": alive_players,
+                "werewolf_count": werewolf_count,
+                "non_werewolf_count": non_werewolf_count
+            }
+            self.shared_memory["public_state"]["game_result"] = result["result"]
+
+        # 游戏结束时处理逻辑
+        if result["terminated"]:
+            # 写入分数到 JSON 文件
+            scores_path = self.shared_memory_path.replace("shared_memory.json", "scores.json")
+            with open(scores_path, "w", encoding="utf-8") as score_file:
+                json.dump(self.scores, score_file, indent=4)
+            self._log_system(f"Scores saved to {scores_path}")
+
+            # 构造游戏结束信息
+            survivor_info = "\n".join([
+                f"{player_id} ({self.get_player_role(player_id)})"
+                for player_id in alive_players
+            ])
+            final_message = (
+                f"\n======================================================\n"
+                f"GAME END! {result['result']}\n\n"
+                f"Remaining players:\n{survivor_info}\n\n"
+                f"Scores:\nVillagers: {self.scores['villager']['total']}\n"
+                f"Werewolves: {self.scores['werewolf']['total']}\n"
+                f"======================================================\n"
             )
-            self._log_system(termination_message)
-            self.log_event(is_private=False, agent_id="system", content=termination_message)
-            return True
+            # 打印红色字体的游戏结束信息
+            print(Fore.RED + final_message + Style.RESET_ALL)
 
-        if werewolf_count == 0:
-            # 好人胜利
-            termination_message = (
-                f"Game ends: All werewolves are eliminated. Villagers win!"
-            )
-            self._log_system(termination_message)
-            self.log_event(is_private=False, agent_id="system", content=termination_message)
-            return True
+            # 重命名日志文件夹
+            current_log_dir = os.path.dirname(self.shared_memory_path)
+            new_log_dir = f"{current_log_dir}_{result['result'].replace(' ', '_')}"
+            try:
+                os.rename(current_log_dir, new_log_dir)
+                self._log_system(f"Log folder renamed to '{new_log_dir}'.")
+            except Exception as e:
+                self._log_system(f"Error renaming log folder: {e}")
 
-
-        # 如果未满足终止条件
-        self._log_system("Game continues: No termination condition met.")
-        return False
-
+        return result
 
     def log_event(self, is_private: bool, agent_id: str, content: str, log_to_system: bool = True, print_to_system: bool = True) -> None:
         """
-        传入内容，对象，是否私密。私密对象存在对应的私有日志中以及系统的私密日志中，公开对象存入所有日志中。
-        系统的私密对象只传入系统的私密日志中。
-        无论私密与否，都会打印出来。
+        Logs events for the game and synchronizes the logs to each agent's corresponding file.
 
         Args:
             is_private (bool): If True, the event is only logged in the specified private logs.
@@ -498,77 +562,138 @@ class WerewolfEnv:
             content (str): The content to be logged.
             log_to_system (bool): If True, the event will also be logged in the system log. Defaults to True.
         """
-        # 处理普通 agent 消息
+        def write_to_agent_log(agent_id: str, message: str):
+            """Write a log message to the corresponding agent's file using _write_log_entry."""
+            agent_instance = next((agent for agent in self.agents if agent.agent_id == agent_id), None)
+            if agent_instance:
+                agent_instance._write_log_entry(message)
+
+        # Handle messages for normal agents
         if agent_id != "system":
-            # 将内容写入指定 agent 的个人日志
             if agent_id in self.shared_memory["private_state"]["players"]:
+                # Update the agent's personal log in shared memory
                 player_log = self.shared_memory["private_state"]["players"][agent_id]["personal_event_log"]
                 self.shared_memory["private_state"]["players"][agent_id]["personal_event_log"] = f"{player_log}\n{content}"
+                write_to_agent_log(agent_id, content)  # Sync to agent's file
 
             if is_private:
-                # 私密消息仅写入私密日志
+                # Private messages go only to private logs and corresponding agent file
                 if log_to_system:
                     private_log = self.shared_memory["private_event_log"]
                     self.shared_memory["private_event_log"] = f"{private_log}\n{content}"
                 if print_to_system:
                     self._log_player(agent_id, f"{agent_id}: {content}")
             else:
-                # 公开消息写入公共和私密日志
+                # Public messages go to both public and private logs
                 if log_to_system:
                     public_log = self.shared_memory["public_event_log"]
                     private_log = self.shared_memory["private_event_log"]
                     self.shared_memory["public_event_log"] = f"{public_log}\n{content}"
                     self.shared_memory["private_event_log"] = f"{private_log}\n{content}"
 
-                # 写入每个 agent 的个人日志
+                # Write to every agent's log
                 for agent in self.shared_memory["private_state"]["players"]:
                     personal_log = self.shared_memory["private_state"]["players"][agent]["personal_event_log"]
                     self.shared_memory["private_state"]["players"][agent]["personal_event_log"] = f"{personal_log}\n{content}"
+                    write_to_agent_log(agent, content)  # Sync to agent's file
                 if print_to_system:
                     self._log_player(agent_id, f"{agent_id}: {content}")
 
-        # 处理 system 消息
+        # Handle system messages
         else:
             if is_private:
-                # 私密 system 消息仅写入私密日志
+                # Private system messages go to private logs
                 if log_to_system:
                     private_log = self.shared_memory["private_event_log"]
                     self.shared_memory["private_event_log"] = f"{private_log}\n{content}"
                 if print_to_system:
                     self._log_event(f"SYSTEM: {content}")
             else:
-                # 公开 system 消息写入所有日志
+                # Public system messages go to all logs
                 if log_to_system:
                     public_log = self.shared_memory["public_event_log"]
                     private_log = self.shared_memory["private_event_log"]
                     self.shared_memory["public_event_log"] = f"{public_log}\n{content}"
                     self.shared_memory["private_event_log"] = f"{private_log}\n{content}"
 
-                # 写入每个 agent 的个人日志
+                # Write to every agent's log
                 for agent in self.shared_memory["private_state"]["players"]:
                     personal_log = self.shared_memory["private_state"]["players"][agent]["personal_event_log"]
                     self.shared_memory["private_state"]["players"][agent]["personal_event_log"] = f"{personal_log}\n{content}"
+                    write_to_agent_log(agent, content)  # Sync to agent's file
                 if print_to_system:
                     self._log_event(f"SYSTEM: {content}")
 
     def update_alive_players(self):
         """
         Updates the list of alive players based on their health status in private_state.
+        Records in the personal log and log file for players whose health drops to 0.
         """
         # 获取所有玩家信息
         players = self.shared_memory["private_state"]["players"]
 
-        # 根据健康状态更新alive_players列表
+        # 获取当前存活玩家列表
         alive_players = [
             player_id for player_id, player_info in players.items()
             if player_info["status"].get("health", 0) == 1
         ]
 
-        # 更新到public_state
+        # 检查哪些玩家从存活变为死亡
+        previously_alive = set(self.shared_memory["public_state"]["alive_players"])
+        currently_alive = set(alive_players)
+        newly_dead = previously_alive - currently_alive
+
+        # 对于死亡的玩家，记录日志并更新个人日志文件
+        for player_id in newly_dead:
+            death_message = f"Player {player_id} has been eliminated from the game."
+            self.log_event(
+                is_private=False, 
+                agent_id="system", 
+                content=death_message)
+
+        # 更新到 public_state
         self.shared_memory["public_state"]["alive_players"] = alive_players
 
         # 记录日志
         self._log_system(f"Updated alive_players list: {alive_players}")
+        
+    def get_player_role(self, player_id: str) -> str:
+        """
+        Returns the role of the specified player.
+
+        Args:
+            player_id (str): The ID of the player whose role is to be retrieved.
+
+        Returns:
+            str: The role of the player (e.g., "wolf", "villager", "seer", etc.).
+                Returns "Unknown" if the player ID is not found.
+        """
+        # 从私有状态中获取玩家信息
+        player_info = self.shared_memory["private_state"]["players"].get(player_id, None)
+        if player_info is None:
+            return "Unknown"  # 如果玩家不存在，返回 "Unknown"
+
+        # 返回玩家角色
+        return player_info.get("role", "Unknown")
+    
+    def get_player_id(self, role: str) -> list:
+        """
+        Returns a list of player IDs who have the specified role.
+
+        Args:
+            role (str): The role to search for (e.g., "wolf", "villager", "seer", etc.).
+
+        Returns:
+            list: A list of player IDs who have the specified role.
+        """
+        players = self.shared_memory["private_state"]["players"]
+        
+        players_with_role = [
+            player_id for player_id, player_info in players.items()
+            if player_info.get("role") == role
+        ]
+        
+        return players_with_role
 
     def guard_action(self) -> None:
         """
@@ -597,7 +722,15 @@ class WerewolfEnv:
                     "night_info": last_protected,
                 }
             }
+            self._log_event("Guard action event published.")
             self.publish_event(event)
+        else:
+            self._log_event("Guard action event published.")
+            self.log_event(
+                is_private=True,
+                agent_id="system",
+                content="No guard player found. Skip guard action."
+            )
 
     def process_guard_action(self, event: dict) -> None:
         """
@@ -648,6 +781,19 @@ class WerewolfEnv:
         except Exception as e:
             self._log_event(f"Error processing guard action: {str(e)}")
 
+    def reset_guard_protection(self):
+        """
+        Resets the protection_count for all players at the beginning of each night.
+        """
+        for player_id, player_info in self.shared_memory["private_state"]["players"].items():
+            player_info["status"]["protection_count"] = 0
+
+        # Clear the last protected target
+        self.shared_memory["private_state"]["guard_last_night_protect"] = None
+
+        # Log the reset action
+        self._log_system("Guard protection reset for all players.")
+
     def werewolf_action(self) -> None:
         """
         Publishes a single werewolf action event to the event bus.
@@ -665,31 +811,37 @@ class WerewolfEnv:
                     # 检查角色是否是狼人并且健康状态是否为 1（存活）
                 if player_info.get("role") == "wolf" and agent.agent_id in self.shared_memory["public_state"].get("alive_players", []):
                     alive_werewolves.append((agent, agent.agent_id))
+            if len(alive_werewolves) != 0:
+                # 提取狼人实例和 ID 列表
+                alive_werewolves_instances = [agent for agent, _ in alive_werewolves]
+                alive_werewolves_ids = [agent_id for _, agent_id in alive_werewolves]
 
-            # 提取狼人实例和 ID 列表
-            alive_werewolves_instances = [agent for agent, _ in alive_werewolves]
-            alive_werewolves_ids = [agent_id for _, agent_id in alive_werewolves]
+                new_round_target = {wolf_id: None for wolf_id in alive_werewolves_ids}
+                self.shared_memory["private_state"]["werewolf_action"]["round_targets"].append(new_round_target)
 
-            new_round_target = {wolf_id: None for wolf_id in alive_werewolves_ids}
-            self.shared_memory["private_state"]["werewolf_action"]["round_targets"].append(new_round_target)
+                # 生成逗号分隔的 ID 列表字符串
+                alive_players_str = ", ".join(alive_players)
+                alive_werewolves_ids_str = ", ".join(map(str, alive_werewolves_ids))
 
-            # 生成逗号分隔的 ID 列表字符串
-            alive_players_str = ", ".join(alive_players)
-            alive_werewolves_ids_str = ", ".join(map(str, alive_werewolves_ids))
-
-            # 发布狼人行动事件，将所有存活狼人作为接收者
-            event = {
-                "event_type": "werewolf_action",
-                "sender": self,  # 标识为环境实例
-                "recipients": alive_werewolves_instances,  # 所有存活狼人实例索引
-                "content": {
-                    "player_info": {
-                        "alive_players": alive_players_str,  # 所有存活玩家的 ID 字符串
-                        "alive_werewolves": alive_werewolves_ids_str  # 所有存活狼人的 ID 字符串
+                # 发布狼人行动事件，将所有存活狼人作为接收者
+                event = {
+                    "event_type": "werewolf_action",
+                    "sender": self,  # 标识为环境实例
+                    "recipients": alive_werewolves_instances,  # 所有存活狼人实例索引
+                    "content": {
+                        "player_info": {
+                            "alive_players": alive_players_str,  # 所有存活玩家的 ID 字符串
+                            "alive_werewolves": alive_werewolves_ids_str  # 所有存活狼人的 ID 字符串
+                        }
                     }
                 }
-            }
-            self.publish_event(event)
+                self.publish_event(event)
+            else:
+                self.log_event(
+                    is_private=True,
+                    agent_id="system",
+                    content="No werewolf players found. Skip guard action."
+                )
         except Exception as e:
             self._log_event(f"Error in werewolf_action: {str(e)}")
             raise
@@ -795,6 +947,10 @@ class WerewolfEnv:
         if majority_target:
             self.shared_memory["private_state"]["werewolf_action"]["final_target"] = majority_target
             target_status = self.shared_memory["private_state"]["players"][majority_target]["status"]
+            self.scores["werewolf"]["total"] += 1
+            self.scores["werewolf"]["details"].append(
+                f"Werewolves has unified their goal. Werewolf +1 point."
+            )
             if target_status["protection_count"] == 0:
                 target_status["health"] = 0
                 success = True
@@ -802,6 +958,13 @@ class WerewolfEnv:
             else:
                 success = False
                 kill_result = f"Target {majority_target} protected, no health reduction."
+                self.scores["villager"]["total"] += 2
+                self.scores["villager"]["details"].append({
+                    "event": "guard_protection",
+                    "target": majority_target,
+                    "description": f"Guard successfully protected {majority_target} from werewolf attack."
+                })
+
 
             if self.shared_memory["private_state"]["night_cache"]:
                 current_night_log = self.shared_memory["private_state"]["night_cache"][-1]
@@ -970,7 +1133,12 @@ class WerewolfEnv:
             self._log_event(f"Seer action event published.")
             self.publish_event(event)
         else:
-            self._log_event("Seer action event published.")
+            self.log_event(
+                is_private=True,
+                agent_id="system",
+                content="No seer player found. Skip guard action."
+            )
+            self._log_event(f"Seer action event published.")
 
     def process_seer_action(self, event: dict) -> None:
         """
@@ -1087,6 +1255,11 @@ class WerewolfEnv:
             self.publish_event(event)
             self._log_event(f"Witch action event published.")
         else:
+            self.log_event(
+                is_private=True,
+                agent_id="system",
+                content="No witch player found. Skip guard action."
+            )
             self._log_event("Witch action event published.")
 
     def process_witch_action(self, event: dict) -> None:
@@ -1139,13 +1312,16 @@ class WerewolfEnv:
                 content=f"Witch used antidote to save {final_target}."
             )
 
+            # 更新评分：女巫成功救助被狼人攻击的目标 +1 分
+            self.scores["villager"]["total"] += 1
+            self.scores["villager"]["details"].append(f"Witch saved {final_target} from werewolf attack. +1 point.")
+
             # 更新 night_cache 中的女巫解药行动
             current_night_log["witch_action"] = {
                 "action": "antidote",
                 "target": final_target
             }
             self.mark_event_complete(event_type="witch_action")
-
 
         # 处理毒药的使用
         elif use_poison and poison_target in self.shared_memory["public_state"]["alive_players"] and witch_status["poison_count"] > 0:
@@ -1167,6 +1343,17 @@ class WerewolfEnv:
                 agent_id="system",
                 content=f"Witch used poison on {poison_target}."
             )
+
+            # 判断毒杀目标是否为狼人
+            poison_target_role = self.get_player_role(poison_target)
+            if poison_target_role == "wolf":
+                # 更新评分：女巫的毒药杀死狼人 +2 分
+                self.scores["villager"]["total"] += 2
+                self.scores["villager"]["details"].append(f"Witch killed werewolf {poison_target} with poison. +2 points.")
+            else:
+                # 毒杀目标不是狼人，-2分
+                self.scores["villager"]["total"] -= 2
+                self.scores["villager"]["details"].append(f"Witch killed non-werewolf {poison_target} with poison. -2 points.")
 
             # 更新 night_cache 中的女巫毒药行动
             current_night_log["witch_action"] = {
@@ -1221,8 +1408,8 @@ class WerewolfEnv:
                 "recipients": alive_players,  # 所有存活玩家的实例引用
                 "content": {}  # 不传入额外内容
             }
-            self.publish_event(event)
             self._log_event("Run for sheriff event published for all living players.")
+            self.publish_event(event)
         else:
             self._log_event("No living players found to participate in sheriff election.")
 
@@ -1291,7 +1478,12 @@ class WerewolfEnv:
 
         else:
             # 无人参选，记录信息
-            self._log_event("No candidates decided to run for sheriff.")
+            self.log_event(
+                is_private=False,
+                agent_id="system",
+                content="No candidates decided to run for sheriff. No sheriff in this game anymore.",
+                )
+
             self.mark_event_complete(event_type="run_for_sheriff")
             return
 
@@ -1517,7 +1709,15 @@ class WerewolfEnv:
 
             # Record the sheriff result in day cache
             day_cache["sheriff_result"] = sheriff_id
-
+            sheriff_role = self.get_player_role(sheriff_id)
+            if sheriff_role != "wolf":
+                # Villager-aligned sheriff
+                self.scores["villager"]["total"] += 2
+                self.scores["villager"]["details"].append(f"Villager-aligned sheriff {sheriff_id} elected. +2 points.")
+            else:
+                # Werewolf sheriff
+                self.scores["werewolf"]["total"] += 2
+                self.scores["werewolf"]["details"].append(f"Werewolf sheriff {sheriff_id} elected. +2 points.")
             # Announce the sheriff result
             announcement = f"{sheriff_id} has been elected as the sheriff."
             self.log_event(
@@ -1544,8 +1744,8 @@ class WerewolfEnv:
         self.log_event(
             is_private=False, 
             agent_id="system", 
-            content=f"Sheriff election votes:\n{vote_summary}"
-            )
+            content=f"Sheriff election votes:\n{vote_summary}\n(Note: The voting order reflects only the system's query sequence and does not imply any strategic alignment or motive.)"
+        )
 
         # Update day cache with vote summary
         day_cache["vote_summary"] = vote_summary
@@ -1861,6 +2061,17 @@ class WerewolfEnv:
             # Record the banishment result in day cache
             day_cache["banishment_result"] = banished_player_id
 
+            # 检查放逐的玩家是狼人还是好人，并更新评分
+            banished_role = self.get_player_role(banished_player_id)
+            if banished_role == "wolf":
+                # 好人阵营得分
+                self.scores["villager"]["total"] += 2
+                self.scores["villager"]["details"].append(f"Werewolf {banished_player_id} was banished. Villagers +2 points.")
+            else:
+                # 狼人阵营得分
+                self.scores["werewolf"]["total"] += 1
+                self.scores["werewolf"]["details"].append(f"Non-werewolf {banished_player_id} was banished. Werewolves +1 point.")
+
             # Check if the banished player is the sheriff
             if banished_player_id == sheriff_id:
                 self._log_event(f"The banished player {banished_player_id} was the sheriff. Processing badge flow.")
@@ -1885,12 +2096,26 @@ class WerewolfEnv:
                 content=announcement
             )
 
-        # Step 5: Publish all votes publicly with the banishment announcement
+        # Step 5: 每位玩家的投票评分逻辑
+        for voter, choice in votes.items():
+            voter_role = self.get_player_role(voter)
+            choice_role = self.get_player_role(choice) if choice != "abstain" else None
+
+            if voter_role != "wolf" and choice_role == "wolf":
+                # 好人投狼人 +0.2 分
+                self.scores["villager"]["total"] += 0.2
+                self.scores["villager"]["details"].append(f"Villager {voter} voted for werewolf {choice}. +0.2 points.")
+            elif voter_role != "wolf" and choice_role != "wolf" and choice != "abstain":
+                # 好人投好人 -0.1 分
+                self.scores["villager"]["total"] -= 0.1
+                self.scores["villager"]["details"].append(f"Villager {voter} voted for villager {choice}. -0.1 points.")
+
+        # Step 6: Publish all votes publicly with the banishment announcement
         vote_summary = "\n".join([f"{voter} voted for {choice}" for voter, choice in votes.items()])
         self.log_event(
             is_private=False,
             agent_id="system",
-            content=f"Banishment votes:\n{vote_summary}"
+            content=f"Banishment votes:\n{vote_summary}\n(Note: The voting order reflects only the system's query sequence and does not imply any strategic alignment or motive.)"
         )
 
         # Update day cache with vote summary
@@ -1932,11 +2157,10 @@ class WerewolfEnv:
         # Step 1: Retrieve the player ID and their final words content
         player_id = event["sender"]
         action_content = event.get("content", {})
-        if action_content == "no_action":
-            last_words_message = f"Error during generation for player {player_id}."
+        if isinstance(action_content, dict): 
+            speech_content = action_content.get("speech_content", f"Error during generation for player {player_id}.")
         else:
-            last_words_message = action_content.get("speech_content", "")
-
+            speech_content = f"Error during generation for player {player_id}."
         # Get the current day and the day cache
         current_day = self.shared_memory["public_state"]["days"]
         day_cache = self.shared_memory["public_state"]["day_cache"][current_day - 1]
@@ -1946,13 +2170,13 @@ class WerewolfEnv:
             day_cache["last_words"] = {}
 
         # Step 2: Record the player's last words in the day cache
-        day_cache["last_words"][player_id] = last_words_message
+        day_cache["last_words"][player_id] = speech_content
 
         # Step 3: Log the last words to the public log
         self.log_event(
             is_private=False,
             agent_id=player_id,
-            content=f"Last words from {player_id}: {last_words_message}"
+            content=f"Last words from {player_id}: {speech_content}"
         )
 
         # Log a system message to indicate the player's last words have been recorded
@@ -2122,9 +2346,7 @@ class WerewolfEnv:
             self.process_badge_flow(event)
         else:
             self._log_system(f"Unknown event type '{event_type}' received. No action taken.")
-
-
-
+'''
 if __name__ == "__main__":
 
     # Game Initialization
@@ -2147,3 +2369,4 @@ if __name__ == "__main__":
         # Handle Initialization or Game Execution Errors
         print(f"An error occurred while starting the game: {e}")
 
+'''

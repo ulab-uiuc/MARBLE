@@ -14,7 +14,7 @@ class WerewolfAgent:
     WerewolfAgent class without calling BaseAgent's __init__.
     """
 
-    def __init__(self, config: Dict[str, Any], role: str, log_path: str, event_bus: EventBus, shared_memory: Dict[str, Any], env: any):
+    def __init__(self, config: Dict[str, Any], role: str, log_path: str, event_bus: EventBus, shared_memory: Dict[str, Any], env: any, number: int):
         """
         Custom initialization for WerewolfAgent without calling BaseAgent's __init__.
 
@@ -35,7 +35,7 @@ class WerewolfAgent:
         assert isinstance(self.agent_id, str), "agent_id must be a string"
 
         self.role = role  # 设置角色
-
+        self.agent_number = number
         # 保存环境实例
         self.env = env
         # 共享内存文件路径
@@ -45,7 +45,7 @@ class WerewolfAgent:
         self.logger = self._create_logger(self.agent_id)
 
         # 设置日志文件的路径
-        self.log_file_path = os.path.join(log_path, f"{self.agent_id}_log.txt")
+        self.log_file_path = os.path.join(log_path, f"{self.agent_number}-{self.role}-{self.agent_id}_log.txt")
         self._initialize_log_file()
 
         # 在终端输出并写入日志文件
