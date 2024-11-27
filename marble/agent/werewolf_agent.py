@@ -1,7 +1,10 @@
 import json
 import logging
+import logging
 import os
 import time
+from typing import Any, Dict
+
 from typing import Any, Dict
 
 import yaml
@@ -17,6 +20,7 @@ class WerewolfAgent:
     def __init__(self, config: Dict[str, Any], role: str, log_path: str, event_bus: EventBus, shared_memory: Dict[str, Any], env: any, number: int):
         """
         Custom initialization for WerewolfAgent without calling BaseAgent's __init__.
+
 
         Args:
             config (dict): Configuration for the agent.
@@ -34,6 +38,7 @@ class WerewolfAgent:
         self.id = self.agent_id
         assert isinstance(self.agent_id, str), "agent_id must be a string"
 
+
         self.role = role  # 设置角色
         self.agent_number = number
         # 保存环境实例
@@ -43,6 +48,7 @@ class WerewolfAgent:
         
         # 创建一个独立的 logger
         self.logger = self._create_logger(self.agent_id)
+
 
         # 设置日志文件的路径
         self.log_file_path = os.path.join(log_path, f"{self.agent_number}-{self.role}-{self.agent_id}_log.txt")
@@ -65,6 +71,7 @@ class WerewolfAgent:
         Args:
             agent_id (str): 当前 Agent 的 ID。
 
+
         Returns:
             logging.Logger: 与 agent_id 绑定的日志记录器。
         """
@@ -79,6 +86,7 @@ class WerewolfAgent:
         # 添加处理器
         if not logger.handlers:  # 避免重复添加处理器
             logger.addHandler(handler)
+
 
         return logger
 
@@ -115,9 +123,11 @@ class WerewolfAgent:
         with open(self.log_file_path, 'a', encoding='utf-8') as log_file:
             log_file.write(log_entry + "\n")
 
+
     def act(self, event: Dict[str, Any]) -> Dict[str, Any]:
         """
         Agent takes an action based on the received event.
+
 
         Args:
             event (Dict[str, Any]): The event that triggers an action.
@@ -128,6 +138,7 @@ class WerewolfAgent:
 
         event_type = event.get("event_type", "")
         reply_event_type = f"reply_{event_type}"  # 将事件类型格式化为 reply_<event_type>
+
 
         # Initialize result as no_action in expected event format
         result = {"event_type": "reply_no_action", "sender": self.agent_id, "recipients": [], "content": {}}
@@ -161,11 +172,13 @@ class WerewolfAgent:
 
         self._write_log_entry(str(result_content))
 
+
         return result
 
     def receive_communication(self, event: Dict[str, Any], debug: bool = False) -> None:
         """
         Receive communication (from EventBus) and process the event.
+
 
         Args:
             event (Dict[str, Any]): The event data received (e.g., other players' actions, state updates).
@@ -223,6 +236,7 @@ class WerewolfAgent:
         """
         Publish the action decided by the agent.
 
+
         Args:
             action (str): The action to publish.
         """
@@ -249,9 +263,11 @@ class WerewolfAgent:
                 if rounds > 3:
                     raise Exception("Chat Completion failed too many times")
 
+
     def _wolf_action(self, event: Dict[str, Any]) -> Dict[str, Any]:
         """
         Process werewolf-specific actions based on the event type (werewolf_action or werewolf_discussion).
+
 
         Args:
             event (Dict[str, Any]): The event data received (with event_type "werewolf_action" or "werewolf_discussion").
@@ -303,6 +319,7 @@ class WerewolfAgent:
         # Step 5: 针对 werewolf_action 和 werewolf_discussion 分别填充 prompt
         filled_prompt = ""
 
+
             # Werewolf Action: 第一次选择目标
         if event_type == "werewolf_action":
             # 获取当前夜晚的存活玩家信息
@@ -353,6 +370,7 @@ class WerewolfAgent:
 
         Args:
             action (Dict[str, Any]): The action dict, which includes "event_type" (e.g., "witch_action", "guard_action", "seer_action")
+            action (Dict[str, Any]): The action dict, which includes "event_type" (e.g., "witch_action", "guard_action", "seer_action")
                                     and other relevant details like "night_info", "content", etc.
 
         Returns:
@@ -360,6 +378,7 @@ class WerewolfAgent:
         """
         # Step 1: Get the event type from the action dictionary
         event_type = action.get("event_type", "")
+
 
         # Step 2: Define YAML path based on the action type
         yaml_paths = {

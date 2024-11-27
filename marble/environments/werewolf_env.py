@@ -43,6 +43,7 @@ class WerewolfEnv:
         with open(system_prompt_path, 'r', encoding='utf-8') as f:
             system_prompt = yaml.safe_load(f)
 
+
         game_introduction = system_prompt.get("game_introduction", "")
         self.condition = Condition(Lock())
         self.current_event = None
@@ -253,6 +254,7 @@ class WerewolfEnv:
                 self.log_event(is_private=False, agent_id="system", content=night_start_message)
                 self.night()
 
+
                 # Check termination condition after night phase
                 if self.should_terminate()["terminated"]:
                     try:
@@ -269,6 +271,7 @@ class WerewolfEnv:
                 self._log_event(day_start_message)
                 self.log_event(is_private=False, agent_id="system", content=day_start_message)
                 self.day()
+
 
                 # Check termination condition after day phase
                 game_result = self.should_terminate()
@@ -296,6 +299,7 @@ class WerewolfEnv:
 
     def night(self) -> None:
         """
+        Executes the night phase of the game. Werewolves select a target, and special
         Executes the night phase of the game. Werewolves select a target, and special
         roles (witch, seer, guard) may take actions.
         """
@@ -464,6 +468,7 @@ class WerewolfEnv:
                 - "details" (str): Detailed game summary.
         """
         self._log_system("Checking if the game should terminate.")
+
 
         # 获取存活玩家和狼人数量
         alive_players = self.shared_memory["public_state"]["alive_players"]
@@ -1385,6 +1390,7 @@ class WerewolfEnv:
     def run_for_sheriff(self) -> None:
         """
         Publishes a 'run for sheriff' event to the event bus. This event is directed to all
+        Publishes a 'run for sheriff' event to the event bus. This event is directed to all
         players with a 'health' status of 1, allowing them to decide if they want to run for sheriff.
         """
         # 初始化 sheriff_election 字段
@@ -1415,6 +1421,7 @@ class WerewolfEnv:
 
     def process_run_for_sheriff(self, event: dict) -> None:
         """
+        Processes each player's decision on whether or not to run for sheriff and
         Processes each player's decision on whether or not to run for sheriff and
         prepares candidates for the sheriff election once all decisions are received.
 
@@ -1626,6 +1633,7 @@ class WerewolfEnv:
         # 第二步：确定投票对象（从未参选的玩家中筛选存活玩家）
         all_players = self.shared_memory["public_state"]["alive_players"]
         never_ran_for_sheriff = [
+            player_id for player_id in all_players
             player_id for player_id in all_players
             if not self.shared_memory["private_state"]["sheriff_election"]["candidates"].get(player_id)
         ]
@@ -2292,6 +2300,7 @@ class WerewolfEnv:
         
     def receive_action(self, event: dict) -> None:
         """
+        Processes an action event received from the EventBus.
         Processes an action event received from the EventBus.
         The event contains details about the action to be taken by the agent.
 
