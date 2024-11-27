@@ -162,3 +162,5 @@ cython_debug/
 # Scratch
 scratch.py
 marble/result/discussion_output.jsonl
+# Werewolf log folder
+werewolf_log/
