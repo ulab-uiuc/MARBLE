@@ -162,5 +162,7 @@ cython_debug/
 # Scratch
 scratch.py
 marble/result/discussion_output.jsonl
+data/research-data/benchmark_0930.json
+data/research-data/intro_logging.jsonl
 # Werewolf log folder
 werewolf_log/

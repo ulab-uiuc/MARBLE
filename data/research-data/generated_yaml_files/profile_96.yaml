@@ -1,0 +1,205 @@
+agents:
+- agent_id: agent1
+  profile: "I am a researcher dedicated to enhancing the application of deep learning\
+    \ in medical imaging, with a particular focus on improving the transparency and\
+    \ reliability of AI models in clinical settings. My recent work centers around\
+    \ Explainable AI (XAI), where I aim to bridge the gap between advanced diagnostic\
+    \ capabilities and the need for trustworthy AI systems. \n\nIn my latest study,\
+    \ I developed the Tumor Aware Counterfactual Explanations (TACE) framework, which\
+    \ generates reliable counterfactual explanations for medical images. Unlike traditional\
+    \ methods, TACE specifically modifies tumor-related features while preserving\
+    \ the overall structure of the organ, ensuring that the explanations remain faithful\
+    \ and clinically relevant. This innovative approach has shown remarkable results,\
+    \ significantly improving classification success rates for breast cancer and brain\
+    \ tumors.\n\nI am passionate about making AI more interpretable and trustworthy,\
+    \ as I believe that understanding the decision-making process of AI models is\
+    \ crucial for their adoption in healthcare. My work not only advances the field\
+    \ of medical imaging but also contributes to the broader goal of creating transparent\
+    \ AI systems that can be reliably used in critical applications. You can find\
+    \ the code for my work at https://github.com/ispamm/TACE."
+  type: BaseAgent
+- agent_id: agent2
+  profile: "I am a researcher dedicated to advancing the field of multimodal emotion\
+    \ recognition and medical imaging through innovative deep learning techniques.\
+    \ My recent work focuses on harnessing the power of hypercomplex neural networks\
+    \ to improve the accuracy and interpretability of models in these domains. I have\
+    \ developed a hypercomplex multimodal network that effectively captures latent\
+    \ relationships among physiological signals, significantly enhancing emotion recognition\
+    \ capabilities. \n\nIn the realm of breast cancer classification, I introduced\
+    \ parameterized hypercomplex networks that leverage inter-view correlations in\
+    \ mammography images, outperforming traditional single-view approaches. My research\
+    \ also emphasizes the importance of explainability in AI, leading to the creation\
+    \ of Tumor Aware Counterfactual Explanations (TACE), which provide reliable insights\
+    \ into model decisions while maintaining the integrity of the underlying medical\
+    \ images.\n\nI am passionate about making deep learning models more interpretable\
+    \ and trustworthy, particularly in critical applications like healthcare. My work\
+    \ not only pushes the boundaries of what is possible with hypercomplex architectures\
+    \ but also aims to ensure that these advancements translate into real-world benefits,\
+    \ such as improved diagnostic performance and enhanced understanding of model\
+    \ behavior. I believe that by combining theoretical rigor with practical applications,\
+    \ we can create systems that are both powerful and reliable."
+  type: BaseAgent
+- agent_id: agent3
+  profile: 'I am a researcher deeply engaged in the intersection of deep learning
+    and advanced signal processing, with a particular focus on hypercomplex neural
+    networks and their applications across various domains. My recent work has centered
+    on developing innovative frameworks that leverage the unique properties of hypercomplex
+    algebras, such as quaternions, to enhance performance in tasks ranging from violence
+    detection in surveillance videos to speech emotion recognition.
+
+
+    One of my notable contributions is JOSENet, a self-supervised framework that excels
+    in detecting violence in video footage while optimizing for computational efficiency.
+    I have also explored the potential of quaternion-valued variational autoencoders
+    (VAEs) to improve generative modeling, demonstrating significant parameter reduction
+    without sacrificing performance.
+
+
+    In addition to my work on generative models, I have developed NAF-DPM, a generative
+    framework for restoring degraded documents, and proposed novel methods for semantic
+    communication that utilize deep generative models to enhance data transmission.
+    My research also extends to spatial audio processing, where I introduced a dual
+    quaternion representation to improve sound localization.
+
+
+    I am passionate about addressing real-world challenges through my research, and
+    I strive to create models that are not only effective but also efficient and adaptable
+    to various applications. My work aims to bridge the gap between theoretical advancements
+    and practical implementations, ultimately contributing to the evolution of AI-driven
+    technologies.'
+  type: BaseAgent
+coordinate_mode: graph
+engine_planner:
+  initial_progress: Starting the collaborative research idea generation based on the
+    provided Introduction.
+environment:
+  max_iterations: 3
+  name: Research Collaboration Environment
+  type: Research
+llm: gpt-3.5-turbo
+memory:
+  type: SharedMemory
+metrics:
+  diversity_of_perspectives: true
+  engagement_level: true
+  evaluate_llm: gpt-4o-mini
+  relevance: true
+output:
+  file_path: result/discussion_output.jsonl
+  format: jsonl
+relationships:
+- - agent1
+  - agent2
+  - collaborate with
+- - agent1
+  - agent3
+  - collaborate with
+- - agent2
+  - agent3
+  - collaborate with
+task:
+  content: "\n            Dear Research Team,\n\n            You are collaborating\
+    \ to generate a new research idea based on the following Introduction:\n\n   \
+    \         **Introduction**\n\n             Introduction to mediation, moderation,\
+    \ and conditional process analysis: A regression-\nbased approach . Guilford publications.\n\
+    He, K., X. Zhang, S. Ren, and J. Sun (2016). \u201CDeep residual learning for\
+    \ image recognition.\u201D In: Proceed-\nings of the IEEE conference on computer\
+    \ vision and pattern recognition , pp. 770\u2013778.\nHerm, L. -V . (2023). \u201C\
+    Impact Of Explainable AI On Cognitive Load: Insights From An Empirical Study.\u201D\
+    \narXiv preprint arXiv:2304.08861 .\nHernandez-Bocanegra, D. C. and J. Ziegler\
+    \ (2020). \u201CExplaining review-based recommendations: Effects\nof profile transparency,\
+    \ presentation style and user characteristics.\u201D i-com 19 (3), 181\u2013200.\n\
+    Hudon, A., T. Demazure, A. Karran, P. -M. L\xE9ger, and S. S\xE9n\xE9cal (2021).\
+    \ \u201CExplainable artificial intelli-\ngence (XAI): how the visualization of\
+    \ AI predictions affects user cognitive load and confidence.\u201D In:\nInformation\
+    \ Systems and Neuroscience: NeuroIS Retreat 2021 . Springer, pp. 237\u2013246.\n\
+    Johns, E., O. Mac Aodha, and G. J. Brostow (2015). \u201CBecoming the expert-interactive\
+    \ multi-class\nmachine teaching.\u201D In: proceedings of the IEEE conference\
+    \ on computer vision and pattern recognition ,\npp. 2616\u20132624.\nJussupow,\
+    \ E., K. Spohrer, A. Heinzl, and J. Gawlitza (2021). \u201CAugmenting medical\
+    \ diagnosis decisions?\nAn investigation into physicians\u2019 decision-making\
+    \ process with artificial intelligence.\u201D Information\nSystems Research 32\
+    \ (3), 713\u2013735.\nKirby, J. R., P. J. Moore, and N. J. Schofield (1988). \u201C\
+    Verbal and visual learning styles.\u201D Contemporary\neducational psychology\
+    \ 13 (2), 169\u2013184.\nKirsh, D. (2000). \u201CA Few Thoughts on Cognitive Overload.\u201D\
+    \ Intellectica 1 (30), 19\u201351.\nKochmar, E., D. D. Vu, R. Belfer, V . Gupta,\
+    \ I. V . Serban, and J. Pineau (2022). \u201CAutomated data-driven\ngeneration\
+    \ of personalized pedagogical interventions in intelligent tutoring systems.\u201D\
+    \ International\nJournal of Artificial Intelligence in Education 32 (2), 323\u2013\
+    349.\nKozhevnikov, M. (2007). \u201CCognitive styles in the context of modern\
+    \ psychology: toward an integrated\nframework of cognitive style.\u201D Psychological\
+    \ bulletin 133 (3), 464.\nK\xFChl, N., M. Goutier, L. Baier, C. Wolff, and D.\
+    \ Martin (2022). \u201CHuman vs. supervised machine learning:\nWho learns patterns\
+    \ faster?\u201D Cognitive Systems Research 76, 78\u201392.\nThirty-Second European\
+    \ Conference on Information Systems (ECIS 2024), Paphos, Cyprus 15(X)AI-Based\
+    \ Learning Systems\nLebovitz, S., N. Levina, and H. Lifshitz-Assaf (2021). \u201C\
+    IS AI GROUND TRUTH REALLY TRUE?\nTHE DANGERS OF TRAINING AND EV ALUATING AI TOOLS\
+    \ BASED ON EXPERTS\u2019KNOW-\nWHAT.\u201D MIS quarterly 45 (3).\nLeichtmann,\
+    \ B., A. Hinterreiter, C. Humer, M. Streit, and M. Mara (2023). \u201CExplainable\
+    \ Artificial\nIntelligence improves human decision-making: results demonstrate\n\
+    the effectiveness of these systems and are consistent with Related Work\nIn the\
+    \ last years, there has been increased research into using AI systems not only\
+    \ to support humans in\ntheir interaction with AI to take over auxiliary tasks\
+    \ (Bullock et al., 2020) but also to improve the training\nThirty-Second European\
+    \ Conference on Information Systems (ECIS 2024), Paphos, Cyprus 3(X)AI-Based Learning\
+    \ Systems\nof novices to teach them new tasks (Cakmak and Lopes, 2012; Edwards\
+    \ et al., 2018).\nThe focus of recent research in human-AI collaboration is on\
+    \ XAI: The AI system is providing additional\nexplanations to the novice (Xu et\
+    \ al., 2019) to increase their ability to judge the AI\u2019s predictions (Adadi\n\
+    and Berrada, 2018). Recent studies explore XAI use to avoid overreliance, i.e.,\
+    \ to not blindly follow AI\nadvice (Schemmer, K\xFChl, et al., 2022). This is\
+    \ crucial as humans who blindly rely on the AI might oversee\nincorrect AI advice\
+    \ which leads to ineffective human-AI collaborations. Schemmer, Hemmer, et al.\
+    \ (2022)\nintroduce the conceptualization of appropriate reliance to measure the\
+    \ reliance behavior of\n\n            **Your Task**\n\n            1. **Literature\
+    \ Review**: Analyze the Introduction provided and conduct a brief literature review\
+    \ to understand the current state of research in this area.\n\n            2.\
+    \ **Brainstorming**: Collaboratively brainstorm potential research ideas that\
+    \ build upon or address gaps in the Introduction.\n\n            3. **Summarization**:\
+    \ Summarize your collective ideas.\n\n            4. **Formulate a New Research\
+    \ Idea**: Develop a new research proposal in the format of the '5q', defined below:\n\
+    \n               **Here is a high-level summarized insight of a research field\
+    \ Machine Learning.**\n\n               **Here are the five core questions:**\n\
+    \n               **[Question 1] - What is the problem?**\n\n               Formulate\
+    \ the specific research question you aim to address. Only output one question\
+    \ and do not include any more information.\n\n               **[Question 2] -\
+    \ Why is it interesting and important?**\n\n               Explain the broader\
+    \ implications of solving this problem for the research community.\n         \
+    \      Discuss how such a paper will affect future research.\n               Discuss\
+    \ how addressing this question could advance knowledge or lead to practical applications.\n\
+    \n               **[Question 3] - Why is it hard?**\n\n               Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \       Explain why naive or straightforward approaches may fail.\n          \
+    \     Identify any technical, theoretical, or practical obstacles that need to\
+    \ be overcome. MAKE IT CLEAR.\n\n               **[Question 4] - Why hasn't it\
+    \ been solved before?**\n\n               Identify gaps or limitations in previous\
+    \ research or existing solutions.\n               Discuss any barriers that have\
+    \ prevented this problem from being solved until now.\n               Explain\
+    \ how your approach differs from or improves upon prior work. MAKE IT CLEAR.\n\
+    \n               **[Question 5] - What are the key components of my approach and\
+    \ results?**\n\n               Outline your proposed methodology in detail, including\
+    \ the method, dataset, and metrics that you plan to use.\n               Describe\
+    \ the expected outcomes. MAKE IT CLEAR.\n\n            Please work together to\
+    \ produce the '5q' for your proposed research idea.\n\n            Good luck!\n\
+    \            "
+  output_format: "You should answer the task in the fllowing format:\n           \
+    \     **[Question 1] - What is the problem?**\n\n                Formulate the\
+    \ specific research question you aim to address. Only output one question and\
+    \ do not include any more information.\n\n                **[Question 2] - Why\
+    \ is it interesting and important?**\n\n                Explain the broader implications\
+    \ of solving this problem for the research community.\n                Discuss\
+    \ how such a paper will affect future research.\n                Discuss how addressing\
+    \ this question could advance knowledge or lead to practical applications.\n\n\
+    \                **[Question 3] - Why is it hard?**\n\n                Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \        Explain why naive or straightforward approaches may fail.\n         \
+    \       Identify any technical, theoretical, or practical obstacles that need\
+    \ to be overcome. MAKE IT CLEAR.\n\n                **[Question 4] - Why hasn't\
+    \ it been solved before?**\n\n                Identify gaps or limitations in\
+    \ previous research or existing solutions.\n                Discuss any barriers\
+    \ that have prevented this problem from being solved until now.\n            \
+    \    Explain how your approach differs from or improves upon prior work. MAKE\
+    \ IT CLEAR.\n\n                **[Question 5] - What are the key components of\
+    \ my approach and results?**\n\n                Outline your proposed methodology\
+    \ in detail, including the method, dataset, and metrics that you plan to use.\n\
+    \                Describe the expected outcomes. MAKE IT CLEAR."

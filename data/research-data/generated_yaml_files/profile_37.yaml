@@ -1,0 +1,404 @@
+agents:
+- agent_id: agent1
+  profile: 'I am a researcher dedicated to enhancing the efficiency and robustness
+    of deep neural networks, particularly in resource-constrained environments. My
+    work addresses the critical challenges of model size and deployment, especially
+    in safety-critical applications. I introduced Deadwooding, a global pruning technique
+    that leverages a Lagrangian Dual method to achieve model sparsity without sacrificing
+    accuracy or adversarial robustness. This innovation has significantly advanced
+    the state-of-the-art in model performance.
+
+
+    In my pursuit of practical solutions, I developed VeriCompress, an automated tool
+    that optimizes the search and training of compressed models with guaranteed robustness.
+    This tool not only accelerates training but also ensures that the resulting models
+    are suitable for deployment on edge devices, requiring significantly less memory
+    and inference time compared to existing methods. My comprehensive evaluations
+    across various datasets, including MNIST and CIFAR, demonstrate VeriCompress''s
+    effectiveness in identifying robust models tailored for safety-critical applications.
+
+
+    Additionally, I have explored the realm of human sensing applications, where I
+    introduced CRoP, a static personalization approach that optimizes model performance
+    by addressing intra-user heterogeneity. This work is particularly relevant in
+    clinical settings, where data limitations pose significant challenges. By combining
+    pre-trained models with pruning techniques, CRoP enhances personalization and
+    generalization, showcasing its potential impact on real-world health applications.
+    My research is driven by a commitment to making advanced machine learning techniques
+    accessible and effective in practical scenarios.'
+  type: BaseAgent
+- agent_id: agent2
+  profile: 'I am a researcher dedicated to addressing the intersection of privacy,
+    deep learning, and human sensing applications. My recent work focuses on the implications
+    of smart speaker voice assistants (VAs) and their potential for unauthorized surveillance
+    through speech emotion recognition (SER). I developed DARE-GP, a novel solution
+    that employs a constrained genetic programming approach to create additive noise,
+    effectively masking users'' emotional information while preserving the essential
+    transcription of their speech. This work not only provides real-time protection
+    against unseen SER classifiers but also demonstrates robustness in realistic acoustic
+    environments.
+
+
+    In addition to privacy concerns, I am deeply invested in the challenges of personalization
+    in human sensing applications. My research introduces CRoP, a static personalization
+    method that optimizes model performance by addressing intra-user heterogeneity
+    across different contexts. This approach is particularly relevant in clinical
+    settings, where data availability is often limited. Through extensive evaluations
+    across multiple datasets, including those from health domains, CRoP has shown
+    significant improvements in personalization effectiveness and generalization.
+
+
+    Overall, my work aims to enhance the practical and social impact of machine learning
+    technologies while ensuring user privacy and adaptability in diverse contexts.
+    I am passionate about developing solutions that not only advance the field but
+    also prioritize ethical considerations in technology deployment.'
+  type: BaseAgent
+- agent_id: agent3
+  profile: "I am a researcher dedicated to advancing the field of sports video analysis,\
+    \ particularly in automating the editing and highlight generation processes for\
+    \ soccer broadcasts. My recent work focuses on developing a two-stage paradigm\
+    \ that effectively detects and locates events within long, untrimmed videos. By\
+    \ fine-tuning multiple action recognition models on soccer data, I extract high-level\
+    \ semantic features that enhance our understanding of the game. \n\nAdditionally,\
+    \ I have designed a transformer-based temporal detection module that excels in\
+    \ pinpointing when and what events occur in soccer videos. This innovative approach\
+    \ has led to state-of-the-art performance in both action spotting and replay grounding\
+    \ tasks, as demonstrated in the SoccerNet-v2 Challenge at the CVPR 2021 ActivityNet\
+    \ workshop. \n\nI am passionate about sharing my findings with the research community,\
+    \ which is why I released our soccer embedding features publicly. I believe that\
+    \ collaboration and open access to resources can significantly accelerate advancements\
+    \ in soccer video understanding and contribute to the broader field of sports\
+    \ analytics."
+  type: BaseAgent
+- agent_id: agent4
+  profile: "I am a researcher with a diverse background in computational biology,\
+    \ machine learning, and data analysis. My recent work has focused on understanding\
+    \ protein folding mechanisms, particularly through molecular dynamics simulations\
+    \ of trpzip2, where I identified multiple folding pathways and their probabilities,\
+    \ shedding light on beta-hairpin folding mechanisms. \n\nIn the realm of machine\
+    \ learning, I have developed innovative algorithms for nominal automata, extending\
+    \ classical automata theory to capture nominal regular languages with binders.\
+    \ This work has implications for resource-aware computations and abstract modeling.\
+    \ Additionally, I have contributed to the field of deep learning by creating a\
+    \ novel colorization method that allows for simultaneous global and local user\
+    \ inputs, enhancing control over output images and achieving state-of-the-art\
+    \ results.\n\nMy research also includes advancements in data assimilation techniques,\
+    \ where I introduced VAE-Var, a variational algorithm that models non-Gaussian\
+    \ background error distributions, significantly improving accuracy in chaotic\
+    \ systems. Furthermore, I have tackled the challenge of log parsing by proposing\
+    \ LogBatcher, a cost-effective, LLM-based parser that efficiently processes logs\
+    \ without the need for extensive training or labeled data.\n\nOverall, my work\
+    \ aims to bridge the gap between theoretical advancements and practical applications,\
+    \ contributing to a deeper understanding of complex systems in both biological\
+    \ and computational contexts."
+  type: BaseAgent
+- agent_id: agent5
+  profile: "I am a researcher dedicated to advancing the fields of data analytics,\
+    \ machine learning, and speech science. My work spans a diverse range of topics,\
+    \ from the integration of GPUs in in-memory analytics to the development of innovative\
+    \ frameworks for detecting and understanding speech patterns in children who stutter.\
+    \ \n\nIn my recent studies, I have explored the advantages of GPU databases, highlighting\
+    \ their superior performance in handling data-intensive workloads. I have also\
+    \ tackled the critical issue of credit card fraud detection by employing sparse\
+    \ Gaussian classification methods, demonstrating the effectiveness of Bayesian\
+    \ learning techniques in achieving high accuracy with large financial datasets.\n\
+    \nMy research in speech science has led to the development of novel approaches\
+    \ like the PASAD framework, which leverages real-time physiological data to analyze\
+    \ speech acoustics in young children. This work not only enhances our understanding\
+    \ of speech-motor control factors but also paves the way for personalized interventions\
+    \ for children who stutter.\n\nAdditionally, I have made significant contributions\
+    \ to the field of federated learning, proposing a bias mitigation approach that\
+    \ ensures fairness without compromising data privacy. My work aims to bridge the\
+    \ gap between advanced machine learning techniques and real-world applications,\
+    \ ultimately striving for a more equitable and effective use of AI in human-centered\
+    \ contexts.\n\nThrough my research, I aim to push the boundaries of knowledge\
+    \ in these domains, fostering innovation and practical solutions that can have\
+    \ a meaningful impact on society."
+  type: BaseAgent
+- agent_id: agent6
+  profile: 'I am a researcher dedicated to enhancing clinical speech technology systems
+    and their applications in treating speech sound disorders. My work emphasizes
+    the importance of clinical validation to ensure the reproducibility of systems
+    like the PERCEPT-R Classifier, which predicts clinician judgments of American
+    English /r/ during innovative interventions. Through my studies, I have demonstrated
+    that participants can achieve significant improvements in untreated words after
+    engaging in combined human and AI treatments, despite variability in classification
+    performance.
+
+
+    I have also explored the efficacy of mispronunciation detection tools, revealing
+    that age-and-sex normalized formant estimation outperforms traditional methods
+    for detecting rhotic versus derhotic /r/. My research employs gated recurrent
+    neural networks, achieving impressive participant-specific F1-scores, which underscores
+    the potential of these tools to increase treatment access.
+
+
+    Additionally, I am investigating acoustic-to-articulatory speech inversion to
+    provide detailed feedback for mispronunciation detection, particularly in children
+    with speech sound disorders. My findings indicate that classifiers trained on
+    tract variables can match or exceed the performance of state-of-the-art features,
+    paving the way for more effective clinical applications.
+
+
+    In the realm of human sensing, I have developed CRoP, a novel static personalization
+    approach that optimizes model performance across diverse contexts. This work addresses
+    the challenges of intra-user heterogeneity and limited data availability, demonstrating
+    significant improvements in personalization effectiveness and robustness. My research
+    aims to bridge the gap between advanced technology and practical clinical applications,
+    ultimately enhancing treatment outcomes for individuals with speech sound disorders.'
+  type: BaseAgent
+- agent_id: agent7
+  profile: "As a researcher in the field of clinical speech technology, I am deeply\
+    \ committed to ensuring that our systems not only perform well in controlled lab\
+    \ settings but also demonstrate real-world effectiveness. My recent work focuses\
+    \ on the PERCEPT-R Classifier, which aims to predict clinician judgments of American\
+    \ English /r/ sounds during ChainingAI interventions for motor-based speech sound\
+    \ disorders. \n\nIn my latest study, I validated the classifier's performance\
+    \ through clinical trials, where I observed statistically significant improvements\
+    \ in untreated words among participants after just ten sessions of combined human\
+    \ and ChainingAI treatment. This research has highlighted the complexities of\
+    \ measuring classification performance in clinical speech, particularly when dealing\
+    \ with perceptually ambiguous sounds. \n\nI am passionate about bridging the gap\
+    \ between technology and clinical practice, ensuring that our innovations are\
+    \ not only theoretically sound but also practically applicable. My goal is to\
+    \ contribute to the development of reliable speech technology that can enhance\
+    \ therapeutic outcomes for individuals with speech sound disorders."
+  type: BaseAgent
+- agent_id: agent8
+  profile: 'I am a researcher dedicated to advancing the understanding of speech disorders,
+    particularly stuttering, and the application of machine learning in health-related
+    contexts. My recent work has focused on the physiological arousal patterns of
+    preschool-age children who stutter (CWS) compared to those who do not (CWNS).
+    By employing a novel modality-wise multiple-instance-learning (MI-MIL) approach,
+    I have been able to classify and visualize these differences in real-time, paving
+    the way for personalized interventions that could enhance speech fluency.
+
+
+    In addition to my work on stuttering, I have explored various facets of machine
+    learning, including federated learning and its implications for fairness in human-centered
+    AI applications. My approach to bias mitigation in federated systems represents
+    a significant advancement in ensuring equitable outcomes without compromising
+    data privacy. I have also developed innovative frameworks like PASAD, which leverages
+    physiological responses to analyze speech acoustics, and ThermaStrain, a co-teaching
+    framework that enhances stress prediction using thermal imaging.
+
+
+    My research extends to the deployment of deep learning models in resource-constrained
+    environments, where I introduced VeriCompress, a tool that automates the search
+    for robust, compact models suitable for safety-critical applications. I am passionate
+    about bridging the gap between advanced machine learning techniques and practical
+    applications in healthcare, aiming to improve early detection of conditions like
+    Alzheimer''s disease and enhance speech sound disorder treatments.
+
+
+    Through my work, I strive to contribute to the fields of speech science and machine
+    learning, focusing on real-world applications that can significantly impact individuals''
+    lives.'
+  type: BaseAgent
+coordinate_mode: graph
+engine_planner:
+  initial_progress: Starting the collaborative research idea generation based on the
+    provided Introduction.
+environment:
+  max_iterations: 3
+  name: Research Collaboration Environment
+  type: Research
+llm: gpt-3.5-turbo
+memory:
+  type: SharedMemory
+metrics:
+  diversity_of_perspectives: true
+  engagement_level: true
+  evaluate_llm: gpt-4o-mini
+  relevance: true
+output:
+  file_path: result/discussion_output.jsonl
+  format: jsonl
+relationships:
+- - agent1
+  - agent2
+  - collaborate with
+- - agent1
+  - agent3
+  - collaborate with
+- - agent1
+  - agent4
+  - collaborate with
+- - agent1
+  - agent5
+  - collaborate with
+- - agent1
+  - agent6
+  - collaborate with
+- - agent1
+  - agent7
+  - collaborate with
+- - agent1
+  - agent8
+  - collaborate with
+- - agent2
+  - agent3
+  - collaborate with
+- - agent2
+  - agent4
+  - collaborate with
+- - agent2
+  - agent5
+  - collaborate with
+- - agent2
+  - agent6
+  - collaborate with
+- - agent2
+  - agent7
+  - collaborate with
+- - agent2
+  - agent8
+  - collaborate with
+- - agent3
+  - agent4
+  - collaborate with
+- - agent3
+  - agent5
+  - collaborate with
+- - agent3
+  - agent6
+  - collaborate with
+- - agent3
+  - agent7
+  - collaborate with
+- - agent3
+  - agent8
+  - collaborate with
+- - agent4
+  - agent5
+  - collaborate with
+- - agent4
+  - agent6
+  - collaborate with
+- - agent4
+  - agent7
+  - collaborate with
+- - agent4
+  - agent8
+  - collaborate with
+- - agent5
+  - agent6
+  - collaborate with
+- - agent5
+  - agent7
+  - collaborate with
+- - agent5
+  - agent8
+  - collaborate with
+- - agent6
+  - agent7
+  - collaborate with
+- - agent6
+  - agent8
+  - collaborate with
+- - agent7
+  - agent8
+  - collaborate with
+task:
+  content: "\n            Dear Research Team,\n\n            You are collaborating\
+    \ to generate a new research idea based on the following Introduction:\n\n   \
+    \         **Introduction**\n\n             Introduction\nDomain shift is a common\
+    \ challenge in many real life applications [16]. For ex-\nample, in medical imaging,\
+    \ models trained on the data from one institution may\nnot generalize well to\
+    \ another institution with different imaging hardware. Sim-\nilarly, in battery\
+    \ capacity monitoring, models trained on lab-collected data may\nperform poorly\
+    \ under diverse operation environments. Obtaining the annotation\nfor the new\
+    \ domains, however, is often very costly or infeasible. To address this\n\u22C6\
+    Hanbing Liu, Jingge Wang, Xuan Zhang, and Yang Li are from the Shenzhen Key\n\
+    Laboratory of Ubiquitous Data Enabling, SIGS, Tsinghua University.arXiv:2402.16681v2\
+    \  [cs.LG]  18 Mar 20242 Hanbing Liu et al.\nchallenge, Unsupervised Domain Adaptation\
+    \ (UDA) has been proposed, lever-\naging the labeled data from the source domain\
+    \ to improve the performance of\nlearning models on the unlabeled target domain\
+    \ [5]. In particular, UDA aims\nto align the distributions of the source and target\
+    \ domains using labeled source\ndata and unlabeled target data, typically by learning\
+    \ domain-invariant represen-\ntations [13] or adversarial learning schemes. Nevertheless,\
+    \ one challenge of UDA\nis its limited effectiveness when confronted with significant\
+    \ domain shift. Studies\nconducted by Zhao et al. [18] have shed light on the\
+    \ relationship between the\ndomain shift and generalization error in UDA. They\
+    \ have shown that the effec-\ntiveness of UDA is bounded by the distributional\
+    \ divergence between the source\nand target domain, so the performance of the\
+    \ adapted model on the target do-\nmain may not be satisfactory with a substantial\
+    \ domain shift. In addressing this\nchallenge, many works studied the problem\
+    \ of Continuous Domain Adaptation\n(CDA) [17].\nInstead of directly adapting the\
+    \ model from the source to the target do-\nmain, CDA captures the underlying domain\
+    \ continuity leveraging a stream of\nobserved intermediate domains, and gradually\
+    \ bridges the substantial domain\ngap by adapting the model progressively. There\
+    \ are various applications of CDA\nrequiring continuous domains with indexed metadata\
+    \ [6,9]. For example, in med-\nical data analysis, age acts as a continuous metadata\
+    \ for disease diagnosis across\npatients of different age groups. In the online\
+    \ battery capacity estimation prob-\nlem, the state of health (SoH) of the battery\
+    \ acts as a continuous metadata that\ndiffers across batteries. CDA has attracted\
+    \ a great deal of attention and gained\na rapid performance boost by self-training\
+    \ [7,19], pseudo-labeling [8], adversar-\nial algorithms, optimal transport (OT)\
+    \ [10] and so on. In particular, Oritiz et\nal. [10] designed an efficient forward-backward\
+    \ splitting optimization algorithm\nfor continuous optimal transport (COT) and\
+    \ demonstrated the efficacy of OT in\nreducing the domain shift and improving\
+    \ the performance of adaptation models.\nWhile there have been significant advances\
+    \ in CDA, it still faces two critical\nchallenges, determining the transfer order\
+    \ of intermediate domains in the ab-\nsence of continuous metadata and mitigating\
+    \ cumulative errors throughout the\ncontinuous adaptation process. For the first\
+    \ issue, metadata could be missing\nor incorrect, and sometimes metadata alone\
+    \ can not fully explain the difference\nbetween data distributions. The proper\
+    \ ordering of intermediate domains is sig-\nnificant for CDA in transferring knowledge\
+    \ all the way to the target domain.\nIndeed, it is necessary to order the intermediate\
+    \ domains to facilitate continu-\nous transfer without relying on explicit metadata.\
+    \ As a divergence measurement\nthat takes into account the geometry of the data\
+    \ distributions, Wasserstein dis-\ntance (w-distance) [15] plays an important\
+    \ role in deriving the generalization\nbound in domain adaptation, which implies\n\
+    \n            **Your Task**\n\n            1. **Literature Review**: Analyze the\
+    \ Introduction provided and conduct a brief literature review to understand the\
+    \ current state of research in this area.\n\n            2. **Brainstorming**:\
+    \ Collaboratively brainstorm potential research ideas that build upon or address\
+    \ gaps in the Introduction.\n\n            3. **Summarization**: Summarize your\
+    \ collective ideas.\n\n            4. **Formulate a New Research Idea**: Develop\
+    \ a new research proposal in the format of the '5q', defined below:\n\n      \
+    \         **Here is a high-level summarized insight of a research field Machine\
+    \ Learning.**\n\n               **Here are the five core questions:**\n\n    \
+    \           **[Question 1] - What is the problem?**\n\n               Formulate\
+    \ the specific research question you aim to address. Only output one question\
+    \ and do not include any more information.\n\n               **[Question 2] -\
+    \ Why is it interesting and important?**\n\n               Explain the broader\
+    \ implications of solving this problem for the research community.\n         \
+    \      Discuss how such a paper will affect future research.\n               Discuss\
+    \ how addressing this question could advance knowledge or lead to practical applications.\n\
+    \n               **[Question 3] - Why is it hard?**\n\n               Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \       Explain why naive or straightforward approaches may fail.\n          \
+    \     Identify any technical, theoretical, or practical obstacles that need to\
+    \ be overcome. MAKE IT CLEAR.\n\n               **[Question 4] - Why hasn't it\
+    \ been solved before?**\n\n               Identify gaps or limitations in previous\
+    \ research or existing solutions.\n               Discuss any barriers that have\
+    \ prevented this problem from being solved until now.\n               Explain\
+    \ how your approach differs from or improves upon prior work. MAKE IT CLEAR.\n\
+    \n               **[Question 5] - What are the key components of my approach and\
+    \ results?**\n\n               Outline your proposed methodology in detail, including\
+    \ the method, dataset, and metrics that you plan to use.\n               Describe\
+    \ the expected outcomes. MAKE IT CLEAR.\n\n            Please work together to\
+    \ produce the '5q' for your proposed research idea.\n\n            Good luck!\n\
+    \            "
+  output_format: "You should answer the task in the fllowing format:\n           \
+    \     **[Question 1] - What is the problem?**\n\n                Formulate the\
+    \ specific research question you aim to address. Only output one question and\
+    \ do not include any more information.\n\n                **[Question 2] - Why\
+    \ is it interesting and important?**\n\n                Explain the broader implications\
+    \ of solving this problem for the research community.\n                Discuss\
+    \ how such a paper will affect future research.\n                Discuss how addressing\
+    \ this question could advance knowledge or lead to practical applications.\n\n\
+    \                **[Question 3] - Why is it hard?**\n\n                Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \        Explain why naive or straightforward approaches may fail.\n         \
+    \       Identify any technical, theoretical, or practical obstacles that need\
+    \ to be overcome. MAKE IT CLEAR.\n\n                **[Question 4] - Why hasn't\
+    \ it been solved before?**\n\n                Identify gaps or limitations in\
+    \ previous research or existing solutions.\n                Discuss any barriers\
+    \ that have prevented this problem from being solved until now.\n            \
+    \    Explain how your approach differs from or improves upon prior work. MAKE\
+    \ IT CLEAR.\n\n                **[Question 5] - What are the key components of\
+    \ my approach and results?**\n\n                Outline your proposed methodology\
+    \ in detail, including the method, dataset, and metrics that you plan to use.\n\
+    \                Describe the expected outcomes. MAKE IT CLEAR."

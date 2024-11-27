@@ -9,8 +9,8 @@ user: |
 
   <<game_state>>
 
-  Now, it is your turn to vote for which player to banish. 
-  
+  Now, it is your turn to vote for which player to banish.
+
   1. Consider the current situation and your understanding of each player's role. Based on the previous discussions, who do you believe are the werewolves? Record your thoughts and reasoning in werewolf_suspects.
 
   2. Think about how other players perceive the situation. In their view, who is most likely to be a werewolf? How might their perspectives influence their votes? Store your analysis in public_perception.

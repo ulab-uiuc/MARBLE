@@ -7,14 +7,14 @@ user: |
   "Here's the current game state:"
 
   <<game_state>>
-  
-  "Now, as the seer, it is your turn to take action. 
+
+  "Now, as the seer, it is your turn to take action.
   Here is the history of your previous checks:"
   <<night info>>
 
   "Here's the list of people alive:"
   <<player_alive_info>>
-  
+
   "You can check one player tonight to verify if they are a werewolf or not. Follow these steps to decide your action:
 
   1. Reflect on your previous checks and the current game state. Who do you think is most suspicious or valuable to check tonight? Consider the behavior of the players and their interactions so far. Record your reasoning in `check_target_thought`.

@@ -7,6 +7,8 @@ import uuid
 from collections import defaultdict
 from typing import Any, Dict, List, Optional, Tuple, TypeVar, Union
 
+from litellm import token_counter
+
 from marble.environments import BaseEnvironment, WebEnvironment
 from marble.llms.model_prompting import model_prompting
 from marble.memory import BaseMemory, SharedMemory
@@ -14,6 +16,14 @@ from marble.utils.logger import get_logger
 
 EnvType = Union[BaseEnvironment, WebEnvironment]
 AgentType = TypeVar('AgentType', bound='BaseAgent')
+
+def convert_to_str(result):
+    if isinstance(result, bool):
+        return str(result)  # 转为 'True' 或 'False'
+    elif isinstance(result, dict):
+        return json.dumps(result)  # 将字典转为JSON格式的字符串
+    else:
+        return str(result)  # 处理字符串和数字等其他类型
 
 class BaseAgent:
     """
@@ -30,7 +40,10 @@ class BaseAgent:
             shared_memory (BaseMemory, optional): Shared memory instance.
         """
         agent_id = config.get("agent_id")
-        self.llm = model
+        if isinstance(model, dict):
+            self.llm = model.get("model", "gpt-3.5-turbo")
+        else:
+            self.llm = model
         assert isinstance(agent_id, str), "agent_id must be a string."
         assert env is not None, "agent must has an environment."
         self.env: EnvType = env
@@ -61,6 +74,31 @@ class BaseAgent:
         self.FORWARD_TO = 0
         self.RECV_FROM = 1
         self.session_id: str = ''
+        self.strategy = config.get("strategy", "default")
+        self.reasoning_prompts = {
+            "default": "",
+            "cot": (
+                "Think through this step by step:\n"
+                "1. What is the main objective of this task?\n"
+                "2. What information and resources do I have available?\n"
+                "3. What approach would be most effective?\n"
+                "4. What specific actions should I take?\n"
+            ),
+            "reflexion": (
+                "Follow the reflection process:\n"
+                "1. Initial thoughts on the task\n"
+                "2. Analysis of available options\n"
+                "3. Potential challenges and solutions\n"
+                "4. Final approach decision\n"
+            ),
+            "react": (
+                "Follow the ReAct framework:\n"
+                "Observation: What do I notice about this task?\n"
+                "Thought: What are my considerations?\n"
+                "Action: What specific action should I take?\n"
+                "Result: What do I expect to achieve?\n"
+            )
+        }
 
     def set_agent_graph(self, agent_graph: Any) -> None:
         self.agent_graph = agent_graph
@@ -136,8 +174,12 @@ class BaseAgent:
             }
         }
         tools.append(new_communication_session_description)
+        reasoning_prompt = self.reasoning_prompts.get(self.strategy, '')
+        self.logger.info(f"Agent {self.agent_id} using {self.strategy} strategy with prompt:\n{reasoning_prompt}")
+
         act_task = (
             f"You are {self.agent_id}: {self.profile}\n"
+            f"{reasoning_prompt}\n"  # 使用已经获取的 reasoning_prompt
             f"This is your task: {task}\n"
             f"These are the ids and profiles of other agents you can interact with:\n"
             f"{agent_descriptions}"
@@ -145,6 +187,8 @@ class BaseAgent:
             f"You can also solve the task by calling other functions to solve it by yourself.\n"
             f"These are your memory: {self.memory.get_memory_str()}\n"
         )
+        self.logger.info(f"Complete prompt for agent {self.agent_id}:\n{act_task}")
+
         if len(tools) == 0:
             result = model_prompting(
                 llm_model=self.llm,
@@ -167,7 +211,10 @@ class BaseAgent:
                 tools=tools,
                 tool_choice="auto"
             )[0]
+        messages = [{'role':'usr', 'content': act_task}, {'role':'sys', 'content': result.content}]
+        self.token_usage += token_counter(model=self.llm,messages=messages)
         communication = None
+        result_from_function_str = None
         if result.tool_calls:
             function_call = result.tool_calls[0]
             function_name = function_call.function.name
@@ -175,12 +222,14 @@ class BaseAgent:
             function_args = json.loads(function_call.function.arguments)
             if function_name != "new_communication_session":
                 result_from_function = self.env.apply_action(agent_id=self.agent_id, action_name=function_name, arguments=function_args)
+                result_from_function_str = convert_to_str(result_from_function)
             else: # function_name == "new_communication_session"
                 self.session_id = uuid.uuid4() # new session id
                 target_agent_id = function_args["target_agent_id"]
                 message = function_args["message"]
                 result_from_function = self._handle_new_communication_session(target_agent_id=target_agent_id, message=message, session_id=self.session_id, task=task, turns=5)
-                communication = result_from_function.final_chat_history
+                result_from_function_str = convert_to_str(result_from_function)
+                communication = result_from_function.get("full_chat_history", None)
             self.memory.update(self.agent_id, {
                     "type": "action_function_call",
                     "action_name": function_name,
@@ -201,8 +250,11 @@ class BaseAgent:
             self.logger.info(f"Agent '{self.agent_id}' acted with result '{result}'.")
         result_content = result.content if result.content else ""
         self.token_usage += self._calculate_token_usage(task, result_content)
+        output = "Result from the model:" + result_content + "\n"
+        if result_from_function_str:
+            output += "Result from the function:" + result_from_function_str
+        return output, communication
 
-        return result, communication
 
     def _calculate_token_usage(self, task: str, result: str) -> int:
         """
@@ -359,6 +411,8 @@ class BaseAgent:
                 tools=[communicate_to_description],
                 tool_choice="required"
             )[0]
+            messages = [{"role": "system", "content": session_current_agent.system_message}, {"role":"user", "content": communicate_task}, {'role':'system', 'content': result.content}]
+            self.token_usage += token_counter(model=self.llm, messages=messages)
             if result.tool_calls:
                 function_call = result.tool_calls[0]
                 function_name = function_call.function.name
@@ -396,6 +450,8 @@ class BaseAgent:
             top_p=None,
             stream=None,
         )[0]
+        messages = [{"role": "system", "content": system_message_summary}, {"role":"user", "content": summary_task}, {'role':'system', 'content': result.content}]
+        self.token_usage += token_counter(model=self.llm, messages=messages)
         self.memory.update(self.agent_id, {
                 "type": "action_communicate",
                 "action_name": "communicate_to",
@@ -485,6 +541,8 @@ class BaseAgent:
             top_p=None,
             stream=None,
         )[0].content
+        messages = [{"role": "user", "content": f"Agent '{self.agent_id}' should prioritize tasks that align with their role: {persona}. Based on the task history: {task_history_str}, and memory: {memory_str}, what should be the next task?"}, {'role':'system', 'content': next_task}]
+        self.token_usage += token_counter(model=self.llm, messages=messages)
         self.logger.info(f"Agent '{self.agent_id}' plans next task based on persona: {next_task}")
 
         return next_task
@@ -581,6 +639,8 @@ class BaseAgent:
             temperature=0.7,
             top_p=1.0
         )[0]
+        messages = [{"role": "system", "content": prompt}, {'role':'system', 'content': response.content}]
+        self.token_usage += token_counter(model=self.llm, messages=messages)
         try:
             tasks_for_children:Dict[str, Any] = json.loads(response.content if response.content else "{}")
             self.logger.info(f"Agent '{self.agent_id}' assigned tasks to children: {tasks_for_children}")
@@ -614,6 +674,8 @@ class BaseAgent:
             top_p=1.0
         )[0]
         summary = response.content if response.content else ""
+        messages = [{"role": "system", "content": prompt}, {'role':'system', 'content': summary}]
+        self.token_usage += token_counter(model=self.llm, messages=messages)
         return summary
 
 
@@ -655,7 +717,7 @@ class BaseAgent:
             temperature=0.7,
             top_p=1.0
         )[0].content
-
+        self.token_usage += token_counter(model=self.llm, messages=[{"role": "system", "content": prompt}, {"role": "system", "content": response}])
         # Parse the response to extract the agent ID and planning task
         next_agent_id: Optional[str] = None
         planning_task: Optional[str] = None

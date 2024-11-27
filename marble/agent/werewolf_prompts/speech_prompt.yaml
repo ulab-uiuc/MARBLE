@@ -9,7 +9,7 @@ user: |
 
   <<game_state>>
 
-  Now, it is your turn to speak. 
+  Now, it is your turn to speak.
   You are the <<speech_position>> player to speak this round.
   Here is what the players before you have said:
   <<speech_info>>
@@ -17,7 +17,7 @@ user: |
   At this stage, each player is expected to share their opinions and reveal any information they have gathered, helping the group make an informed decision about who to banish next. Follow these steps to organize your thoughts and decide your action:
 
   0. Based on your current role and objectives, what do you need to achieve in order to win? Do you need to gain more trust, deflect suspicion, or accomplish something else? Break down your ultimate goal into smaller, actionable steps you need to complete during this round of speech. Record your plan in role_objectives.
-  
+
   1. Think about your speaking position. You are the <<speech_position>> player to speak. What have the previous players said? Is there anything that directly impacts your position (e.g., claims against you, information about your role)? Should you respond to their claims? If so, how should you respond? Store your analysis in response_plan.
 
   2. Evaluate the statements made by the players who spoke before you. Whose words seem credible? Who seems suspicious, possibly a werewolf? Should you ally with someone or criticize another player’s statements? Analyze each player’s speech in speech_analysis.
@@ -27,7 +27,7 @@ user: |
   4. How do you think your speech will be perceived? Will it make you appear more trustworthy, or will it raise suspicion? Consider how others will react to what you say. Record your perception_analysis.
 
   5. **Additional Considerations Based on Your Role**:
-     - If you are the **seer** (or claiming to be one): 
+     - If you are the **seer** (or claiming to be one):
        - Should you reveal who you checked last night and the results of your checks from the previous night? Why or why not? Should you direct the guard or witch on who to protect tonight?
      - If you are the **guard** (or claiming to be one):
        - Should you reveal whom you protected last night and who you plan to protect tonight? Will you speak the truth or lie about your protection? Should you coordinate with the witch and the seer?
