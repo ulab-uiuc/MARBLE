@@ -3,7 +3,7 @@ import logging
 import random
 import time
 from enum import IntEnum
-from multiprocessing.pool import *
+from multiprocessing.pool import ThreadPool
 
 import psycopg2
 import pymysql

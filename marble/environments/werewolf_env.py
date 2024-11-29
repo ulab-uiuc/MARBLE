@@ -179,7 +179,7 @@ class WerewolfEnv:
         Args:
             message (str): 系统消息内容。
         """
-        print(f"{Fore.YELLOW}{f"System: {message}"}{Style.RESET_ALL}")
+        print(f"{Fore.YELLOW}{f'System: {message}'}{Style.RESET_ALL}")
 
     def _log_event(self, message: str):
         """
@@ -188,7 +188,7 @@ class WerewolfEnv:
         Args:
             message (str): 事件消息内容。
         """
-        print(f"{Fore.GREEN}{f"Event: {message}"}{Style.RESET_ALL}")
+        print(f"{Fore.GREEN}{f'Event: {message}'}{Style.RESET_ALL}")
 
     def _log_player(self, player_id: str, message: str):
         """
