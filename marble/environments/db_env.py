@@ -5,9 +5,9 @@ from typing import Any, Dict, List
 
 import numpy as np
 import requests
-from marble.environments.db_utils.anomaly_detection import detect_anomalies
 
 from marble.environments.base_env import BaseEnvironment
+from marble.environments.db_utils.anomaly_detection import detect_anomalies
 
 
 def get_prometheus_metric_data(metric_name: str) -> List[Any]:
@@ -30,12 +30,12 @@ def get_prometheus_metric_data(metric_name: str) -> List[Any]:
     prom_url = 'http://localhost:9090/api/v1/query_range'
 
     # Parameters for the query
-    params = {
-        'query': metric_name,
-        'start': start_time,
-        'end': end_time,
-        'step': 60  # sample every 60 seconds
-    }
+    # params = {
+    #     'query': metric_name,
+    #     'start': start_time,
+    #     'end': end_time,
+    #     'step': 60  # sample every 60 seconds
+    # }
 
     prom_url_with_params = f"{prom_url}?query={metric_name}&start={start_time}&end={end_time}&step=60"
 

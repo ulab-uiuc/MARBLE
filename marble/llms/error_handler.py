@@ -2,7 +2,7 @@ import math
 import time
 from functools import wraps
 
-from beartype.typing import Any, Callable, List, Optional, TypeVar, cast, Union, Set
+from beartype.typing import Any, Callable, List, Optional, Set, TypeVar, Union, cast
 from pydantic import BaseModel
 
 INF = float(math.inf)

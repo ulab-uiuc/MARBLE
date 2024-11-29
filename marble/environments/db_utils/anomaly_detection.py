@@ -1,8 +1,10 @@
+from typing import Any, Tuple
+
 import numpy as np
-from typing import Tuple, Any
+
 
 def detect_anomalies(
-    data: np.ndarray[Any, np.dtype[np.float64]], 
+    data: np.ndarray[Any, np.dtype[np.float64]],
     significance_level: float = 0.2
 ) -> Tuple[float, np.ndarray[Any, np.dtype[np.bool_]]]:
     """
@@ -13,7 +15,7 @@ def detect_anomalies(
         significance_level (float): Level of significance for the KS test (default: 0.2).
 
     Returns:
-        Tuple[float, numpy.ndarray]: 
+        Tuple[float, numpy.ndarray]:
             - KS statistic (float): The maximum absolute difference between empirical and expected CDFs.
             - Boolean array (numpy.ndarray): Array indicating anomalies (True) and non-anomalies (False).
     """

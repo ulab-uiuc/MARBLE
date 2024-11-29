@@ -7,8 +7,8 @@ Engine Planner module responsible for task assignment and scheduling.
 import json
 from typing import Any, Dict, List
 
-from litellm.utils import token_counter
 from litellm.types.utils import Message
+from litellm.utils import token_counter
 
 from marble.graph.agent_graph import AgentGraph
 from marble.llms.model_prompting import model_prompting

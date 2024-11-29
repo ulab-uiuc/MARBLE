@@ -2,7 +2,7 @@ import datetime
 import os
 import random
 import time
-from multiprocessing.pool import *
+from multiprocessing.pool import Pool
 
 import promethues
 import psycopg2
