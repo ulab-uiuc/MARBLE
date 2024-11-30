@@ -1,3 +1,8 @@
+# Labels for Test Set
+```json
+['too many indexes', 'missing indexes', 'POOR JOIN PERFORMANCE', 'highly deletes', 'highly concurrent commits or highly concurrent inserts', 'CORRELATED SUBQUERY', 'INSERT_LARGE_DATA', 'FETCH_LARGE_DATA', 'IO_CONTENTION', 'CPU CONTENTION', 'highly concurrent updates']
+```
+
 # Prometheus And AlertManager Deployment Tutorial
 
 <p align="center">
