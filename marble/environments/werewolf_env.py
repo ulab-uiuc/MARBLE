@@ -1634,7 +1634,6 @@ class WerewolfEnv:
         all_players = self.shared_memory["public_state"]["alive_players"]
         never_ran_for_sheriff = [
             player_id for player_id in all_players
-            player_id for player_id in all_players
             if not self.shared_memory["private_state"]["sheriff_election"]["candidates"].get(player_id)
         ]
         
