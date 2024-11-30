@@ -1,40 +1,54 @@
-from typing import Any, Tuple
-
 import numpy as np
 
 
-def detect_anomalies(
-    data: np.ndarray[Any, np.dtype[np.float64]],
-    significance_level: float = 0.2
-) -> Tuple[float, np.ndarray[Any, np.dtype[np.bool_]]]:
+def detect_anomalies(data, significance_level=0.2):
     """
     Detects anomalies in the given data using the KS test algorithm.
 
     Args:
         data (numpy.ndarray): 1-D array of data values.
-        significance_level (float): Level of significance for the KS test (default: 0.2).
+        significance_level (float): Level of significance for the KS test (default: 0.05).
 
     Returns:
-        Tuple[float, numpy.ndarray]:
-            - KS statistic (float): The maximum absolute difference between empirical and expected CDFs.
-            - Boolean array (numpy.ndarray): Array indicating anomalies (True) and non-anomalies (False).
+        numpy.ndarray: Boolean array indicating anomalies (True) and non-anomalies (False).
     """
-    sorted_data: np.ndarray[Any, np.dtype[np.float64]] = np.sort(data)
-    n: int = len(sorted_data)
+
+    sorted_data = np.sort(data)
+    n = len(sorted_data)
 
     # Calculate the expected CDF assuming a normal distribution
-    expected_cdf: np.ndarray[Any, np.dtype[np.float64]] = np.arange(1, n + 1) / n
+    expected_cdf = np.arange(1, n + 1) / n
 
     # Calculate the empirical CDF
-    empirical_cdf: np.ndarray[Any, np.dtype[np.float64]] = np.searchsorted(sorted_data, sorted_data, side='right') / n
+    empirical_cdf = np.searchsorted(sorted_data, sorted_data, side='right') / n
 
     # Calculate the maximum absolute difference between the expected and empirical CDFs
-    ks_statistic: float = np.max(np.abs(empirical_cdf - expected_cdf))
+    ks_statistic = np.max(np.abs(empirical_cdf - expected_cdf))
 
     # Calculate the critical value based on the significance level and sample size
-    critical_value: float = np.sqrt(-0.1 * np.log(significance_level / 2) / n)
+    critical_value = np.sqrt(-0.1 * np.log(significance_level / 2) / n)
 
     # Compare the KS statistic with the critical value
-    anomalies: np.ndarray[Any, np.dtype[np.bool_]] = np.full_like(data, ks_statistic > critical_value, dtype=bool)
+    anomalies = np.where(ks_statistic > critical_value, True, False)
 
-    return ks_statistic, anomalies
+    return ks_statistic.tolist(), anomalies.tolist()
+
+def describe_data_features(data):
+    """Describe the features of a given data in natural language."""
+    if data == []:
+        raise Exception("No metric values found for the given time range")
+
+    # compute processed values for the metric
+    # max (reserve two decimal places)
+    max_value = round(np.max(np.array(data)), 2)
+    # min
+    min_value = round(np.min(np.array(data)), 2)
+    # mean
+    mean_value = round(np.mean(np.array(data)), 2)
+    # deviation
+    deviation_value = round(np.std(np.array(data)), 2)
+    # evenly sampled 10 values (reserve two decimal places)
+    evenly_sampled_values = [round(data[i], 2) for i in range(0, len(data), len(data) // 10)]
+
+    # describe the above five values in a string
+    return f"the max value is {max_value}, the min value is {min_value}, the mean value is {mean_value}, the deviation value is {deviation_value}, and the evenly_sampled_values are {evenly_sampled_values}."

@@ -6,13 +6,8 @@ environment:
   type: DB
   name: "DB Simulation Environment"
   max_iterations: 5
-  anomalies:
-    - anomaly: MISSING_INDEXES
-      threads: 100
-      ncolumn: 20
-      nrow:    20000
-      colsize: 100
-
+  anomalies: []
+  
 communication: False
 
 task:
