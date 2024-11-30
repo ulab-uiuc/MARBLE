@@ -7,7 +7,7 @@ import uuid
 from collections import defaultdict
 from typing import Any, Dict, List, Optional, Tuple, TypeVar, Union
 
-from litellm import token_counter
+from litellm.utils import token_counter
 
 from marble.environments import BaseEnvironment, WebEnvironment
 from marble.llms.model_prompting import model_prompting
@@ -17,13 +17,13 @@ from marble.utils.logger import get_logger
 EnvType = Union[BaseEnvironment, WebEnvironment]
 AgentType = TypeVar('AgentType', bound='BaseAgent')
 
-def convert_to_str(result):
+def convert_to_str(result: Any) -> str:
     if isinstance(result, bool):
-        return str(result)  # 转为 'True' 或 'False'
+        return str(result)  # Turn into 'True' or 'False'
     elif isinstance(result, dict):
-        return json.dumps(result)  # 将字典转为JSON格式的字符串
+        return json.dumps(result)  # dict to JSON string
     else:
-        return str(result)  # 处理字符串和数字等其他类型
+        return str(result)  # handle other types
 
 class BaseAgent:
     """
@@ -128,7 +128,8 @@ class BaseAgent:
         self.task_history.append(task)
         self.logger.info(f"Agent '{self.agent_id}' acting on task '{task}'.")
         tools = [self.env.action_handler_descriptions[name] for name in self.env.action_handler_descriptions]
-        available_agents = {}
+        available_agents: Dict[str, Any] = {}
+        assert self.agent_graph is not None, "Agent graph is not set. Please set the agent graph using the set_agent_graph method first."
         for agent_id_1, agent_id_2, relationship in self.agent_graph.relationships:
             if agent_id_1 != self.agent_id and agent_id_2 != self.agent_id:
                 continue
@@ -316,7 +317,7 @@ class BaseAgent:
             session_ids = [session_id] if session_id in self.msg_box else []
         else:
             # Serialize messages for all sessions
-            session_ids = self.msg_box.keys()
+            session_ids = list(self.msg_box.keys())
 
         for sid in session_ids:
             seralized_msg += f"In Session {sid} \n"
@@ -361,6 +362,7 @@ class BaseAgent:
         initial_communication = self._handle_communicate_to(target_agent_id, message, session_id)
         if not initial_communication["success"]:
             return initial_communication
+        assert self.agent_graph is not None, "Agent graph is not set. Please set the agent graph using the set_agent_graph method first."
         agents = [self.agent_graph.agents.get(target_agent_id), self]
         for t in range(turns):
             session_current_agent = agents[t % 2]
@@ -482,6 +484,7 @@ class BaseAgent:
         try:
             self.session_id = session_id
             linked_by_graph = False
+            assert self.agent_graph is not None, "Agent graph is not set. Please set the agent graph using the set_agent_graph method first."
             for a1_id, a2_id, rel in self.agent_graph.relationships:
                 if a1_id == self.agent_id or a2_id == self.agent_id:
                     linked_by_graph = True
@@ -705,7 +708,8 @@ class BaseAgent:
         prompt += (
             "\nBased on the result and the agent profiles provided, select the most suitable agent to continue the task and provide a brief plan for the next agent to execute. "
             "Respond in the following format:\n"
-            "{\"agent_id\": \"<next_agent_id>\", \"planning_task\": \"<description of the next planning task>\"}"
+            "{\"agent_id\": \"<next_agent_id>\", \"planning_task\": \"<description of the next planning task>\"}\n"
+            "You must follow the json format or the system will crash as we fail to interpret the response."
         )
 
         # Use the LLM to select the next agent and create a planning task
@@ -723,6 +727,12 @@ class BaseAgent:
         planning_task: Optional[str] = None
 
         try:
+            assert isinstance(response, str)
+            # check if response is a json, or is a text + json
+            if response[0] == '{':
+                response_data: Dict[str, Any] = json.loads(response)
+            else:
+                response_data: Dict[str, Any] = json.loads(response[response.find('{'):response.rfind('}')+1])
             response_data: Dict[str, Any] = json.loads(response)
             next_agent_id = response_data.get("agent_id")
             planning_task = response_data.get("planning_task")

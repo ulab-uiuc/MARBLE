@@ -7,8 +7,8 @@ Engine Planner module responsible for task assignment and scheduling.
 import json
 from typing import Any, Dict, List
 
-from litellm import token_counter
 from litellm.types.utils import Message
+from litellm.utils import token_counter
 
 from marble.graph.agent_graph import AgentGraph
 from marble.llms.model_prompting import model_prompting
@@ -99,7 +99,7 @@ class EnginePlanner:
             temperature=0.7,
             top_p=1.0
         )
-        messages =[{"role": "system", "content": system_message}, {"role": "user", "content": prompt}, {"role": "assistant", "content": response[0].content}]
+        messages =[{"role": "system", "content": system_message}, {"role": "user", "content": prompt}, {"role": "assistant", "content": f"{response[0].content}"}]
         self.token_usage += token_counter(model=self.model, messages=messages)
         try:
             assignment:Dict[str, Any] = json.loads(response[0].content if response[0].content else "")
@@ -178,7 +178,7 @@ class EnginePlanner:
             temperature=0.3,
             top_p=1.0
         )
-        messages = [{"role": "system", "content": prompt}, {"role": "assistant", "content": response[0].content}]
+        messages = [{"role": "system", "content": prompt}, {"role": "assistant", "content": f"{response[0].content}"}]
         self.token_usage += token_counter(model=self.model, messages=messages)
         try:
             decision = json.loads(response[0].content if response[0].content else "")

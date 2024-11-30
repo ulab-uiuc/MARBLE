@@ -6,7 +6,7 @@ sys.path.append('/root/DB-GPT/')
 import datetime
 import random
 import time
-from multiprocessing.pool import *
+from multiprocessing.pool import Pool, ThreadPool
 
 import yaml
 
