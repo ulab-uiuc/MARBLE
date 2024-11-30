@@ -1,0 +1,45 @@
+coordinate_mode: star
+relationships: []
+llm: "gpt-4o-mini"
+
+environment:
+  type: DB
+  name: "DB Simulation Environment"
+  max_iterations: 5
+  anomalies:
+    - anomaly: MISSING_INDEXES
+      threads: 100
+      ncolumn: 20
+      nrow:    20000
+      colsize: 100
+
+communication: False
+
+task:
+  content: "Analyze the database alerts & outputs and find out the reason that caused it. The alerts might include: NodeMemSwapped, NodeLoadHigh, ... The reasons could be: ['INSERT_LARGE_DATA', 'MISSING_INDEXES','LOCK_CONTENTION','VACUUM','REDUNDANT_INDEX','INSERT_LARGE_DATA,IO_CONTENTION', 'FETCH_LARGE_DATA,CORRELATED_SUBQUERY','POOR_JOIN_PERFORMANCE,CPU_CONTENTION']. Only one of these reasons would apply. The planner should ask different experts to work on same task, and summarize their opinions into a final prediction. They can only do 3 things with tools. First is get alert. The second thing they can do is check whether a metric is abnormal using a statistical method. They can check: cpu_usage, memory_usage, network, and io. The third thing they can do is match diagnostic knowledge based on the expert and the four metrics, to guess what has caused the problem."
+  output_format: "The alerts might include: NodeMemSwapped, NodeLoadHigh, ... Please choose the most likely cause of the database anomaly from the following list, based on the expert agents: ['INSERT_LARGE_DATA', 'MISSING_INDEXES','LOCK_CONTENTION','VACUUM','REDUNDANT_INDEX','INSERT_LARGE_DATA,IO_CONTENTION', 'FETCH_LARGE_DATA,CORRELATED_SUBQUERY','POOR_JOIN_PERFORMANCE,CPU_CONTENTION']. You can ONLY CHOOSE ONE."
+
+agents:
+  - type: BaseAgent
+    agent_id: ConfigurationExpert
+    profile: "ConfigurationExpert specializes in system configurations and optimizations."
+  - type: BaseAgent
+    agent_id: CpuExpert
+    profile: "CpuExpert is knowledgeable in CPU architecture, performance, and optimizations."
+  - type: BaseAgent
+    agent_id: WorkloadExpert
+    profile: "WorkloadExpert excels in analyzing workloads, resource allocation, and optimization for efficiency."
+
+memory:
+  type: SharedMemory
+  # Additional memory configurations if needed
+
+metrics: {}
+  # Define metrics configurations for the Evaluator
+  # Example:
+  # accuracy: true
+  # response_time: true
+
+engine_planner:
+  initial_progress: "Starting the simulation."
+  # Additional engine planner configurations if needed
