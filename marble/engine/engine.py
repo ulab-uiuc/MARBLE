@@ -9,7 +9,7 @@ from typing import Any, Dict, List, Optional, Union
 from marble.agent import BaseAgent
 from marble.configs.config import Config
 from marble.engine.engine_planner import EnginePlanner
-from marble.environments import BaseEnvironment, ResearchEnvironment, WebEnvironment
+from marble.environments import BaseEnvironment, ResearchEnvironment, WebEnvironment, DBEnvironment
 from marble.evaluator.evaluator import Evaluator
 from marble.graph.agent_graph import AgentGraph
 from marble.memory.base_memory import BaseMemory
@@ -79,6 +79,9 @@ class Engine:
             return env2
         elif env_type == "Research":
             env3 = ResearchEnvironment(name="Research Environment", config=env_config)
+            return env3
+        elif env_type == "DB":
+            env3 = DBEnvironment(name="Database Environment", config=env_config)
             return env3
         else:
             raise ValueError(f"Unsupported environment type: {env_type}")
