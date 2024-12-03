@@ -156,14 +156,18 @@ class Engine:
                     agent = self.graph.get_agent(agent_id)
                     self.logger.info(f"Assigning initial task to {agent_id}: {task}")
                     # Assign the task to the agent
-                    iteration_data["task_assignments"][agent_id] = task
+                    iteration_data_task_assignments = iteration_data.get("task_assignments")
+                    assert isinstance(iteration_data_task_assignments, dict)
+                    iteration_data_task_assignments[agent_id] = task
                     result, communication = agent.act(task)
                     if communication:
                         communications.append(communication)
                     agents_results.append({agent_id: result})
                     # Record the result
                     task_result = {"agent_id": agent_id, "result": result}
-                    iteration_data["task_results"].append(task_result)
+                    iteration_data_task_results = iteration_data.get("task_results")
+                    assert isinstance(iteration_data_task_results, list)
+                    iteration_data_task_results.append(task_result)
                     self.logger.debug(f"Agent '{agent_id}' completed initial task with result: {result}")
                 except KeyError:
                     self.logger.error(f"Agent '{agent_id}' not found in the graph.")
@@ -173,8 +177,8 @@ class Engine:
             # Summarize outputs and update planner for the initial assignment
             summary = self._summarize_results(agents_results)
             self.logger.info(f"Initial Summary:\n{summary}")
-            summary = self.planner.summarize_output(summary, self.task, self.output_format)
-            iteration_data["summary"] = summary.content
+            summary_from_planner = self.planner.summarize_output(summary, self.task, self.output_format)
+            iteration_data["summary"] = summary_from_planner.content
 
             # Decide whether to continue or terminate after initial assignment
             continue_simulation = self.planner.decide_next_step(agents_results)
@@ -190,7 +194,9 @@ class Engine:
 
                     # Evaluate communication
             if iteration_data["communications"]:
-                communications_str = self._format_communications(iteration_data["communications"])
+                iteration_data_communications = iteration_data.get("communications")
+                assert isinstance(iteration_data_communications, list)
+                communications_str = self._format_communications(iteration_data_communications)
                 self.evaluator.evaluate_communication(self.task, communications_str)
             else:
                 # Store -1 if communications are empty
@@ -198,13 +204,19 @@ class Engine:
 
             # Evaluate planning
             agent_profiles = self._get_agent_profiles()
-            agent_tasks_str = self._format_agent_tasks(iteration_data["task_assignments"])
-            results_str = self._format_results(iteration_data["task_results"])
-            self.evaluator.evaluate_planning(iteration_data["summary"], agent_profiles, agent_tasks_str, results_str)
+            iteration_data_task_assignments = iteration_data.get("task_assignments")
+            assert isinstance(iteration_data_task_assignments, dict)
+            agent_tasks_str = self._format_agent_tasks(iteration_data_task_assignments)
+            iteration_data_task_results = iteration_data.get("task_results")
+            assert isinstance(iteration_data_task_results, list)
+            results_str = self._format_results(iteration_data_task_results)
+            iteration_data_summary = iteration_data.get("summary")
+            assert isinstance(iteration_data_summary, str)
+            self.evaluator.evaluate_planning(iteration_data_summary, agent_profiles, agent_tasks_str, results_str)
             self.evaluator.evaluate_kpi(self.task, results_str)
 
             while self.current_iteration < self.max_iterations:
-                iteration_data:Dict[str, Any] = {
+                iteration_data = {
                     "iteration": self.current_iteration + 1,
                     "task_assignments": {},
                     "task_results": [],
@@ -226,7 +238,9 @@ class Engine:
                         # Each agent plans its own task
                         task = agent.plan_task()
                         current_tasks[agent.agent_id] = task
-                        iteration_data["task_assignments"][agent.agent_id] = task
+                        iteration_data_task_assignments = iteration_data.get("task_assignments")
+                        assert isinstance(iteration_data_task_assignments, dict)
+                        iteration_data_task_assignments[agent.agent_id] = task
                         self.logger.info(f"Agent '{agent.agent_id}' planned task: {task}")
 
                         # Agent acts on the planned task
@@ -234,7 +248,9 @@ class Engine:
                         if communication:
                             communications.append(communication)
                         agents_results.append({agent.agent_id: result})
-                        iteration_data["task_results"].append({agent.agent_id: result})
+                        iteration_data_task_results = iteration_data.get("task_results")
+                        assert isinstance(iteration_data_task_results, list)
+                        iteration_data_task_results.append({agent.agent_id: result})
                         self.logger.debug(f"Agent '{agent.agent_id}' executed task with result: {result}")
                     except Exception as e:
                         self.logger.error(f"Error in agent '{agent.agent_id}' during planning or action: {e}")
@@ -243,13 +259,15 @@ class Engine:
                 summary = self._summarize_results(agents_results)
                 self.logger.info(f"Iteration {self.current_iteration} Summary:\n{summary}")
                 self.current_iteration += 1
-                summary = self.planner.summarize_output(summary, self.task, self.output_format)
-                iteration_data["summary"] = summary.content
+                summary_from_planner = self.planner.summarize_output(summary, self.task, self.output_format)
+                iteration_data["summary"] = summary_from_planner.content
 
 
                 # Evaluate communication
                 if iteration_data["communications"]:
-                    communications_str = self._format_communications(iteration_data["communications"])
+                    iteration_data_communications = iteration_data.get("communications")
+                    assert isinstance(iteration_data_communications, list)
+                    communications_str = self._format_communications(iteration_data_communications)
                     self.evaluator.evaluate_communication(self.task, communications_str)
                 else:
                     # Store -1 if communications are empty
@@ -257,9 +275,15 @@ class Engine:
 
                 # Evaluate planning
                 agent_profiles = self._get_agent_profiles()
-                agent_tasks_str = self._format_agent_tasks(iteration_data["task_assignments"])
-                results_str = self._format_results(iteration_data["task_results"])
-                self.evaluator.evaluate_planning(iteration_data["summary"], agent_profiles, agent_tasks_str, results_str)
+                iteration_data_task_assignments = iteration_data.get("task_assignments")
+                assert isinstance(iteration_data_task_assignments, dict)
+                agent_tasks_str = self._format_agent_tasks(iteration_data_task_assignments)
+                iteration_data_task_results = iteration_data.get("task_results")
+                assert isinstance(iteration_data_task_results, list)
+                results_str = self._format_results(iteration_data_task_results)
+                iteration_data_summary = iteration_data.get("summary")
+                assert isinstance(iteration_data_summary, str)
+                self.evaluator.evaluate_planning(iteration_data_summary, agent_profiles, agent_tasks_str, results_str)
                 self.evaluator.evaluate_kpi(self.task, results_str)
                 # Decide whether to continue or terminate
                 continue_simulation = self.planner.decide_next_step(agents_results)
@@ -280,7 +304,9 @@ class Engine:
             summary_data["agent_kpis"] = self.evaluator.metrics["agent_kpis"]
             summary_data["total_milestones"] = self.evaluator.metrics["total_milestones"]
             if self.environment.name == 'Research Environment':
-                self.evaluator.evaluate_task_research(self.task, iteration_data["summary"])
+                iteration_data_summary = iteration_data.get("summary")
+                assert isinstance(iteration_data_summary, str)
+                self.evaluator.evaluate_task_research(self.task, iteration_data_summary)
                 summary_data['task_evaluation'] = self.evaluator.metrics["task_evaluation"]
                 self.logger.info("Engine graph-based coordination loop completed.")
             self.logger.info("Engine graph-based coordination loop completed.")
@@ -299,7 +325,7 @@ class Engine:
         """
         try:
             summary_data = {"task": self.task, "coordination_mode": self.coordinate_mode, "iterations": [], "final_output": ""}
-            agents_results = []
+            agents_results:List[Dict[str, Any]] = []
             while self.current_iteration < self.max_iterations:
                 self.current_iteration += 1
                 iteration_data:Dict[str, Any] = {
@@ -340,8 +366,8 @@ class Engine:
                 iteration_data["communications"] = communications
                 # Update progress based on agents' results
                 summary = self._summarize_results(agents_results)
-                summary = self.planner.summarize_output(summary, self.task,  self.output_format)
-                iteration_data["summary"] = summary.content
+                summary_from_planner = self.planner.summarize_output(summary, self.task,  self.output_format)
+                iteration_data["summary"] = summary_from_planner.content
                 self.logger.info(summary)
                 self.planner.update_progress(summary)
 
@@ -429,7 +455,9 @@ class Engine:
                 self.logger.info(f"Agent '{current_agent.agent_id}' is executing task.")
                 result, communication = current_agent.act(task)
                 result_str = f"AgentID: '{current_agent.agent_id}' completed task with result: {result}"
-                iteration_data["task_assignments"][current_agent.agent_id] = task
+                iteration_data_task_assignments = iteration_data.get("task_assignments")
+                assert isinstance(iteration_data_task_assignments, dict)
+                iteration_data_task_assignments[current_agent.agent_id] = task
                 agents_results.append({current_agent.agent_id: result})
                 iteration_data["result"] = result
                 self.logger.info(f"Agent '{current_agent.agent_id}' completed task with result: {result}")
@@ -438,6 +466,7 @@ class Engine:
                 # Current agent chooses the next agent
                 next_agent_id, plan = current_agent.plan_next_agent(result, agent_profiles)
                 print(f"Next agent: {next_agent_id}, Plan: {plan}")
+                assert isinstance(next_agent_id, str)
                 current_agent = self.graph.get_agent(next_agent_id)
                 task = plan
                 chain_length += 1
@@ -446,20 +475,26 @@ class Engine:
 
                 # Evaluate communication
                 if iteration_data["communications"]:
-                    communications_str = self._format_communications(iteration_data["communications"])
+                    iteration_data_communications = iteration_data.get("communications")
+                    assert isinstance(iteration_data_communications, list)
+                    communications_str = self._format_communications(iteration_data_communications)
                     self.evaluator.evaluate_communication(self.task, communications_str)
                 else:
                     # Store -1 if communications are empty
                     self.evaluator.metrics["communication_score"].append(-1)
 
                 summary = self._summarize_results(agents_results)
-                summary = self.planner.summarize_output(summary, self.task,  self.output_format)
-                iteration_data["summary"] = summary.content
+                summary_from_planner = self.planner.summarize_output(summary, self.task,  self.output_format)
+                iteration_data["summary"] = summary_from_planner.content
 
                 # Evaluate planning
-                agent_profiles = self._get_agent_profiles()
-                agent_tasks_str = self._format_agent_tasks(iteration_data["task_assignments"])
-                self.evaluator.evaluate_planning(iteration_data["summary"], agent_profiles, agent_tasks_str, result)
+                agent_profiles_self = self._get_agent_profiles()
+                iteration_data_task_assignments = iteration_data.get("task_assignments")
+                assert isinstance(iteration_data_task_assignments, dict)
+                agent_tasks_str = self._format_agent_tasks(iteration_data_task_assignments)
+                iteration_data_summary = iteration_data.get("summary")
+                assert isinstance(iteration_data_summary, str)
+                self.evaluator.evaluate_planning(iteration_data_summary, agent_profiles_self, agent_tasks_str, result)
                 self.evaluator.evaluate_kpi(self.task, result_str)
 
 
@@ -482,7 +517,9 @@ class Engine:
             summary_data["agent_kpis"] = self.evaluator.metrics["agent_kpis"]
             summary_data["total_milestones"] = self.evaluator.metrics["total_milestones"]
             if self.environment.name == 'Research Environment':
-                self.evaluator.evaluate_task_research(self.task, iteration_data["summary"])
+                iteration_data_summary = iteration_data.get("summary")
+                assert isinstance(iteration_data_summary, str)
+                self.evaluator.evaluate_task_research(self.task, iteration_data_summary)
                 summary_data['task_evaluation'] = self.evaluator.metrics["task_evaluation"]
                 self.logger.info("Engine graph-based coordination loop completed.")
             elif self.environment.name == 'World Simulation Environment':
@@ -528,8 +565,8 @@ class Engine:
 
                 # Update progress
                 summary = self._summarize_results(results)
-                summary = self.planner.summarize_output(summary, self.task,  self.output_format)
-                iteration_data["summary"] = summary.content
+                summary_from_planner = self.planner.summarize_output(summary, self.task,  self.output_format)
+                iteration_data["summary"] = summary_from_planner.content
                 self.logger.info(f"Iteration {self.current_iteration} Summary:\n{summary}")
                 self.planner.update_progress(summary)
                 iteration_data["communications"] = communication
@@ -707,15 +744,6 @@ class Engine:
             self.logger.info(f"Summary data successfully written to {file_path}")
         except IOError as e:
             self.logger.error(f"Failed to write summary data to {file_path}: {e}")
-
-    def _get_final_ooutput_in_graph(self):
-        """
-        Get the final output graph.
-
-        Returns:
-            Dict[str, Any]: The final output graph.
-        """
-        return self.graph.get_output_graph()
 
     def _format_communications(self, communications: List[Any]) -> str:
         """

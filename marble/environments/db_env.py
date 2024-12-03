@@ -5,12 +5,12 @@ from typing import Any, Dict, List
 
 import numpy as np
 import requests
-from db_utils.anomaly_detection import detect_anomalies
 
 from marble.environments.base_env import BaseEnvironment
+from marble.environments.db_utils.anomaly_detection import detect_anomalies
 
 
-def get_prometheus_metric_data(metric_name: str) -> List[List[Any]]:
+def get_prometheus_metric_data(metric_name: str) -> List[Any]:
     """
     Query Prometheus for the given metric data from the last hour, sampling every 60 seconds.
 
@@ -30,21 +30,24 @@ def get_prometheus_metric_data(metric_name: str) -> List[List[Any]]:
     prom_url = 'http://localhost:9090/api/v1/query_range'
 
     # Parameters for the query
-    params = {
-        'query': metric_name,
-        'start': start_time,
-        'end': end_time,
-        'step': 60  # sample every 60 seconds
-    }
+    # params = {
+    #     'query': metric_name,
+    #     'start': start_time,
+    #     'end': end_time,
+    #     'step': 60  # sample every 60 seconds
+    # }
+
+    prom_url_with_params = f"{prom_url}?query={metric_name}&start={start_time}&end={end_time}&step=60"
 
     # Make the HTTP request to Prometheus
-    response = requests.get(prom_url, params=params)
+    response = requests.get(prom_url_with_params)
 
     # Check if the request was successful
     if response.status_code == 200:
         data = response.json()
         if data.get('status') == 'success':
             # Extract the values (timestamp-value pairs) from the response
+            assert isinstance(data['data']['result'][0]['values'], list)
             return data['data']['result'][0]['values']
         else:
             raise ValueError(f"Prometheus returned an error: {data.get('error', 'Unknown error')}")
@@ -82,44 +85,6 @@ class DBEnvironment(BaseEnvironment):
                 colsize = anomaly['colsize']
                 subprocess.run(["python3", "anomaly_trigger/main.py", "--anomaly", anomaly_type, "--threads", f"{threads}", "--ncolumn", f"{ncolumn}", "--colsize", f"{colsize}"], check=True)
 
-        # We will query using v1 api instead
-        # Code must be agnostic to system clock
-        # instead, rely on prometheus clock
-
-        # to get alerts
-        # curl -g 'http://localhost:9090/api/v1/alerts'
-
-        # to have all metrics:
-        # curl -g 'http://localhost:9090/api/v1/label/__name__/values'\
-        # {"status":"success","data":["ALERTS","ALERTS_FOR_STATE", ...]}
-
-        # to get current time:
-        # curl -g 'http://localhost:9090/api/v1/query?query=time()'
-        # {"status":"success","data":{"resultType":"scalar","result":[1731134765.257,"1731134765.257"]}}
-
-        # to get data for a given metric:
-        # curl -g 'http://localhost:9090/api/v1/query_range?query=node:dev:disk_reads_rate1m&start=1731130861.241&end=1731134461.241&step=60'
-        # where node:dev:disk_reads_rate1m is the metric,
-        #       step=60                    is sample each 60s,
-        #       end=1731134461.241         is the time now,
-        #       start=1731130861.241       is an hour (600s) earlier.
-        # {
-        #     "status":"success",
-        #     "data":{
-        #                "resultType":"matrix",
-        #                "result":[{"metric":{"__name__":"node:dev:disk_reads_rate1m","device":"sda","instance":"node_exporter:9100","job":"node_exporter"},"values":[[1731130861.241,"0.1101637668599871"],[1731130921.241,"6.10319007077649"],[1731130981.241,"0.12500000000000003"],[1731131221.241,"7.773037853954849"], ...]}]}}
-
-        # In these pairs, first element is timestamp, second is value
-
-        # To simplify, we keep a shortened set of metrics
-
-        #     cpu_usage     ->     node:cpu:usage_avg1m
-        #     disk_io       ->     node:cls:disk_io_bytes_rate1m
-        #     disk_read     ->     node:cls:disk_read_bytes_rate1m
-        #     disk_write    ->     node:cls:disk_write_bytes_rate1m
-        #     mem_usage     ->     node:cls:mem_usage
-        #     space_usage   ->     node:cls:space_usage
-
         # Register the actions available in this environment
         self.register_action(
             "whether_is_abnormal_metric",
@@ -154,7 +119,7 @@ class DBEnvironment(BaseEnvironment):
 
         # TODO: match_diagnose_knowledge, optimize_index_selection
 
-    def whether_is_abnormal_metric_handler(self, metric_name: str) -> bool:
+    def whether_is_abnormal_metric_handler(self, metric_name: str) -> Dict[str, Any]:
         #try:
         if True:
             # Get the metric data from Prometheus
@@ -169,24 +134,23 @@ class DBEnvironment(BaseEnvironment):
             metric_name_mapped = metric_name_mapper.get(metric_name, "")
             if metric_name_mapped == "":
                 raise ValueError(f"Access to {metric_name} currently not supported")
-                # yes, very easy to support, but too much metrics would overwhelm the llm
-                # the real issue is to select important ones
             print(metric_name_mapped)
-            import pdb
-            pdb.set_trace()
             values = get_prometheus_metric_data(metric_name_mapped)
             if not len(values):
                 print('No values yet. Please wait at least 15s.')
-                return False
+                return {"success": False, "message": "Execution failed. No values yet. Please wait at least 15s."}
             values_list = [float(v) for t, v in values]
             # Convert the list into a 1D NumPy array
-            values_array = np.array(values_list)
-            return detect_anomalies(values_array)
-        #except Exception as e:
-        #    print(f"Error fetching metric data: {e}")
-        #    return False
+            values_array = np.array(values_list, dtype=np.float64)
+            ks_statistic, anomalies = detect_anomalies(values_array)
+            if np.any(anomalies):
+                print(f"Anomalies detected in the metric '{metric_name}'")
+                return {"success": True, "message": f"Anomalies detected in the metric '{metric_name}'; ks_statistic: {ks_statistic}, anomalies: {anomalies}"}
+            else:
+                print(f"No anomalies detected in the metric '{metric_name}'")
+                return {"success": True, "message": f"No anomalies detected in the metric '{metric_name}'"}
 
-    def get_alerts(self) -> dict:
+    def get_alerts(self) -> Dict[str, Any]:
         prom_url = 'http://localhost:9090/api/v1/alerts'
 
         # Make the HTTP request to Prometheus
@@ -197,6 +161,7 @@ class DBEnvironment(BaseEnvironment):
             data = response.json()
             if data.get('status') == 'success':
                 # Extract the values (timestamp-value pairs) from the response
+                assert isinstance(data['data'], dict)
                 return data['data']
             else:
                 raise ValueError(f"Prometheus returned an error: {data.get('error', 'Unknown error')}")

@@ -7,8 +7,8 @@ Engine Planner module responsible for task assignment and scheduling.
 import json
 from typing import Any, Dict, List
 
-from litellm import token_counter
 from litellm.types.utils import Message
+from litellm.utils import token_counter
 
 from marble.graph.agent_graph import AgentGraph
 from marble.llms.model_prompting import model_prompting
@@ -35,7 +35,10 @@ class EnginePlanner:
         self.config = config
         self.current_progress = config.get('initial_progress', '')
         self.task = task
-        self.model = model
+        if isinstance(model, dict):
+            self.model = model.get("model", "gpt-3.5-turbo")
+        else:
+            self.model = model
         self.token_usage = 0
         self.logger.info("EnginePlanner initialized.")
 
@@ -89,14 +92,14 @@ class EnginePlanner:
         )
         messages = [{"role": "system", "content": system_message}, {"role": "user", "content": prompt}]
         response = model_prompting(
-            llm_model=self.model,
+            llm_model="gpt-3.5-turbo",
             messages=messages,
             return_num=1,
             max_token_num=1024,
             temperature=0.7,
             top_p=1.0
         )
-        messages =[{"role": "system", "content": system_message}, {"role": "user", "content": prompt}, {"role": "assistant", "content": response[0].content}]
+        messages =[{"role": "system", "content": system_message}, {"role": "user", "content": prompt}, {"role": "assistant", "content": f"{response[0].content}"}]
         self.token_usage += token_counter(model=self.model, messages=messages)
         try:
             assignment:Dict[str, Any] = json.loads(response[0].content if response[0].content else "")
@@ -127,7 +130,7 @@ class EnginePlanner:
             str: The summarized output.
         """
         response = model_prompting(
-            llm_model=self.model,
+            llm_model="gpt-3.5-turbo",
             messages=[{"role": "user", "content": f"Summarize the output of the agents for the task: {task}\n\nNow here is some result of thr agent: {summary}, please summarize it. You should follow the use of the following format: {output_format}"}],
             return_num=1,
             max_token_num=1024,
@@ -168,14 +171,14 @@ class EnginePlanner:
 
         messages = [{"role": "system", "content": prompt}]
         response = model_prompting(
-            llm_model=self.model,
+            llm_model="gpt-3.5-turbo",
             messages=messages,
             return_num=1,
             max_token_num=256,
             temperature=0.3,
             top_p=1.0
         )
-        messages = [{"role": "system", "content": prompt}, {"role": "assistant", "content": response[0].content}]
+        messages = [{"role": "system", "content": prompt}, {"role": "assistant", "content": f"{response[0].content}"}]
         self.token_usage += token_counter(model=self.model, messages=messages)
         try:
             decision = json.loads(response[0].content if response[0].content else "")

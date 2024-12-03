@@ -1,7 +1,7 @@
 import datetime
 import random
 import time
-from multiprocessing.pool import *
+from multiprocessing.pool import ThreadPool
 
 import psycopg2
 import yaml

@@ -8,7 +8,7 @@ import psycopg2
 sys.path.append('/root/DB-GPT/')
 import random
 import time
-from multiprocessing.pool import *
+from multiprocessing.pool import ThreadPool
 
 import yaml
 
