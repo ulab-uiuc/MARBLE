@@ -1267,22 +1267,23 @@ use = ["tensorflow", "tensorflow-hub", "tensorflow-text"]
 
 [[package]]
 name = "litellm"
-version = "1.52.1"
+version = "1.53.7"
 description = "Library to easily interface with LLM API providers"
 optional = false
 python-versions = "!=2.7.*,!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,!=3.5.*,!=3.6.*,!=3.7.*,>=3.8"
 files = [
-    {file = "litellm-1.52.1-py3-none-any.whl", hash = "sha256:a76133fc6d14a3157275d9ae850b9f18312ae93ae313092d6cf9e9d35f2c72f2"},
-    {file = "litellm-1.52.1.tar.gz", hash = "sha256:750056e0329c5c742193b8f2104133da1e69b2fcc534827e18f7b536af56315c"},
+    {file = "litellm-1.53.7-py3-none-any.whl", hash = "sha256:f6d58a6bebe8cb530d6e3d45ae6f2f648546687d5fd3eb2e064ac8292b50b9c1"},
+    {file = "litellm-1.53.7.tar.gz", hash = "sha256:1b00bb3b7f8f35b0843abc1ced98e7bb0580430ca027f6710128dc1346fb1073"},
 ]
 
 [package.dependencies]
 aiohttp = "*"
 click = "*"
+httpx = ">=0.23.0,<0.28.0"
 importlib-metadata = ">=6.8.0"
 jinja2 = ">=3.1.2,<4.0.0"
 jsonschema = ">=4.22.0,<5.0.0"
-openai = ">=1.54.0"
+openai = ">=1.55.3"
 pydantic = ">=2.0.0,<3.0.0"
 python-dotenv = ">=0.2.0"
 requests = ">=2.31.0,<3.0.0"
@@ -1907,13 +1908,13 @@ files = [
 
 [[package]]
 name = "openai"
-version = "1.54.3"
+version = "1.57.0"
 description = "The official Python library for the openai API"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "openai-1.54.3-py3-none-any.whl", hash = "sha256:f18dbaf09c50d70c4185b892a2a553f80681d1d866323a2da7f7be2f688615d5"},
-    {file = "openai-1.54.3.tar.gz", hash = "sha256:7511b74eeb894ac0b0253dc71f087a15d2e4d71d22d0088767205143d880cca6"},
+    {file = "openai-1.57.0-py3-none-any.whl", hash = "sha256:972e36960b821797952da3dc4532f486c28e28a2a332d7d0c5407f242e9d9c39"},
+    {file = "openai-1.57.0.tar.gz", hash = "sha256:76f91971c4bdbd78380c9970581075e0337b5d497c2fbf7b5255078f4b31abf9"},
 ]
 
 [package.dependencies]
@@ -3955,4 +3956,4 @@ test = ["big-O", "importlib-resources", "jaraco.functools", "jaraco.itertools", 
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.9, <3.12"
-content-hash = "c8f5820a6efc0fcab43ea7d21c627d38c32d01d0dac79403c2bb3909005a5f00"
+content-hash = "00b0f967045e45cc7f62692edd934a99b1016378c2f83bb6f1ae0219d060293f"
