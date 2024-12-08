@@ -2,15 +2,16 @@
 MineCraft environment module.
 """
 
+import subprocess
 from typing import Any, Callable, Dict, List, Union
 
 from marble.environments.base_env import BaseEnvironment
-from marble.environments.minecraft.minecraft_client import MinecraftClient
-from marble.environments.minecraft.minecraft_tool_description import *
+from marble.environments.minecraft_utils.minecraft_client import MinecraftClient
+from marble.environments.minecraft_utils.minecraft_tool_description import *
 
 
 class MinecraftEnvironment(BaseEnvironment):
-    def __init__(self, name: str, config: Dict[str, Any]):
+    def __init__(self, name: str, config: Dict[str, Any] = dict(), task_id: int = 0, task_name: str = "test"):
         """
         Initialize the environment.
 
@@ -23,6 +24,8 @@ class MinecraftEnvironment(BaseEnvironment):
         self.host: str = config.get("host", "localhost")
         self.port: int = config.get("port", 25565)
         self.clients: Dict[str, MinecraftClient] = dict()
+        self.task_id: int = task_id
+        self.task_name: str = task_name
 
         # Register tons of actions.
         self.register_action("scanNearbyEntities", handler=self._scanNearbyEntities_handler, description=scanNearbyEntities_description)
@@ -56,7 +59,6 @@ class MinecraftEnvironment(BaseEnvironment):
         self.register_action("removeDirtBeam", handler=self._removeDirtBeam_handler, description=removeDirtBeam_description)
         self.register_action("openContainer", handler=self._openContainer_handler, description=openContainer_description)
         self.register_action("closeContainer", handler=self._closeContainer_handler, description=closeContainer_description)
-        self.register_action("openContainer", handler=self._wear_handler, description=wear_description)
         self.register_action("fetchContainerContents", handler=self._fetchContainerContents_handler, description=fetchContainerContents_description)
         self.register_action("toggleAction", handler=self._toggleAction_handler, description=toggleAction_description)
         self.register_action("get_entity_info", handler=self._get_entity_info_handler, description=get_entity_info_description)
@@ -75,6 +77,8 @@ class MinecraftEnvironment(BaseEnvironment):
 
     def launch(self):
         MinecraftClient.launch(host=self.host, port=self.port)
+        subprocess.Popen(["python", "marble/environments/minecraft_utils/build_judger.py", "--idx", str(self.task_id), "--host", self.host, "--port" , str(self.port), "--agent_num", str(len(self.agents)), "--agent_names", ",".join(self.agents), "--task_name", self.task_name], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        print(f"""python env/build_judger.py --idx {self.task_id} --host \"{self.host}\" --port {self.port} --agent_num {len(self.agents)} --agent_names \"{",".join(self.agents)}\" --task_name \"{self.task_name}\"""")
 
     def _scanNearbyEntities_handler(self, player_name: str, item_name: str, radius: int = 10, item_num: int = -1):
         return MinecraftClient.scanNearbyEntities(player_name, item_name, radius, item_num)
@@ -233,3 +237,34 @@ class MinecraftEnvironment(BaseEnvironment):
             Dict[str, Any]: The current environment state.
         """
         return MinecraftClient.get_environment_dict_info(self.agents[0])
+
+if __name__ == "__main__":
+    agent_id = "player1"
+    agent_port = 5000
+    mcenv = MinecraftEnvironment("minecraft")
+    mcenv.register_agent(agent_id, agent_port)
+    mcenv.launch()
+    while True:
+        command = input("Action:\n").strip()
+        args = command.split(" ")
+        action = args[0]
+        arg_name, arg_value = None, None
+        arg_dict = dict()
+        for i in range(1, len(args)):
+            if i % 2 == 1:
+                arg_name = args[i]
+            else:
+                arg_value = args[i]
+            if arg_name and arg_value:
+                try:
+                    arg_value = eval(arg_value)
+                except:
+                    pass
+                arg_dict[arg_name] = arg_value
+                arg_name, arg_value = None, None
+        print(f"Log:\nAction: {action}, Args: {arg_dict}")
+        try:
+            ret = mcenv.apply_action(agent_id, action, arg_dict)
+            print(f"Result:\n{ret}")
+        except Exception as e:
+            print(f"Error:\n{e}")

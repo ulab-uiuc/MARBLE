@@ -29,6 +29,7 @@ pypdf2 = "^3.0.1"
 tqdm = "^4.67.0"
 semanticscholar = "^0.8.4"
 requests = "^2.32.3"
+colorlog = "^6.9.0"
 
 
 [tool.poetry.group.dev.dependencies]
