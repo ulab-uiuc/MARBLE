@@ -5,18 +5,18 @@ user: |
 
   <<public_chat>>
 
-  Here's the current game state:
+  "Here's the current game state:"
 
   <<game_state>>
 
-  Now, as the sheriff, it is your turn to decide the speaking sequence for this round. You can choose the following options:
-
+  "Now, as the sheriff, it is your turn to decide the speaking sequence for this round. You can choose the following options:"
+  
   1. Whether to start from one of the dead players or from yourself (the sheriff).
   2. Whether to start from the left side (decreasing player numbers) or from the right side (increasing player numbers).
 
-  Last night, <<dead player_list>> died.
-
-  Your own speech will always come at the end of the round. Follow these steps to decide your action:
+  Last night, <<dead player_list>> died. You can choose from <<beginning candidates list>>
+  
+  "Your own speech will always come at the end of the round. Follow these steps to decide your action:"
 
   1. Reflect on the current alliances and opponents. Who do you consider to be your most trusted teammates? Who are your opponents (those you find suspicious or who may be competing against you)? Record your reasoning in alliances_and_opponents.
   2. Based on your current assessment of the players, decide which speaking sequence will benefit your team the most. Consider whether it's strategic to let your opponents speak first or have your trusted teammates speak later. Write your reasoning in speech_strategy.

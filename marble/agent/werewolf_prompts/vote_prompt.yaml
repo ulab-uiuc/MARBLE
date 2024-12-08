@@ -50,6 +50,10 @@ tools:
             type: "string"
             description: "Your final reasoning after considering all factors, summarizing your decision-making process."
           action:
-            type: "string"
-            description: "Your final vote. Record the player ID of the person you vote to banish, or indicate that you are abstaining."
+            type: "object"
+            properties:
+              action_vote:
+                type: "string"
+                description: "Your final vote. Record the player ID of the person you vote to banish, or record abstain to indicate that you are abstaining."
+            required: ["action_vote"]
         required: ["werewolf_suspects", "public_perception", "role_strategy", "target_analysis", "perception_analysis", "final_thought", "action"]

@@ -114,7 +114,7 @@ def collect_publications_and_coauthors(
 
         return paper_abstracts, paper_titles, co_author_names
     except Exception:
-        return None, None, None
+        return [], [], []
 
 
 @beartype
@@ -133,7 +133,7 @@ def write_bio_prompting(
     """
     template_input = {'pub_info': pub_info}
     messages = openai_format_prompt_construct(prompt_template, template_input)
-    return model_prompting(
+    response_str = model_prompting(
         model_name,
         messages,
         return_num=return_num,
@@ -142,6 +142,8 @@ def write_bio_prompting(
         top_p=top_p,
         stream=stream,
     )[0].content
+    assert isinstance(response_str, str)
+    return response_str
 
 
 @beartype
@@ -169,5 +171,6 @@ def summarize_domain_prompting(
         top_p=top_p,
         stream=stream,
     )
+    assert isinstance(domain_str[0].content, str)
     domains = domain_str[0].content.split(';')
     return [domain.strip() for domain in domains]
