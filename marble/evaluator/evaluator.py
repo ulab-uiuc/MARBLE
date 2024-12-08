@@ -218,6 +218,33 @@ class Evaluator:
             self.metrics["task_evaluation"] = ratings
         else:
             self.logger.error("Failed to parse world ratings")
+    
+    def evaluate_task_db(self, task: str, result: str, labels: List[str], pred_num: int, root_causes: List[str]) -> None:
+        """
+        Evaluate the final database idea based on Data Quality, Data Security, and Data Privacy.
+
+        Args:
+            task (str): The task description.
+            result (str): The final root cause analysis.
+            labels (List[str]): The list of root cause labels.
+            pred_num (int): The number of predicted root causes.
+            root_causes (List[str]): The root cause labels.
+        """
+        for root_cause in root_causes:
+            assert root_cause in labels, f"Root cause {root_cause} not found in the list of labels."
+        # Get the database evaluation prompt
+        predicted_labels = []
+        for label in labels:
+            if label.lower().replace('_', ' ') in result.lower().replace('_', ' '):
+                predicted_labels.append(label)
+        assert len(predicted_labels) == pred_num, "You seems to be predicting wrong number of root causes. Please update prompts to enforce the correct number of root causes predicted."
+        accuracy = len(set(predicted_labels).intersection(root_causes)) / len(root_causes)
+        self.metrics["task_evaluation"] = {
+            'predicted_labels': predicted_labels,
+            'root_cause': root_cause,
+            'accuracy': accuracy
+        }
+        self.logger.error(f"Predicted {len(predicted_labels)} root causes: {', '.join(predicted_labels)}")
 
     def parse_research_ratings(self, assistant_answer: str) -> Dict[str, int]:
         """

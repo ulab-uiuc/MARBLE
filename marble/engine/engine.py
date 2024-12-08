@@ -14,6 +14,7 @@ from marble.environments import (
     ResearchEnvironment,
     WebEnvironment,
     WorldSimulationEnvironment,
+    DBEnvironment
 )
 from marble.evaluator.evaluator import Evaluator
 from marble.graph.agent_graph import AgentGraph
@@ -88,6 +89,9 @@ class Engine:
         elif env_type == "WorldSimulation":
             env4 = WorldSimulationEnvironment(name="World Simulation Environment", config=env_config)
             return env4
+        elif env_type == "DB":
+            env5 = DBEnvironment(name="DB Environment", config=env_config)
+            return env5
         else:
             raise ValueError(f"Unsupported environment type: {env_type}")
 
@@ -309,6 +313,15 @@ class Engine:
                 self.evaluator.evaluate_task_research(self.task, iteration_data_summary)
                 summary_data['task_evaluation'] = self.evaluator.metrics["task_evaluation"]
                 self.logger.info("Engine graph-based coordination loop completed.")
+            elif self.environment.name == 'DB Environment':
+                self.evaluator.evaluate_task_db(
+                    self.task, iteration_data["summary"], 
+                    self.config.task["labels"], 
+                    self.config.task["number_of_labels_pred"],
+                    self.config.task["root_causes"]
+                )
+                summary_data['task_evaluation'] = self.evaluator.metrics["task_evaluation"]
+                self.logger.info("Engine graph-based coordination loop completed.")
             self.logger.info("Engine graph-based coordination loop completed.")
 
         except Exception:
@@ -412,7 +425,16 @@ class Engine:
             if self.environment.name == 'Research Environment':
                 self.evaluator.evaluate_task_research(self.task, iteration_data["summary"])
                 summary_data['task_evaluation'] = self.evaluator.metrics["task_evaluation"]
-                self.logger.info("Engine graph-based coordination loop completed.")
+                self.logger.info("Engine star-based coordination loop completed.")
+            elif self.environment.name == 'DB Environment':
+                self.evaluator.evaluate_task_db(
+                    self.task, iteration_data["summary"], 
+                    self.config.task["labels"], 
+                    self.config.task["number_of_labels_pred"],
+                    self.config.task["root_causes"]
+                )
+                summary_data['task_evaluation'] = self.evaluator.metrics["task_evaluation"]
+                self.logger.info("Engine star-based coordination loop completed.")
             self.logger.info("Engine simulation loop completed.")
 
         except Exception:
@@ -525,7 +547,16 @@ class Engine:
             elif self.environment.name == 'World Simulation Environment':
                 self.evaluator.evaluate_task_world(self.task, iteration_data["summary"])
                 summary_data['task_evaluation'] = self.evaluator.metrics["task_evaluation"]
-                self.logger.info("Engine graph-based coordination loop completed.")
+                self.logger.info("Engine chain-based coordination loop completed.")
+            elif self.environment.name == 'DB Environment':
+                self.evaluator.evaluate_task_db(
+                    self.task, iteration_data["summary"], 
+                    self.config.task["labels"], 
+                    self.config.task["number_of_labels_pred"],
+                    self.config.task["root_causes"]
+                )
+                summary_data['task_evaluation'] = self.evaluator.metrics["task_evaluation"]
+                self.logger.info("Engine chain-based coordination loop completed.")
             self.logger.info("Chain-based coordination simulation completed.")
 
         except Exception:
@@ -605,7 +636,16 @@ class Engine:
             if self.environment.name == 'Research Environment':
                 self.evaluator.evaluate_task_research(self.task, iteration_data["summary"])
                 summary_data['task_evaluation'] = self.evaluator.metrics["task_evaluation"]
-                self.logger.info("Engine graph-based coordination loop completed.")
+                self.logger.info("Engine tree-based coordination loop completed.")
+            elif self.environment.name == 'DB Environment':
+                self.evaluator.evaluate_task_db(
+                    self.task, iteration_data["summary"], 
+                    self.config.task["labels"], 
+                    self.config.task["number_of_labels_pred"],
+                    self.config.task["root_causes"]
+                )
+                summary_data['task_evaluation'] = self.evaluator.metrics["task_evaluation"]
+                self.logger.info("Engine tree-based coordination loop completed.")
             self.logger.info("Tree-based coordination simulation completed.")
 
         except Exception:
