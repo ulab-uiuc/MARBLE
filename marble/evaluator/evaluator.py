@@ -239,6 +239,10 @@ class Evaluator:
                 predicted_labels.append(label)
         if len(predicted_labels) == pred_num:
             print("You seems to be predicting wrong number of root causes. Please update prompts to enforce the correct number of root causes predicted.")
+        if 'INSERT_LARGE_DATA,IO_CONTENTION' in predicted_labels:
+            predicted_labels.append('INSERT_LARGE_DATA')
+        if 'INSERT_LARGE_DATA,IO_CONTENTION' in root_causes:
+            root_causes.append('INSERT_LARGE_DATA')
         accuracy = len(set(predicted_labels).intersection(root_causes)) / len(root_causes)
         self.metrics["task_evaluation"] = {
             'predicted_labels': predicted_labels,
