@@ -1,0 +1,252 @@
+coordinate_mode: star
+relationships: []
+llm: "gpt-4o-mini"
+
+environment:
+  type: DB
+  name: "DB Simulation Environment"
+  max_iterations: 5
+  init_sql: |
+    CREATE TABLE iot_devices (
+      device_id SERIAL PRIMARY KEY,
+      device_name VARCHAR(255) NOT NULL,
+      location VARCHAR(255) NOT NULL,
+      status VARCHAR(50) NOT NULL,
+      installation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+    
+    CREATE TABLE device_data (
+      data_id SERIAL PRIMARY KEY,
+      device_id INTEGER REFERENCES iot_devices(device_id),
+      timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      temperature FLOAT NOT NULL,
+      humidity FLOAT NOT NULL,
+      pressure FLOAT NOT NULL,
+      battery_level FLOAT NOT NULL CHECK (battery_level >= 0 AND battery_level <= 100)
+    );
+    
+    INSERT INTO iot_devices (device_name, location, status) VALUES
+    ('Sensor A', 'Warehouse 1', 'Active'),
+    ('Sensor B', 'Warehouse 2', 'Active'),
+    ('Sensor C', 'Warehouse 3', 'Inactive'),
+    ('Sensor D', 'Warehouse 4', 'Active'),
+    ('Sensor E', 'Warehouse 5', 'Active');
+    
+    INSERT INTO device_data (device_id, temperature, humidity, pressure, battery_level) VALUES
+    (1, 22.5, 45.0, 1013.25, 85.0),
+    (2, 23.0, 50.0, 1012.00, 90.0),
+    (3, 21.0, 55.0, 1011.75, 75.0),
+    (4, 24.5, 40.0, 1010.50, 80.0),
+    (5, 25.0, 35.0, 1009.25, 95.0);
+      
+    CREATE TABLE sensor_maintenance (
+      maintenance_id SERIAL PRIMARY KEY,
+      device_id INTEGER REFERENCES iot_devices(device_id),
+      maintenance_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      technician VARCHAR(255) NOT NULL,
+      notes TEXT
+    );
+
+    CREATE TABLE device_alerts (
+      alert_id SERIAL PRIMARY KEY,
+      device_id INTEGER REFERENCES iot_devices(device_id),
+      alert_type VARCHAR(255) NOT NULL,
+      alert_message TEXT,
+      alert_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+
+    CREATE TABLE firmware_updates (
+      update_id SERIAL PRIMARY KEY,
+      device_id INTEGER REFERENCES iot_devices(device_id),
+      firmware_version VARCHAR(50) NOT NULL,
+      update_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      status VARCHAR(50) NOT NULL
+    );
+
+    CREATE TABLE energy_consumption (
+      consumption_id SERIAL PRIMARY KEY,
+      device_id INTEGER REFERENCES iot_devices(device_id),
+      consumption_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      energy_used FLOAT NOT NULL
+    );
+
+    CREATE TABLE network_activity (
+      activity_id SERIAL PRIMARY KEY,
+      device_id INTEGER REFERENCES iot_devices(device_id),
+      activity_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      data_sent FLOAT NOT NULL,
+      data_received FLOAT NOT NULL
+    );
+
+    CREATE TABLE device_errors (
+      error_id SERIAL PRIMARY KEY,
+      device_id INTEGER REFERENCES iot_devices(device_id),
+      error_code VARCHAR(50) NOT NULL,
+      error_message TEXT,
+      error_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+
+    CREATE TABLE device_settings (
+      setting_id SERIAL PRIMARY KEY,
+      device_id INTEGER REFERENCES iot_devices(device_id),
+      setting_name VARCHAR(255) NOT NULL,
+      setting_value TEXT,
+      last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+
+    CREATE TABLE device_logs (
+      log_id SERIAL PRIMARY KEY,
+      device_id INTEGER REFERENCES iot_devices(device_id),
+      log_message TEXT,
+      log_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+
+    CREATE TABLE device_warranty (
+      warranty_id SERIAL PRIMARY KEY,
+      device_id INTEGER REFERENCES iot_devices(device_id),
+      warranty_start_date TIMESTAMP NOT NULL,
+      warranty_end_date TIMESTAMP NOT NULL,
+      warranty_status VARCHAR(50) NOT NULL
+    );
+
+    INSERT INTO sensor_maintenance (device_id, technician, notes) VALUES
+    (1, 'Tech A', 'Replaced battery'),
+    (2, 'Tech B', 'Calibrated sensor'),
+    (3, 'Tech C', 'Updated firmware'),
+    (4, 'Tech D', 'Checked connectivity'),
+    (5, 'Tech E', 'Cleaned sensor');
+
+    INSERT INTO device_alerts (device_id, alert_type, alert_message) VALUES
+    (1, 'Battery Low', 'Battery level below 20%'),
+    (2, 'Temperature High', 'Temperature exceeds threshold'),
+    (3, 'Connection Lost', 'Device not responding'),
+    (4, 'Firmware Update', 'New firmware available'),
+    (5, 'Maintenance Required', 'Scheduled maintenance due');
+
+    INSERT INTO firmware_updates (device_id, firmware_version, status) VALUES
+    (1, 'v1.2.3', 'Successful'),
+    (2, 'v1.2.3', 'Successful'),
+    (3, 'v1.2.3', 'Failed'),
+    (4, 'v1.2.3', 'Successful'),
+    (5, 'v1.2.3', 'Successful');
+
+    INSERT INTO energy_consumption (device_id, energy_used) VALUES
+    (1, 12.5),
+    (2, 15.0),
+    (3, 10.0),
+    (4, 20.0),
+    (5, 18.5);
+
+    INSERT INTO network_activity (device_id, data_sent, data_received) VALUES
+    (1, 500.0, 450.0),
+    (2, 600.0, 550.0),
+    (3, 700.0, 650.0),
+    (4, 800.0, 750.0),
+    (5, 900.0, 850.0);
+
+    INSERT INTO device_errors (device_id, error_code, error_message) VALUES
+    (1, 'E001', 'Low battery'),
+    (2, 'E002', 'High temperature'),
+    (3, 'E003', 'Connection lost'),
+    (4, 'E004', 'Firmware update failed'),
+    (5, 'E005', 'Maintenance required');
+
+    INSERT INTO device_settings (device_id, setting_name, setting_value) VALUES
+    (1, 'Sampling Rate', '5 minutes'),
+    (2, 'Sampling Rate', '10 minutes'),
+    (3, 'Sampling Rate', '15 minutes'),
+    (4, 'Sampling Rate', '20 minutes'),
+    (5, 'Sampling Rate', '25 minutes');
+
+    INSERT INTO device_logs (device_id, log_message) VALUES
+    (1, 'Device initialized'),
+    (2, 'Temperature reading taken'),
+    (3, 'Humidity reading taken'),
+    (4, 'Pressure reading taken'),
+    (5, 'Battery level checked');
+
+    INSERT INTO device_warranty (device_id, warranty_start_date, warranty_end_date, warranty_status) VALUES
+    (1, '2023-01-01', '2024-01-01', 'Active'),
+    (2, '2023-01-01', '2024-01-01', 'Active'),
+    (3, '2023-01-01', '2024-01-01', 'Expired'),
+    (4, '2023-01-01', '2024-01-01', 'Active'),
+    (5, '2023-01-01', '2024-01-01', 'Active');
+  anomalies:  
+    - anomaly: INSERT_LARGE_DATA
+      threads: 100
+      ncolumn: 20
+      nrow:    20000
+      colsize: 100
+
+communication: False
+
+task:
+  content: |
+    The sysbench database manages data for an IoT system that includes thousands of sensors deployed across multiple warehouses. The 'iot_devices' table stores information about each sensor device, while the 'device_data' table logs environmental data such as temperature, humidity, and pressure collected by these sensors. 
+    Recently, during operation, the database monitoring system has triggered an alert. Analyze the database alerts & outputs and find out the reason that caused it. The root cause can be only one of the following: 'Sync Commits', 'Many Inserts', 'High Updates', 'Many Deletes', 'Index Missing', 'Redundant Indexes', 'Large Data Insert', 'Large Data Fetch', 'Poor Join Performance', 'Correlated Subquery'. The planner should ask different experts to work on the same task, and summarize their opinions into a final prediction. Please make the decision after using all these tools, as a premature decision may lead to incorrect conclusions.
+  output_format: |
+    Please make the decision after using all these tools, as a premature decision may lead to incorrect conclusions.
+    Please choose the most likely cause of the database anomaly from the following list, based on the expert agents: 
+    'INSERT_LARGE_DATA', 'INSERT_LARGE_DATA', 'LOCK_CONTENTION', 'VACUUM', 'REDUNDANT_INDEX', 'INSERT_LARGE_DATA,IO_CONTENTION', 'FETCH_LARGE_DATA,CORRELATED_SUBQUERY', 'POOR_JOIN_PERFORMANCE,CPU_CONTENTION'
+    You can ONLY CHOOSE THREE.
+    Please make the decision after using all these tools, as a premature decision may lead to incorrect conclusions.
+    These functions include:
+
+    get_alerts_handler:
+      Retrieves and formats current alerts from Prometheus, returning detailed information about each alert, including name, severity, description, state, active since, and value.
+
+    detect_metric_abnormality_handler:
+      Checks for anomalies in a specified metric using data from the last 10 minutes. It maps the metric name, retrieves the data, and uses a statistical method to identify abnormalities.
+
+    get_alert_metrics_handler:
+      Retrieves metrics related to current alerts and returns a detailed explanation of the alert metrics.
+
+    get_rag_handler:
+      Retrieves relevant knowledge from the Retrieval-Augmented Generation (RAG) system based on the expert and metric name, and returns an explanation.
+
+    get_slow_query_handler:
+      Retrieves information about the slowest queries executed in the database and returns an explanation. output_format: |
+
+  labels: 
+    - 'INSERT_LARGE_DATA'
+    - 'INSERT_LARGE_DATA'
+    - 'LOCK_CONTENTION'
+    - 'VACUUM'
+    - 'REDUNDANT_INDEX'
+    - 'INSERT_LARGE_DATA,IO_CONTENTION'
+    - 'FETCH_LARGE_DATA,CORRELATED_SUBQUERY'
+    - 'POOR_JOIN_PERFORMANCE,CPU_CONTENTION'
+  root_causes: 
+    - 'INSERT_LARGE_DATA'
+  number_of_labels_pred: 3
+
+agents:
+  - type: agent1
+    agent_id: ConfigurationExpert
+    profile: "agent1 is a ConfigurationExpert that specializes in system configurations and optimizations."
+  - type: BaseAgent
+    agent_id: agent2
+    profile: "agent2 is a CpuExpert that specializes in CPU architecture, performance, and optimizations."
+  - type: BaseAgent
+    agent_id: agent3
+    profile: "agent3 is a WorkloadExpert that specializes in analyzing workloads, resource allocation, and optimization for efficiency."
+  - type: BaseAgent
+    agent_id: agent4
+    profile: "agent4 is a DiskExpert that specializes in disk I/O, storage, and optimization for performance."
+  - type: BaseAgent
+    agent_id: agent5
+    profile: "agent5 is a QueryExpert that specializes in query optimization, indexing, and performance tuning."
+memory:
+  type: SharedMemory
+  # Additional memory configurations if needed
+
+metrics: 
+  accuracy: true
+  response_time: true
+
+output:
+  file_path: "result/INTERNET_OF_THINGS_INSERT_LARGE_DATA_RESULT.json"
+
+engine_planner:
+  initial_progress: "Starting the simulation."
+  # Additional engine planner configurations if needed

@@ -151,7 +151,6 @@ class EnginePlanner:
         Returns:
             bool: True to continue, False to terminate.
         """
-        return True
 
         prompt = (
             "Based on the following agents' results, determine whether the overall task is completed.\n\n"

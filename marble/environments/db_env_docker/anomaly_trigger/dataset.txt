@@ -78,3 +78,12 @@ python anomaly_trigger/main.py --anomaly MISSING_INDEXES --threads 100 --ncolumn
 python anomaly_trigger/main.py --anomaly MISSING_INDEXES --threads 100 --ncolumn 20 --nrow 100 --colsize 100 ended at 1733745018
 python anomaly_trigger/main.py --anomaly MISSING_INDEXES --threads 100 --ncolumn 20 --nrow 100 --colsize 100 started at 1733745909
 python anomaly_trigger/main.py --anomaly MISSING_INDEXES --threads 100 --ncolumn 20 --nrow 100 --colsize 100 ended at 1733745970
+python anomaly_trigger/main.py --anomaly MISSING_INDEXES --threads 100 --ncolumn 20 --nrow 100 --colsize 100 started at 1733780731
+python anomaly_trigger/main.py --anomaly MISSING_INDEXES --threads 100 --ncolumn 20 --nrow 100 --colsize 100 ended at 1733780791
+python anomaly_trigger/main.py --anomaly MISSING_INDEXES --threads 100 --ncolumn 20 --nrow 100 --colsize 100 started at 1733780978
+python anomaly_trigger/main.py --anomaly INSERT_LARGE_DATA --threads 100 --ncolumn 20 --nrow 100 --colsize 100 started at 1733781100
+python anomaly_trigger/main.py --anomaly INSERT_LARGE_DATA --threads 100 --ncolumn 20 --nrow 100 --colsize 100 ended at 1733781160
+python anomaly_trigger/main.py --anomaly INSERT_LARGE_DATA --threads 100 --ncolumn 20 --nrow 100 --colsize 100 started at 1733781994
+python anomaly_trigger/main.py --anomaly INSERT_LARGE_DATA --threads 100 --ncolumn 20 --nrow 100 --colsize 100 ended at 1733782054
+python anomaly_trigger/main.py --anomaly MISSING_INDEXES --threads 100 --ncolumn 20 --nrow 100 --colsize 100 started at 1733782221
+python anomaly_trigger/main.py --anomaly MISSING_INDEXES --threads 100 --ncolumn 20 --nrow 100 --colsize 100 ended at 1733782282

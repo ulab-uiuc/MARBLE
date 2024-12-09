@@ -172,7 +172,7 @@ environment:
     (4, '2023-01-01', '2024-01-01', 'Active'),
     (5, '2023-01-01', '2024-01-01', 'Active');
   anomalies:  
-    - anomaly: MISSING_INDEXES
+    - anomaly: INSERT_LARGE_DATA
       threads: 100
       ncolumn: 20
       nrow:    20000
@@ -182,11 +182,12 @@ communication: False
 
 task:
   content: |
-    The sysbench database manages data for an IoT system that includes thousands of sensors deployed across multiple warehouses. The 'iot_devices' table stores information about each sensor device, while the 'device_data' table logs environmental data such as temperature, humidity, and pressure collected by these sensors. Recently, during operation, the database monitoring system has triggered an alert. Analyze the database alerts & outputs and find out the reason that caused it. The root cause can be only one of the following: 'Sync Commits', 'Many Inserts', 'High Updates', 'Many Deletes', 'Index Missing', 'Redundant Indexes', 'Large Data Insert', 'Large Data Fetch', 'Poor Join Performance', 'Correlated Subquery'. The planner should ask different experts to work on the same task, and summarize their opinions into a final prediction. Please make the decision after using all these tools, as a premature decision may lead to incorrect conclusions.
+    The sysbench database manages data for an IoT system that includes thousands of sensors deployed across multiple warehouses. The 'iot_devices' table stores information about each sensor device, while the 'device_data' table logs environmental data such as temperature, humidity, and pressure collected by these sensors. 
+    Recently, during operation, the database monitoring system has triggered an alert. Analyze the database alerts & outputs and find out the reason that caused it. The root cause can be only one of the following: 'Sync Commits', 'Many Inserts', 'High Updates', 'Many Deletes', 'Index Missing', 'Redundant Indexes', 'Large Data Insert', 'Large Data Fetch', 'Poor Join Performance', 'Correlated Subquery'. The planner should ask different experts to work on the same task, and summarize their opinions into a final prediction. Please make the decision after using all these tools, as a premature decision may lead to incorrect conclusions.
   output_format: |
     Please make the decision after using all these tools, as a premature decision may lead to incorrect conclusions.
     Please choose the most likely cause of the database anomaly from the following list, based on the expert agents: 
-    'Sync Commits', 'Many Inserts', 'High Updates', 'Many Deletes', 'Index Missing', 'Redundant Indexes', 'Large Data Insert', 'Large Data Fetch', 'Poor Join Performance', 'Correlated Subquery'.
+    'INSERT_LARGE_DATA', 'INSERT_LARGE_DATA', 'LOCK_CONTENTION', 'VACUUM', 'REDUNDANT_INDEX', 'INSERT_LARGE_DATA,IO_CONTENTION', 'FETCH_LARGE_DATA,CORRELATED_SUBQUERY', 'POOR_JOIN_PERFORMANCE,CPU_CONTENTION'
     You can ONLY CHOOSE THREE.
     Please make the decision after using all these tools, as a premature decision may lead to incorrect conclusions.
     These functions include:
@@ -200,9 +201,6 @@ task:
     get_alert_metrics_handler:
       Retrieves metrics related to current alerts and returns a detailed explanation of the alert metrics.
 
-    get_llm_selected_metric_handler:
-      Retrieves detailed information about a specific metric selected by the Language Learning Model (LLM) and returns an explanation.
-
     get_rag_handler:
       Retrieves relevant knowledge from the Retrieval-Augmented Generation (RAG) system based on the expert and metric name, and returns an explanation.
 
@@ -210,18 +208,16 @@ task:
       Retrieves information about the slowest queries executed in the database and returns an explanation. output_format: |
 
   labels: 
-    - 'Sync Commits'
-    - 'Many Inserts'
-    - 'High Updates'
-    - 'Many Deletes'
-    - 'Index Missing'
-    - 'Redundant Indexes'
-    - 'Large Data Insert'
-    - 'Large Data Fetch'
-    - 'Poor Join Performance'
-    - 'Correlated Subquery'
+    - 'INSERT_LARGE_DATA'
+    - 'INSERT_LARGE_DATA'
+    - 'LOCK_CONTENTION'
+    - 'VACUUM'
+    - 'REDUNDANT_INDEX'
+    - 'INSERT_LARGE_DATA,IO_CONTENTION'
+    - 'FETCH_LARGE_DATA,CORRELATED_SUBQUERY'
+    - 'POOR_JOIN_PERFORMANCE,CPU_CONTENTION'
   root_causes: 
-    - 'Index Missing'
+    - 'INSERT_LARGE_DATA'
   number_of_labels_pred: 3
 
 agents:
@@ -234,6 +230,12 @@ agents:
   - type: BaseAgent
     agent_id: agent3
     profile: "agent3 is a WorkloadExpert that specializes in analyzing workloads, resource allocation, and optimization for efficiency."
+  - type: BaseAgent
+    agent_id: agent4
+    profile: "agent4 is a DiskExpert that specializes in disk I/O, storage, and optimization for performance."
+  - type: BaseAgent
+    agent_id: agent5
+    profile: "agent5 is a QueryExpert that specializes in query optimization, indexing, and performance tuning."
 memory:
   type: SharedMemory
   # Additional memory configurations if needed
@@ -243,7 +245,7 @@ metrics:
   response_time: true
 
 output:
-  file_path: "result/INTERNET_OF_THINGS_LARGE_DATA_INSERT_RESULT.json"
+  file_path: "result/INTERNET_OF_THINGS_INSERT_LARGE_DATA_RESULT.json"
 
 engine_planner:
   initial_progress: "Starting the simulation."

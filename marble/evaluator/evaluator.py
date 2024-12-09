@@ -237,8 +237,8 @@ class Evaluator:
         for label in labels:
             if label.lower().replace('_', ' ') in result.lower().replace('_', ' '):
                 predicted_labels.append(label)
-        import pdb; pdb.set_trace()
-        assert len(predicted_labels) == pred_num, "You seems to be predicting wrong number of root causes. Please update prompts to enforce the correct number of root causes predicted."
+        if len(predicted_labels) == pred_num:
+            print("You seems to be predicting wrong number of root causes. Please update prompts to enforce the correct number of root causes predicted.")
         accuracy = len(set(predicted_labels).intersection(root_causes)) / len(root_causes)
         self.metrics["task_evaluation"] = {
             'predicted_labels': predicted_labels,

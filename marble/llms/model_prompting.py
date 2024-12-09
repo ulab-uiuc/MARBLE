@@ -2,6 +2,7 @@ import litellm
 from beartype import beartype
 from beartype.typing import Any, Dict, List, Optional
 from litellm.types.utils import Message
+from litellm.utils import trim_messages
 
 from .error_handler import api_calling_error_exponential_backoff
 
@@ -28,7 +29,7 @@ def model_prompting(
     # litellm.set_verbose=True
     completion = litellm.completion(
         model=llm_model,
-        messages=messages,
+        messages=trim_messages(messages),
         max_tokens=max_token_num,
         n=return_num,
         top_p=top_p,
