@@ -172,7 +172,7 @@ environment:
     (4, '2023-01-01', '2024-01-01', 'Active'),
     (5, '2023-01-01', '2024-01-01', 'Active');
   anomalies:  
-    - anomaly: INSERT_LARGE_DATA
+    - anomaly: FETCH_LARGE_DATA,CORRELATED_SUBQUERY
       threads: 100
       ncolumn: 20
       nrow:    20000
@@ -187,7 +187,7 @@ task:
   output_format: |
     Please make the decision after using all these tools, as a premature decision may lead to incorrect conclusions.
     Please choose the most likely cause of the database anomaly from the following list, based on the expert agents: 
-    'INSERT_LARGE_DATA', 'INSERT_LARGE_DATA', 'LOCK_CONTENTION', 'VACUUM', 'REDUNDANT_INDEX', 'INSERT_LARGE_DATA,IO_CONTENTION', 'FETCH_LARGE_DATA,CORRELATED_SUBQUERY', 'POOR_JOIN_PERFORMANCE,CPU_CONTENTION'
+    'INSERT_LARGE_DATA', 'FETCH_LARGE_DATA,CORRELATED_SUBQUERY', 'LOCK_CONTENTION', 'VACUUM', 'REDUNDANT_INDEX', 'INSERT_LARGE_DATA,IO_CONTENTION', 'FETCH_LARGE_DATA,CORRELATED_SUBQUERY', 'POOR_JOIN_PERFORMANCE,CPU_CONTENTION'
     You can ONLY CHOOSE THREE.
     Please make the decision after using all these tools, as a premature decision may lead to incorrect conclusions.
     These functions include:
@@ -209,7 +209,7 @@ task:
 
   labels: 
     - 'INSERT_LARGE_DATA'
-    - 'INSERT_LARGE_DATA'
+    - 'FETCH_LARGE_DATA,CORRELATED_SUBQUERY'
     - 'LOCK_CONTENTION'
     - 'VACUUM'
     - 'REDUNDANT_INDEX'
@@ -217,7 +217,7 @@ task:
     - 'FETCH_LARGE_DATA,CORRELATED_SUBQUERY'
     - 'POOR_JOIN_PERFORMANCE,CPU_CONTENTION'
   root_causes: 
-    - 'INSERT_LARGE_DATA'
+    - 'FETCH_LARGE_DATA,CORRELATED_SUBQUERY'
   number_of_labels_pred: 3
 
 agents:
@@ -245,7 +245,7 @@ metrics:
   response_time: true
 
 output:
-  file_path: "result/INTERNET_OF_THINGS_INSERT_LARGE_DATA_RESULT.json"
+  file_path: "result/INTERNET_OF_THINGS_FETCH_LARGE_DATA,CORRELATED_SUBQUERY_RESULT.json"
 
 engine_planner:
   initial_progress: "Starting the simulation."

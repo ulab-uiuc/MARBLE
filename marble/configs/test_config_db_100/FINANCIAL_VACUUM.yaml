@@ -75,7 +75,7 @@ environment:
     (7, 'Anti-Money Laundering', 'Passed');
 
   anomalies:  
-    - anomaly: INSERT_LARGE_DATA
+    - anomaly: VACUUM
       threads: 100
       ncolumn: 20
       nrow:    20000
@@ -91,7 +91,7 @@ task:
   output_format: |
     Please make the decision after using all these tools, as a premature decision may lead to incorrect conclusions.
     Please choose the most likely cause of the database anomaly from the following list, based on the expert agents: 
-    'INSERT_LARGE_DATA', 'INSERT_LARGE_DATA', 'LOCK_CONTENTION', 'VACUUM', 'REDUNDANT_INDEX', 'INSERT_LARGE_DATA,IO_CONTENTION', 'FETCH_LARGE_DATA,CORRELATED_SUBQUERY', 'POOR_JOIN_PERFORMANCE,CPU_CONTENTION'
+    'INSERT_LARGE_DATA', 'VACUUM', 'LOCK_CONTENTION', 'VACUUM', 'REDUNDANT_INDEX', 'INSERT_LARGE_DATA,IO_CONTENTION', 'FETCH_LARGE_DATA,CORRELATED_SUBQUERY', 'POOR_JOIN_PERFORMANCE,CPU_CONTENTION'
     You can ONLY CHOOSE THREE.
     Please make the decision after using all these tools, as a premature decision may lead to incorrect conclusions.
     These functions include:
@@ -113,7 +113,7 @@ task:
 
   labels: 
     - 'INSERT_LARGE_DATA'
-    - 'INSERT_LARGE_DATA'
+    - 'VACUUM'
     - 'LOCK_CONTENTION'
     - 'VACUUM'
     - 'REDUNDANT_INDEX'
@@ -121,7 +121,7 @@ task:
     - 'FETCH_LARGE_DATA,CORRELATED_SUBQUERY'
     - 'POOR_JOIN_PERFORMANCE,CPU_CONTENTION'
   root_causes: 
-    - 'INSERT_LARGE_DATA'
+    - 'VACUUM'
   number_of_labels_pred: 3
 
 agents:
@@ -149,7 +149,7 @@ metrics:
   response_time: true
 
 output:
-  file_path: "result/FINANCIAL_INSERT_LARGE_DATA_RESULT.json"
+  file_path: "result/FINANCIAL_VACUUM_RESULT.json"
 
 engine_planner:
   initial_progress: "Starting the simulation."
