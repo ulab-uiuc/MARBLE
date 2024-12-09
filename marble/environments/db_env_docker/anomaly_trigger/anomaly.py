@@ -30,12 +30,13 @@ def restart():
 
 def restart_postgresql():
     # Directly execute the restart command locally
-    try:
-        os.chdir("../db_env_docker")
-        os.system("docker compose restart postgres_db")
-        print("PostgreSQL Service Rebooted")
-    except Exception as e:
-        print(f"本地命令执行出错：{e}")
+    # try:
+    #     os.chdir("../db_env_docker")
+    #     os.system("docker compose restart postgres_db")
+    #     print("PostgreSQL Service Rebooted")
+    # except Exception as e:
+    #     print(f"Local command exec error: {e}")
+    print("[INFO] PostgreSQL Reboot is cancelled")
 
 # create a table
 def create_table(table_name,colsize, ncolumns):
@@ -73,24 +74,24 @@ def write_amomaly_sql_to_file(text):
     try:
         with open('badsql.txt', 'a') as file:
             file.write(f"{text}\n")
-        print("文本已成功写入到badsql.txt文件中。")
+        print("Text written to badsql.txt")
     except Exception as e:
-        print(f"写入文件时出现错误: {e}")
+        print(f"Error writting to file: {e}")
 
 def write_amomaly_sql_to_file_a_line(text):
     try:
         with open('badsql.txt', 'a') as file:
             file.write(f"{text}\t\t")
-        print("文本已成功写入到badsql.txt文件中。")
+        print("Text written to badsql.txt")
     except Exception as e:
-        print(f"写入文件时出现错误: {e}")
+        print(f"Error writting to file: {e}")
 
 def write_space():
     try:
         with open('badsql.txt', 'a') as file:
             file.write("\n")
     except Exception as e:
-        print(f"写入文件时出现错误: {e}")
+        print(f"Error writting to file: {e}")
 
 '''insert_large_data'''
 def insert_large_data(threads,duration,ncolumns,nrows,colsize,table_name='table1'):

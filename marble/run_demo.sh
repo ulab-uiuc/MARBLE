@@ -1,7 +1,10 @@
 #!/bin/bash
 
-# Define the path to the configuration file
-CONFIG_FILE="./configs/test_config_db_single/test_config_db.yaml"
+# Define the directory containing the configuration files
+CONFIG_DIR="./configs/test_config_db_100"
 
-# Execute the simulation engine with the specified configuration
-python main.py --config "$CONFIG_FILE"
+# Iterate over each YAML file in the configuration directory
+for CONFIG_FILE in "$CONFIG_DIR"/*.yaml; do
+    # Execute the simulation engine with the specified configuration
+    python main.py --config "$CONFIG_FILE"
+done

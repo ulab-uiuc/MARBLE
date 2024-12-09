@@ -17,58 +17,21 @@ from marble.environments.db_utils.diagnostic_kb import DiagnosticKB
 from marble.environments.db_utils.slow_query import obtain_slow_queries
 
 def split_sql_statements(sql: str) -> List[str]:
-    """
-    Split a SQL script into individual statements.
-
-    Args:
-        sql (str): The SQL script to split.
-
-    Returns:
-        List[str]: A list of individual SQL statements.
-    """
-    # Split the SQL script using the semicolon as the delimiter
     statements = re.split(r';\s*\n', sql)
+    return [stmt.strip() for stmt in statements if stmt.strip()]
 
-    # Remove any empty statements
-    statements = [stmt.strip() for stmt in statements if stmt.strip()]
-
-    return statements
-
-def get_prometheus_metric_data(metric_name: str) -> List[List[Any]]:
-    """
-    Query Prometheus for the given metric data from the last hour, sampling every 60 seconds.
-
-    Args:
-        metric_name (str): The name of the metric to retrieve (e.g., 'node:cpu:usage_avg1m').
-
-    Returns:
-        List[List[Any]]: A list of timestamp-value pairs for the metric over the past 10 minutes.
-    """
-    # Get the current time in Unix timestamp
-    end_time = time.time()
-
-    # Calculate the start time (10 minutes ago)
-    start_time = end_time - 600  # 600 seconds = 10 minutes
-
-    # Prometheus query range URL
+def get_prometheus_metric_data(metric_name: str, start_time: float, end_time: float, step: int = 1) -> List[List[Any]]:
     prom_url = 'http://localhost:9090/api/v1/query_range'
-
-    # Parameters for the query
     params = {
         'query': metric_name,
         'start': start_time,
         'end': end_time,
-        'step': 1, # sample every second
+        'step': step,
     }
-
-    # Make the HTTP request to Prometheus
     response = requests.get(prom_url, params=params)
-
-    # Check if the request was successful
     if response.status_code == 200:
         data = response.json()
         if data.get('status') == 'success':
-            # Extract the values (timestamp-value pairs) from the response
             try:
                 return data['data']['result'][0]['values']
             except:
@@ -78,79 +41,93 @@ def get_prometheus_metric_data(metric_name: str) -> List[List[Any]]:
     else:
         raise ValueError(f"Failed to query Prometheus. Status code: {response.status_code}")
 
+def get_current_time() -> float:
+    return time.time()
+
+def get_metric_data_for_last_10_minutes(metric_name: str) -> List[List[Any]]:
+    end_time = get_current_time()
+    start_time = end_time - 600
+    return get_prometheus_metric_data(metric_name, start_time, end_time)
+
 class DBEnvironment(BaseEnvironment):
     def __init__(self, config: Dict[str, Any], name: str = "DBEnv"):
-        """
-        Initialize the DBEnvironment.
-
-        Args:
-            name (str): The name of the environment.
-        """
         super().__init__(name, config)
-
         self.kb = DiagnosticKB()
-
         self.current_dir = os.path.dirname(os.path.abspath(__file__))
+        self.start_docker_containers()
+        self.initialize_database(config)
+        self.register_actions()
+        self.wait_for_alerts()
+        # self.get_rag_handler('WorkloadExpert', 'cpu')
+        # self.get_slow_query_handler()
+        # print out results from each handler as a test
+        print(self.get_alerts_handler())
+        print(self.get_alert_metrics_handler())
+        print(self.detect_metric_abnormality_handler('cpu'))
+        print(self.get_rag_handler('WorkloadExpert', 'cpu'))
+        print(self.get_slow_query_handler())
+
+    def start_docker_containers(self):
         print("Starting Docker containers...")
+        subprocess.run(["sudo", "docker", "compose", "down", "-v"], cwd=os.path.join(self.current_dir, "db_env_docker"), shell=False, check=True)
+        subprocess.run(["sudo", "docker", "compose", "up", "-d", "--remove-orphans"], cwd=os.path.join(self.current_dir, "db_env_docker"), check=True)
 
-        # Run docker-compose up in detached mode
-        subprocess.run(["sudo", "sudo", "docker", "compose", "down", "-v"], cwd=os.path.join(self.current_dir, "db_env_docker"), shell=False, check=True)
-
-        # Then, run "docker-compose up
-        subprocess.run(["sudo", "sudo", "docker", "compose", "up", "-d", "--remove-orphans"], cwd=os.path.join(self.current_dir, "db_env_docker"), check=True)
-
-        # anomalies
-
-        anomalies = config.get('anomalies', [])
-        init_sql = config.get('init_sql', None)
-        test_sql = config.get('test_sql', None)
-
-        # wait till we can connect to the database
+    def initialize_database(self, config: Dict[str, Any]):
         while not self.check_db_connection():
             time.sleep(1)
 
-        assert len(init_sql)
-        assert len(test_sql)
+        init_sql = config.get('init_sql', None)
+        test_sql = config.get('test_sql', None)
 
-        # Connect to the PostgreSQL database
+        assert init_sql
+
         connection = psycopg2.connect(
             user="test",
             password="Test123_456",
             database="sysbench",
-            host="localhost",  # Use "postgres_db" if running within Docker
+            host="localhost",
             port="5432"
         )
-
-        # Create a cursor object using the connection
         cursor = connection.cursor()
-
-        # Enable autocommit mode
         connection.autocommit = True
-
-        # Turn off warnings during the initialization
         cursor.execute("SET client_min_messages TO WARNING;")
         print("Warning messages turned off.")
 
-        # Execute the initialization SQL script
         print("Initializing the database...")
-        init_sql_statements = split_sql_statements(init_sql)
-        for statement in init_sql_statements:
+        for statement in split_sql_statements(init_sql):
             cursor.execute(statement)
 
-        # Turn on warnings after the initialization
         cursor.execute("RESET client_min_messages;")
         print("Warning messages turned on.")
 
-        # Execute the test SQL script
         print("Executing test SQL statements...")
-        test_sql_statements = split_sql_statements(test_sql)
-        for statement in test_sql_statements:
-            try:
-                cursor.execute(statement)
-            except Exception as e:
-                print(f"Error executing SQL statement: {e}")
 
-        # Register the actions available in this environment
+        anomalies = config.get('anomalies', [])
+        if anomalies:
+            for anomaly in anomalies:
+                anomaly_type = anomaly['anomaly']
+                threads = anomaly['threads']
+                ncolumn = anomaly['ncolumn']
+                colsize = anomaly['colsize']
+                subprocess.run(["python", "main.py", "--anomaly", anomaly_type, "--threads", f"{threads}", "--ncolumn", f"{ncolumn}", "--colsize", f"{colsize}"], cwd=os.path.join(self.current_dir, "db_env_docker", "anomaly_trigger"), check=True)
+        else:
+            print(
+                (
+                    "*** WARNING ***\n"
+                    "This is an experimental feature.\n"
+                    "Generally, it is difficult for one single SQL query\n"
+                    "to trigger an alarm. Please be careful in designing\n"
+                    "the test SQL queries, or the experiment will take forever\n"
+                    "waiting for an alarm to be triggered."
+                )
+            )
+            for statement in split_sql_statements(test_sql):
+                try:
+                    cursor.execute(statement)
+                except Exception as e:
+                    print(f"Error executing SQL statement: {e}")
+
+    def register_actions(self) -> None:
         self.register_action(
             "get_alerts",
             handler=self.get_alerts_handler,
@@ -170,78 +147,109 @@ class DBEnvironment(BaseEnvironment):
         )
 
         self.register_action(
-            "detect_metric_abnormality",
-            handler=self.detect_metric_abnormality_handler,
+            "get_alert_metrics",
+            handler=self.get_alert_metrics_handler,
             description={
                 "type": "function",
                 "function": {
-                    "name": "detect_metric_abnormality",
-                    "description": "Check if a type of metric of the database system is abnormal or not using a staticical method. This is used for initial checking where has gone wrong.",
+                    "name": "get_alert_metrics",
+                    "description": "Get metrics related to current alerts from the database monitoring system.",
                     "parameters": {
-                        "type": "object",
-                        "properties": {
-                            "metric_name": {
-                                "type": "string",
-                                "description": "The name of the metric to check for anormalies. It will examine the data from the last 10 minutes, sampling every second. Anomalies are checked using the KS test algorithm.",
-                                "enum": [
-                                    "cpu_usage",
-                                    "memory_usage",
-                                    "network_traffic",
-                                    "io_activity"
-                                ]
-                            }
-                        },
-                        "required": ["metric_name"],
-                        "additionalProperties": False
+                    "type": "object",
+                    "properties": {},
+                    "required": [],
+                    "additionalProperties": False
                     }
                 }
             }
         )
 
         self.register_action(
-            "match_diagnose_knowledge",
-            handler=self.match_diagnose_knowledge_handler,
+            "detect_metric_abnormality",
+            handler=self.detect_metric_abnormality_handler,
             description={
                 "type": "function",
                 "function": {
-                    "name": "match_diagnose_knowledge",
-                    "description": "Check if a type of metric of the database system is abnormal or not using a staticical method across all related metrics.",
+                    "name": "detect_metric_abnormality",
+                    "description": "Get detailed information about a specific metric selected by the LLM.",
                     "parameters": {
-                        "type": "object",
-                        "properties": {
-                            "expert": {
-                                "type": "string",
-                                "description": "The type of expert to consult",
-                                "enum": [
-                                    "ConfigurationExpert",
-                                    "CpuExpert",
-                                    "DiskExpert",
-                                    "IndexExpert",
-                                    "IoExpert",
-                                    "MemoryExpert",
-                                    "QueryExpert",
-                                    "RecoveryExpert",
-                                    "WorkloadExpert"
-                                ]
-                            },
-                            "metric_name": {
-                                "type": "string",
-                                "description": "The type of metric to check for anormalies. It will examine the data from the last 10 minutes, sampling every second. Anomalies are checked using the KS test algorithm.",
-                                "enum": [
-                                    "cpu",
-                                    "memory",
-                                    "network",
-                                    "io"
-                                ]
-                            }
-                        },
-                        "required": ["expert", "metric_name"],
-                        "additionalProperties": False
+                    "type": "object",
+                    "properties": {
+                        "metric_name": {
+                            "type": "string",
+                            "description": "The name of the metric to get information about.",
+                            "enum": [
+                                "cpu",
+                                "memory",
+                                "network",
+                                "io"
+                            ]
+                        }
+                    },
+                    "required": ["metric_name"],
+                    "additionalProperties": False
                     }
                 }
             }
         )
 
+        self.register_action(
+            "get_rag",
+            handler=self.get_rag_handler,
+            description={
+                "type": "function",
+                "function": {
+                    "name": "get_rag",
+                    "description": "Get relevant knowledge from the RAG system based on the expert and metric name.",
+                    "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "expert": {
+                            "type": "string",
+                            "description": "The type of expert to consult. Please input the one matching with your profession.",
+                            "enum": [
+                                "ConfigurationExpert",
+                                "CpuExpert",
+                                "DiskExpert",
+                                "IndexExpert",
+                                "IoExpert",
+                                "MemoryExpert",
+                                "QueryExpert",
+                                "RecoveryExpert",
+                                "WorkloadExpert"
+                            ]
+                        },
+                        "query_str": {
+                            "type": "string",
+                            "description": "What you would like to find the root cause for."
+                        }
+                    },
+                    "required": ["expert", "metric_name", "llm_selected_metric_str"],
+                    "additionalProperties": False
+                    }
+                }
+            }
+        )
+
+        self.register_action(
+            "get_slow_query",
+            handler=self.get_slow_query_handler,
+            description={
+                "type": "function",
+                "function": {
+                    "name": "get_slow_query",
+                    "description": "Get information about the slowest queries executed in the database.",
+                    "parameters": {
+                    "type": "object",
+                    "properties": {},
+                    "required": [],
+                    "additionalProperties": False
+                    }
+                }
+            }
+        )
+    
+    def wait_for_alerts(self) -> None:
         is_initialized = False
         alerts = []
         time_before_alert_detection = time.time()
@@ -252,7 +260,6 @@ class DBEnvironment(BaseEnvironment):
                 time_now = time.time()
                 if time_now - time_before_alert_detection > 1:
                     time_before_alert_detection = time_now
-                    # print waited time in HH:MM:SS
                     print(f'Waited time: {time.strftime("%H:%M:%S", time.gmtime(time_now - time_last_print))}', end='\r')
 
                 if len(alerts):
@@ -263,18 +270,13 @@ class DBEnvironment(BaseEnvironment):
         print(f'Alert detected @ {alerts}')
 
     def get_alerts_handler(self) -> Dict[str, Any]:
-        """
-        Handler function to get current alerts from Prometheus.
-
-        Returns:
-            Dict[str, Any]: Dictionary containing alert information in a structured format
-        """
         try:
             alerts = self.get_raw_alerts()
             formatted_alerts = []
 
             for alert in alerts.get('alerts', []):
                 formatted_alert = {
+                    'function_name': 'get_alerts',
                     'name': alert['labels'].get('alertname', 'Unknown'),
                     'severity': alert['labels'].get('severity', 'Unknown'),
                     'description': alert['annotations'].get('description', ''),
@@ -283,109 +285,147 @@ class DBEnvironment(BaseEnvironment):
                     'value': alert.get('value', '')
                 }
                 formatted_alerts.append(formatted_alert)
+            
+            explanation = ''
+            for alert in formatted_alerts:
+                explanation += f"{alert['name']} triggered alert: {alert['description']}. \n"
+                explanation += f"Severity: {alert['severity']}. \n"
+                explanation += f"State: {alert['state']}. \n"
+                explanation += f"Active since: {alert['active_since']}. \n"
+                explanation += f"Value: {alert['value']}. \n\n"
 
             return {
                 'status': 'success',
                 'alert_count': len(formatted_alerts),
-                'alerts': formatted_alerts
+                'alerts': formatted_alerts,
+                'explanation': explanation
             }
         except Exception as e:
             return {
                 'status': 'error',
                 'message': str(e),
-                'alerts': []
+                'alerts': [],
+                'explanation': 'No alerts found now. You can try again later.'
             }
 
-    def detect_metric_abnormality_handler(self, metric_name: str) -> bool:
+    def get_alert_metrics_handler(self) -> Dict[str, Any]:
         try:
-            # Get the metric data from Prometheus
-            metric_name_mapped = allowed_metrics_full_names.get(metric_name, "")
-            if metric_name_mapped == "":
-                raise ValueError(f"Access to {metric_name} currently not supported")
-            print(metric_name_mapped)
-            values = get_prometheus_metric_data(metric_name_mapped)
-            if not len(values):
-                print('No values yet. Please wait at least 15s.')
-                return False
-            values_list = [float(v) for t, v in values]
-            # Convert the list into a 1D NumPy array
-            values_array = np.array(values_list)
-            return detect_anomalies(values_array)
+            alert_metrics_str = self.get_alert_metrics_str()
+            return {
+                'status': 'success',
+                'function_name': 'get_alert_metrics',
+                'explanation': alert_metrics_str
+            }
         except Exception as e:
-            print(f"Error fetching metric data: {e}")
-            return False
+            return {
+                'status': 'error',
+                'function_name': 'get_alert_metrics',
+                'explanation': str(e)
+            }
 
-    def match_diagnose_knowledge_handler(self, expert: str, metric_name: str) -> str:
-        # first, we get the alert metrics
+    def detect_metric_abnormality_handler(self, metric_name: str) -> Dict[str, Any]:
+        try:
+            llm_selected_metric_str = self.detect_metric_abnormality_str(metric_name)
+            return {
+                'status': 'success',
+                'function_name': 'detect_metric_abnormality',
+                'explanation': llm_selected_metric_str
+            }
+        except Exception as e:
+            return {
+                'status': 'error',
+                'function_name': 'detect_metric_abnormality',
+                'explanation': str(e)
+            }
+    
+    def get_rag_handler(self, expert: str, query_str: str) -> Dict[str, Any]:
+        try:
+            rag_str = self.get_rag_str(expert, query_str)
+            return {
+                'status': 'success',
+                'function_name': 'get_rag',
+                'explanation': rag_str
+            }
+        except Exception as e:
+            return {
+                'status': 'error',
+                'function_name': 'get_rag',
+                'explanation': str(e)
+            }
+
+    def get_slow_query_handler(self) -> Dict[str, Any]:
+        try:
+            slow_query_str = self.get_slow_query_str()
+            return {
+                'status': 'success',
+                'function_name': 'get_slow_query',
+                'explanation': slow_query_str
+            }
+        except Exception as e:
+            return {
+                'status': 'error',
+                'function_name': 'get_slow_query',
+                'explanation': str(e)
+            }
+
+    def get_alert_metrics_str(self) -> Dict[str, Any]:
         alerts = self.get_raw_alerts()
-        alert_metrics = []
-        alert_descriptions = []
-        alert_metric_str = ""
+        alert_metrics_str = ""
         for alert in alerts['alerts']:
             alert_description = alert['annotations']['description']
             alert_metric = alert_description.split('[')[0]
-            alert_metrics.append(alert_metric.strip())
-            alert_descriptions.append(alert_description)
-
-            alert_metric_str += f"{alert_metric.strip()} triggered alert: {alert_description}. \n"
-
-            anomaly_data = get_prometheus_metric_data(alert_metric)
+            alert_metrics_str += f"{alert_metric.strip()} triggered alert: {alert_description}. \n"
+            anomaly_data = get_metric_data_for_last_10_minutes(alert_metric)
             anomaly_data_list = [float(v) for t, v in anomaly_data]
-            anomaly_data_array = np.array(anomaly_data_list)
             anomaly_data_features = describe_data_features(anomaly_data_list)
+            alert_metrics_str += f"Data description for {alert_metric}: {anomaly_data_features} \n\n"
+        return {
+            'status': 'success',
+            'function_name': 'get_alert_metrics',
+            'explanation': alert_metrics_str
+        }
 
-            alert_metric_str += f"Data description for {alert_metric}: {anomaly_data_features} \n"
-            alert_metric_str += f"\n"
-
+    def detect_metric_abnormality_str(self, metric_name: str) -> Dict[str, Any]:
         llm_selected_metric_str = ""
         for name in full_metrics_full_names[metric_name]:
             query = full_metrics_full_names[metric_name][name]
-            data = get_prometheus_metric_data(query)
+            data = get_metric_data_for_last_10_minutes(query)
             data_list = [float(v) for t, v in data]
+            if not len(data_list):
+                llm_selected_metric_str += f"No data found for {name} (Query: {query}).\n"
+                llm_selected_metric_str += "Please wait at least 15s.\n\n"
+                continue
             data_array = np.array(data_list)
             anomaly = detect_anomalies(data_array)
-            if anomaly[1]:
+            if anomaly['anomalies']:
                 data_features = describe_data_features(data_list)
                 llm_selected_metric_str += f"{name} (Query: {query}) is abnormal.\n"
-                llm_selected_metric_str += f"Data description: {data_features}\n"
-                llm_selected_metric_str += f"\n"
+                llm_selected_metric_str += f"Data description: {data_features}\n\n"
+        return {
+            'status': 'success',
+            'function_name': 'detect_metric_abnormality',
+            'explanation': llm_selected_metric_str
+        }
 
-        rag_str = f""
-        self.kb.search(metric_name, expert=expert)
-        rag_str += f"For expert {expert}, the following knowledge is matched: \n"
-
-        for alert_description in alert_descriptions:
-            rag_str += f"For the alert description you wanted to look into, here are the matched knowledge: \n"
-            for result in self.kb.search(alert_description, expert=expert, top_k=3):
-                rag_str += f"{result}:\n"
-                rag_str += f"Cause : {result['cause_name']}\n"
-                rag_str += f"Metrics: {result['metrics']}\n"
-                rag_str += f"Expert : {result['expert']}\n"
-                rag_str += f"\n"
-
-        slow_query_str = f"Here are the commands that took longest time:\n"
-        slow_query_str += obtain_slow_queries()
-
-        rag_str += f"For the metric you wanted to look into, here are the matched knowledge: \n"
-        for result in self.kb.search(llm_selected_metric_str, expert=expert, top_k=3):
+    def get_rag_str(self, expert: str, llm_selected_metric_str: str) -> Dict[str, Any]:
+        rag_str = f"For expert {expert}, the following knowledge is matched: \n"
+        for result in self.kb.search(llm_selected_metric_str, expert=expert):
             rag_str += f"{result}:\n"
             rag_str += f"Cause : {result['cause_name']}\n"
             rag_str += f"Metrics: {result['metrics']}\n"
-            rag_str += f"Expert : {result['expert']}\n"
-            rag_str += f"\n"
+            rag_str += f"Expert : {result['expert']}\n\n"
+        return {
+            'status': 'success',
+            'function_name': 'get_rag',
+            'explanation': rag_str
+        }
 
-        return alert_metric_str + llm_selected_metric_str + slow_query_str + rag_str
+    def get_slow_query_str(self) -> str:
+        return f"Here are the commands that took longest time:\n{obtain_slow_queries()}"
 
     def get_raw_alerts(self) -> dict:
-        """
-        Get raw alerts data from Prometheus.
-
-        Returns:
-            dict: Raw alerts data from Prometheus
-        """
         prom_url = 'http://localhost:9090/api/v1/alerts'
         response = requests.get(prom_url)
-
         if response.status_code == 200:
             data = response.json()
             if data.get('status') == 'success':
@@ -395,33 +435,30 @@ class DBEnvironment(BaseEnvironment):
         else:
             raise ValueError(f"Failed to query Prometheus. Status code: {response.status_code}")
 
-    def check_db_connection(self):
-        """Check if the database is up and return True if successful, False otherwise."""
+    def check_db_connection(self) -> bool:
         try:
-            # Attempt to connect to PostgreSQL database
             connection = psycopg2.connect(
                 user="test",
                 password="Test123_456",
                 database="sysbench",
-                host="localhost",  # Use "postgres_db" if running within Docker
+                host="localhost",
                 port="5432"
             )
             print("Database is up!")
             connection.close()
-            return True  # Return True if connection is successful
-
+            return True
         except OperationalError:
             print("Database is not available.")
-            return False  # Return False if connection fails
+            return False
 
     def terminate(self) -> None:
         subprocess.run(["sudo", "docker", "compose", "down"], cwd=os.path.join(self.current_dir, "db_env_docker"), check=True)
 
 if __name__ == "__main__":
+    raise NotImplementedError("This demo is obsolete. Please run the experiment directly.")
     env = DBEnvironment(config={
         'environment': {
-            'anomalies':
-            [
+            'anomalies': [
                 {
                     'anomaly': 'MISSING_INDEXES',
                     'threads': 1000,

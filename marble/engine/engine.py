@@ -176,6 +176,7 @@ class Engine:
                 except KeyError:
                     self.logger.error(f"Agent '{agent_id}' not found in the graph.")
                 except Exception as e:
+                    import pdb; pdb.set_trace()
                     self.logger.error(f"Error while executing initial task for agent '{agent_id}': {e}")
             iteration_data["communications"] = communications
             # Summarize outputs and update planner for the initial assignment

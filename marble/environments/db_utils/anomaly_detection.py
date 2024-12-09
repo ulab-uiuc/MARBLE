@@ -31,7 +31,22 @@ def detect_anomalies(data, significance_level=0.2):
     # Compare the KS statistic with the critical value
     anomalies = np.where(ks_statistic > critical_value, True, False)
 
-    return ks_statistic.tolist(), anomalies.tolist()
+    explanation = ''
+    if np.any(anomalies):
+        explanation = (
+            'Anomalies detected. We use the Kolmogorov-Smirnov (KS) test to compare '
+            'the empirical CDF of the data with the expected CDF of a normal distribution. '
+            'The KS statistic is the maximum absolute difference between the two CDFs. '
+            'If the KS statistic is greater than the critical value, we consider the data point an anomaly. '
+            'In this case, the KS statistic is {:.2f} and the critical value is {:.2f}.'
+        ).format(ks_statistic, critical_value)
+
+    return {
+        'ks_statistic': ks_statistic,
+        'critical_value': critical_value,
+        'anomalies': anomalies,
+        'explanation': explanation
+    }
 
 def describe_data_features(data):
     """Describe the features of a given data in natural language."""
