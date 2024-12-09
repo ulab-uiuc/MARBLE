@@ -32,7 +32,8 @@ class Evaluator:
             "communication_score": [],
             "task_evaluation": {},
             "total_milestones": 0,
-            "agent_kpis": {}
+            "agent_kpis": {},
+            "code_quality": {}
         }
         with open('evaluator/evaluator_prompts.json', 'r', encoding='utf-8') as f:
             self.evaluation_prompts = json.load(f)
@@ -280,3 +281,67 @@ class Evaluator:
         except json.JSONDecodeError:
             self.logger.error("Failed to parse JSON from assistant's answer.")
             return []
+
+    def evaluate_code_quality(self, task: str, code_result: str) -> None:
+        """
+        Evaluate the code quality based on completeness, executability, consistency, and quality.
+
+        Args:
+            task (str): The task description.
+            code_result (str): The code result to be evaluated.
+        """
+        # 定义评估代码质量的 prompt
+        code_quality_prompt_template = """
+        [Context]
+        **Task:** {task}
+
+        **Code Result:** {code_result}
+
+        [System]
+        Please evaluate the provided code result based on the following criteria:
+        
+        1. **Completeness:** Does the code fulfill all the requirements of the task?
+        2. **Executability:** Is the code syntactically correct and executable?
+        3. **Consistency:** Is the code consistent in logic and style?
+        4. **Quality:** Is the code well-structured, readable, and maintainable?
+        
+        Use the following 5-point scale for each criterion:
+        - **5 points:** Excellent - Fully satisfies the criterion.
+        - **4 points:** Good - Minor issues or improvements needed.
+        - **3 points:** Average - Noticeable areas for improvement.
+        - **2 points:** Below Average - Significant issues that need addressing.
+        - **1 point:** Poor - Does not meet the basic requirements.
+
+        [Question]
+        Based on the criteria, evaluate the code and output the scores for each criterion in the following JSON format:
+        {{
+            "completeness": score,
+            "executability": score,
+            "consistency": score,
+            "quality": score
+        }}
+        """
+        # 填充模板
+        prompt = code_quality_prompt_template.format(task=task, code_result=code_result)
+
+        # 调用 LLM
+        response = model_prompting(
+            llm_model=self.llm,
+            messages=[{"role": "user", "content": prompt}],
+            return_num=1,
+            max_token_num=512,
+            temperature=0.0,
+            top_p=None,
+            stream=None,
+        )[0]
+
+        # 解析评分结果
+        scores = self.parse_research_ratings(response.content)
+
+        # 更新评估指标
+        if scores:
+            self.metrics["code_quality"] = scores
+            self.logger.info(f"Code quality evaluated: {scores}")
+        else:
+            self.logger.error("Failed to parse code quality scores.")
+

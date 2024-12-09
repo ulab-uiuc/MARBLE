@@ -6,7 +6,7 @@ The core engine module that coordinates agents within the environment.
 import json
 from typing import Any, Dict, List, Optional, Union
 
-from marble.agent import BaseAgent
+from marble.agent import BaseAgent, CodingAgent
 from marble.configs.config import Config
 from marble.engine.engine_planner import EnginePlanner
 from marble.environments import BaseEnvironment, ResearchEnvironment, WebEnvironment, CodingEnvironment
@@ -17,12 +17,28 @@ from marble.memory.shared_memory import SharedMemory
 from marble.utils.logger import get_logger
 
 EnvType = Union[BaseEnvironment, WebEnvironment, ResearchEnvironment, CodingEnvironment]
-AgentType = Union[BaseAgent]
+AgentType = Union[BaseAgent, CodingAgent]
 
 class Engine:
     """
     The Engine class orchestrates the simulation, coordinating agents and the environment.
     """
+    def _read_code_from_file(self, file_path: str) -> str:
+        """
+        从指定文件路径读取代码。
+
+        Args:
+            file_path (str): 文件路径
+
+        Returns:
+            str: 文件内容
+        """
+        try:
+            with open(file_path, 'r', encoding='utf-8') as file:
+                return file.read()
+        except IOError as e:
+            self.logger.error(f"Failed to read code from {file_path}: {e}")
+            return ""
 
     def __init__(self, config: Config):
         """
@@ -479,6 +495,14 @@ class Engine:
                 self.evaluator.evaluate_task_research(self.task, iteration_data["summary"])
                 summary_data['task_evaluation'] = self.evaluator.metrics["task_evaluation"]
                 self.logger.info("Engine graph-based coordination loop completed.")
+            if self.environment.name == 'Coding Environment':
+                code = self._read_code_from_file('/home/zhe36/MARBLE/marble/workspace/solution.py')
+                if code:
+                    self.evaluator.evaluate_code_quality(task=self.task, code_result=code)
+                    summary_data["code_quality"] = self.evaluator.metrics["code_quality"]
+                    self.logger.info(f"Code quality evaluation results: {self.evaluator.metrics['code_quality']}")
+        
+        
             self.logger.info("Chain-based coordination simulation completed.")
 
         except Exception:

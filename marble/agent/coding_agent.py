@@ -25,7 +25,7 @@ def convert_to_str(result):
     else:
         return str(result) 
 
-class BaseAgent:
+class CodingAgent:
     """
     Base class for all agents.
     """
