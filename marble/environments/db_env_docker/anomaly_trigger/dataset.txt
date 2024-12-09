@@ -97,3 +97,5 @@ python anomaly_trigger/main.py --anomaly FETCH_LARGE_DATA,CORRELATED_SUBQUERY en
 python anomaly_trigger/main.py --anomaly INSERT_LARGE_DATA,IO_CONTENTION started at 1733783769
 python anomaly_trigger/main.py --anomaly INSERT_LARGE_DATA,IO_CONTENTION ended at 1733783778
 python anomaly_trigger/main.py --anomaly INSERT_LARGE_DATA --threads 100 --ncolumn 20 --nrow 100 --colsize 100 started at 1733783838
+python anomaly_trigger/main.py --anomaly FETCH_LARGE_DATA,CORRELATED_SUBQUERY started at 1733784021
+python anomaly_trigger/main.py --anomaly FETCH_LARGE_DATA,CORRELATED_SUBQUERY ended at 1733784021

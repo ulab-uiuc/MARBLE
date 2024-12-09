@@ -95,7 +95,7 @@ def write_space():
 
 '''insert_large_data'''
 def insert_large_data(threads,duration,ncolumns,nrows,colsize,table_name='table1'):
-    cmd=f"python anomaly_trigger/main.py --anomaly INSERT_LARGE_DATA --threads {threads} --ncolumn {ncolumns} --nrow {nrows} --colsize {colsize}"
+    cmd=f"python main.py --anomaly INSERT_LARGE_DATA --threads {threads} --ncolumn {ncolumns} --nrow {nrows} --colsize {colsize}"
     #Delete undeleted tables
     delete_table(table_name)
     #create a new table
@@ -124,7 +124,7 @@ def insert_large_data(threads,duration,ncolumns,nrows,colsize,table_name='table1
 
 '''missing_index'''
 def missing_index(threads,duration,ncolumns,nrows,colsize,table_name='table1'):
-    cmd=f"python anomaly_trigger/main.py --anomaly MISSING_INDEXES --threads {threads} --ncolumn {ncolumns} --nrow {nrows} --colsize {colsize}"
+    cmd=f"python main.py --anomaly MISSING_INDEXES --threads {threads} --ncolumn {ncolumns} --nrow {nrows} --colsize {colsize}"
     #create a new table
 
     db=Database(init())
@@ -158,7 +158,7 @@ def missing_index(threads,duration,ncolumns,nrows,colsize,table_name='table1'):
 
 '''lock_contention'''
 def lock_contention(threads,duration,ncolumns,nrows,colsize,table_name='table1'):
-    cmd=f"python anomaly_trigger/main.py --anomaly LOCK_CONTENTION --threads {threads} --ncolumn {ncolumns} --nrow {nrows} --colsize {colsize}"
+    cmd=f"python main.py --anomaly LOCK_CONTENTION --threads {threads} --ncolumn {ncolumns} --nrow {nrows} --colsize {colsize}"
     #create a new table
     delete_table(table_name)
     create_table(table_name,colsize, ncolumns)
@@ -191,7 +191,7 @@ def lock_contention(threads,duration,ncolumns,nrows,colsize,table_name='table1')
 
 '''vacuum'''
 def vacuum(threads,duration,ncolumns,nrows,colsize,table_name='table1'):
-    cmd=f"python anomaly_trigger/main.py --anomaly VACUUM --threads {threads} --ncolumn {ncolumns} --nrow {nrows} --colsize {colsize}"
+    cmd=f"python main.py --anomaly VACUUM --threads {threads} --ncolumn {ncolumns} --nrow {nrows} --colsize {colsize}"
     db=Database(init())
     #create a new table
     delete_table(table_name)
@@ -226,7 +226,7 @@ def vacuum(threads,duration,ncolumns,nrows,colsize,table_name='table1'):
 
 '''redundent_index'''
 def redundent_index(threads,duration,ncolumns,nrows,colsize,nindex,table_name='table1'):
-    cmd=f"python anomaly_trigger/main.py --anomaly REDUNDANT_INDEX --threads {threads} --ncolumn {ncolumns} --nrow {nrows} --colsize {colsize}"
+    cmd=f"python main.py --anomaly REDUNDANT_INDEX --threads {threads} --ncolumn {ncolumns} --nrow {nrows} --colsize {colsize}"
     #create a new table
     delete_table(table_name)
     create_table(table_name,colsize, ncolumns)
@@ -267,7 +267,7 @@ def redundent_index(threads,duration,ncolumns,nrows,colsize,nindex,table_name='t
 
 '''io_contention'''
 def io_contention():
-    cmd="python anomaly_trigger/main.py --anomaly INSERT_LARGE_DATA,IO_CONTENTION"
+    cmd="python main.py --anomaly INSERT_LARGE_DATA,IO_CONTENTION"
     print_start_time(cmd)
     command = (
     "su - root -c 'cd /sysbench-tpcc-master; "
@@ -289,11 +289,11 @@ def io_contention():
 
 '''fetch_large_data'''
 def fetch_large_data():
-    cmd="python anomaly_trigger/main.py --anomaly FETCH_LARGE_DATA,CORRELATED_SUBQUERY"
+    cmd="python main.py --anomaly FETCH_LARGE_DATA,CORRELATED_SUBQUERY"
 
     try:
         print_start_time(cmd)
-        os.system("python anomaly_trigger/benchmark_tpch.py")
+        os.system("python benchmark_tpch.py")
         print_end_time(cmd)
         write_amomaly_sql_to_file('''select o_orderpriority, count(*) as order_count from orders where o_orderdate >= date '1996-03-01' and o_orderdate < date '1996-03-01' + interval '3' month and exists ( select * from lineitem where l_orderkey = o_orderkey and l_commitdate < l_receiptdate ) group by o_orderpriority order by o_orderpriority LIMIT 1;''')
         time.sleep(10)
@@ -310,10 +310,10 @@ def fetch_large_data():
 
 '''cpu_contention'''
 def cpu_contention():
-    cmd="python anomaly_trigger/main.py --anomaly POOR_JOIN_PERFORMANCE,CPU_CONTENTION"
+    cmd="python main.py --anomaly POOR_JOIN_PERFORMANCE,CPU_CONTENTION"
     try:
         print_start_time(cmd)
-        os.system("python anomaly_trigger/benchmark_job.py")
+        os.system("python benchmark_job.py")
         print_end_time(cmd)
         write_amomaly_sql_to_file('''SELECT MIN(mc.note) AS production_note, MIN(t.title) AS movie_title,MIN(t.production_year) AS movie_year FROM company_type AS ct,info_type AS it,movie_companies AS mc,movie_info_idx AS mi_idx,title AS WHERE ct.kind = 'production companies'AND it.info = 'top 250 rank'AND mc.note NOT LIKE '%(as Metro-Goldwyn-Mayer Pictures)%' AND (mc.note LIKE '%(co-production)%'OR mc.note LIKE '%(presents)%') AND ct.id = mc.company_type_idAND t.id = mc.movie_id AND t.id = mi_idx.movie_id AND mc.movie_id = mi_idx.movie_id AND it.id = mi_idx.info_type_id;''')
         time.sleep(10)
