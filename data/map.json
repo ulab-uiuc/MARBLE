@@ -5,38 +5,74 @@
         0
     ],
     "size": [
-        0,
-        2,
+        3,
+        4,
         0
     ],
     "blocks": [
         {
             "position": [
-                -8,
+                -11,
                 -60,
                 0
             ],
-            "name": "cut_sandstone",
-            "facing": "A"
+            "name": "bone_block",
+            "facing": "y"
         },
         {
             "position": [
-                -8,
+                -11,
                 -59,
                 0
             ],
-            "name": "terracotta",
-            "facing": "A"
+            "name": "bone_block",
+            "facing": "y"
+        },
+        {
+            "position": [
+                -11,
+                -58,
+                0
+            ],
+            "name": "bone_block",
+            "facing": "y"
+        },
+        {
+            "position": [
+                -11,
+                -57,
+                0
+            ],
+            "name": "bone_block",
+            "facing": "y"
+        },
+        {
+            "position": [
+                -10,
+                -56,
+                0
+            ],
+            "name": "bone_block",
+            "facing": "x"
+        },
+        {
+            "position": [
+                -9,
+                -56,
+                0
+            ],
+            "name": "bone_block",
+            "facing": "x"
         },
         {
             "position": [
                 -8,
-                -58,
+                -56,
                 0
             ],
-            "name": "torch",
-            "facing": "A"
+            "name": "bone_block",
+            "facing": "x"
         }
     ],
-    "name": "minecraft/templates/village_desert_desert_lamp_1"
+    "name": "minecraft/templates/nether_fossils_fossil_13"
 }

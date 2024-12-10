@@ -27,8 +27,8 @@ class MinecraftClient:
 
     @staticmethod
     def get_url_prefix() -> dict:
-        if os.path.exists("data/url_prefix.json"):
-            with open("data/url_prefix.json", "r") as f:
+        if os.path.exists("../data/url_prefix.json"):
+            with open("../data/url_prefix.json", "r") as f:
                 url_prefix = json.load(f)
         else:
             url_prefix = {}
@@ -68,7 +68,7 @@ class MinecraftClient:
             return
         url_prefix = MinecraftClient.get_url_prefix()
         url_prefix[name] = f"http://localhost:{local_port}"
-        with open("data/url_prefix.json", "w") as f:
+        with open("../data/url_prefix.json", "w") as f:
             json.dump(url_prefix, f)
 
         MinecraftClient.name2port[name] = local_port
@@ -97,9 +97,9 @@ class MinecraftClient:
             if key in ignore_name:
                 continue
             MinecraftClient.agent_process[key] = subprocess.Popen(
-                ["python", "marble/environments/minecraft_utils/minecraft_server.py", "-H", host, "-P", str(port), "-LP", str(value), "-U", key, "-W",
+                ["python", "environments/minecraft_utils/minecraft_server.py", "-H", host, "-P", str(port), "-LP", str(value), "-U", key, "-W",
                 world, "-D", str(debug)], shell=False)
-            print(f"python marble/environments/minecraft_utils/minecraft_server.py -H \"{host}\" -P {port} -LP {value} -U \"{key}\" -W \"{world}\" -D {debug}")
+            print(f"python environments/minecraft_utils/minecraft_server.py -H \"{host}\" -P {port} -LP {value} -U \"{key}\" -W \"{world}\" -D {debug}")
             time.sleep(3)
         if verbose:
             print("launch done.")

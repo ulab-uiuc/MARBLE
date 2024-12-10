@@ -689,7 +689,7 @@ def find_nearest_(bot, Vec3, envs_info, mcData, name):  # X
     
 def is_entity_or_item(name):
     # 已经确定是合法的名字但是不知道是实体还是方块
-    with open('data/mcData.json', 'r', encoding='utf-8') as f:
+    with open('../data/mcData.json', 'r', encoding='utf-8') as f:
         mc_data_json = json.load(f)
     for item in mc_data_json['entities']:
         if name == item[0]:
@@ -1174,7 +1174,7 @@ async def place_axis(bot, mcData, pathfinder, Vec3, item_name, pos, axis=None):
                         continue
         return False, f"cannot place the block at this position, no valid reference block can be found"
 
-dig_file = "data/dig_item.json"
+dig_file = "../data/dig_item.json"
 dig_data = json.load(open(dig_file, "r"))
 
 def dig_check(bot,item_name):
@@ -1506,7 +1506,7 @@ async def interact_nearest(pathfinder, bot,  Vec3, envs_info, mcData, RANGE_GOAL
                 chest_data.append({'name': item['name'], 'count': item['count']})
             if get_item_name == None or get_item_name == '' or get_item_name == 'all' or get_item_name == 'everything':
                 chest.close()
-                return f" open {name}, (didn't get them out)" + chest_str, True, chest_data
+                return f" open {name}, (didn't get them out; try the withdraw api to get them out)" + chest_str, True, chest_data
             if not get_item_name:
                 chest.close()
                 return f" open {name}, " + chest_str, True, chest_data
@@ -2019,7 +2019,7 @@ def findSimilarName(name):
     name_parts = name.split('_')
 
     # 加载数据
-    with open('data/mcData.json', 'r', encoding='utf-8') as f:
+    with open('../data/mcData.json', 'r', encoding='utf-8') as f:
         mc_data_json = json.load(f)
 
     # 如果本身就是一个合法的名字，直接返回

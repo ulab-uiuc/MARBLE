@@ -1,1 +1,1 @@
-{"player1": "http://localhost:5000"}
+{"player1": "http://localhost:5000", "agent1": "http://localhost:5000", "agent2": "http://localhost:5001", "agent3": "http://localhost:5002"}

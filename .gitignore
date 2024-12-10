@@ -160,9 +160,12 @@ cython_debug/
 #.idea/
 
 # Scratch
-scratch.py
+scratch*
 marble/result/discussion_output.jsonl
 data/research-data/benchmark_0930.json
 data/research-data/intro_logging.jsonl
+output.csv
+marble/process_result.py
+marble/result/test
 # Werewolf log folder
 werewolf_log/

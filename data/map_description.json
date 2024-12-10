@@ -1,5 +1,4 @@
 [
-    "material: cut_sandstone facing: A position: [-8, -60, 0]",
-    "material: terracotta facing: A position: [-8, -59, 0]",
-    "material: torch facing: A position: [-8, -58, 0]"
+    "[material:bone_block facing:y positions:[start:[-11 -60 0] end:[-11 -57 0]]]",
+    "[material:bone_block facing:x positions:[start:[-10 -56 0] end:[-8 -56 0]]]"
 ]
