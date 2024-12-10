@@ -75,12 +75,10 @@ def revise_solution_handler(env, task_description: str, model_name: str, file_pa
         Dict[str, Any]: Result of the operation
     """
     try:
-        # Construct full path using workspace directory
-        workspace_dir = env.workspace_dir  # This should be "marble/workspace"
-        full_path = os.path.join(workspace_dir, file_path)
+        full_path = os.path.join(env.workspace_dir, os.path.basename(file_path))
         
         # Create workspace directory if it doesn't exist
-        os.makedirs(workspace_dir, exist_ok=True)
+        os.makedirs(env.workspace_dir, exist_ok=True)
 
         # Create file if it doesn't exist
         if not os.path.exists(full_path):

@@ -1,70 +1,74 @@
 ```python
-import random
-import curses
+import os
+import time
+import keyboard
 
-def create_food(snake, sh, sw):
-    food = None
-    while food is None:
-        food = [random.randint(1, sh-1), random.randint(1, sw-1)]
-        food = food if food not in snake else None
-    return food
+# Game settings
+WIDTH = 40
+HEIGHT = 20
+PADDLE_SIZE = 3
+BALL_CHAR = '*'
+PADDLE_CHAR = '|'
+AI_SPEED = 0.1
 
-def main(stdscr):
-    curses.curs_set(0)
-    sh, sw = stdscr.getmaxyx()
-    w = curses.newwin(sh, sw, 0, 0)
-    w.keypad(1)
-    w.timeout(100)
+# Initialize game variables
+ball = {'x': WIDTH // 2, 'y': HEIGHT // 2, 'dx': 1, 'dy': 1}
+player_paddle = HEIGHT // 2
+ai_paddle = HEIGHT // 2
 
-    snk_x = sw//4
-    snk_y = sh//2
-    snake = [
-        [snk_y, snk_x],
-        [snk_y, snk_x-1],
-        [snk_y, snk_x-2]
-    ]
+def clear_screen():
+    os.system('cls' if os.name == 'nt' else 'clear')
 
-    food = create_food(snake, sh, sw)
-    w.addch(food[0], food[1], curses.ACS_PI)
+def draw_game():
+    clear_screen()
+    for y in range(HEIGHT):
+        for x in range(WIDTH):
+            if x == 0 or x == WIDTH - 1:
+                print('#', end='')
+            elif x == ball['x'] and y == ball['y']:
+                print(BALL_CHAR, end='')
+            elif x == 1 and player_paddle <= y < player_paddle + PADDLE_SIZE:
+                print(PADDLE_CHAR, end='')
+            elif x == WIDTH - 2 and ai_paddle <= y < ai_paddle + PADDLE_SIZE:
+                print(PADDLE_CHAR, end='')
+            else:
+                print(' ', end='')
+        print()
 
-    key = curses.KEY_RIGHT
+def update_ball_position():
+    ball['x'] += ball['dx']
+    ball['y'] += ball['dy']
 
+    # Check for collisions with walls
+    if ball['y'] == 0 or ball['y'] == HEIGHT - 1:
+        ball['dy'] = -ball['dy']
+    if ball['x'] == 2 and player_paddle <= ball['y'] < player_paddle + PADDLE_SIZE:
+        ball['dx'] = -ball['dx']
+    if ball['x'] == WIDTH - 3 and ai_paddle <= ball['y'] < ai_paddle + PADDLE_SIZE:
+        ball['dx'] = -ball['dx']
+
+def update_ai_paddle():
+    if ball['y'] < ai_paddle + PADDLE_SIZE // 2:
+        ai_paddle -= 1
+    elif ball['y'] > ai_paddle + PADDLE_SIZE // 2:
+        ai_paddle += 1
+
+def main():
     while True:
-        next_key = w.getch()
-        key = key if next_key == -1 else next_key
+        draw_game()
+        update_ball_position()
+        update_ai_paddle()
 
-        new_head = [snake[0][0], snake[0][1]]
+        if keyboard.is_pressed('up') and player_paddle > 1:
+            player_paddle -= 1
+        if keyboard.is_pressed('down') and player_paddle < HEIGHT - PADDLE_SIZE - 1:
+            player_paddle += 1
 
-        if key == curses.KEY_DOWN:
-            new_head[0] += 1
-        if key == curses.KEY_UP:
-            new_head[0] -= 1
-        if key == curses.KEY_LEFT:
-            new_head[1] -= 1
-        if key == curses.KEY_RIGHT:
-            new_head[1] += 1
+        time.sleep(0.1)
 
-        snake.insert(0, new_head)
-
-        if snake[0] == food:
-            food = create_food(snake, sh, sw)
-            w.addch(food[0], food[1], curses.ACS_PI)
-        else:
-            tail = snake.pop()
-            w.addch(int(tail[0]), int(tail[1]), ' ')
-
-        if snake[0][0] in [0, sh] or snake[0][1] in [0, sw] or snake[0] in snake[1:]:
-            break
-
-        w.addch(int(snake[0][0]), int(snake[0][1]), curses.ACS_CKBOARD)
-
-curses.wrapper(main)
+if __name__ == '__main__':
+    main()
 ```
 
-The task description is: Create a Python Snake Game with the following requirements:
-1. The game should be a simple 2D snake game with a snake that moves around the screen and eats food.
-2. The snake should grow in length when it eats food.
-3. The game should be terminal based.
-4. The game should be playable by pressing the arrow keys.
-
+The task description is: Build a basic ping pong game with simple AI opponent.
 Based on this task description, I have improved the solution.

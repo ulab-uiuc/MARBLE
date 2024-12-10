@@ -1,24 +1,52 @@
-# coding_utils/reviewer.py
-from typing import Any, Dict, Optional
+import os
+import json
+import datetime
+from typing import Dict, Any, Optional
 from marble.llms.model_prompting import model_prompting
 
-def review_code_handler(env, code: str, model_name: str, review_criteria: Optional[str] = None) -> Dict[str, Any]:
-    try:
-        task_description = env.config.get("task", {}).get("content", "")
-        
-        system_prompt = (
-            "You are a strict code reviewer. Review the following code according to the task description and provide feedback.\n"
-            "After your detailed review, your conclusion must be in this exact format:\n"
-            "'The task description is: [repeat the full task description here]. Based on this task description, "
-            "it looks good to me (LGTM)' OR 'it looks bad to me (LBTM)'.\n\n"
-            f"Task Description:\n{task_description}\n"
-            "\nRemember: Your final conclusion must restate the complete task description before giving LGTM/LBTM judgment."
-        )
-        
-        if review_criteria:
-            system_prompt += f"\nSpecific review criteria: {review_criteria}"
+def give_advice_handler(env, task_description: str, model_name: str, file_path: str = "solution.py") -> Dict[str, Any]:
+    """
+    Reads solution.py content and provides improvement suggestions based on task description.
+    Saves suggestions to advices.json in the workspace directory.
 
-        user_prompt = f"Please review this code:\n```\n{code}\n```"
+    Args:
+        env: The environment instance
+        task_description (str): Task description
+        model_name (str): Name of the LLM model to use
+        file_path (str): File path, defaults to solution.py
+
+    Returns:
+        Dict[str, Any]: Result of the operation containing advice
+    """
+    try:
+        full_path = os.path.join(env.workspace_dir, os.path.basename(file_path))
+        advice_path = os.path.join(env.workspace_dir, "advices.json")
+        
+        if not os.path.exists(full_path):
+            return {
+                "success": False,
+                "error-msg": f"File not found at {full_path}"
+            }
+
+        # Read existing code
+        with open(full_path, 'r') as file:
+            existing_code = file.read()
+
+        system_prompt = (
+            "You are a Python code reviewer. Review the existing code based on the task description.\n"
+            "Provide clear, actionable suggestions for improvement without modifying the code.\n"
+            "Focus on:\n"
+            "1. Code quality and best practices\n"
+            "2. Performance optimization opportunities\n"
+            "3. Potential bugs or edge cases\n"
+            "4. Documentation and readability\n"
+            "Format your response as a structured list of suggestions.\n\n"
+            f"Task Description:\n{task_description}\n"
+            "\nCode to Review:\n"
+            f"{existing_code}\n"
+        )
+
+        user_prompt = "Please provide a detailed code review with specific suggestions for improvement."
 
         response = model_prompting(
             model_name,
@@ -27,45 +55,75 @@ def review_code_handler(env, code: str, model_name: str, review_criteria: Option
                 {"role": "user", "content": user_prompt}
             ],
             return_num=1,
-            max_token_num=1024,
+            max_token_num=2048,
             temperature=0.0
         )[0]
 
-        review_result = response.content
-        is_lgtm = "LGTM" in review_result.upper()
+        # Prepare advice data
+        advice_data = {
+            "task_description": task_description,
+            "file_path": file_path,
+            "timestamp": str(datetime.datetime.now()),
+            "suggestions": response.content
+        }
+
+        # Load existing advices if file exists
+        existing_advices = []
+        if os.path.exists(advice_path):
+            try:
+                with open(advice_path, 'r') as f:
+                    existing_advices = json.load(f)
+            except json.JSONDecodeError:
+                existing_advices = []
+
+        # Append new advice
+        if not isinstance(existing_advices, list):
+            existing_advices = []
+        existing_advices.append(advice_data)
+
+        # Save updated advices
+        with open(advice_path, 'w') as f:
+            json.dump(existing_advices, f, indent=2, ensure_ascii=False)
 
         return {
             "success": True,
-            "is_lgtm": is_lgtm,
-            "review_feedback": review_result
+            "message": f"Code review completed and saved to {advice_path}",
+            "code": existing_code,
+            "suggestions": response.content
         }
-        
+
     except Exception as e:
         return {"success": False, "error-msg": str(e)}
 
 def register_reviewer_actions(env):
+    """
+    Register coding-related actions in the environment.
+    """
     env.register_action(
-        "review_code",
-        handler=lambda **kwargs: review_code_handler(env, **kwargs),
+        "give_advice",
+        handler=lambda **kwargs: give_advice_handler(env, **kwargs),
         description={
             "type": "function",
             "function": {
-                "name": "review_code",
-                "description": "Review code and provide LGTM/LBTM feedback",
+                "name": "give_advice",
+                "description": "Review existing solution file and provide improvement suggestions without modifying the code",
                 "parameters": {
                     "type": "object",
                     "properties": {
-                        "code": {"type": "string", "description": "Code to be reviewed"},
+                        "task_description": {
+                            "type": "string", 
+                            "description": "Description of the task to review"
+                        },
                         "model_name": {
                             "type": "string", 
                             "description": "Name of the LLM model to use (e.g., 'gpt-3.5-turbo', 'gpt-4')"
                         },
-                        "review_criteria": {
-                            "type": "string", 
-                            "description": "Specific criteria for code review (optional)"
+                        "file_path": {
+                            "type": "string",
+                            "description": "Path of the solution file to review (optional, defaults to 'solution.py')"
                         }
                     },
-                    "required": ["code", "model_name"],
+                    "required": ["task_description", "model_name"],
                     "additionalProperties": False
                 }
             }

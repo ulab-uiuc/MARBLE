@@ -295,6 +295,12 @@ class Engine:
                 summary_data['task_evaluation'] = self.evaluator.metrics["task_evaluation"]
                 self.logger.info("Engine graph-based coordination loop completed.")
             self.logger.info("Engine graph-based coordination loop completed.")
+            if self.environment.name == 'Coding Environment':
+                code = self._read_code_from_file('/home/zhe36/MARBLE/marble/workspace/solution.py')
+                if code:
+                    self.evaluator.evaluate_code_quality(task=self.task, code_result=code)
+                    summary_data["code_quality"] = self.evaluator.metrics["code_quality"]
+                    self.logger.info(f"Code quality evaluation results: {self.evaluator.metrics['code_quality']}")
 
         except Exception:
             self.logger.exception("An error occurred during graph-based coordination.")
@@ -398,6 +404,12 @@ class Engine:
                 self.evaluator.evaluate_task_research(self.task, iteration_data["summary"])
                 summary_data['task_evaluation'] = self.evaluator.metrics["task_evaluation"]
                 self.logger.info("Engine graph-based coordination loop completed.")
+            if self.environment.name == 'Coding Environment':
+                code = self._read_code_from_file('/home/zhe36/MARBLE/marble/workspace/solution.py')
+                if code:
+                    self.evaluator.evaluate_code_quality(task=self.task, code_result=code)
+                    summary_data["code_quality"] = self.evaluator.metrics["code_quality"]
+                    self.logger.info(f"Code quality evaluation results: {self.evaluator.metrics['code_quality']}")
             self.logger.info("Engine simulation loop completed.")
 
         except Exception:
@@ -583,6 +595,12 @@ class Engine:
                 self.evaluator.evaluate_task_research(self.task, iteration_data["summary"])
                 summary_data['task_evaluation'] = self.evaluator.metrics["task_evaluation"]
                 self.logger.info("Engine graph-based coordination loop completed.")
+            if self.environment.name == 'Coding Environment':
+                code = self._read_code_from_file('/home/zhe36/MARBLE/marble/workspace/solution.py')
+                if code:
+                    self.evaluator.evaluate_code_quality(task=self.task, code_result=code)
+                    summary_data["code_quality"] = self.evaluator.metrics["code_quality"]
+                    self.logger.info(f"Code quality evaluation results: {self.evaluator.metrics['code_quality']}")
             self.logger.info("Tree-based coordination simulation completed.")
 
         except Exception:
