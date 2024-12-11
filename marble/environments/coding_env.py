@@ -9,6 +9,7 @@ from marble.environments.coding_utils import (
     register_coder_actions,
     # register_tester_actions,
     register_reviewer_actions,
+    # register_debugger_actions,
     # register_analyst_actions  
 )
 
@@ -39,6 +40,7 @@ class CodingEnvironment(BaseEnvironment):
         register_coder_actions(self)
         # register_tester_actions(self)
         register_reviewer_actions(self)
+        # register_debugger_actions(self)
         # register_analyst_actions(self)  
 
     def _get_file_path(self, filename: str, subdir: Optional[str] = None) -> str:

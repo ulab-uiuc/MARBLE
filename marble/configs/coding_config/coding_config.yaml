@@ -18,29 +18,28 @@ environment:
   type: Coding
   name: "Coding Environment"
   workspace_dir: "workspace"
-  max_iterations: 3
+  max_iterations: 5
 
 task:
-  content: |
+  content: |-
     Software Development Task:
-    
-    Build a basic ping pong game with simple AI opponent.
-    
+
+    Build a decision tree classifier supporting both numerical and categorical features
     1. Implementation requirements:
-       - The game should be a simple 2D ping pong game with a ball and a paddle.
-       - The paddle should be controlled by the player using the keyboard.
-       - The ball should move towards the paddle and bounce off the walls.
-       - The game should be terminal based.
-       - The game should be playable by pressing the arrow keys.
-    
+       - Use recursive partitioning based on information gain or Gini index.
+       - Handle missing values and categorical features.
+       - Implement tree visualization or text-based representation.
+       - Evaluate the classifier using test data.
+
+
     2. Project structure:
        - solution.py (main implementation)
-    
+
     3. Development process:
        - Developer: Create the code.
        - Developer: Update the code.
-       - Reviewer: Code review 
-    
+       - Reviewer: Code review
+
     Please work together to complete this task following software engineering best practices.
 
   output_format: |
@@ -54,20 +53,19 @@ agents:
       I am a Senior Software Developer specialized in Python development.
       I have to call "create_code" action to create the code in the first iteration.
       I need to let agent2 revise the code after I create the code.
-      But if the solution.py already exists, I have to call "revise_code" action to revise the code.
+      But if the solution.py already exists, I have to call "give_advice_and_revise_code" action to revise the code.
 
   - type: CodingAgent
     agent_id: agent2
     profile: |
-      I am a Senior Software Developer specialized in Python development.
-      I have to either call "revise_code" action to revise the code and furtherimprove the code quality or call "give_advice" action to give advice to the code.
+      I am a Senior Software Debugger specialized in Python development.
+      I have to call "give_advice_and_revise_code" action to give advice to the code and revise the code.
 
   - type: CodingAgent
     agent_id: agent3
     profile: |
-      I am a Code Reviewer with expertise in code quality and best practices and a Senior Software Developer specialized in Python development.
-      I have deep knowledge of software architecture and coding standards.
-      I have to either call "revise_code" action to revise the code and furtherimprove the code quality or call "give_advice" action to review the code.
+      I am a Senior Software Developer specialized in Python development.
+      I have to call "give_advice_and_revise_code" action to give advice to the code and revise the code.
 
 memory:
   type: SharedMemory

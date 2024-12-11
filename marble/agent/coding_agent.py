@@ -393,16 +393,28 @@ class CodingAgent:
 
         # summarize chat history
         system_message_summary = (
-            "You are an advanced summarizer agent designed to condense and clarify the history of conversations between multiple agents. "
-            "Your task is to analyze dialogues from various participants and generate a cohesive summary that captures the key points, themes, and decisions made throughout the interactions.\n\n"
+            "You are an advanced code review summarizer designed to analyze and synthesize discussions between multiple coding agents. "
+            "Your task is to analyze technical discussions and generate a cohesive summary that captures key technical decisions, code improvements, and implementation strategies.\n\n"
             "Your primary objectives are:\n\n"
-            "1. Contextual Analysis: Carefully review the entire conversation history to understand the context, including the roles of different agents and the progression of discussions.\n\n"
-            "2. Identify Key Themes: Extract the main themes, topics, and significant moments in the dialogue, noting any recurring issues or points of contention.\n\n"
-            "3. Summarize Conversations: Create a clear and concise summary that outlines the conversation's flow, important exchanges, decisions made, and any action items that emerged. Ensure that the summary reflects the contributions of each agent without losing the overall narrative.\n\n"
-            "4. Highlight Outcomes: Emphasize any conclusions reached or actions agreed upon by the agents, providing a sense of closure to the summarized conversation.\n\n"
-            "5. Engage with User Input: If the user has specific interests or focuses within the conversation, inquire to tailor the summary accordingly, ensuring it meets their needs.\n\n"
-            "When composing the summary, maintain clarity, coherence, and logical organization. Your goal is to provide a comprehensive yet succinct overview that enables users to understand the essence of the multi-agent dialogue at a glance."
+            "1. Technical Context Analysis: Review the entire conversation history to understand the technical context, including code requirements, implementation challenges, and proposed solutions.\n\n"
+            "2. Code Review Points: Extract the main technical suggestions, code improvements, bug fixes, and architectural decisions discussed between agents.\n\n"
+            "3. Implementation Details: Identify specific code changes, refactoring suggestions, and optimization strategies that were proposed or agreed upon.\n\n"
+            "4. Technical Decisions: Document key technical decisions made during the discussion, including chosen algorithms, design patterns, or architectural approaches.\n\n"
+            "5. Action Items: List concrete code changes, refactoring tasks, or improvements that need to be implemented based on the discussion.\n\n"
+            "6. Quality Considerations: Highlight discussions about code quality, performance optimizations, testing strategies, and best practices.\n\n"
+            "When composing the summary, focus on technical accuracy and actionable insights. Your goal is to provide a clear overview of the technical discussion that can guide the actual implementation or code improvements."
         )
+        # system_message_summary = (
+        #     "You are an advanced summarizer agent designed to condense and clarify the history of conversations between multiple agents. "
+        #     "Your task is to analyze dialogues from various participants and generate a cohesive summary that captures the key points, themes, and decisions made throughout the interactions.\n\n"
+        #     "Your primary objectives are:\n\n"
+        #     "1. Contextual Analysis: Carefully review the entire conversation history to understand the context, including the roles of different agents and the progression of discussions.\n\n"
+        #     "2. Identify Key Themes: Extract the main themes, topics, and significant moments in the dialogue, noting any recurring issues or points of contention.\n\n"
+        #     "3. Summarize Conversations: Create a clear and concise summary that outlines the conversation's flow, important exchanges, decisions made, and any action items that emerged. Ensure that the summary reflects the contributions of each agent without losing the overall narrative.\n\n"
+        #     "4. Highlight Outcomes: Emphasize any conclusions reached or actions agreed upon by the agents, providing a sense of closure to the summarized conversation.\n\n"
+        #     "5. Engage with User Input: If the user has specific interests or focuses within the conversation, inquire to tailor the summary accordingly, ensuring it meets their needs.\n\n"
+        #     "When composing the summary, maintain clarity, coherence, and logical organization. Your goal is to provide a comprehensive yet succinct overview that enables users to understand the essence of the multi-agent dialogue at a glance."
+        # )
         summary_task = (
             f"These are an chat history: {session_current_agent.seralize_message(session_id=self.session_id)}\n"
             f"Please summarize information in the chat history relevant to the task: {task}."

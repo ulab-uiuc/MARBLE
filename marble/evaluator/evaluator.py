@@ -284,47 +284,58 @@ class Evaluator:
 
     def evaluate_code_quality(self, task: str, code_result: str) -> None:
         """
-        Evaluate the code quality based on completeness, executability, consistency, and quality.
+        Evaluate the code quality based on stricter criteria, with clear penalties for incompleteness and other issues.
 
         Args:
             task (str): The task description.
             code_result (str): The code result to be evaluated.
         """
-        # 定义评估代码质量的 prompt
+
         code_quality_prompt_template = """
-        [Context]
-        **Task:** {task}
+                [Context]
+                **Task:** {task}
 
-        **Code Result:** {code_result}
+                **Code Result:** {code_result}
 
-        [System]
-        Please evaluate the provided code result based on the following criteria:
-        
-        1. **Completeness:** Does the code fulfill all the requirements of the task?
-        2. **Executability:** Is the code syntactically correct and executable?
-        3. **Consistency:** Is the code consistent in logic and style?
-        4. **Quality:** Is the code well-structured, readable, and maintainable?
-        
-        Use the following 5-point scale for each criterion:
-        - **5 points:** Excellent - Fully satisfies the criterion.
-        - **4 points:** Good - Minor issues or improvements needed.
-        - **3 points:** Average - Noticeable areas for improvement.
-        - **2 points:** Below Average - Significant issues that need addressing.
-        - **1 point:** Poor - Does not meet the basic requirements.
+                [System]
+                This evaluation requires extremely stringent scoring. The scores must not be generous, and deductions should be applied strictly for every issue found. 
 
-        [Question]
-        Based on the criteria, evaluate the code and output the scores for each criterion in the following JSON format:
-        {{
-            "completeness": score,
-            "executability": score,
-            "consistency": score,
-            "quality": score
-        }}
+                ### **Evaluation Criteria**
+                1. **Instruction-Following:** Does the code fulfill all the requirements of the task? Deduct 1 point for every unmet or partially met requirement from the task instructions. 
+                2. **Executability:** Is the code syntactically correct and executable? Deduct points for any syntax errors, missing imports, or runtime errors. 
+                3. **Consistency:** Is the code consistent in variable naming, formatting, and logic? Deduct points for inconsistent variable naming, formatting issues, or contradictory logic. 
+                4. **Quality:** Is the code well-documented, clear, and modular? Deduct points for poor documentation, unclear logic, or lack of modular design. 
+
+                ### **Scoring**
+                - **1 point:** Below Average - Significant issues that need addressing.
+                - **2 points:** Average - Noticeable areas for improvement.
+                - **3 points:** Good - Minor issues or improvements needed.
+
+                bonus stage:
+                Only code with a base score of **3** can be considered for bonus points.
+                - **4 points:** Excellent - Fully satisfies the criterion.
+                - **5 points:** Legendary - The code is flawless and exceeds expectations.
+
+                **Do not give the same scores for different criteria, such as 3 for instruction-following, 3 for executability, 3 for consistency, and 3 for quality.**
+                If you give the same scores for the 4 criteria, you have to deduct or add 1 point randomly for one or two criteria.
+
+                
+
+                ### **Question**
+                Based on the criteria, evaluate the code and output the scores for each criterion in the following JSON format:
+                {{
+                    "instruction_following": score,
+                    "executability": score,
+                    "consistency": score,
+                    "quality": score
+                }}
         """
-        # 填充模板
+
+
+        # Fill in the template
         prompt = code_quality_prompt_template.format(task=task, code_result=code_result)
 
-        # 调用 LLM
+        # Call the LLM
         response = model_prompting(
             llm_model=self.llm,
             messages=[{"role": "user", "content": prompt}],
@@ -335,13 +346,14 @@ class Evaluator:
             stream=None,
         )[0]
 
-        # 解析评分结果
+        # Parse the scores
         scores = self.parse_research_ratings(response.content)
 
-        # 更新评估指标
+        # Update the metrics
         if scores:
             self.metrics["code_quality"] = scores
-            self.logger.info(f"Code quality evaluated: {scores}")
+            self.logger.info(f"Code quality evaluated strictly: {scores}")
         else:
             self.logger.error("Failed to parse code quality scores.")
+
 

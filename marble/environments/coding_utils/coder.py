@@ -19,7 +19,11 @@ def create_solution_handler(env, task_description: str, model_name: str, file_pa
         # Construct full path using workspace directory
         workspace_dir = env.workspace_dir  # This should be "marble/workspace"
         full_path = os.path.join(workspace_dir, file_path)
-        
+        if os.path.exists(full_path):
+            return {
+                "success": False,
+                "error-msg": f"Solution file already exists at {full_path}. Operation aborted."
+            }
         # Create workspace directory if it doesn't exist
         os.makedirs(workspace_dir, exist_ok=True)
 
@@ -61,73 +65,95 @@ def create_solution_handler(env, task_description: str, model_name: str, file_pa
     except Exception as e:
         return {"success": False, "error-msg": str(e)}
 
-def revise_solution_handler(env, task_description: str, model_name: str, file_path: str = "solution.py") -> Dict[str, Any]:
-    """
-    Reads solution.py content and improves/modifies it based on task description.
+# def revise_solution_handler(env, task_description: str, model_name: str, file_path: str = "solution.py") -> Dict[str, Any]:
+#     """
+#     Reads solution.py content and improves/modifies it based on task description.
+#     If advices.json exists, incorporates the suggestions into the improvement process.
 
-    Args:
-        env: The environment instance
-        task_description (str): Task description
-        model_name (str): Name of the LLM model to use
-        file_path (str): File path, defaults to solution.py
+#     Args:
+#         env: The environment instance
+#         task_description (str): Task description
+#         model_name (str): Name of the LLM model to use
+#         file_path (str): File path, defaults to solution.py
 
-    Returns:
-        Dict[str, Any]: Result of the operation
-    """
-    try:
-        full_path = os.path.join(env.workspace_dir, os.path.basename(file_path))
+#     Returns:
+#         Dict[str, Any]: Result of the operation
+#     """
+#     try:
+#         full_path = os.path.join(env.workspace_dir, os.path.basename(file_path))
+#         advice_path = os.path.join(env.workspace_dir, "advices.json")
         
-        # Create workspace directory if it doesn't exist
-        os.makedirs(env.workspace_dir, exist_ok=True)
+#         # Create workspace directory if it doesn't exist
+#         os.makedirs(env.workspace_dir, exist_ok=True)
 
-        # Create file if it doesn't exist
-        if not os.path.exists(full_path):
-            return create_solution_handler(env, task_description, model_name, file_path)
+#         # Create file if it doesn't exist
+#         if not os.path.exists(full_path):
+#             return create_solution_handler(env, task_description, model_name, file_path)
 
-        # Read existing code
-        with open(full_path, 'r') as file:
-            existing_code = file.read()
+#         # Read existing code
+#         with open(full_path, 'r') as file:
+#             existing_code = file.read()
 
-        system_prompt = (
-            "You are a Python developer. Review and improve the existing code based on the task description.\n"
-            "Your improvements should maintain code clarity and follow Python best practices.\n"
-            "After your improvements, your conclusion must be in this exact format:\n"
-            "'The task description is: [repeat the full task description here]. Based on this task description, "
-            "I have improved the solution.'\n\n"
-            f"Task Description:\n{task_description}\n"
-            "\nExisting Code:\n"
-            f"{existing_code}\n"
-        )
+#         # Try to load suggestions from advices.json if it exists
+#         suggestions = ""
+#         if os.path.exists(advice_path):
+#             try:
+#                 with open(advice_path, 'r') as f:
+#                     advice_data = json.load(f)
+#                     if isinstance(advice_data, list) and len(advice_data) > 0:
+#                         suggestions = advice_data[0].get("suggestions", "")
+#             except (json.JSONDecodeError, KeyError):
+#                 suggestions = ""
 
-        user_prompt = "Please provide the improved version of this code."
+#         # Construct system prompt with suggestions if available
+#         system_prompt = (
+#             "You are a Python developer. Review and improve the existing code based on the task description.\n"
+#             "Your improvements should maintain code clarity and follow Python best practices.\n"
+#             "After your improvements, your conclusion must be in this exact format:\n"
+#             "'The task description is: [repeat the full task description here]. Based on this task description, "
+#             "I have improved the solution.'\n\n"
+#             f"Task Description:\n{task_description}\n"
+#             "\nExisting Code:\n"
+#             f"{existing_code}\n"
+#         )
 
-        response = model_prompting(
-            model_name,
-            messages=[
-                {"role": "system", "content": system_prompt},
-                {"role": "user", "content": user_prompt}
-            ],
-            return_num=1,
-            max_token_num=2048,
-            temperature=0.0
-        )[0]
+#         if suggestions:
+#             system_prompt += (
+#                 "\nPrevious Code Review Suggestions:\n"
+#                 f"{suggestions}\n"
+#                 "\nPlease consider these suggestions while improving the code.\n"
+#             )
 
-        # Extract the improved code from the response
-        improved_code = response.content
+#         user_prompt = "Please provide the improved version of this code, taking into account any previous suggestions if provided."
 
-        # revise the file with improved code
-        with open(full_path, 'w') as file:
-            file.write(improved_code)
+#         response = model_prompting(
+#             model_name,
+#             messages=[
+#                 {"role": "system", "content": system_prompt},
+#                 {"role": "user", "content": user_prompt}
+#             ],
+#             return_num=1,
+#             max_token_num=2048,
+#             temperature=0.0
+#         )[0]
 
-        return {
-            "success": True,
-            "message": f"Solution file revised at {full_path}",
-            "original_code": existing_code,
-            "improved_code": improved_code
-        }
+#         # Extract the improved code from the response
+#         improved_code = response.content
 
-    except Exception as e:
-        return {"success": False, "error-msg": str(e)}
+#         # revise the file with improved code
+#         with open(full_path, 'w') as file:
+#             file.write(improved_code)
+
+#         return {
+#             "success": True,
+#             "message": f"Solution file revised at {full_path}",
+#             "original_code": existing_code,
+#             "improved_code": improved_code,
+#             "previous_suggestions": suggestions if suggestions else "No previous suggestions found"
+#         }
+
+#     except Exception as e:
+#         return {"success": False, "error-msg": str(e)}
 
 def register_coder_actions(env):
     """
@@ -164,33 +190,33 @@ def register_coder_actions(env):
         }
     )
 
-    env.register_action(
-        "revise_solution",
-        handler=lambda **kwargs: revise_solution_handler(env, **kwargs),
-        description={
-            "type": "function",
-            "function": {
-                "name": "revise_solution",
-                "description": "revise existing solution file by improving/modifying code based on task description",
-                "parameters": {
-                    "type": "object",
-                    "properties": {
-                        "task_description": {
-                            "type": "string", 
-                            "description": "Description of the task to implement"
-                        },
-                        "model_name": {
-                            "type": "string", 
-                            "description": "Name of the LLM model to use (e.g., 'gpt-3.5-turbo', 'gpt-4')"
-                        },
-                        "file_path": {
-                            "type": "string",
-                            "description": "Path of the solution file to revise (optional, defaults to 'solution.py')"
-                        }
-                    },
-                    "required": ["task_description", "model_name"],
-                    "additionalProperties": False
-                }
-            }
-        }
-    )
+    # env.register_action(
+    #     "revise_solution",
+    #     handler=lambda **kwargs: revise_solution_handler(env, **kwargs),
+    #     description={
+    #         "type": "function",
+    #         "function": {
+    #             "name": "revise_solution",
+    #             "description": "revise existing solution file by improving/modifying code based on task description",
+    #             "parameters": {
+    #                 "type": "object",
+    #                 "properties": {
+    #                     "task_description": {
+    #                         "type": "string", 
+    #                         "description": "Description of the task to implement"
+    #                     },
+    #                     "model_name": {
+    #                         "type": "string", 
+    #                         "description": "Name of the LLM model to use (e.g., 'gpt-3.5-turbo', 'gpt-4')"
+    #                     },
+    #                     "file_path": {
+    #                         "type": "string",
+    #                         "description": "Path of the solution file to revise (optional, defaults to 'solution.py')"
+    #                     }
+    #                 },
+    #                 "required": ["task_description", "model_name"],
+    #                 "additionalProperties": False
+    #             }
+    #         }
+    #     }
+    # )
