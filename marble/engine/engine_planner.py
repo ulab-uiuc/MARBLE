@@ -9,6 +9,7 @@ from typing import Any, Dict, List
 
 from litellm.types.utils import Message
 from litellm.utils import token_counter
+from litellm.utils import trim_messages
 
 from marble.graph.agent_graph import AgentGraph
 from marble.llms.model_prompting import model_prompting
@@ -129,15 +130,18 @@ class EnginePlanner:
         Returns:
             str: The summarized output.
         """
-        response = model_prompting(
-            llm_model="gpt-3.5-turbo",
-            messages=[{"role": "user", "content": f"Summarize the output of the agents for the task: {task}\n\nNow here is some result of thr agent: {summary}, please summarize it. You should follow the use of the following format: {output_format}"}],
-            return_num=1,
-            max_token_num=1024,
-            temperature=0.0,
-            top_p=None,
-            stream=None
-        )[0]
+        messages = [{"role": "user", "content": f"Summarize the output of the agents for the task: {task}\n\nNow here is some result of thr agent: {summary}, please summarize it. You should follow the use of the following format: {output_format}"}]
+        try:
+            response = model_prompting(
+                llm_model="gpt-3.5-turbo",
+                messages=trim_messages(messages, model=self.model, max_tokens=int(16384 * 0.6)),                return_num=1,
+                max_token_num=1024,
+                temperature=0.0,
+                top_p=None,
+                stream=None
+            )[0]
+        except:
+            import pdb; pdb.set_trace()
         self.token_usage += token_counter(model=self.model, messages=[{"role": "user", "content": f"Summarize the output of the agents for the task: {task}\n\nNow here is some result of thr agent: {summary}, please summarize it. You should follow the use of the following format: {output_format}"}, {"role": "assistant", "content": response.content}])
         return response
 
@@ -171,6 +175,9 @@ class EnginePlanner:
         )
 
         messages = [{"role": "system", "content": prompt}]
+        # trim messages
+        messages = trim_messages(messages, model=self.model, max_tokens=int(16384 * 0.6))
+        
         response = model_prompting(
             llm_model="gpt-3.5-turbo",
             messages=messages,

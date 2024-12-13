@@ -11,6 +11,7 @@ import requests
 from marble.environments.db_utils.anomaly_detection import detect_anomalies, describe_data_features
 
 from marble.environments.base_env import BaseEnvironment
+from marble.llms.model_prompting import model_prompting
 
 from marble.environments.db_utils.metrics import allowed_metrics_full_names, full_metrics_full_names
 from marble.environments.db_utils.diagnostic_kb import DiagnosticKB
@@ -79,8 +80,6 @@ class DBEnvironment(BaseEnvironment):
         init_sql = config.get('init_sql', None)
         test_sql = config.get('test_sql', None)
 
-        assert init_sql
-
         connection = psycopg2.connect(
             user="test",
             password="Test123_456",
@@ -94,11 +93,29 @@ class DBEnvironment(BaseEnvironment):
         print("Warning messages turned off.")
 
         print("Initializing the database...")
-        for statement in split_sql_statements(init_sql):
-            cursor.execute(statement)
+        if init_sql is not None and len(init_sql):
+            for statement in split_sql_statements(init_sql):
+                cursor.execute(statement)
+        else:
+            print("No init SQL statements provided. Skipping...")
 
         cursor.execute("RESET client_min_messages;")
         print("Warning messages turned on.")
+        
+        cursor.execute("CREATE EXTENSION pg_stat_statements;")
+        
+        # interactive sql shell
+        # while True:
+        #     sql = input("Enter SQL statement: ")
+        #     if sql == 'q':
+        #         break
+        #     try:
+        #         cursor.execute(sql)
+        #         print(cursor.fetchall())
+        #     except Exception as e:
+        #         print(f"Error executing SQL statement: {e}")
+
+        print("pg_stat_statements extension created.")
 
         print("Executing test SQL statements...")
 
@@ -128,122 +145,200 @@ class DBEnvironment(BaseEnvironment):
                     print(f"Error executing SQL statement: {e}")
 
     def register_actions(self) -> None:
+        # self.register_action(
+        #     "get_alerts",
+        #     handler=self.get_alerts_handler,
+        #     description={
+        #         "type": "function",
+        #         "function": {
+        #             "name": "get_alerts",
+        #             "description": "Get current alerts from the database monitoring system. Returns information about any active alerts including their names, descriptions, and severity levels.",
+        #             "parameters": {
+        #                 "type": "object",
+        #                 "properties": {},
+        #                 "required": [],
+        #                 "additionalProperties": False
+        #             }
+        #         }
+        #     }
+        # )
+
+        # self.register_action(
+        #     "get_alert_metrics",
+        #     handler=self.get_alert_metrics_handler,
+        #     description={
+        #         "type": "function",
+        #         "function": {
+        #             "name": "get_alert_metrics",
+        #             "description": "Get metrics related to current alerts from the database monitoring system.",
+        #             "parameters": {
+        #             "type": "object",
+        #             "properties": {},
+        #             "required": [],
+        #             "additionalProperties": False
+        #             }
+        #         }
+        #     }
+        # )
+
+        # self.register_action(
+        #     "detect_metric_abnormality",
+        #     handler=self.detect_metric_abnormality_handler,
+        #     description={
+        #         "type": "function",
+        #         "function": {
+        #             "name": "detect_metric_abnormality",
+        #             "description": "Get detailed information about a specific metric selected by the LLM.",
+        #             "parameters": {
+        #             "type": "object",
+        #             "properties": {
+        #                 "metric_name": {
+        #                     "type": "string",
+        #                     "description": "The name of the metric to get information about.",
+        #                     "enum": [
+        #                         "cpu",
+        #                         "memory",
+        #                         "network",
+        #                         "io"
+        #                     ]
+        #                 }
+        #             },
+        #             "required": ["metric_name"],
+        #             "additionalProperties": False
+        #             }
+        #         }
+        #     }
+        # )
+
+        # self.register_action(
+        #     "get_rag",
+        #     handler=self.get_rag_handler,
+        #     description={
+        #         "type": "function",
+        #         "function": {
+        #             "name": "get_rag",
+        #             "description": "Get relevant knowledge from the RAG system based on the expert and metric name.",
+        #             "parameters": {
+        #             "type": "object",
+        #             "properties": {
+        #                 "expert": {
+        #                     "type": "string",
+        #                     "description": "The type of expert to consult. Please input the one matching with your profession.",
+        #                     "enum": [
+        #                         "ConfigurationExpert",
+        #                         "CpuExpert",
+        #                         "DiskExpert",
+        #                         "IndexExpert",
+        #                         "IoExpert",
+        #                         "MemoryExpert",
+        #                         "QueryExpert",
+        #                         "RecoveryExpert",
+        #                         "WorkloadExpert"
+        #                     ]
+        #                 },
+        #                 "query_str": {
+        #                     "type": "string",
+        #                     "description": "What you would like to find the root cause for."
+        #                 }
+        #             },
+        #             "required": ["expert", "metric_name", "llm_selected_metric_str"],
+        #             "additionalProperties": False
+        #             }
+        #         }
+        #     }
+        # )
+
+        # self.register_action(
+        #     "get_slow_query",
+        #     handler=self.get_slow_query_handler,
+        #     description={
+        #         "type": "function",
+        #         "function": {
+        #             "name": "get_slow_query",
+        #             "description": "Get information about the slowest queries executed in the database.",
+        #             "parameters": {
+        #             "type": "object",
+        #             "properties": {},
+        #             "required": [],
+        #             "additionalProperties": False
+        #             }
+        #         }
+        #     }
+        # )
+
+        # self.register_action(
+        #     'get_docker_postgresql_error_query_log',
+        #     handler=self.get_docker_postgresql_error_query_log_handler,
+        #     description={
+        #         "type": "function",
+        #         "function": {
+        #             "name": "get_docker_postgresql_error_query_log",
+        #             "description": "Get the last 100 lines of the PostgreSQL query error log.",
+        #             "parameters": {
+        #                 "type": "object",
+        #                 "properties": {},
+        #                 "required": [],
+        #                 "additionalProperties": False
+        #             }
+        #         }
+        #     }
+        # )
+
         self.register_action(
-            "get_alerts",
-            handler=self.get_alerts_handler,
+            'query_db',
+            handler=self.query_db_handler,
             description={
                 "type": "function",
                 "function": {
-                    "name": "get_alerts",
-                    "description": "Get current alerts from the database monitoring system. Returns information about any active alerts including their names, descriptions, and severity levels.",
+                    "name": "query_db",
+                    "description": (
+                        "Query the PostgreSQL database with the given SQL statement. \n"
+                        "Please keep to the pg_stat_statements "
+                        "table, and make sure that your query itself "
+                        "won't cause the database to hang. \n"
+                        "Recommended to use one single query at a time. \n"
+                        "You will get the result of the query."
+                    ),
                     "parameters": {
                         "type": "object",
-                        "properties": {},
-                        "required": [],
-                        "additionalProperties": False
-                    }
-                }
-            }
-        )
-
-        self.register_action(
-            "get_alert_metrics",
-            handler=self.get_alert_metrics_handler,
-            description={
-                "type": "function",
-                "function": {
-                    "name": "get_alert_metrics",
-                    "description": "Get metrics related to current alerts from the database monitoring system.",
-                    "parameters": {
-                    "type": "object",
-                    "properties": {},
-                    "required": [],
-                    "additionalProperties": False
-                    }
-                }
-            }
-        )
-
-        self.register_action(
-            "detect_metric_abnormality",
-            handler=self.detect_metric_abnormality_handler,
-            description={
-                "type": "function",
-                "function": {
-                    "name": "detect_metric_abnormality",
-                    "description": "Get detailed information about a specific metric selected by the LLM.",
-                    "parameters": {
-                    "type": "object",
-                    "properties": {
-                        "metric_name": {
-                            "type": "string",
-                            "description": "The name of the metric to get information about.",
-                            "enum": [
-                                "cpu",
-                                "memory",
-                                "network",
-                                "io"
-                            ]
-                        }
-                    },
-                    "required": ["metric_name"],
-                    "additionalProperties": False
-                    }
-                }
-            }
-        )
-
-        self.register_action(
-            "get_rag",
-            handler=self.get_rag_handler,
-            description={
-                "type": "function",
-                "function": {
-                    "name": "get_rag",
-                    "description": "Get relevant knowledge from the RAG system based on the expert and metric name.",
-                    "parameters": {
-                    "type": "object",
-                    "properties": {
-                        "expert": {
-                            "type": "string",
-                            "description": "The type of expert to consult. Please input the one matching with your profession.",
-                            "enum": [
-                                "ConfigurationExpert",
-                                "CpuExpert",
-                                "DiskExpert",
-                                "IndexExpert",
-                                "IoExpert",
-                                "MemoryExpert",
-                                "QueryExpert",
-                                "RecoveryExpert",
-                                "WorkloadExpert"
-                            ]
+                        "properties": {
+                            "sql": {
+                                "type": "string",
+                                "description": (
+                                    "The SQL statement to execute. \n"
+                                    "You can try to access these tables: \n"
+                                    "For insert related: \n"
+                                    "- pg_stat_queries, for running queries \n"
+                                    "- pg_stat_statements, for detailed query statistics \n"
+                                    "For lock contention related: \n"
+                                    "- pg_locks, for lock waits and contention \n"
+                                    "- pg_stat_activity, for identifying blocked and active queries \n"
+                                    "For redundant indexes: \n"
+                                    "- pg_indexes, for index definitions \n"
+                                    "- pg_stat_user_indexes, for index usage statistics \n"
+                                    "For vacuum related: \n"
+                                    "- pg_stat_all_tables, forvdetailed statistics about vacuuming, auto vacuuming, "
+                                    "and analyze operations for each table \n"
+                                    "For example, here is how you can get the slowest "
+                                    "queries: \n"
+                                    "SELECT query, total_exec_time \n"
+                                    "FROM pg_stat_statements \n"
+                                    "ORDER BY total_exec_time DESC \n"
+                                    "LIMIT 10;\n\n"
+                                    "Here is how you can get slowest SELECT data fetching queries: \n"
+                                    "SELECT query, total_exec_time \n"
+                                    "FROM pg_stat_statements \n"
+                                    "WHERE query LIKE 'SELECT%' \n"
+                                    "ORDER BY total_exec_time DESC \n"
+                                    "LIMIT 10;\n\n"
+                                    "It is advised you don't query with limit set "
+                                    "way too high, like not more than 100. "
+                                    "Only include query statements in this param."
+                                )
+                            }
                         },
-                        "query_str": {
-                            "type": "string",
-                            "description": "What you would like to find the root cause for."
-                        }
-                    },
-                    "required": ["expert", "metric_name", "llm_selected_metric_str"],
-                    "additionalProperties": False
-                    }
-                }
-            }
-        )
-
-        self.register_action(
-            "get_slow_query",
-            handler=self.get_slow_query_handler,
-            description={
-                "type": "function",
-                "function": {
-                    "name": "get_slow_query",
-                    "description": "Get information about the slowest queries executed in the database.",
-                    "parameters": {
-                    "type": "object",
-                    "properties": {},
-                    "required": [],
-                    "additionalProperties": False
+                        "required": ["sql"],
+                        "additionalProperties": False
                     }
                 }
             }
@@ -268,6 +363,28 @@ class DBEnvironment(BaseEnvironment):
             except:
                 pass
         print(f'Alert detected @ {alerts}')
+
+    def get_docker_postgresql_error_query_log_handler(self) -> Dict[str, Any]:
+        raise Exception("This function is STILL IN DEVELOPMENT. Please try again later.")
+        # use a command
+        result = os.popen("sudo docker logs -tf db_env_docker-postgres_db-1").read()
+        # get last 100 lines and make it string
+        result = '\n'.join(result.split('\n')[-100:])
+        if result:
+            return {
+                'status': 'success',
+                'function_name': 'get_docker_postgresql_error_query_log',
+                'explanation': (
+                    "Here are the last 100 lines of the PostgreSQL query error log: \n"
+                    f"{result}"
+                )
+            }
+        else:
+            return {
+                'status': 'success',
+                'function_name': 'get_docker_postgresql_error_query_log',
+                'explanation': "No failed queries found in the PostgreSQL query error log."
+            }
 
     def get_alerts_handler(self) -> Dict[str, Any]:
         try:
@@ -297,14 +414,14 @@ class DBEnvironment(BaseEnvironment):
             return {
                 'status': 'success',
                 'alert_count': len(formatted_alerts),
-                'alerts': formatted_alerts,
+                # 'alerts': formatted_alerts,
                 'explanation': explanation
             }
         except Exception as e:
             return {
                 'status': 'error',
                 'message': str(e),
-                'alerts': [],
+                # 'alerts': [],
                 'explanation': 'No alerts found now. You can try again later.'
             }
 
@@ -351,6 +468,35 @@ class DBEnvironment(BaseEnvironment):
                 'status': 'error',
                 'function_name': 'get_rag',
                 'explanation': str(e)
+            }
+
+    def query_db_handler(self, sql: str) -> Dict[str, Any]:
+        try:
+            connection = psycopg2.connect(
+                user="test",
+                password="Test123_456",
+                database="sysbench",
+                host="localhost",
+                port="5432"
+            )
+            cursor = connection.cursor()
+            sql_queries = split_sql_statements(sql)
+            for sql_query in sql_queries:
+                cursor.execute(sql_query)
+            result = cursor.fetchall()
+            cursor.close()
+            connection.close()
+
+            return {
+                'status': 'success',
+                'function_name': 'query_db',
+                'explanation': f"Your query on the database was successful{'' if len(result) else ' but no data was returned'}. \nYour query is: {sql_queries} \nResult: {result}"
+            }
+        except Exception as e:
+            return {
+                'status': 'error',
+                'function_name': 'query_db',
+                'explanation': f"An error occurred while you tried to query the database: {str(e)}"
             }
 
     def get_slow_query_handler(self) -> Dict[str, Any]:

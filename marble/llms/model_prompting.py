@@ -29,7 +29,7 @@ def model_prompting(
     # litellm.set_verbose=True
     completion = litellm.completion(
         model=llm_model,
-        messages=trim_messages(messages),
+        messages=trim_messages(messages, model=llm_model, max_tokens=int(16384 * 0.6)),
         max_tokens=max_token_num,
         n=return_num,
         top_p=top_p,

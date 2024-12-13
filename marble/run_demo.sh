@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # Define the directory containing the configuration files
-CONFIG_DIR="./configs/test_config_db_100"
+CONFIG_DIR="./configs/test_config_db_base"
 
 scenarios=(
-    'E_COMMERCE'
+    'BASE'
     'EDUCATION'
     'FILE_SHARING'
     'FINANCIAL'
@@ -15,7 +15,6 @@ scenarios=(
 )
 
 # List scenarios and ask user to select one or more
-echo "Please select one or more scenarios by entering the corresponding numbers (1-8), separated by commas, or enter 'all' to select all:"
 echo "1) E_COMMERCE"
 echo "2) EDUCATION"
 echo "3) FILE_SHARING"
@@ -46,7 +45,7 @@ for CONFIG_FILE in "$CONFIG_DIR"/*.yaml; do
     for scenario in "${selected_scenarios[@]}"; do
         if grep -q "$scenario" "$CONFIG_FILE"; then
             # Execute the simulation engine with the specified configuration
-            python main.py --config "$CONFIG_FILE"
+            python main.py --config "$CONFIG_FILE" | tee "logs/$(basename "$CONFIG_FILE" .yaml)_$(date +'%Y%m%d_%H%M%S').log"
             break
         fi
     done
