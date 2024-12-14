@@ -1,6 +1,6 @@
 coordinate_mode: star
 relationships: []
-llm: "gpt-4o-mini"
+llm: "together_ai/meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo"
 
 environment:
   type: DB
@@ -19,7 +19,7 @@ communication: False
 
 task:
   content: |
-    Recently, during operation, the database monitoring system has triggered an alert. Use sql queries to find out what is wrong, and query the RAG system to get related information, and find out the reason that caused it. The root cause can be only two of the following: 'INSERT_LARGE_DATA', 'MISSING_INDEXES', 'LOCK_CONTENTION', 'VACUUM', 'REDUNDANT_INDEX', 'FETCH_LARGE_DATA,CORRELATED_SUBQUERY', 'POOR_JOIN_PERFORMANCE,CPU_CONTENTION'. The planner should assign different agent to analyze possbility for each root cause and make final decision. Please make the decision after using all these tools, as a premature decision may lead to incorrect conclusions.
+    Recently, during operation, the database monitoring system has triggered an alert. Use sql queries to find out what is wrong, and query the RAG system to get related information, and find out the reason that caused it. The root cause can be only two of the following: 'INSERT_LARGE_DATA', 'MISSING_INDEXES', 'LOCK_CONTENTION', 'VACUUM', 'REDUNDANT_INDEX', 'FETCH_LARGE_DATA', 'POOR_JOIN_PERFORMANCE,CPU_CONTENTION'. The planner should assign different agent to analyze possbility for each root cause and make final decision. Please make the decision after using all these tools, as a premature decision may lead to incorrect conclusions.
   output_format: |
     Please make the decision after exploring all rootcauses, as a premature decision may lead to incorrect conclusions.
     Please choose the most likely cause of the database anomaly from the following list, based on the expert agents: 
