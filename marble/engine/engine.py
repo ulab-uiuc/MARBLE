@@ -216,11 +216,16 @@ class Engine:
             assert isinstance(iteration_data_task_results, list)
             results_str = self._format_results(iteration_data_task_results)
             iteration_data_summary = iteration_data.get("summary")
+
             assert isinstance(iteration_data_summary, str)
             self.evaluator.evaluate_planning(iteration_data_summary, agent_profiles, agent_tasks_str, results_str)
             self.evaluator.evaluate_kpi(self.task, results_str)
 
-            while self.current_iteration < self.max_iterations:
+            end_on_iter_0 = False
+            if not continue_simulation:
+                end_on_iter_0 = True
+
+            while self.current_iteration < self.max_iterations and not end_on_iter_0:
                 iteration_data = {
                     "iteration": self.current_iteration + 1,
                     "task_assignments": {},
@@ -266,7 +271,6 @@ class Engine:
                 self.current_iteration += 1
                 summary_from_planner = self.planner.summarize_output(summary, self.task, self.output_format)
                 iteration_data["summary"] = summary_from_planner.content
-
 
                 # Evaluate communication
                 if iteration_data["communications"]:
