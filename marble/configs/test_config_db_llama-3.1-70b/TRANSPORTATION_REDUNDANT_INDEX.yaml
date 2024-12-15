@@ -195,7 +195,7 @@ metrics:
   accuracy: true
   response_time: true
 output:
-  file_path: result_llama-3.3-70b/TRANSPORTATION_REDUNDANT_INDEX_RESULT.json
+  file_path: result/result_llama-3.3-70b/TRANSPORTATION_REDUNDANT_INDEX_RESULT.json
 engine_planner:
   initial_progress: |-
     Starting the simulation.

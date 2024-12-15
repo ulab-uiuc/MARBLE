@@ -168,7 +168,7 @@ metrics:
   accuracy: true
   response_time: true
 output:
-  file_path: result_llama-3.3-70b/SOCIAL_MEDIA_INSERT_LARGE_DATA_RESULT.json
+  file_path: result/result_llama-3.3-70b/SOCIAL_MEDIA_INSERT_LARGE_DATA_RESULT.json
 engine_planner:
   initial_progress: |-
     Starting the simulation.
