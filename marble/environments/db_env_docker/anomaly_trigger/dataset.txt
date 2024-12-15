@@ -772,3 +772,7 @@ python main.py --anomaly FETCH_LARGE_DATA ended at 1734254036
 python main.py --anomaly FETCH_LARGE_DATA started at 1734254134
 python main.py --anomaly FETCH_LARGE_DATA started at 1734254405
 python main.py --anomaly FETCH_LARGE_DATA ended at 1734254439
+python main.py --anomaly FETCH_LARGE_DATA started at 1734255526
+python main.py --anomaly FETCH_LARGE_DATA ended at 1734255559
+python main.py --anomaly INSERT_LARGE_DATA --threads 100 --ncolumn 20 --nrow 100 --colsize 100 started at 1734255644
+python main.py --anomaly INSERT_LARGE_DATA --threads 100 --ncolumn 20 --nrow 100 --colsize 100 ended at 1734255704

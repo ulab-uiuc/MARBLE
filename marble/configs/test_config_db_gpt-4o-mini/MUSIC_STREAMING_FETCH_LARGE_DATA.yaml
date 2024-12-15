@@ -185,6 +185,6 @@ metrics:
   accuracy: true
   response_time: true
 output:
-  file_path: result_gpt-4o-mini/MUSIC_STREAMING_FETCH_LARGE_DATA_RESULT.json
+  file_path: result/result_gpt-4o-mini/MUSIC_STREAMING_FETCH_LARGE_DATA_RESULT.json
 engine_planner:
   initial_progress: Starting the simulation.

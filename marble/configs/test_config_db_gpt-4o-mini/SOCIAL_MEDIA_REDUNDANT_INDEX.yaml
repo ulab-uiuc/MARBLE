@@ -175,6 +175,6 @@ metrics:
   accuracy: true
   response_time: true
 output:
-  file_path: result_gpt-4o-mini/SOCIAL_MEDIA_REDUNDANT_INDEX_RESULT.json
+  file_path: result/result_gpt-4o-mini/SOCIAL_MEDIA_REDUNDANT_INDEX_RESULT.json
 engine_planner:
   initial_progress: Starting the simulation.

@@ -89,7 +89,7 @@ for file in file_list:
             new_file = new_file.replace("BASE_", scenario + "_")
             for model_name in model_names_short_full.keys():
                 anomalies__ = copy.deepcopy(anomalies)
-                data["output"]["file_path"] = file_path.replace("BASE_", scenario + "_").replace("result/", f"result_{model_name}/")
+                data["output"]["file_path"] = file_path.replace("BASE_", scenario + "_").replace("result/", f"result/result_{model_name}/")
                 model_full_name = model_names_short_full[model_name]
                 data["llm"] = model_full_name
                 data["environment"]["anomalies"] = anomalies__
