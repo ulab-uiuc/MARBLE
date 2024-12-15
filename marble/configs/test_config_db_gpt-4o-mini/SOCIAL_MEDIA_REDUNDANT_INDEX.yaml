@@ -1,5 +1,4 @@
-coordinate_mode: |-
-  graph
+coordinate_mode: graph
 relationships:
 - - agent1
   - agent2
@@ -33,10 +32,8 @@ relationships:
   - collaborate with
 llm: gpt-4o-mini
 environment:
-  type: |-
-    DB
-  name: |-
-    DB Simulation Environment
+  type: DB
+  name: DB Simulation Environment
   max_iterations: 5
   init_sql: "-- 1. Users table (stores information about users)\nCREATE TABLE users\
     \ (\n    user_id SERIAL PRIMARY KEY,  -- Unique user ID\n    username VARCHAR(50)\
@@ -106,17 +103,28 @@ environment:
     \ users u2 ON m.receiver_id = u2.user_id\nWHERE m.sender_id = 1 AND m.receiver_id\
     \ = 2;\n"
   anomalies:
-  - anomaly: FETCH_LARGE_DATA
+  - anomaly: REDUNDANT_INDEX
     threads: 100
     ncolumn: 20
     nrow: 20000
     colsize: 100
 communication: false
 task:
-  content: |
-    This database is used for a Social Media platform, where users can create posts, comment on posts, like posts, follow other users, send direct messages, and upload media. The schema covers key aspects such as user information, social interactions (like, comments, follow), messaging, and media management.
+  content: 'This database is used for a Social Media platform, where users can create
+    posts, comment on posts, like posts, follow other users, send direct messages,
+    and upload media. The schema covers key aspects such as user information, social
+    interactions (like, comments, follow), messaging, and media management.
 
-    Recently, during operation, the database has seen performance issues. Use sql queries to find out what is wrong, and find out the reason that caused it. The root cause can be only two of the following: 'INSERT_LARGE_DATA', 'MISSING_INDEXES', 'LOCK_CONTENTION', 'VACUUM', 'REDUNDANT_INDEX', 'FETCH_LARGE_DATA', 'POOR_JOIN_PERFORMANCE,CPU_CONTENTION'. The planner should assign different agent to analyze possbility for each root cause and make final decision. Agents can also chat with each other to share information.  Please make the decision after using all these tools, as a premature decision may lead to incorrect conclusions.
+    Recently, during operation, the database has seen performance issues. Use sql
+    queries to find out what is wrong, and find out the reason that caused it. The
+    root cause can be only two of the following: ''INSERT_LARGE_DATA'', ''MISSING_INDEXES'',
+    ''LOCK_CONTENTION'', ''VACUUM'', ''REDUNDANT_INDEX'', ''FETCH_LARGE_DATA'', ''POOR_JOIN_PERFORMANCE,CPU_CONTENTION''.
+    The planner should assign different agent to analyze possbility for each root
+    cause and make final decision. Agents can also chat with each other to share information.  Please
+    make the decision after using all these tools, as a premature decision may lead
+    to incorrect conclusions.
+
+    '
   output_format: "Please make the decision after exploring all rootcauses, as a premature\
     \ decision may lead to incorrect conclusions.\nPlease choose the most likely cause\
     \ of the database anomaly from the following list, based on the expert agents:\
@@ -162,13 +170,11 @@ agents:
   profile: agent5 will explore the possibility of FETCH_LARGE_DATA as a root cause.
     Recommended to search for SELECTs from `pg_stat_statements`.
 memory:
-  type: |-
-    SharedMemory
+  type: SharedMemory
 metrics:
   accuracy: true
   response_time: true
 output:
-  file_path: result/result_llama-3.3-70b/SOCIAL_MEDIA_REDUNDANT_INDEX_RESULT.json
+  file_path: result_gpt-4o-mini/SOCIAL_MEDIA_REDUNDANT_INDEX_RESULT.json
 engine_planner:
-  initial_progress: |-
-    Starting the simulation.
+  initial_progress: Starting the simulation.

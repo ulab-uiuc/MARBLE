@@ -1,5 +1,4 @@
-coordinate_mode: |-
-  graph
+coordinate_mode: graph
 relationships:
 - - agent1
   - agent2
@@ -33,10 +32,8 @@ relationships:
   - collaborate with
 llm: gpt-4o-mini
 environment:
-  type: |-
-    DB
-  name: |-
-    DB Simulation Environment
+  type: DB
+  name: DB Simulation Environment
   max_iterations: 5
   init_sql: "-- 1. Students table (stores student information)\nCREATE TABLE students\
     \ (\n    student_id SERIAL PRIMARY KEY,  -- Unique student ID\n    first_name\
@@ -80,17 +77,27 @@ environment:
     \ p.status\nFROM payments p\nJOIN students s ON p.student_id = s.student_id\n\
     WHERE s.student_id = 1;  -- Payment details for student with ID 1 (John)\n"
   anomalies:
-  - anomaly: FETCH_LARGE_DATA
+  - anomaly: VACUUM
     threads: 100
     ncolumn: 20
     nrow: 20000
     colsize: 100
 communication: false
 task:
-  content: |
-    This database is used in an educational system to manage student, course, enrollment, and payment information. It consists of four tables: students, courses, enrollments, and payments.
+  content: 'This database is used in an educational system to manage student, course,
+    enrollment, and payment information. It consists of four tables: students, courses,
+    enrollments, and payments.
 
-    Recently, during operation, the database has seen performance issues. Use sql queries to find out what is wrong, and find out the reason that caused it. The root cause can be only two of the following: 'INSERT_LARGE_DATA', 'MISSING_INDEXES', 'LOCK_CONTENTION', 'VACUUM', 'REDUNDANT_INDEX', 'FETCH_LARGE_DATA', 'POOR_JOIN_PERFORMANCE,CPU_CONTENTION'. The planner should assign different agent to analyze possbility for each root cause and make final decision. Agents can also chat with each other to share information.  Please make the decision after using all these tools, as a premature decision may lead to incorrect conclusions.
+    Recently, during operation, the database has seen performance issues. Use sql
+    queries to find out what is wrong, and find out the reason that caused it. The
+    root cause can be only two of the following: ''INSERT_LARGE_DATA'', ''MISSING_INDEXES'',
+    ''LOCK_CONTENTION'', ''VACUUM'', ''REDUNDANT_INDEX'', ''FETCH_LARGE_DATA'', ''POOR_JOIN_PERFORMANCE,CPU_CONTENTION''.
+    The planner should assign different agent to analyze possbility for each root
+    cause and make final decision. Agents can also chat with each other to share information.  Please
+    make the decision after using all these tools, as a premature decision may lead
+    to incorrect conclusions.
+
+    '
   output_format: "Please make the decision after exploring all rootcauses, as a premature\
     \ decision may lead to incorrect conclusions.\nPlease choose the most likely cause\
     \ of the database anomaly from the following list, based on the expert agents:\
@@ -136,13 +143,11 @@ agents:
   profile: agent5 will explore the possibility of FETCH_LARGE_DATA as a root cause.
     Recommended to search for SELECTs from `pg_stat_statements`.
 memory:
-  type: |-
-    SharedMemory
+  type: SharedMemory
 metrics:
   accuracy: true
   response_time: true
 output:
-  file_path: result/result_llama-3.3-70b/EDUCATION_VACUUM_RESULT.json
+  file_path: result_gpt-4o-mini/EDUCATION_VACUUM_RESULT.json
 engine_planner:
-  initial_progress: |-
-    Starting the simulation.
+  initial_progress: Starting the simulation.

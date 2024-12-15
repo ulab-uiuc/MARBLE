@@ -770,3 +770,5 @@ python main.py --anomaly FETCH_LARGE_DATA ended at 1734253909
 python main.py --anomaly FETCH_LARGE_DATA started at 1734254003
 python main.py --anomaly FETCH_LARGE_DATA ended at 1734254036
 python main.py --anomaly FETCH_LARGE_DATA started at 1734254134
+python main.py --anomaly FETCH_LARGE_DATA started at 1734254405
+python main.py --anomaly FETCH_LARGE_DATA ended at 1734254439

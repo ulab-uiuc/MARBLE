@@ -40,7 +40,7 @@ environment:
   init_sql: ""
       
   anomalies:  
-    - anomaly: FETCH_LARGE_DATA
+    - anomaly: VACUUM
       threads: 100
       ncolumn: 20
       nrow:    20000
