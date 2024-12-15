@@ -3,6 +3,26 @@ import yaml
 import copy
 import os
 
+# Add custom representers for block style strings
+class folded_str(str): pass
+class literal_str(str): pass
+
+def folded_str_representer(dumper, data):
+    return dumper.represent_scalar('tag:yaml.org,2002:str', data, style='>')
+def literal_str_representer(dumper, data):
+    return dumper.represent_scalar('tag:yaml.org,2002:str', data, style='|')
+
+yaml.add_representer(folded_str, folded_str_representer)
+yaml.add_representer(literal_str, literal_str_representer)
+
+model_names_short_full = {
+    'gpt-3.5-turbo': 'gpt-3.5-turbo',
+    'gpt-4o-mini': 'gpt-4o-mini',
+    'llama-3.1-8b': 'together_ai/meta-llama/Llama-3.1-8B-Instruct',
+    'llama-3.1-70b': 'together_ai/meta-llama/Llama-3.1-70B-Instruct',
+    'llama-3.3-70b': 'together_ai/meta-llama/Llama-3.3-70B-Instruct',
+}
+
 scenarios = [
     "E_COMMERCE",
     "EDUCATION",
@@ -33,26 +53,81 @@ descriptions = {
 # load all yamls starting with BASE_
 file_list = os.listdir()
 
+# make dir as shorts for model names
+for model_name in model_names_short_full.keys():
+    folder_name = f"test_config_db_{model_name}"
+    if not os.path.exists(folder_name):
+        os.makedirs(folder_name)
+
+# for file in file_list:
+#     if file.startswith("BASE_"):
+#         with open(file, 'r', encoding='utf-8') as f:
+#             data = yaml.safe_load(f)
+#         # edit data
+#         # get .task.content
+#         task_content = copy.deepcopy(data["task"]["content"])
+#         # get file content from scenario.lower.yaml
+#         file_path = data["output"]["file_path"]
+#         for scenario in scenarios:
+#             with open(scenario.lower() + ".sql", 'r', encoding='utf-8') as f:
+#                 scenario_data = f.read()
+#             # edit envionment.init_sql
+#             data["environment"]["init_sql"] = scenario_data
+#             scenario_desc = descriptions[scenario]
+#             data["task"]["content"] = scenario_desc + "\n\n" + task_content
+#             # replace BASE_ in .output.file_path
+#             data["output"]["file_path"] = file_path.replace("BASE_", scenario + "_")
+#             # replace BASE_ in file name to save
+#             new_file = copy.deepcopy(file)
+#             new_file = new_file.replace("BASE_", scenario + "_")
+#             for model_name in model_names_short_full.keys():
+#                 model_full_name = model_names_short_full[model_name]
+#                 data["llm"] = model_full_name
+#                 with open(f"test_config_db_{model_name}/{new_file}", 'w', encoding='utf-8') as f:
+#                     yaml.dump(data, f, default_flow_style=False, sort_keys=False)
+#             # with open(new_file, 'w', encoding='utf-8') as f:
+#             #     # use | to do multiline string
+#             #     yaml.dump(data, f, default_flow_style=False, sort_keys=False)
+
+# make the result_{model_name} folder
+for model_name in model_names_short_full.keys():
+    folder_name = f"result_{model_name}"
+    if not os.path.exists(folder_name):
+        os.makedirs(folder_name)
+
+# In the main processing loop, convert strings to literal_str
 for file in file_list:
     if file.startswith("BASE_"):
         with open(file, 'r', encoding='utf-8') as f:
             data = yaml.safe_load(f)
-        # edit data
-        # get .task.content
+        
+        def iter_make_literal_str(data):
+            for key, value in data.items():
+                if isinstance(value, dict):
+                    iter_make_literal_str(value)
+                elif isinstance(value, str):
+                    data[key] = literal_str(value)
+            return data
+
+        data = iter_make_literal_str(data)
+            
         task_content = copy.deepcopy(data["task"]["content"])
-        # get file content from scenario.lower.yaml
+        file_path = data["output"]["file_path"]
+        
         for scenario in scenarios:
             with open(scenario.lower() + ".sql", 'r', encoding='utf-8') as f:
                 scenario_data = f.read()
-            # edit envionment.init_sql
-            data["environment"]["init_sql"] = scenario_data
+            
             scenario_desc = descriptions[scenario]
-            data["task"]["content"] = scenario_desc + "\n\n" + task_content
-            # replace BASE_ in .output.file_path
-            data["output"]["file_path"] = data["output"]["file_path"].replace("BASE_", scenario + "_")
-            # replace BASE_ in file name to save
-            new_file = copy.deepcopy(file)
-            new_file = new_file.replace("BASE_", scenario + "_")
-            with open(new_file, 'w', encoding='utf-8') as f:
-                # use | to do multiline string
-                yaml.dump(data, f, default_flow_style=False, sort_keys=False)
+            # Convert SQL and content to literal string style
+            data["environment"]["init_sql"] = literal_str(scenario_data)
+            data["task"]["content"] = literal_str(scenario_desc + "\n\n" + task_content)
+            data["output"]["file_path"] = file_path.replace("BASE_", scenario + "_").replace("result/", f"result/result_{model_name}/")
+            
+            new_file = file.replace("BASE_", scenario + "_")
+            
+            for model_name in model_names_short_full.keys():
+                model_full_name = model_names_short_full[model_name]
+                data["llm"] = model_full_name
+                with open(f"test_config_db_{model_name}/{new_file}", 'w', encoding='utf-8') as f:
+                    yaml.dump(data, f, default_flow_style=False, sort_keys=False)

@@ -753,3 +753,7 @@ python main.py --anomaly REDUNDANT_INDEX --threads 100 --ncolumn 20 --nrow 100 -
 python main.py --anomaly REDUNDANT_INDEX --threads 100 --ncolumn 20 --nrow 100 --colsize 100 ended at 1734211381
 python main.py --anomaly IMPROPER_VACUUM --threads 100 --ncolumn 20 --nrow 100 --colsize 100 started at 1734211540
 python main.py --anomaly IMPROPER_VACUUM --threads 100 --ncolumn 20 --nrow 100 --colsize 100 ended at 1734211540
+python main.py --anomaly FETCH_LARGE_DATA started at 1734248845
+python main.py --anomaly FETCH_LARGE_DATA ended at 1734248881
+python main.py --anomaly FETCH_LARGE_DATA started at 1734248980
+python main.py --anomaly FETCH_LARGE_DATA ended at 1734249016
