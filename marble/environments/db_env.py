@@ -345,24 +345,25 @@ class DBEnvironment(BaseEnvironment):
         )
     
     def wait_for_alerts(self) -> None:
-        is_initialized = False
-        alerts = []
-        time_before_alert_detection = time.time()
-        time_last_print = time.time()
-        while True:
-            try:
-                alerts = self.get_raw_alerts()['alerts']
-                time_now = time.time()
-                if time_now - time_before_alert_detection > 1:
-                    time_before_alert_detection = time_now
-                    print(f'Waited time: {time.strftime("%H:%M:%S", time.gmtime(time_now - time_last_print))}', end='\r')
+        return True
+        # is_initialized = False
+        # alerts = []
+        # time_before_alert_detection = time.time()
+        # time_last_print = time.time()
+        # while True:
+        #     try:
+        #         alerts = self.get_raw_alerts()['alerts']
+        #         time_now = time.time()
+        #         if time_now - time_before_alert_detection > 1:
+        #             time_before_alert_detection = time_now
+        #             print(f'Waited time: {time.strftime("%H:%M:%S", time.gmtime(time_now - time_last_print))}', end='\r')
 
-                if len(alerts):
-                    is_initialized = True
-                    break
-            except:
-                pass
-        print(f'Alert detected @ {alerts}')
+        #         if len(alerts):
+        #             is_initialized = True
+        #             break
+        #     except:
+        #         pass
+        # print(f'Alert detected @ {alerts}')
 
     def get_docker_postgresql_error_query_log_handler(self) -> Dict[str, Any]:
         raise Exception("This function is STILL IN DEVELOPMENT. Please try again later.")
