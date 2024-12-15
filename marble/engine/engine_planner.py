@@ -93,7 +93,8 @@ class EnginePlanner:
         )
         messages = [{"role": "system", "content": system_message}, {"role": "user", "content": prompt}]
         response = model_prompting(
-            llm_model="gpt-3.5-turbo",
+            # llm_model="gpt-3.5-turbo",
+            llm_model=self.model,
             messages=messages,
             return_num=1,
             max_token_num=1024,
@@ -133,7 +134,8 @@ class EnginePlanner:
         messages = [{"role": "user", "content": f"Summarize the output of the agents for the task: {task}\n\nNow here is some result of thr agent: {summary}, please summarize it. You should follow the use of the following format: {output_format}"}]
         try:
             response = model_prompting(
-                llm_model="gpt-3.5-turbo",
+                # llm_model="gpt-3.5-turbo",
+                llm_model=self.model,
                 messages=trim_messages(messages, model=self.model, max_tokens=int(16384 * 0.6)),                return_num=1,
                 max_token_num=1024,
                 temperature=0.0,
@@ -179,7 +181,8 @@ class EnginePlanner:
         messages = trim_messages(messages, model=self.model, max_tokens=int(16384 * 0.6))
         
         response = model_prompting(
-            llm_model="gpt-3.5-turbo",
+            # llm_model="gpt-3.5-turbo",
+            llm_model=self.model,
             messages=messages,
             return_num=1,
             max_token_num=256,
