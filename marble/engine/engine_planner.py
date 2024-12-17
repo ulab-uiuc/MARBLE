@@ -108,6 +108,7 @@ class EnginePlanner:
             self.logger.debug(f"Received task assignment: {assignment}")
             return assignment
         except json.JSONDecodeError as e:
+            import pdb; pdb.set_trace()
             self.logger.error(f"Failed to parse JSON response: {e}")
             return {"tasks": {}, "continue": False}
 
@@ -173,7 +174,8 @@ class EnginePlanner:
             "Example:\n"
             "{\n"
             '  "continue": True\n'
-            "}"
+            "}\n"
+            "Please respond in JSON only, or the system will crash.\n"
         )
 
         messages = [{"role": "system", "content": prompt}]
@@ -192,10 +194,15 @@ class EnginePlanner:
         messages = [{"role": "system", "content": prompt}, {"role": "assistant", "content": f"{response[0].content}"}]
         self.token_usage += token_counter(model=self.model, messages=messages)
         try:
-            decision = json.loads(response[0].content if response[0].content else "")
+            # decision = json.loads(response[0].content if response[0].content else "")
+            if 'False' in response[0].content:
+                decision = {"continue": False}
+            else:
+                decision = {"continue": True}
             self.logger.debug(f"Received continuation decision: {decision}")
             bool_decision:bool = decision.get("continue", False)
             return bool_decision
         except json.JSONDecodeError as e:
+            import pdb; pdb.set_trace()
             self.logger.error(f"Failed to parse JSON decision response: {e}")
             return False

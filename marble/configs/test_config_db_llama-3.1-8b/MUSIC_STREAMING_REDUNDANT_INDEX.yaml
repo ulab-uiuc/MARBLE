@@ -30,7 +30,7 @@ relationships:
 - - agent4
   - agent5
   - collaborate with
-llm: together_ai/meta-llama/Llama-3.1-8B-Instruct
+llm: fireworks_ai/accounts/fireworks/models/llama-v3p1-8b-instruct
 environment:
   type: DB
   name: DB Simulation Environment

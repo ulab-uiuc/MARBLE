@@ -18,9 +18,9 @@ yaml.add_representer(literal_str, literal_str_representer)
 model_names_short_full = {
     'gpt-3.5-turbo': 'gpt-3.5-turbo',
     'gpt-4o-mini': 'gpt-4o-mini',
-    'llama-3.1-8b': 'together_ai/meta-llama/Llama-3.1-8B-Instruct',
-    'llama-3.1-70b': 'together_ai/meta-llama/Llama-3.1-70B-Instruct',
-    'llama-3.3-70b': 'together_ai/meta-llama/Llama-3.3-70B-Instruct',
+    'llama-3.1-8b': 'fireworks_ai/accounts/fireworks/models/llama-v3p1-8b-instruct',
+    'llama-3.1-70b': 'fireworks_ai/accounts/fireworks/models/llama-v3p1-70b-instruct',
+    'llama-3.3-70b': 'fireworks_ai/accounts/fireworks/models/llama-v3p3-70b-instruct',
 }
 
 scenarios = [
