@@ -1,0 +1,88 @@
+agents:
+- agent_id: agent1
+  agent_port: 5000
+  profile: agent1 is a pragmatic team member. agen1 prefers doing more actual work
+    rather than talking.
+  type: BaseAgent
+- agent_id: agent2
+  agent_port: 5001
+  profile: agent2 is a talkative team member. agent2 talks more than doing actual
+    work.
+  type: BaseAgent
+- agent_id: agent3
+  agent_port: 5002
+  profile: agent3 is a judgmental team member. agent3 likes making reflections and
+    criticizing team members.
+  type: BaseAgent
+coordinate_mode: graph
+engine_planner:
+  initial_progress: Starting the simulation.
+environment:
+  host: localhost
+  max_iterations: 10
+  name: Minecraft Environment
+  port: 25565
+  task_id: 57
+  task_name: test
+  type: Minecraft
+llm: together_ai/meta-llama/Llama-3.3-70B-Instruct-Turbo
+memory:
+  type: SharedMemory
+metrics:
+  evaluate_llm:
+    model: gpt-3.5-turbo
+    provider: openai
+output:
+  file_path: result/minecraft/discussion_output_llama-33-70b.jsonl
+relationships:
+- - agent1
+  - agent2
+  - collaborate with
+- - agent1
+  - agent3
+  - collaborate with
+- - agent2
+  - agent3
+  - collaborate with
+task:
+  content: "This is in the game of Minecraft. Build a building according to a blueprint.\
+    \ The blueprint contains necessary information about the material, facing direction\
+    \ and position of each block.\n*** The minecraft knowledge card ***\nHere are\
+    \ some knowledge about minecraft:\n1. The minecraft world x,z is the horizontal\
+    \ coordinate, y is the vertical coordinate. y=-61 is the ground level.\n2. You\
+    \ can use the tool or empty hand to dig the block, and place the block to the\
+    \ world.\n3. You can find the item in the chest. Item in the chest can not directly\
+    \ be seen or used, take it out and use it or equip it.\n4. If their is no items\
+    \ in the chest, maybe you can find the item at other chest or get it from other\
+    \ agent or dig it up or craft it.\n5. One bucket can hold one item, if you want\
+    \ to get more items, you need to get more buckets at first.\n6. You are in a team\
+    \ with other agents, you can try to find the item from other agents, and do not\
+    \ change the blocks other agents placed without permission.\n*** The blueprint\
+    \ ***\n[\n    \"[material:dirt facing:A position:[-9 -60 1] material:cobblestone_stairs\
+    \ facing:N position:[-9 -59 1]]\",\n    \"[material:dirt facing:A position:[-9\
+    \ -60 -1] material:cobblestone_stairs facing:S position:[-9 -59 -1]]\",\n    \"\
+    material: glowstone facing: A position: [-9, -60, 0]\",\n    \"material: dirt\
+    \ facing: A position: [-8, -60, 0]\",\n    \"material: dirt facing: A position:\
+    \ [-10, -60, 0]\",\n    \"material: grass_block facing: A position: [-8, -60,\
+    \ 1]\",\n    \"material: grass_block facing: A position: [-8, -60, -1]\",\n  \
+    \  \"material: grass_block facing: A position: [-10, -60, 1]\",\n    \"material:\
+    \ grass_block facing: A position: [-10, -60, -1]\",\n    \"[material:black_wool\
+    \ facing:A positions:[[-9 -59 0] [-9 -58 0] [-9 -56 0]] material:furnace facing:N\
+    \ position:[-9 -54 0]]\",\n    \"[material:cobblestone_stairs facing:W positions:[[-8\
+    \ -59 0] [-8 -53 0] [-8 -51 0]] material:stone_button facing:E position:[-8 -55\
+    \ 0]]\",\n    \"[material:cobblestone_stairs facing:E positions:[[-10 -59 0] [-10\
+    \ -53 0] [-10 -51 0]]]\",\n    \"material: dead_bush facing: A position: [-8,\
+    \ -59, 1]\",\n    \"[material:jungle_log facing:y positions:[start:[-9 -57 0]\
+    \ end:[-9 -55 0]]]\",\n    \"material: stone_button facing: S position: [-9, -55,\
+    \ 1]\",\n    \"material: stone_button facing: N position: [-9, -55, -1]\",\n \
+    \   \"material: stone_button facing: W position: [-10, -55, 0]\",\n    \"[material:cobblestone_slab\
+    \ facing:A position:[-8 -54 0] material:nether_brick_fence facing:A position:[-8\
+    \ -52 0]]\",\n    \"[material:cobblestone_slab facing:A position:[-10 -54 0] material:nether_brick_fence\
+    \ facing:A position:[-10 -52 0]]\",\n    \"[material:netherrack facing:A position:[-9\
+    \ -53 0] material:fire facing:A position:[-9 -52 0] material:cobblestone_slab\
+    \ facing:A position:[-9 -51 0]]\",\n    \"[material:cobblestone_stairs facing:N\
+    \ positions:[[-9 -53 1] [-9 -51 1]]]\",\n    \"[material:cobblestone_stairs facing:S\
+    \ positions:[[-9 -53 -1] [-9 -51 -1]]]\",\n    \"material: nether_brick_fence\
+    \ facing: A position: [-9, -52, 1]\",\n    \"material: nether_brick_fence facing:\
+    \ A position: [-9, -52, -1]\",\n    \"material: petrified_oak_slab facing: A position:\
+    \ [-9, -50, 0]\"\n]"

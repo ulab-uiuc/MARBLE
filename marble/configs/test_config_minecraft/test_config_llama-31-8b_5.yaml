@@ -1,55 +1,63 @@
+agents:
+- agent_id: agent1
+  agent_port: 5000
+  profile: agent1 is a pragmatic team member. agen1 prefers doing more actual work
+    rather than talking.
+  type: BaseAgent
+- agent_id: agent2
+  agent_port: 5001
+  profile: agent2 is a talkative team member. agent2 talks more than doing actual
+    work.
+  type: BaseAgent
+- agent_id: agent3
+  agent_port: 5002
+  profile: agent3 is a judgmental team member. agent3 likes making reflections and
+    criticizing team members.
+  type: BaseAgent
 coordinate_mode: graph
-relationships:
-  - [agent1, agent2, "collaborate with"]
-  - [agent1, agent3, "collaborate with"]
-  - [agent2, agent3, "collaborate with"]
-
+engine_planner:
+  initial_progress: Starting the simulation.
 environment:
-  type: Minecraft
-  name: "Minecraft Environment"
-  host: "localhost"
-  port: 25565
+  host: localhost
   max_iterations: 10
+  name: Minecraft Environment
+  port: 25565
   task_id: 5
   task_name: test
-  # Add other environment-specific configurations here
-
-task:
-  content: "This is in the game of Minecraft. Build a building according to the following description: bone_block facing direction y starting from [-8 -60 0] to [-8 -57 0], bone_block facing direction x at position [-10 -56 0] and position [-9 -56 0]. Hint: useful materials are in a chest. withdraw the materials and place them in the correct position and correct orientation. if you cannot reach a desired place, use a ladder."
-
-agents:
-  - type: BaseAgent
-    agent_id: agent1
-    agent_port: 5000
-    profile: "agent1 is a pragmatic team member. agen1 prefers doing more actual work rather than talking."
-    # Additional agent-specific configurations
-  - type: BaseAgent
-    agent_id: agent2
-    agent_port: 5001
-    profile: "agent2 is a talkative team member. agent2 talks more than doing actual work."
-    # Additional agent-specific configurations
-  - type: BaseAgent
-    agent_id: agent3
-    agent_port: 5002
-    profile: "agent3 is a deliberate team member. agent3 likes making reflections and giving guidance to team members."
-    # Additional agent-specific configurations
-
+  type: Minecraft
+llm: together_ai/meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo
 memory:
   type: SharedMemory
-  # Additional memory configurations if needed
-
 metrics:
-  # Define metrics configurations for the Evaluator
-  # Example:
   evaluate_llm:
     model: gpt-3.5-turbo
     provider: openai
-
-engine_planner:
-  initial_progress: "Starting the simulation."
-  # Additional engine planner configurations if needed
-
-llm: together_ai/meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo
-
 output:
-  file_path: result/minecraft/discussion_output_llama_31_8b.jsonl
+  file_path: result/minecraft/discussion_output_llama-31-8b.jsonl
+relationships:
+- - agent1
+  - agent2
+  - collaborate with
+- - agent1
+  - agent3
+  - collaborate with
+- - agent2
+  - agent3
+  - collaborate with
+task:
+  content: "This is in the game of Minecraft. Build a building according to a blueprint.\
+    \ The blueprint contains necessary information about the material, facing direction\
+    \ and position of each block.\n*** The minecraft knowledge card ***\nHere are\
+    \ some knowledge about minecraft:\n1. The minecraft world x,z is the horizontal\
+    \ coordinate, y is the vertical coordinate. y=-61 is the ground level.\n2. You\
+    \ can use the tool or empty hand to dig the block, and place the block to the\
+    \ world.\n3. You can find the item in the chest. Item in the chest can not directly\
+    \ be seen or used, take it out and use it or equip it.\n4. If their is no items\
+    \ in the chest, maybe you can find the item at other chest or get it from other\
+    \ agent or dig it up or craft it.\n5. One bucket can hold one item, if you want\
+    \ to get more items, you need to get more buckets at first.\n6. You are in a team\
+    \ with other agents, you can try to find the item from other agents, and do not\
+    \ change the blocks other agents placed without permission.\n*** The blueprint\
+    \ ***\n[\n    \"[material:bone_block facing:y positions:[start:[-8 -60 0] end:[-8\
+    \ -57 0]]]\",\n    \"[material:bone_block facing:x positions:[[-10 -56 0] [-9\
+    \ -56 0]]]\"\n]"
