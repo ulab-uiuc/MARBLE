@@ -34,7 +34,7 @@ llm: gpt-4o-mini
 environment:
   type: DB
   name: DB Simulation Environment
-  max_iterations: 5
+  max_iterations: 10
   init_sql: "-- 1. Customers table (stores information about customers)\nCREATE TABLE\
     \ customers (\n    customer_id SERIAL PRIMARY KEY,  -- Unique customer ID\n  \
     \  company_name VARCHAR(255) NOT NULL,  -- Customer company name\n    contact_name\

@@ -34,7 +34,7 @@ llm: fireworks_ai/accounts/fireworks/models/llama-v3p1-8b-instruct
 environment:
   type: DB
   name: DB Simulation Environment
-  max_iterations: 5
+  max_iterations: 10
   init_sql: "-- 1. Customers table (stores customer info)\nCREATE TABLE customers\
     \ (\n    customer_id SERIAL PRIMARY KEY,  -- Unique customer ID\n    first_name\
     \ VARCHAR(100),\n    last_name VARCHAR(100),\n    email VARCHAR(255) UNIQUE NOT\

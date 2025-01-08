@@ -34,7 +34,7 @@ llm: fireworks_ai/accounts/fireworks/models/llama-v3p3-70b-instruct
 environment:
   type: DB
   name: DB Simulation Environment
-  max_iterations: 5
+  max_iterations: 10
   init_sql: "-- 1. Devices table (stores information about IoT devices)\nCREATE TABLE\
     \ devices (\n    device_id SERIAL PRIMARY KEY,  -- Unique device ID\n    device_name\
     \ VARCHAR(255) NOT NULL,  -- Device name\n    device_type VARCHAR(100) NOT NULL,\

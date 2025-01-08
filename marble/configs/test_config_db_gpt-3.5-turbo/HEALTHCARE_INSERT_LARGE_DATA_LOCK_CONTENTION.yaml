@@ -34,7 +34,7 @@ llm: gpt-3.5-turbo
 environment:
   type: DB
   name: DB Simulation Environment
-  max_iterations: 5
+  max_iterations: 10
   init_sql: "-- 1. Patients table (stores patient information)\nCREATE TABLE patients\
     \ (\n    patient_id SERIAL PRIMARY KEY,  -- Unique patient ID\n    first_name\
     \ VARCHAR(100) NOT NULL,  -- Patient's first name\n    last_name VARCHAR(100)\

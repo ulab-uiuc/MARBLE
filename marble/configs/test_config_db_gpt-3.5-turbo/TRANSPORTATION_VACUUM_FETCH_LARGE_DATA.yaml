@@ -34,7 +34,7 @@ llm: gpt-3.5-turbo
 environment:
   type: DB
   name: DB Simulation Environment
-  max_iterations: 5
+  max_iterations: 10
   init_sql: "-- 1. Vehicles table (stores information about vehicles)\nCREATE TABLE\
     \ vehicles (\n    vehicle_id SERIAL PRIMARY KEY,  -- Unique vehicle ID\n    vehicle_type\
     \ VARCHAR(50) NOT NULL,  -- Type of vehicle (e.g., truck, bus, car)\n    license_plate\
