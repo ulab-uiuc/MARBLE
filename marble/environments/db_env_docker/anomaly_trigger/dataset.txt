@@ -1446,3 +1446,7 @@ python main.py --anomaly REDUNDANT_INDEX --threads 100 --ncolumn 20 --nrow 100 -
 python main.py --anomaly REDUNDANT_INDEX --threads 100 --ncolumn 20 --nrow 100 --colsize 100 ended at 1734498395
 python main.py --anomaly IMPROPER_VACUUM --threads 100 --ncolumn 20 --nrow 100 --colsize 100 started at 1734498541
 python main.py --anomaly IMPROPER_VACUUM --threads 100 --ncolumn 20 --nrow 100 --colsize 100 ended at 1734498541
+python main.py --anomaly IMPROPER_VACUUM --threads 100 --ncolumn 20 --nrow 100 --colsize 100 started at 1734520167
+python main.py --anomaly IMPROPER_VACUUM --threads 100 --ncolumn 20 --nrow 100 --colsize 100 ended at 1734520167
+python main.py --anomaly IMPROPER_VACUUM --threads 100 --ncolumn 20 --nrow 100 --colsize 100 started at 1734520360
+python main.py --anomaly IMPROPER_VACUUM --threads 100 --ncolumn 20 --nrow 100 --colsize 100 ended at 1734520360

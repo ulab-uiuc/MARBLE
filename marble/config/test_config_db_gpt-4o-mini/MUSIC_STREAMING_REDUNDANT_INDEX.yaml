@@ -1,0 +1,194 @@
+coordinate_mode: graph
+relationships:
+- - agent1
+  - agent2
+  - collaborate with
+- - agent1
+  - agent3
+  - collaborate with
+- - agent1
+  - agent4
+  - collaborate with
+- - agent1
+  - agent5
+  - collaborate with
+- - agent2
+  - agent3
+  - collaborate with
+- - agent2
+  - agent4
+  - collaborate with
+- - agent2
+  - agent5
+  - collaborate with
+- - agent3
+  - agent4
+  - collaborate with
+- - agent3
+  - agent5
+  - collaborate with
+- - agent4
+  - agent5
+  - collaborate with
+llm: gpt-4o-mini
+environment:
+  type: DB
+  name: DB Simulation Environment
+  max_iterations: 5
+  init_sql: "-- 1. Users table (stores information about users)\nCREATE TABLE users\
+    \ (\n    user_id SERIAL PRIMARY KEY,  -- Unique user ID\n    username VARCHAR(50)\
+    \ UNIQUE NOT NULL,  -- Username\n    first_name VARCHAR(100),  -- User's first\
+    \ name\n    last_name VARCHAR(100),   -- User's last name\n    email VARCHAR(255)\
+    \ UNIQUE NOT NULL,  -- User email\n    password VARCHAR(255) NOT NULL,  -- User\
+    \ password\n    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP  -- Account creation\
+    \ time\n);\n\n-- 2. Artists table (stores artist information)\nCREATE TABLE artists\
+    \ (\n    artist_id SERIAL PRIMARY KEY,  -- Unique artist ID\n    name VARCHAR(255)\
+    \ NOT NULL,  -- Artist name\n    bio TEXT,  -- Artist biography\n    created_at\
+    \ TIMESTAMP DEFAULT CURRENT_TIMESTAMP  -- Artist creation time\n);\n\n-- 3. Albums\
+    \ table (stores album details)\nCREATE TABLE albums (\n    album_id SERIAL PRIMARY\
+    \ KEY,  -- Unique album ID\n    artist_id INT REFERENCES artists(artist_id), \
+    \ -- Foreign key to artists\n    title VARCHAR(255) NOT NULL,  -- Album title\n\
+    \    release_date DATE,  -- Album release date\n    genre VARCHAR(100),  -- Genre\
+    \ of the album\n    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP  -- Album creation\
+    \ time\n);\n\n-- 4. Songs table (stores song details)\nCREATE TABLE songs (\n\
+    \    song_id SERIAL PRIMARY KEY,  -- Unique song ID\n    album_id INT REFERENCES\
+    \ albums(album_id),  -- Foreign key to albums\n    title VARCHAR(255) NOT NULL,\
+    \  -- Song title\n    duration INT,  -- Duration in seconds\n    track_number\
+    \ INT,  -- Track number in the album\n    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP\
+    \  -- Song creation time\n);\n\n-- 5. Playlists table (stores playlists created\
+    \ by users)\nCREATE TABLE playlists (\n    playlist_id SERIAL PRIMARY KEY,  --\
+    \ Unique playlist ID\n    user_id INT REFERENCES users(user_id),  -- Foreign key\
+    \ to users\n    name VARCHAR(255) NOT NULL,  -- Playlist name\n    description\
+    \ TEXT,  -- Playlist description\n    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP\
+    \  -- Playlist creation time\n);\n\n-- 6. Playlist_Songs table (stores songs in\
+    \ playlists)\nCREATE TABLE playlist_songs (\n    playlist_song_id SERIAL PRIMARY\
+    \ KEY,  -- Unique playlist song ID\n    playlist_id INT REFERENCES playlists(playlist_id),\
+    \  -- Foreign key to playlists\n    song_id INT REFERENCES songs(song_id),  --\
+    \ Foreign key to songs\n    added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP  -- Song\
+    \ added to playlist time\n);\n\n-- 7. User_Activity table (stores users' listening\
+    \ activity)\nCREATE TABLE user_activity (\n    activity_id SERIAL PRIMARY KEY,\
+    \  -- Unique activity ID\n    user_id INT REFERENCES users(user_id),  -- Foreign\
+    \ key to users\n    song_id INT REFERENCES songs(song_id),  -- Foreign key to\
+    \ songs\n    played_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP  -- Time song was played\n\
+    );\n\n-- 8. Subscriptions table (stores subscription details for users)\nCREATE\
+    \ TABLE subscriptions (\n    subscription_id SERIAL PRIMARY KEY,  -- Unique subscription\
+    \ ID\n    user_id INT REFERENCES users(user_id),  -- Foreign key to users\n  \
+    \  start_date DATE,  -- Subscription start date\n    end_date DATE,  -- Subscription\
+    \ end date\n    plan_type VARCHAR(50),  -- Subscription plan (e.g., free, premium)\n\
+    \    status VARCHAR(50) DEFAULT 'active'  -- Subscription status\n);\n\n-- 9.\
+    \ Payments table (stores payment information for subscriptions)\nCREATE TABLE\
+    \ payments (\n    payment_id SERIAL PRIMARY KEY,  -- Unique payment ID\n    subscription_id\
+    \ INT REFERENCES subscriptions(subscription_id),  -- Foreign key to subscriptions\n\
+    \    amount DECIMAL(10, 2) NOT NULL,  -- Payment amount\n    payment_date TIMESTAMP\
+    \ DEFAULT CURRENT_TIMESTAMP,  -- Payment date\n    payment_method VARCHAR(50),\
+    \  -- Payment method (e.g., credit card, PayPal)\n    status VARCHAR(50) DEFAULT\
+    \ 'completed'  -- Payment status\n);\n\n-- Insert sample users\nINSERT INTO users\
+    \ (username, first_name, last_name, email, password)\nVALUES \n('johndoe', 'John',\
+    \ 'Doe', 'john.doe@example.com', 'password123'),\n('janesmith', 'Jane', 'Smith',\
+    \ 'jane.smith@example.com', 'password456');\n\n-- Insert sample artists\nINSERT\
+    \ INTO artists (name, bio)\nVALUES \n('Artist A', 'Bio of Artist A'),\n('Artist\
+    \ B', 'Bio of Artist B');\n\n-- Insert sample albums\nINSERT INTO albums (artist_id,\
+    \ title, release_date, genre)\nVALUES \n(1, 'Album A', '2024-01-01', 'Pop'),\n\
+    (2, 'Album B', '2023-12-01', 'Rock');\n\n-- Insert sample songs\nINSERT INTO songs\
+    \ (album_id, title, duration, track_number)\nVALUES \n(1, 'Song 1', 240, 1),\n\
+    (1, 'Song 2', 210, 2),\n(2, 'Song 3', 220, 1);\n\n-- Insert sample playlists\n\
+    INSERT INTO playlists (user_id, name, description)\nVALUES \n(1, 'My Playlist',\
+    \ 'A playlist of my favorite songs'),\n(2, 'Rock Playlist', 'A playlist for rock\
+    \ music');\n\n-- Insert songs into playlists\nINSERT INTO playlist_songs (playlist_id,\
+    \ song_id)\nVALUES \n(1, 1),\n(1, 2),\n(2, 3);\n\n-- Insert sample user activity\n\
+    INSERT INTO user_activity (user_id, song_id)\nVALUES \n(1, 1),\n(1, 2),\n(2, 3);\n\
+    \n-- Insert sample subscriptions\nINSERT INTO subscriptions (user_id, start_date,\
+    \ end_date, plan_type)\nVALUES \n(1, '2024-01-01', '2025-01-01', 'premium'),\n\
+    (2, '2023-12-01', '2024-12-01', 'free');\n\n-- Insert sample payments\nINSERT\
+    \ INTO payments (subscription_id, amount, payment_method, status)\nVALUES \n(1,\
+    \ 99.99, 'Credit Card', 'completed'),\n(2, 0.00, 'None', 'completed');\n\n-- Select\
+    \ all songs in a specific playlist\nSELECT ps.playlist_song_id, s.title, s.duration\n\
+    FROM playlist_songs ps\nJOIN songs s ON ps.song_id = s.song_id\nWHERE ps.playlist_id\
+    \ = 1;\n\n-- Select all activities of a user\nSELECT ua.activity_id, s.title,\
+    \ ua.played_at\nFROM user_activity ua\nJOIN songs s ON ua.song_id = s.song_id\n\
+    WHERE ua.user_id = 1;\n\n-- Select all subscriptions for a user\nSELECT * FROM\
+    \ subscriptions WHERE user_id = 1;\n\n-- Select all payments for a subscription\n\
+    SELECT * FROM payments WHERE subscription_id = 1;\n\n-- Select all songs by a\
+    \ specific artist\nSELECT s.title, s.duration\nFROM songs s\nJOIN albums a ON\
+    \ s.album_id = a.album_id\nJOIN artists ar ON a.artist_id = ar.artist_id\nWHERE\
+    \ ar.name = 'Artist A';\n"
+  anomalies:
+  - anomaly: REDUNDANT_INDEX
+    threads: 100
+    ncolumn: 20
+    nrow: 20000
+    colsize: 100
+communication: false
+task:
+  content: 'This database is used for a Music Streaming platform where users can listen
+    to songs, create playlists, track their listening activity, and subscribe to premium
+    services. The schema includes tables for users, artists, albums, songs, playlists,
+    and subscription details. It also tracks user activities and payments.
+
+    Recently, during operation, the database has seen performance issues. Use sql
+    queries to find out what is wrong, and find out the reason that caused it. The
+    root cause can be only two of the following: ''INSERT_LARGE_DATA'', ''MISSING_INDEXES'',
+    ''LOCK_CONTENTION'', ''VACUUM'', ''REDUNDANT_INDEX'', ''FETCH_LARGE_DATA''. The
+    planner should assign different agent to analyze possbility for each root cause
+    and make final decision. Agents can also chat with each other to share information.  Please
+    make the decision after using all these tools, as a premature decision may lead
+    to incorrect conclusions. If the last round involves the Agents investigating
+    via SQL queries, the next round should allow them to communicate to each other
+    and discuss. In this round, each agent could talk to one other agent. Otherwise,
+    assign the agents to investigate these reasons - agent1 on ''INSERT_LARGE_DATA'',
+    agent 2 on ''MISSING_INDEXES'', ..., agent5 on ''FETCH_LARGE_DATA''.
+
+    '
+  output_format: "Please make the decision after exploring all rootcauses, as a premature\
+    \ decision may lead to incorrect conclusions.\nPlease choose the most likely cause\
+    \ of the database anomaly from the following list, based on the expert agents:\
+    \ \n'INSERT_LARGE_DATA', 'LOCK_CONTENTION', 'VACUUM', 'REDUNDANT_INDEX', 'FETCH_LARGE_DATA'\n\
+    You can ONLY CHOOSE two.\nYou have access to the Database, and you can perform\
+    \ queries to get the required information. Agents can also chat with each other\
+    \ to share information.\nThese tables include:\n- `pg_stat_statements` (for detailed\
+    \ query stats)\n- `pg_locks` (for lock waits and contention)\n- `pg_stat_user_indexes`\
+    \ (for index usage)\n- `pg_indexes` (for index definitions)\n- `pg_stat_all_tables`\
+    \ (detailed statistics about vacuuming, auto vacuuming, and analyze operations\
+    \ for each table)\n- `pg_stat_progress_vacuum` (for vacuum progress)\n- `pg_stat_user_tables`\
+    \ (for dead tuples and vacuum stats)\n"
+  labels:
+  - INSERT_LARGE_DATA
+  - LOCK_CONTENTION
+  - VACUUM
+  - REDUNDANT_INDEX
+  - FETCH_LARGE_DATA
+  root_causes:
+  - REDUNDANT_INDEX
+  number_of_labels_pred: 2
+agents:
+- type: BaseAgent
+  agent_id: agent1
+  profile: 'agent1 will explore the possibility of INSERT_LARGE_DATA as a root cause.
+    Recommended tables: `pg_stat_statements`. You can search for INSERTs.'
+- type: BaseAgent
+  agent_id: agent2
+  profile: 'agent2 will explore the possibility of LOCK_CONTENTION as a root cause.
+    Recommended tables: `pg_locks`.'
+- type: BaseAgent
+  agent_id: agent3
+  profile: 'agent3 will explore the possibility of VACUUM as a root cause. Recommended
+    to search for inappropiate VACUUMs from `pg_stat_all_tables`: SELECT query, calls,
+    total_plan_time, rows, mean_plan_time FROM pg_stat_statements WHERE query LIKE
+    ''VACUUM%'';'
+- type: BaseAgent
+  agent_id: agent4
+  profile: 'agent4 will explore the possibility of REDUNDANT_INDEX as a root cause.
+    Recommended tables: `pg_stat_user_indexes`, `pg_indexes`.'
+- type: BaseAgent
+  agent_id: agent5
+  profile: agent5 will explore the possibility of FETCH_LARGE_DATA as a root cause.
+    Recommended to search for SELECTs from `pg_stat_statements`.
+memory:
+  type: SharedMemory
+metrics:
+  accuracy: true
+  response_time: true
+output:
+  file_path: result/result_gpt-4o-mini/MUSIC_STREAMING_REDUNDANT_INDEX_RESULT.json
+engine_planner:
+  initial_progress: Starting the simulation.

@@ -1,0 +1,26 @@
+Processing folder: result_llama-3.3-70b
+Average collaboration score for result_llama-3.3-70b: 2.000000
+Scaled task score for result_llama-3.3-70b: 1.300000
+Errors so far: 0
+
+Processing folder: result_gpt-3.5-turbo
+Average collaboration score for result_gpt-3.5-turbo: 2.981000
+Scaled task score for result_gpt-3.5-turbo: 2.300000
+Errors so far: 0
+
+Processing folder: result_llama-3.1-8b
+Average collaboration score for result_llama-3.1-8b: 2.000000
+Scaled task score for result_llama-3.1-8b: 1.700000
+Errors so far: 0
+
+Processing folder: result_gpt-4o-mini
+Average collaboration score for result_gpt-4o-mini: 1.980000
+Scaled task score for result_gpt-4o-mini: 2.700000
+Errors so far: 0
+
+Processing folder: result_llama-3.1-70b
+Average collaboration score for result_llama-3.1-70b: 1.930000
+Scaled task score for result_llama-3.1-70b: 3.200000
+Errors so far: 0
+
+Total errors: 0
