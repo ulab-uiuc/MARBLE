@@ -1,18 +1,25 @@
 agents:
 - agent_id: agent1
   agent_port: 5000
-  profile: agent1 is a pragmatic team member. agen1 prefers doing more actual work
-    rather than talking.
+  profile: agent1 is a team member good at finding correct materials in the container
+    and place the block in the correct place. agent1 know that retrieving materials
+    can be done by using 'withdrawItem' and placing blocks can be done by using 'placeBlock'.
+    agent1 is willing to seek help from other team members.
   type: BaseAgent
 - agent_id: agent2
   agent_port: 5001
-  profile: agent2 is a talkative team member. agent2 talks more than doing actual
-    work.
+  profile: agent2 is a team member good at designing the correct order of placing
+    the blocks since a block cannot be directly placed in the air. agent2 knows how
+    to design auxilary blocks when some target blocks have to be in the air. agent2
+    tends to tell agent1 the correct order of placing target blocks and tell agent3
+    when to put auxilary blocks and when to remove them.
   type: BaseAgent
 - agent_id: agent3
   agent_port: 5002
-  profile: agent3 is a judgmental team member. agent3 likes making reflections and
-    criticizing team members.
+  profile: agent3 is a team member good at placing auxilary blocks and removing them
+    according to the discussion with agent2. agent1 know that placing auxilary blocks
+    can be done by using 'placeBlock' or 'erectDirtLadder' and removing them can be
+    done by using 'MineBlock' or 'dismantleDirtLadder'.
   type: BaseAgent
 coordinate_mode: graph
 engine_planner:
@@ -51,17 +58,20 @@ task:
     \ some knowledge about minecraft:\n1. The minecraft world x,z is the horizontal\
     \ coordinate, y is the vertical coordinate. y=-61 is the ground level.\n2. You\
     \ can use the tool or empty hand to dig the block, and place the block to the\
-    \ world.\n3. You can find the item in the chest. Item in the chest can not directly\
-    \ be seen or used, take it out and use it or equip it.\n4. If their is no items\
-    \ in the chest, maybe you can find the item at other chest or get it from other\
-    \ agent or dig it up or craft it.\n5. One bucket can hold one item, if you want\
-    \ to get more items, you need to get more buckets at first.\n6. You are in a team\
-    \ with other agents, you can try to find the item from other agents, and do not\
-    \ change the blocks other agents placed without permission.\n*** The blueprint\
-    \ ***\n[\n    \"[material:grass_block facing:A positions:[[-9 -60 -1] [-9 -60\
-    \ 0] [-9 -60 1]]]\",\n    \"[material:oak_trapdoor positions:[position:[-9 -60\
-    \ -2] facing:N position:[-8 -60 -1] facing:E position:[-8 -60 0] facing:E position:[-8\
-    \ -60 1] facing:E position:[-9 -60 2] facing:S]]\",\n    \"[material:oak_trapdoor\
-    \ facing:W positions:[[-10 -60 -1] [-10 -60 0] [-10 -60 1]]]\",\n    \"[material:poppy\
-    \ facing:A position:[-9 -59 -1] material:oxeye_daisy facing:A position:[-9 -59\
-    \ 0] material:dandelion facing:A position:[-9 -59 1]]\"\n]"
+    \ world.\n3. A block cannot be directly placed in the air. When being placed,\
+    \ there must be at least one existing block next to it.\n4. A block can exist\
+    \ in the air by removing all the other blocks attached to it.\n5. You can find\
+    \ the item in the chest. Item in the chest can not directly be seen or used, take\
+    \ it out and use it or equip it.\n6. If their is no items in the chest, maybe\
+    \ you can find the item at other chest or get it from other agent or dig it up\
+    \ or craft it.\n7. One bucket can hold one item, if you want to get more items,\
+    \ you need to get more buckets at first.\n8. You are in a team with other agents,\
+    \ you can try to find the item from other agents, and do not change the blocks\
+    \ other agents placed without permission.\n*** The blueprint ***\n[\n    \"[material:grass_block\
+    \ facing:A positions:[[-9 -60 -1] [-9 -60 0] [-9 -60 1]]]\",\n    \"[material:oak_trapdoor\
+    \ positions:[position:[-9 -60 -2] facing:N position:[-8 -60 -1] facing:E position:[-8\
+    \ -60 0] facing:E position:[-8 -60 1] facing:E position:[-9 -60 2] facing:S]]\"\
+    ,\n    \"[material:oak_trapdoor facing:W positions:[[-10 -60 -1] [-10 -60 0] [-10\
+    \ -60 1]]]\",\n    \"[material:poppy facing:A position:[-9 -59 -1] material:oxeye_daisy\
+    \ facing:A position:[-9 -59 0] material:dandelion facing:A position:[-9 -59 1]]\"\
+    \n]"
