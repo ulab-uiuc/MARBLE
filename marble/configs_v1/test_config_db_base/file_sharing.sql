@@ -39,36 +39,36 @@ CREATE TABLE file_access_logs (
 );
 
 -- Insert sample users
-INSERT INTO users (username, email, password_hash) 
-VALUES 
+INSERT INTO users (username, email, password_hash)
+VALUES
 ('john_doe', 'john.doe@example.com', 'hashed_password_1'),
 ('jane_smith', 'jane.smith@example.com', 'hashed_password_2');
 
 -- Insert sample files for John
-INSERT INTO files (user_id, file_name, file_path, file_size) 
-VALUES 
+INSERT INTO files (user_id, file_name, file_path, file_size)
+VALUES
 (1, 'document1.pdf', '/files/john_doe/document1.pdf', 102400),
 (1, 'image1.jpg', '/files/john_doe/image1.jpg', 204800);
 
 -- Insert sample files for Jane
-INSERT INTO files (user_id, file_name, file_path, file_size) 
-VALUES 
+INSERT INTO files (user_id, file_name, file_path, file_size)
+VALUES
 (2, 'presentation.pptx', '/files/jane_smith/presentation.pptx', 512000);
 
 -- Share files with other users
-INSERT INTO shared_files (file_id, owner_id, shared_with, permissions) 
-VALUES 
+INSERT INTO shared_files (file_id, owner_id, shared_with, permissions)
+VALUES
 (1, 1, 2, 'read'),  -- John shares document1.pdf with Jane
 (2, 1, 2, 'write');  -- John shares image1.jpg with Jane
 
 -- Insert file access logs
-INSERT INTO file_access_logs (user_id, file_id, action, ip_address) 
-VALUES 
+INSERT INTO file_access_logs (user_id, file_id, action, ip_address)
+VALUES
 (2, 1, 'viewed', '192.168.1.1'),  -- Jane viewed document1.pdf
 (2, 2, 'downloaded', '192.168.1.2');  -- Jane downloaded image1.jpg
 
 -- Query to retrieve all shared files for a user
-SELECT sf.share_id, f.file_name, u.username AS shared_by, sf.permissions 
+SELECT sf.share_id, f.file_name, u.username AS shared_by, sf.permissions
 FROM shared_files sf
 JOIN files f ON sf.file_id = f.file_id
 JOIN users u ON sf.owner_id = u.user_id

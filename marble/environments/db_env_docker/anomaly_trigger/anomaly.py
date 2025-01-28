@@ -229,7 +229,7 @@ def vacuum(threads,duration,ncolumns,nrows,colsize,table_name='table1'):
 
     # Perform an improper VACUUM operation
 
-    vacuum_cmd = f'VACUUM FULL;'  # Intentionally not using VERBOSE or ANALYZE
+    vacuum_cmd = 'VACUUM FULL;'  # Intentionally not using VERBOSE or ANALYZE
     # # write_anomaly_sql_to_file(vacuum_cmd)
     # # perform concurrent vacuum
     # db.execute_sql(vacuum_cmd)
@@ -338,9 +338,9 @@ def fetch_large_data():
     # Insert a large volume of data into the tables using concurrent execution
     print("Inserting large datasets with concurrency...")
     orders_insert_query = """
-        INSERT INTO orders 
-        SELECT generate_series(1, 10000), 
-               CASE WHEN random() > 0.5 THEN '1-URGENT' ELSE '5-LOW' END::varchar, 
+        INSERT INTO orders
+        SELECT generate_series(1, 10000),
+               CASE WHEN random() > 0.5 THEN '1-URGENT' ELSE '5-LOW' END::varchar,
                (date '1996-03-01' + (random() * (date '1998-09-01' - date '1996-03-01'))::int)
         ON CONFLICT DO NOTHING;
     """

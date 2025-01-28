@@ -1,4 +1,3 @@
-import time
 import litellm
 from beartype import beartype
 from beartype.typing import Any, Dict, List, Optional
@@ -28,7 +27,7 @@ def model_prompting(
     Select model via router in LiteLLM with support for function calling.
     """
 
-    if not 'fireworks_ai' in llm_model:
+    if 'fireworks_ai' not in llm_model:
         completion = litellm.completion(
             model=llm_model,
             # api_key = "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",
@@ -46,7 +45,6 @@ def model_prompting(
         assert isinstance(message_0, Message)
         return [message_0]
     else:
-        import os
         llm_model = llm_model.split('/', 1)[-1]
         completion = litellm.completion(
             model='openai/'+llm_model,

@@ -11,10 +11,10 @@ from marble.configs.config import Config
 from marble.engine.engine_planner import EnginePlanner
 from marble.environments import (
     BaseEnvironment,
+    DBEnvironment,
     ResearchEnvironment,
     WebEnvironment,
     WorldSimulationEnvironment,
-    DBEnvironment
 )
 from marble.evaluator.evaluator import Evaluator
 from marble.graph.agent_graph import AgentGraph
@@ -176,7 +176,6 @@ class Engine:
                 except KeyError:
                     self.logger.error(f"Agent '{agent_id}' not found in the graph.")
                 except Exception as e:
-                    import pdb; pdb.set_trace()
                     self.logger.error(f"Error while executing initial task for agent '{agent_id}': {e}")
             iteration_data["communications"] = communications
             # Summarize outputs and update planner for the initial assignment
@@ -320,8 +319,8 @@ class Engine:
                 self.logger.info("Engine graph-based coordination loop completed.")
             elif self.environment.name == 'DB Environment':
                 self.evaluator.evaluate_task_db(
-                    self.task, iteration_data["summary"], 
-                    self.config.task["labels"], 
+                    self.task, iteration_data["summary"],
+                    self.config.task["labels"],
                     self.config.task["number_of_labels_pred"],
                     self.config.task["root_causes"]
                 )
@@ -433,8 +432,8 @@ class Engine:
                 self.logger.info("Engine star-based coordination loop completed.")
             elif self.environment.name == 'DB Environment':
                 self.evaluator.evaluate_task_db(
-                    self.task, iteration_data["summary"], 
-                    self.config.task["labels"], 
+                    self.task, iteration_data["summary"],
+                    self.config.task["labels"],
                     self.config.task["number_of_labels_pred"],
                     self.config.task["root_causes"]
                 )
@@ -555,8 +554,8 @@ class Engine:
                 self.logger.info("Engine chain-based coordination loop completed.")
             elif self.environment.name == 'DB Environment':
                 self.evaluator.evaluate_task_db(
-                    self.task, iteration_data["summary"], 
-                    self.config.task["labels"], 
+                    self.task, iteration_data["summary"],
+                    self.config.task["labels"],
                     self.config.task["number_of_labels_pred"],
                     self.config.task["root_causes"]
                 )
@@ -644,8 +643,8 @@ class Engine:
                 self.logger.info("Engine tree-based coordination loop completed.")
             elif self.environment.name == 'DB Environment':
                 self.evaluator.evaluate_task_db(
-                    self.task, iteration_data["summary"], 
-                    self.config.task["labels"], 
+                    self.task, iteration_data["summary"],
+                    self.config.task["labels"],
                     self.config.task["number_of_labels_pred"],
                     self.config.task["root_causes"]
                 )

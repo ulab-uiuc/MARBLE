@@ -47,39 +47,39 @@ CREATE TABLE investment_transactions (
 );
 
 -- Insert sample users
-INSERT INTO users (first_name, last_name, email, password_hash) 
-VALUES 
+INSERT INTO users (first_name, last_name, email, password_hash)
+VALUES
 ('John', 'Doe', 'john.doe@example.com', 'hashed_password_1'),
 ('Jane', 'Smith', 'jane.smith@example.com', 'hashed_password_2');
 
 -- Insert sample accounts
-INSERT INTO accounts (user_id, account_type, balance) 
-VALUES 
+INSERT INTO accounts (user_id, account_type, balance)
+VALUES
 (1, 'checking', 1000.00),
 (1, 'savings', 5000.00),
 (2, 'checking', 1500.00);
 
 -- Insert sample transactions for John
-INSERT INTO transactions (account_id, transaction_type, amount, description) 
-VALUES 
+INSERT INTO transactions (account_id, transaction_type, amount, description)
+VALUES
 (1, 'deposit', 500.00, 'Salary deposit'),
 (1, 'withdrawal', 200.00, 'ATM withdrawal'),
 (2, 'deposit', 1000.00, 'Transfer from savings');
 
 -- Insert sample investments for John
-INSERT INTO investments (user_id, investment_name, amount) 
-VALUES 
+INSERT INTO investments (user_id, investment_name, amount)
+VALUES
 (1, 'Stocks', 1000.00),
 (1, 'Bonds', 3000.00);
 
 -- Insert sample investment transactions for John
-INSERT INTO investment_transactions (investment_id, transaction_type, amount, price) 
-VALUES 
+INSERT INTO investment_transactions (investment_id, transaction_type, amount, price)
+VALUES
 (1, 'buy', 1000.00, 50.00),  -- John buys 20 stocks at $50 each
 (1, 'sell', 500.00, 60.00);  -- John sells 10 stocks at $60 each
 
 -- Query to retrieve account details for a user
-SELECT a.account_id, a.account_type, a.balance 
+SELECT a.account_id, a.account_type, a.balance
 FROM accounts a
 JOIN users u ON a.user_id = u.user_id
 WHERE u.user_id = 1;  -- Accounts for John

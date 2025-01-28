@@ -38,27 +38,27 @@ CREATE TABLE payments (
 );
 
 -- Insert sample students
-INSERT INTO students (first_name, last_name, email, phone, address) 
-VALUES 
+INSERT INTO students (first_name, last_name, email, phone, address)
+VALUES
 ('John', 'Doe', 'john.doe@example.com', '555-1234', '789 Student St, Cityville'),
 ('Jane', 'Smith', 'jane.smith@example.com', '555-5678', '456 College Ave, Cityville');
 
 -- Insert sample courses
-INSERT INTO courses (course_name, description, credits) 
-VALUES 
+INSERT INTO courses (course_name, description, credits)
+VALUES
 ('Introduction to Computer Science', 'Basic concepts of computer science and programming.', 3),
 ('Data Structures and Algorithms', 'Study of data structures and algorithms in computer science.', 4);
 
 -- Insert sample enrollments
-INSERT INTO enrollments (student_id, course_id, grade) 
-VALUES 
+INSERT INTO enrollments (student_id, course_id, grade)
+VALUES
 (1, 1, 'A'),  -- John enrolled in Introduction to Computer Science with grade A
 (1, 2, 'B'),  -- John enrolled in Data Structures and Algorithms with grade B
 (2, 1, 'B');  -- Jane enrolled in Introduction to Computer Science with grade B
 
 -- Insert sample payments
-INSERT INTO payments (student_id, amount, payment_method, status) 
-VALUES 
+INSERT INTO payments (student_id, amount, payment_method, status)
+VALUES
 (1, 500.00, 'Credit Card', 'completed'),  -- Payment for John
 (2, 500.00, 'Bank Transfer', 'completed');  -- Payment for Jane
 

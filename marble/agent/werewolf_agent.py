@@ -1,17 +1,15 @@
 import json
 import logging
-import logging
 import os
 import time
 from typing import Any, Dict
 
-from typing import Any, Dict
-
 import yaml
-import logging
-from typing import Any, Dict
-from marble.utils.eventbus import EventBus # 假设 BaseAgent 在 base_agent_module 中
 from openai import OpenAI
+
+from marble.utils.eventbus import EventBus  # 假设 BaseAgent 在 base_agent_module 中
+
+
 class WerewolfAgent:
     """
     WerewolfAgent class without calling BaseAgent's __init__.
@@ -45,7 +43,7 @@ class WerewolfAgent:
         self.env = env
         # 共享内存文件路径
         self.shared_memory = shared_memory
-        
+
         # 创建一个独立的 logger
         self.logger = self._create_logger(self.agent_id)
 
@@ -95,7 +93,7 @@ class WerewolfAgent:
         初始化日志文件。如果文件不存在则创建，不记录任何内容。
         """
         if not os.path.exists(self.log_file_path):
-            with open(self.log_file_path, 'w', encoding='utf-8') as log_file:
+            with open(self.log_file_path, 'w', encoding='utf-8'):
                 pass  # 创建空的日志文件，不写入内容
 
     def _log_and_save(self, log_entry: str) -> None:
@@ -297,7 +295,7 @@ class WerewolfAgent:
 
         # Step 4: 读取共享内存中的游戏状态
         try:
-                
+
             public_state = self.shared_memory.get("public_state", {})
             private_state = self.shared_memory.get("private_state", {}).get("players", {}).get(self.agent_id, {})
             personal_event_log = private_state.get("personal_event_log", "")
@@ -412,7 +410,7 @@ class WerewolfAgent:
 
         # Step 4: Read from shared memory (public and private)
         try:
-                    
+
             public_state = self.shared_memory.get("public_state", {})
             private_state = self.shared_memory.get("private_state", {}).get("players", {}).get(self.agent_id, {})
             personal_event_log = private_state.get("personal_event_log", "")
@@ -560,23 +558,23 @@ class WerewolfAgent:
         elif event_type == "vote_action":
 
             filled_prompt = prompt_template.replace("<<public_chat>>", public_chat)
-            filled_prompt = filled_prompt.replace("<<game_state>>", json.dumps(game_state, indent=2))       
- 
+            filled_prompt = filled_prompt.replace("<<game_state>>", json.dumps(game_state, indent=2))
+
         elif event_type == "last_words":
 
             filled_prompt = prompt_template.replace("<<public_chat>>", public_chat)
             filled_prompt = filled_prompt.replace("<<game_state>>", json.dumps(game_state, indent=2))
-        
+
         elif event_type == "badge_flow":
 
             filled_prompt = prompt_template.replace("<<public_chat>>", public_chat)
             filled_prompt = filled_prompt.replace("<<game_state>>", json.dumps(game_state, indent=2))
-        
+
         else:
 
             filled_prompt = prompt_template.replace("<<public_chat>>", public_chat)
             filled_prompt = filled_prompt.replace("<<game_state>>", json.dumps(game_state, indent=2))
-            
+
         # Step 6: Create messages to pass to the tool
         messages = [
             {'role': 'system', 'content': action_template.get('system', '')},

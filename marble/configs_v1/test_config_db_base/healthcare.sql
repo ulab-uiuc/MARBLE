@@ -54,32 +54,32 @@ CREATE TABLE treatments (
 );
 
 -- Insert sample patients
-INSERT INTO patients (first_name, last_name, date_of_birth, gender, email, phone, address) 
-VALUES 
+INSERT INTO patients (first_name, last_name, date_of_birth, gender, email, phone, address)
+VALUES
 ('Alice', 'Johnson', '1985-04-12', 'Female', 'alice.johnson@example.com', '123-456-7890', '123 Elm St, Springfield'),
 ('Bob', 'Smith', '1990-08-23', 'Male', 'bob.smith@example.com', '234-567-8901', '456 Oak St, Springfield');
 
 -- Insert sample doctors
-INSERT INTO doctors (first_name, last_name, specialty, email, phone) 
-VALUES 
+INSERT INTO doctors (first_name, last_name, specialty, email, phone)
+VALUES
 ('Dr. Sarah', 'Miller', 'Cardiologist', 'dr.sarah.miller@example.com', '345-678-9012'),
 ('Dr. James', 'Taylor', 'Dermatologist', 'dr.james.taylor@example.com', '456-789-0123');
 
 -- Insert sample appointments
-INSERT INTO appointments (patient_id, doctor_id, appointment_date, status, reason) 
-VALUES 
+INSERT INTO appointments (patient_id, doctor_id, appointment_date, status, reason)
+VALUES
 (1, 1, '2024-12-14 09:00:00', 'scheduled', 'Routine checkup'),
 (2, 2, '2024-12-14 11:00:00', 'scheduled', 'Skin rash evaluation');
 
 -- Insert sample medical records
-INSERT INTO medical_records (patient_id, doctor_id, diagnosis, treatment, prescriptions) 
-VALUES 
+INSERT INTO medical_records (patient_id, doctor_id, diagnosis, treatment, prescriptions)
+VALUES
 (1, 1, 'Hypertension', 'Lifestyle changes, medication', 'Lisinopril 10mg daily'),
 (2, 2, 'Eczema', 'Topical steroids, moisturizers', 'Hydrocortisone cream');
 
 -- Insert sample treatments
-INSERT INTO treatments (patient_id, doctor_id, treatment_type, treatment_description) 
-VALUES 
+INSERT INTO treatments (patient_id, doctor_id, treatment_type, treatment_description)
+VALUES
 (1, 1, 'Medication', 'Prescription for hypertension medication'),
 (2, 2, 'Topical Treatment', 'Application of hydrocortisone cream for eczema');
 

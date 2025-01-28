@@ -1,11 +1,16 @@
 # for editing yaml
-import yaml
 import copy
 import os
 
+import yaml
+
+
 # Add custom representers for block style strings
-class folded_str(str): pass
-class literal_str(str): pass
+class folded_str(str):
+    pass
+
+class literal_str(str):
+    pass
 
 def folded_str_representer(dumper, data):
     return dumper.represent_scalar('tag:yaml.org,2002:str', data, style='>')
@@ -104,7 +109,7 @@ for file in file_list:
 #     if file.startswith("BASE_"):
 #         with open(file, 'r', encoding='utf-8') as f:
 #             data = yaml.safe_load(f)
-        
+
 #         def iter_make_literal_str(data):
 #             for key, value in data.items():
 #                 if isinstance(value, dict):
@@ -114,23 +119,23 @@ for file in file_list:
 #             return data
 
 #         data = iter_make_literal_str(data)
-            
+
 #         task_content = copy.deepcopy(data["task"]["content"])
 #         file_path = data["output"]["file_path"]
-        
+
 #         for scenario in scenarios:
 #             with open(scenario.lower() + ".sql", 'r', encoding='utf-8') as f:
 #                 scenario_data = f.read()
-            
+
 #             scenario_desc = descriptions[scenario]
 #             # Convert SQL and content to literal string style
 #             data["environment"]["init_sql"] = literal_str(scenario_data)
 #             data["task"]["content"] = literal_str(scenario_desc + "\n\n" + task_content)
 #             file_path_ = copy.deepcopy(file_path)
 #             data["output"]["file_path"] = file_path_.replace("BASE_", scenario + "_").replace("result/", f"result/result_{model_name}/")
-            
+
 #             new_file = file.replace("BASE_", scenario + "_")
-            
+
 #             for model_name in model_names_short_full.keys():
 #                 model_full_name = model_names_short_full[model_name]
 #                 data["llm"] = model_full_name

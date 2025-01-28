@@ -84,58 +84,58 @@ CREATE TABLE payments (
 
 -- Insert sample users
 INSERT INTO users (username, first_name, last_name, email, password)
-VALUES 
+VALUES
 ('johndoe', 'John', 'Doe', 'john.doe@example.com', 'password123'),
 ('janesmith', 'Jane', 'Smith', 'jane.smith@example.com', 'password456');
 
 -- Insert sample artists
 INSERT INTO artists (name, bio)
-VALUES 
+VALUES
 ('Artist A', 'Bio of Artist A'),
 ('Artist B', 'Bio of Artist B');
 
 -- Insert sample albums
 INSERT INTO albums (artist_id, title, release_date, genre)
-VALUES 
+VALUES
 (1, 'Album A', '2024-01-01', 'Pop'),
 (2, 'Album B', '2023-12-01', 'Rock');
 
 -- Insert sample songs
 INSERT INTO songs (album_id, title, duration, track_number)
-VALUES 
+VALUES
 (1, 'Song 1', 240, 1),
 (1, 'Song 2', 210, 2),
 (2, 'Song 3', 220, 1);
 
 -- Insert sample playlists
 INSERT INTO playlists (user_id, name, description)
-VALUES 
+VALUES
 (1, 'My Playlist', 'A playlist of my favorite songs'),
 (2, 'Rock Playlist', 'A playlist for rock music');
 
 -- Insert songs into playlists
 INSERT INTO playlist_songs (playlist_id, song_id)
-VALUES 
+VALUES
 (1, 1),
 (1, 2),
 (2, 3);
 
 -- Insert sample user activity
 INSERT INTO user_activity (user_id, song_id)
-VALUES 
+VALUES
 (1, 1),
 (1, 2),
 (2, 3);
 
 -- Insert sample subscriptions
 INSERT INTO subscriptions (user_id, start_date, end_date, plan_type)
-VALUES 
+VALUES
 (1, '2024-01-01', '2025-01-01', 'premium'),
 (2, '2023-12-01', '2024-12-01', 'free');
 
 -- Insert sample payments
 INSERT INTO payments (subscription_id, amount, payment_method, status)
-VALUES 
+VALUES
 (1, 99.99, 'Credit Card', 'completed'),
 (2, 0.00, 'None', 'completed');
 

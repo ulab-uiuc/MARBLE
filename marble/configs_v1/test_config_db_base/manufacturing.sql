@@ -97,61 +97,61 @@ CREATE TABLE payments (
 
 -- Insert sample customers
 INSERT INTO customers (company_name, contact_name, contact_email, phone, address)
-VALUES 
+VALUES
 ('Acme Corp', 'John Doe', 'johndoe@acmecorp.com', '123-456-7890', '123 Elm St'),
 ('Beta Industries', 'Jane Smith', 'janesmith@betaind.com', '987-654-3210', '456 Oak St');
 
 -- Insert sample products
 INSERT INTO products (product_name, description, price, stock_quantity)
-VALUES 
+VALUES
 ('Widget A', 'High-quality widget', 25.99, 100),
 ('Widget B', 'Standard widget', 15.99, 200);
 
 -- Insert sample suppliers
 INSERT INTO suppliers (company_name, contact_name, contact_email, phone, address)
-VALUES 
+VALUES
 ('SupplyCo', 'Alice Brown', 'alice@supplyco.com', '123-111-2222', '789 Pine St'),
 ('PartsPlus', 'Bob Green', 'bob@partsplus.com', '321-654-9870', '101 Maple St');
 
 -- Insert sample orders
 INSERT INTO orders (customer_id, order_date, status, total_amount)
-VALUES 
+VALUES
 (1, '2024-12-01', 'pending', 51.98),
 (2, '2024-12-02', 'completed', 31.98);
 
 -- Insert sample order items
 INSERT INTO order_items (order_id, product_id, quantity, price)
-VALUES 
+VALUES
 (1, 1, 2, 25.99),
 (2, 2, 2, 15.99);
 
 -- Insert sample inventory transactions
 INSERT INTO inventory (product_id, quantity_in, quantity_out)
-VALUES 
+VALUES
 (1, 100, 0),
 (2, 200, 50);
 
 -- Insert sample manufacturing orders
 INSERT INTO manufacturing_orders (product_id, quantity, due_date, status)
-VALUES 
+VALUES
 (1, 50, '2024-12-15', 'pending'),
 (2, 100, '2024-12-20', 'completed');
 
 -- Insert raw materials
 INSERT INTO raw_materials (material_name, description, unit_price, stock_quantity)
-VALUES 
+VALUES
 ('Steel', 'Raw steel for widgets', 5.50, 500),
 ('Plastic', 'Plastic for widget casing', 2.00, 300);
 
 -- Insert sample manufacturing inventory transactions
 INSERT INTO manufacturing_inventory (material_id, quantity_used, manufacturing_order_id)
-VALUES 
+VALUES
 (1, 250, 1),
 (2, 200, 2);
 
 -- Insert sample payments
 INSERT INTO payments (order_id, amount, payment_method, status)
-VALUES 
+VALUES
 (1, 51.98, 'Credit Card', 'completed'),
 (2, 31.98, 'Bank Transfer', 'completed');
 

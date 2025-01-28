@@ -36,7 +36,7 @@ class Evaluator:
         }
         with open('evaluator/evaluator_prompts.json', 'r', encoding='utf-8') as f:
             self.evaluation_prompts = json.load(f)
-        
+
         evaluate_llm_config = self.metrics_config.get('evaluate_llm', {})
         self.llm = evaluate_llm_config.get('model', 'gpt-3.5-turbo') if isinstance(evaluate_llm_config, dict) else evaluate_llm_config
 
@@ -218,7 +218,7 @@ class Evaluator:
             self.metrics["task_evaluation"] = ratings
         else:
             self.logger.error("Failed to parse world ratings")
-    
+
     def evaluate_task_db(self, task: str, result: str, labels: List[str], pred_num: int, root_causes: List[str]) -> None:
         """
         Evaluate the final database idea based on Data Quality, Data Security, and Data Privacy.

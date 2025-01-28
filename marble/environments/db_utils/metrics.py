@@ -76,6 +76,6 @@ full_metrics_full_names = {
         "node_disk_io_time_weighted_seconds_rate": "irate(node_disk_io_time_weighted_seconds_total[1m])",
         "node_disk_read_time_seconds_rate": "irate(node_disk_read_time_seconds_total[1m])",
         "node_disk_write_time_seconds_rate": "irate(node_disk_write_time_seconds_total[1m])",
-        "node_disk_io_time_seconds_rate": "irate(node_disk_io_time_seconds_total[1m])"
+        # "node_disk_io_time_seconds_rate": "irate(node_disk_io_time_seconds_total[1m])"
     }
 }

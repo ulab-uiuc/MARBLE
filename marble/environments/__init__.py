@@ -1,13 +1,13 @@
 from .base_env import BaseEnvironment
+from .db_env import DBEnvironment
 from .research_env import ResearchEnvironment
 from .web_env import WebEnvironment
 from .world_env import WorldSimulationEnvironment
-from .db_env import DBEnvironment
 
 __all__ = [
     'BaseEnvironment',
-    'WebEnvironment',
+    'DBEnvironment',
     'ResearchEnvironment',
+    'WebEnvironment',
     'WorldSimulationEnvironment'
-    'DBEnvironment'
 ]

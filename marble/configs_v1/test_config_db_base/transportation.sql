@@ -108,60 +108,60 @@ CREATE TABLE payments (
 
 -- Insert vehicles
 INSERT INTO vehicles (vehicle_type, license_plate, model, capacity, manufacturer)
-VALUES 
+VALUES
 ('Truck', 'ABC123', 'Model X', 20, 'Ford'),
 ('Bus', 'XYZ789', 'Model Y', 50, 'Mercedes');
 
 -- Insert drivers
 INSERT INTO drivers (first_name, last_name, date_of_birth, license_number, phone)
-VALUES 
+VALUES
 ('John', 'Doe', '1985-06-15', 'DL12345', '555-1234'),
 ('Jane', 'Smith', '1990-08-25', 'DL98765', '555-5678');
 
 -- Insert routes
 INSERT INTO routes (start_location, end_location, distance, estimated_time)
-VALUES 
+VALUES
 ('City A', 'City B', 100.5, '02:00:00'),
 ('City C', 'City D', 150.0, '03:00:00');
 
 -- Insert trips
 INSERT INTO trips (vehicle_id, driver_id, route_id, departure_time, arrival_time, status)
-VALUES 
+VALUES
 (1, 1, 1, '2024-12-01 08:00:00', '2024-12-01 10:00:00', 'completed'),
 (2, 2, 2, '2024-12-02 09:00:00', '2024-12-02 12:00:00', 'completed');
 
 -- Insert cargo
 INSERT INTO cargo (trip_id, cargo_type, weight, description)
-VALUES 
+VALUES
 (1, 'Goods', 1000.00, 'Electronics shipment'),
 (2, 'Passengers', 3000.00, 'Tourists for sightseeing');
 
 -- Insert maintenance
 INSERT INTO maintenance (vehicle_id, maintenance_type, maintenance_date, cost, description)
-VALUES 
+VALUES
 (1, 'Oil Change', '2024-11-20', 50.00, 'Routine oil change'),
 (2, 'Tire Replacement', '2024-11-25', 200.00, 'Replaced 2 tires');
 
 -- Insert fuel logs
 INSERT INTO fuel_logs (vehicle_id, fuel_date, fuel_quantity, fuel_cost)
-VALUES 
+VALUES
 (1, '2024-12-01', 50.00, 100.00),
 (2, '2024-12-02', 70.00, 140.00);
 
 -- Insert locations
 INSERT INTO locations (location_name, latitude, longitude, description)
-VALUES 
+VALUES
 ('City A', 40.7128, -74.0060, 'Starting point of route 1'),
 ('City B', 34.0522, -118.2437, 'Destination point of route 1');
 
 -- Insert trip logs
 INSERT INTO trip_logs (trip_id, log_time, log_description, location_id)
-VALUES 
+VALUES
 (1, '2024-12-01 08:15:00', 'Departed City A', 1),
 (1, '2024-12-01 09:45:00', 'Arrived in City B', 2);
 
 -- Insert payments
 INSERT INTO payments (trip_id, amount, payment_method, payment_date)
-VALUES 
+VALUES
 (1, 500.00, 'Credit Card', '2024-12-01'),
 (2, 1000.00, 'Cash', '2024-12-02');

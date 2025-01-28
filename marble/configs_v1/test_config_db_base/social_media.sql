@@ -66,44 +66,44 @@ CREATE TABLE media (
 );
 
 -- Insert some sample users
-INSERT INTO users (username, first_name, last_name, email, password) 
-VALUES 
+INSERT INTO users (username, first_name, last_name, email, password)
+VALUES
 ('john_doe', 'John', 'Doe', 'john.doe@example.com', 'password123'),
 ('jane_smith', 'Jane', 'Smith', 'jane.smith@example.com', 'password456');
 
 -- Insert some posts
-INSERT INTO posts (user_id, content, image_url) 
-VALUES 
+INSERT INTO posts (user_id, content, image_url)
+VALUES
 (1, 'Excited to be part of this platform!', 'https://example.com/images/welcome.jpg'),
 (2, 'Good morning, everyone!', 'https://example.com/images/morning.jpg');
 
 -- Insert comments on posts
-INSERT INTO comments (post_id, user_id, content) 
-VALUES 
+INSERT INTO comments (post_id, user_id, content)
+VALUES
 (1, 2, 'Welcome to the platform, John!'),
 (2, 1, 'Good morning, Jane!');
 
 -- Insert likes on posts
-INSERT INTO likes (post_id, user_id) 
-VALUES 
+INSERT INTO likes (post_id, user_id)
+VALUES
 (1, 2),
 (2, 1);
 
 -- Insert follow relationships
-INSERT INTO followers (follower_id, followed_id) 
-VALUES 
+INSERT INTO followers (follower_id, followed_id)
+VALUES
 (1, 2),  -- John follows Jane
 (2, 1);  -- Jane follows John
 
 -- Insert direct messages
-INSERT INTO messages (sender_id, receiver_id, content) 
-VALUES 
+INSERT INTO messages (sender_id, receiver_id, content)
+VALUES
 (1, 2, 'Hi Jane, how are you?'),
 (2, 1, 'Im good, John! How about you?');
 
 -- Insert media uploaded by users
-INSERT INTO media (user_id, media_type, media_url) 
-VALUES 
+INSERT INTO media (user_id, media_type, media_url)
+VALUES
 (1, 'image', 'https://example.com/media/photo1.jpg'),
 (2, 'video', 'https://example.com/media/video1.mp4');
 

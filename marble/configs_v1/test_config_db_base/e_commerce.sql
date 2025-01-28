@@ -47,47 +47,47 @@ CREATE TABLE payments (
 );
 
 -- Insert customers
-INSERT INTO customers (first_name, last_name, email, phone, address) 
-VALUES 
+INSERT INTO customers (first_name, last_name, email, phone, address)
+VALUES
 ('Alice', 'Smith', 'alice.smith@example.com', '123-456-7890', '123 Main St, Springfield'),
 ('Bob', 'Johnson', 'bob.johnson@example.com', '234-567-8901', '456 Oak St, Springfield');
 
 -- Insert products
-INSERT INTO products (product_name, description, price, stock_quantity) 
-VALUES 
+INSERT INTO products (product_name, description, price, stock_quantity)
+VALUES
 ('Laptop', 'High-performance laptop', 999.99, 10),
 ('Smartphone', 'Latest model smartphone', 799.99, 15),
 ('Headphones', 'Noise-cancelling headphones', 199.99, 25);
 
 -- Insert an order for Alice
-INSERT INTO orders (customer_id, order_date, status) 
-VALUES 
+INSERT INTO orders (customer_id, order_date, status)
+VALUES
 (1, '2024-12-13 10:00:00', 'pending');
 
 -- Insert order items for Alice's order
-INSERT INTO order_items (order_id, product_id, quantity, price) 
-VALUES 
+INSERT INTO order_items (order_id, product_id, quantity, price)
+VALUES
 (1, 1, 1, 999.99),  -- 1 Laptop
 (1, 3, 2, 199.99);  -- 2 Headphones
 
 -- Insert a payment for Alice's order
-INSERT INTO payments (order_id, amount, payment_method, status) 
-VALUES 
+INSERT INTO payments (order_id, amount, payment_method, status)
+VALUES
 (1, 1399.97, 'Credit Card', 'completed');
 
 -- Insert an order for Bob
-INSERT INTO orders (customer_id, order_date, status) 
-VALUES 
+INSERT INTO orders (customer_id, order_date, status)
+VALUES
 (2, '2024-12-13 12:00:00', 'pending');
 
 -- Insert order items for Bob's order
-INSERT INTO order_items (order_id, product_id, quantity, price) 
-VALUES 
+INSERT INTO order_items (order_id, product_id, quantity, price)
+VALUES
 (2, 2, 1, 799.99);  -- 1 Smartphone
 
 -- Insert a payment for Bob's order
-INSERT INTO payments (order_id, amount, payment_method, status) 
-VALUES 
+INSERT INTO payments (order_id, amount, payment_method, status)
+VALUES
 (2, 799.99, 'PayPal', 'completed');
 
 SELECT oi.order_item_id, p.product_name, oi.quantity, oi.price

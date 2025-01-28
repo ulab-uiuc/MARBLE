@@ -73,49 +73,49 @@ CREATE TABLE device_commands (
 );
 
 -- Insert some sample devices
-INSERT INTO devices (device_name, device_type, manufacturer, model_number) 
-VALUES 
+INSERT INTO devices (device_name, device_type, manufacturer, model_number)
+VALUES
 ('Temperature Sensor', 'sensor', 'IoT Corp', 'TS-1001'),
 ('Smart Light', 'actuator', 'SmartHome Inc.', 'SL-2020');
 
 -- Insert some users
-INSERT INTO users (first_name, last_name, email, password, role) 
-VALUES 
+INSERT INTO users (first_name, last_name, email, password, role)
+VALUES
 ('John', 'Doe', 'john.doe@example.com', 'securepassword', 'admin'),
 ('Jane', 'Smith', 'jane.smith@example.com', 'password123', 'user');
 
 -- Insert device data
-INSERT INTO device_data (device_id, data_value, data_type) 
-VALUES 
+INSERT INTO device_data (device_id, data_value, data_type)
+VALUES
 (1, '23.5', 'temperature'),
 (2, 'ON', 'status');
 
 -- Insert device logs
-INSERT INTO device_logs (device_id, log_message) 
-VALUES 
+INSERT INTO device_logs (device_id, log_message)
+VALUES
 (1, 'Temperature sensor initialized successfully'),
 (2, 'Smart light turned on remotely');
 
 -- Insert device configuration
-INSERT INTO device_configuration (device_id, config_key, config_value) 
-VALUES 
+INSERT INTO device_configuration (device_id, config_key, config_value)
+VALUES
 (1, 'IP Address', '192.168.1.10'),
 (2, 'IP Address', '192.168.1.20');
 
 -- Insert alerts
-INSERT INTO alerts (device_id, alert_message) 
-VALUES 
+INSERT INTO alerts (device_id, alert_message)
+VALUES
 (1, 'Temperature exceeded threshold!'),
 (2, 'Smart light malfunction detected');
 
 -- Insert device status
-INSERT INTO device_status (device_id, status_value) 
-VALUES 
+INSERT INTO device_status (device_id, status_value)
+VALUES
 (1, 'online'),
 (2, 'offline');
 
 -- Insert device commands
-INSERT INTO device_commands (device_id, command) 
-VALUES 
+INSERT INTO device_commands (device_id, command)
+VALUES
 (1, 'Reset sensor'),
 (2, 'Turn off light');

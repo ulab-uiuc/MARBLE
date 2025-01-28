@@ -1,6 +1,7 @@
 import psycopg2
 from psycopg2.extras import RealDictCursor
 
+
 def obtain_slow_queries(server_address="localhost",
                         username="test",
                         password="Test123_456",

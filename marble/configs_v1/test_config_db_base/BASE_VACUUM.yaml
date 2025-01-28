@@ -1,5 +1,5 @@
 coordinate_mode: graph
-relationships: 
+relationships:
 - - agent1
   - agent2
   - collaborate with
@@ -38,8 +38,8 @@ environment:
   name: "DB Simulation Environment"
   max_iterations: 5
   init_sql: ""
-      
-  anomalies:  
+
+  anomalies:
     - anomaly: VACUUM
       threads: 100
       ncolumn: 20
@@ -49,11 +49,11 @@ environment:
 communication: False
 
 task:
-  content: |    
+  content: |
     Recently, during operation, the database has seen performance issues. Use sql queries to find out what is wrong, and find out the reason that caused it. The root cause can be only two of the following: 'INSERT_LARGE_DATA', 'MISSING_INDEXES', 'LOCK_CONTENTION', 'VACUUM', 'REDUNDANT_INDEX', 'FETCH_LARGE_DATA', 'POOR_JOIN_PERFORMANCE,CPU_CONTENTION'. The planner should assign different agent to analyze possbility for each root cause and make final decision. Agents can also chat with each other to share information.  Please make the decision after using all these tools, as a premature decision may lead to incorrect conclusions.
   output_format: |
     Please make the decision after exploring all rootcauses, as a premature decision may lead to incorrect conclusions.
-    Please choose the most likely cause of the database anomaly from the following list, based on the expert agents: 
+    Please choose the most likely cause of the database anomaly from the following list, based on the expert agents:
     'INSERT_LARGE_DATA', 'LOCK_CONTENTION', 'VACUUM', 'REDUNDANT_INDEX', 'FETCH_LARGE_DATA'
     You can ONLY CHOOSE two.
     You have access to the Database, and you can perform queries to get the required information. Agents can also chat with each other to share information.
@@ -65,13 +65,13 @@ task:
     - `pg_stat_all_tables` (detailed statistics about vacuuming, auto vacuuming, and analyze operations for each table)
     - `pg_stat_progress_vacuum` (for vacuum progress)
     - `pg_stat_user_tables` (for dead tuples and vacuum stats)
-  labels: 
+  labels:
     - 'INSERT_LARGE_DATA'
     - 'LOCK_CONTENTION'
     - 'VACUUM'
     - 'REDUNDANT_INDEX'
     - 'FETCH_LARGE_DATA'
-  root_causes: 
+  root_causes:
     - 'VACUUM'
   number_of_labels_pred: 2
 
@@ -91,11 +91,11 @@ agents:
   - type: BaseAgent
     agent_id: agent5
     profile: "agent5 will explore the possibility of FETCH_LARGE_DATA as a root cause. Recommended to search for SELECTs from `pg_stat_statements`."
-    
+
 memory:
   type: SharedMemory
 
-metrics: 
+metrics:
   accuracy: true
   response_time: true
 

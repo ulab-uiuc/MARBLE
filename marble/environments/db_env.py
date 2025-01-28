@@ -1,21 +1,23 @@
 import os
+import re
 import subprocess
 import time
 from typing import Any, Dict, List
-import re
-import psycopg2
-from psycopg2 import OperationalError
 
 import numpy as np
+import psycopg2
 import requests
-from marble.environments.db_utils.anomaly_detection import detect_anomalies, describe_data_features
+from psycopg2 import OperationalError
 
 from marble.environments.base_env import BaseEnvironment
-from marble.llms.model_prompting import model_prompting
-
-from marble.environments.db_utils.metrics import allowed_metrics_full_names, full_metrics_full_names
+from marble.environments.db_utils.anomaly_detection import (
+    describe_data_features,
+    detect_anomalies,
+)
 from marble.environments.db_utils.diagnostic_kb import DiagnosticKB
+from marble.environments.db_utils.metrics import full_metrics_full_names
 from marble.environments.db_utils.slow_query import obtain_slow_queries
+
 
 def split_sql_statements(sql: str) -> List[str]:
     statements = re.split(r';\s*\n', sql)
@@ -35,7 +37,7 @@ def get_prometheus_metric_data(metric_name: str, start_time: float, end_time: fl
         if data.get('status') == 'success':
             try:
                 return data['data']['result'][0]['values']
-            except:
+            except Exception:
                 return []
         else:
             raise ValueError(f"Prometheus returned an error: {data.get('error', 'Unknown error')}")
@@ -101,9 +103,9 @@ class DBEnvironment(BaseEnvironment):
 
         cursor.execute("RESET client_min_messages;")
         print("Warning messages turned on.")
-        
+
         cursor.execute("CREATE EXTENSION pg_stat_statements;")
-        
+
         # interactive sql shell
         # while True:
         #     sql = input("Enter SQL statement: ")
@@ -343,7 +345,7 @@ class DBEnvironment(BaseEnvironment):
                 }
             }
         )
-    
+
     def wait_for_alerts(self) -> None:
         return True
         # is_initialized = False
@@ -403,7 +405,7 @@ class DBEnvironment(BaseEnvironment):
                     'value': alert.get('value', '')
                 }
                 formatted_alerts.append(formatted_alert)
-            
+
             explanation = ''
             for alert in formatted_alerts:
                 explanation += f"{alert['name']} triggered alert: {alert['description']}. \n"
@@ -455,7 +457,7 @@ class DBEnvironment(BaseEnvironment):
                 'function_name': 'detect_metric_abnormality',
                 'explanation': str(e)
             }
-    
+
     def get_rag_handler(self, expert: str, query_str: str) -> Dict[str, Any]:
         try:
             rag_str = self.get_rag_str(expert, query_str)

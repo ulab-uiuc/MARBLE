@@ -8,8 +8,7 @@ import json
 from typing import Any, Dict, List
 
 from litellm.types.utils import Message
-from litellm.utils import token_counter
-from litellm.utils import trim_messages
+from litellm.utils import token_counter, trim_messages
 
 from marble.graph.agent_graph import AgentGraph
 from marble.llms.model_prompting import model_prompting
@@ -108,7 +107,6 @@ class EnginePlanner:
             self.logger.debug(f"Received task assignment: {assignment}")
             return assignment
         except json.JSONDecodeError as e:
-            import pdb; pdb.set_trace()
             self.logger.error(f"Failed to parse JSON response: {e}")
             return {"tasks": {}, "continue": False}
 
@@ -133,18 +131,15 @@ class EnginePlanner:
             str: The summarized output.
         """
         messages = [{"role": "user", "content": f"Summarize the output of the agents for the task: {task}\n\nNow here is some result of thr agent: {summary}, please summarize it. You should follow the use of the following format: {output_format}"}]
-        try:
-            response = model_prompting(
-                # llm_model="gpt-3.5-turbo",
-                llm_model=self.model,
-                messages=trim_messages(messages, model=self.model, max_tokens=int(16384 * 0.6)),                return_num=1,
-                max_token_num=1024,
-                temperature=0.0,
-                top_p=None,
-                stream=None
-            )[0]
-        except:
-            import pdb; pdb.set_trace()
+        response = model_prompting(
+            # llm_model="gpt-3.5-turbo",
+            llm_model=self.model,
+            messages=trim_messages(messages, model=self.model, max_tokens=int(16384 * 0.6)),                return_num=1,
+            max_token_num=1024,
+            temperature=0.0,
+            top_p=None,
+            stream=None
+        )[0]
         self.token_usage += token_counter(model=self.model, messages=[{"role": "user", "content": f"Summarize the output of the agents for the task: {task}\n\nNow here is some result of thr agent: {summary}, please summarize it. You should follow the use of the following format: {output_format}"}, {"role": "assistant", "content": response.content}])
         return response
 
@@ -181,7 +176,7 @@ class EnginePlanner:
         messages = [{"role": "system", "content": prompt}]
         # trim messages
         messages = trim_messages(messages, model=self.model, max_tokens=int(16384 * 0.6))
-        
+
         response = model_prompting(
             # llm_model="gpt-3.5-turbo",
             llm_model=self.model,
@@ -203,6 +198,5 @@ class EnginePlanner:
             bool_decision:bool = decision.get("continue", False)
             return bool_decision
         except json.JSONDecodeError as e:
-            import pdb; pdb.set_trace()
             self.logger.error(f"Failed to parse JSON decision response: {e}")
             return False
