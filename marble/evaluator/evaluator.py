@@ -37,7 +37,7 @@ class Evaluator:
         }
         with open('evaluator/evaluator_prompts.json', 'r', encoding='utf-8') as f:
             self.evaluation_prompts = json.load(f)
-        self.llm = self.metrics_config.get('evaluate_llm', 'gpt-3.5-turbo')
+        self.llm = self.metrics_config.get('evaluate_llm', 'together_ai/meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo')
 
 
     def update(self, environment: BaseEnvironment, agents: List[BaseAgent]) -> None:
@@ -98,6 +98,8 @@ class Evaluator:
         # Get the planning prompt
         planning_prompt_template = self.evaluation_prompts["Graph"]["Planning"]["prompt"]
         # Fill in the placeholders
+        summary = summary[:2000]
+        results = results[:5000]
         prompt = planning_prompt_template.format(
             summary=summary,
             agent_profiles=agent_profiles,
@@ -128,6 +130,10 @@ class Evaluator:
             agent_results (str): The results from the agents.
         """
         # Get the KPI prompt
+        MAX_LENGTH = 7200 
+
+        if len(agent_results) > MAX_LENGTH:
+            agent_results = agent_results[:MAX_LENGTH] + "..."
         kpi_prompt_template = self.evaluation_prompts["Graph"]["KPI"]["prompt"]
         # Fill in the placeholders {task} and {agent_results}
         prompt = kpi_prompt_template.format(task=task, agent_results=agent_results)
@@ -217,14 +223,26 @@ class Evaluator:
             assistant_answer (str): The assistant's answer containing the score.
 
         Returns:
-            int: The parsed score.
+            int: The parsed score. Returns 0 if parsing fails.
         """
-        # Look for "Rating: [[rating]]" in the assistant's answer
-        match = re.search(r'Rating:\s*\[\[\[(\d+)\]\]\]', assistant_answer)
-        if match:
-            return int(match.group(1))
-        else:
-            return int(assistant_answer[-1])
+        try:
+            # 首先尝试匹配 "Rating: [[[rating]]]" 格式
+            match = re.search(r'Rating:\s*\[\[\[(\d+)\]\]\]', assistant_answer)
+            if match:
+                return int(match.group(1))
+            
+            # 如果上面的匹配失败，尝试从后向前查找第一个数字
+            for char in reversed(assistant_answer):
+                if char.isdigit():
+                    return int(char)
+                    
+            # 如果都没找到，返回默认值
+            self.logger.warning(f"No score found in assistant's answer, returning 0")
+            return 0
+            
+        except Exception as e:
+            self.logger.error(f"Error parsing score: {e}")
+            return 0  # 出错时返回默认值
 
     def finalize(self) -> None:
         """
@@ -298,7 +316,7 @@ class Evaluator:
                 **Code Result:** {code_result}
 
                 [System]
-                This evaluation requires extremely stringent scoring. The scores must not be generous, and deductions should be applied strictly for every issue found. 
+                This evaluation requires **extremely stringent scoring and strict deduction**. The scores must not be generous, and deductions should be applied strictly for every issue found. 
 
                 ### **Evaluation Criteria**
                 1. **Instruction-Following:** Does the code fulfill all the requirements of the task? Deduct 1 point for every unmet or partially met requirement from the task instructions. 
@@ -313,11 +331,11 @@ class Evaluator:
 
                 bonus stage:
                 Only code with a base score of **3** can be considered for bonus points.
-                - **4 points:** Excellent - Fully satisfies the criterion.
-                - **5 points:** Legendary - The code is flawless and exceeds expectations.
+                - **4 points:** Excellent - Almost or fully satisfies the criterion.
+                - **5 points:** Legendary - Flawless, perfectly satisfies the criterion, and exceeds expectations.
 
                 **Do not give the same scores for different criteria, such as 3 for instruction-following, 3 for executability, 3 for consistency, and 3 for quality.**
-                If you give the same scores for the 4 criteria, you have to deduct or add 1 point randomly for one or two criteria.
+                If you give the same scores for the 4 criteria, you have to add or deduct 1 point randomly for one or two criteria.
 
                 
 
@@ -340,7 +358,7 @@ class Evaluator:
             llm_model=self.llm,
             messages=[{"role": "user", "content": prompt}],
             return_num=1,
-            max_token_num=512,
+            max_token_num=4096,
             temperature=0.0,
             top_p=None,
             stream=None,

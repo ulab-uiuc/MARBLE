@@ -20,7 +20,7 @@ class EnginePlanner:
     The EnginePlanner class handles task assignment and scheduling for agents.
     """
 
-    def __init__(self, agent_graph: AgentGraph, memory: Any, config: Dict[str, Any], task:str, model:str="gpt-3.5-turbo"):
+    def __init__(self, agent_graph: AgentGraph, memory: Any, config: Dict[str, Any], task:str, model:str="together_ai/meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo"):
         """
         Initialize the EnginePlanner.
 
@@ -92,7 +92,7 @@ class EnginePlanner:
             llm_model=self.model,
             messages=messages,
             return_num=1,
-            max_token_num=1024,
+            max_token_num=2048,
             temperature=0.7,
             top_p=1.0
         )
@@ -130,7 +130,7 @@ class EnginePlanner:
             llm_model=self.model,
             messages=[{"role": "user", "content": f"Summarize the output of the agents for the task: {task}\n\nNow here is some result of thr agent: {summary}, please summarize it. You should follow the use of the following format: {output_format}"}],
             return_num=1,
-            max_token_num=1024,
+            max_token_num=2048,
             temperature=0.0,
             top_p=None,
             stream=None
@@ -171,7 +171,7 @@ class EnginePlanner:
             llm_model=self.model,
             messages=messages,
             return_num=1,
-            max_token_num=256,
+            max_token_num=2048,
             temperature=0.3,
             top_p=1.0
         )

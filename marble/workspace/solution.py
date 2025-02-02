@@ -1,179 +1,195 @@
-The task description is: Build a decision tree classifier supporting both numerical and categorical features
-1. Implementation requirements:
-   - Use recursive partitioning based on information gain or Gini index.
-   - Handle missing values and categorical features.
-   - Implement tree visualization or text-based representation.
-   - Evaluate the classifier using test data.
-
-Based on this task description, I have improved the solution.
+Here's the improved version of the code:
 
 ```python
-import numpy as np
-import pandas as pd
-from collections import Counter
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score
-from sklearn.impute import SimpleImputer
-from sklearn.preprocessing import OneHotEncoder, LabelEncoder
+import random
+import pygame
+import sys
 
-try:
-    from graphviz import Digraph  # Required for tree visualization
-    graphviz_installed = True
-except ImportError:
-    graphviz_installed = False
+# Initialize Pygame
+pygame.init()
 
-class Node:
-    def __init__(self, feature=None, threshold=None, left=None, right=None, value=None):
-        self.feature = feature
-        self.threshold = threshold
-        self.left = left
-        self.right = right
-        self.value = value
+# Define some colors
+BLACK = (0, 0, 0)
+WHITE = (255, 255, 255)
+GRAY = (128, 128, 128)
 
-class DecisionTreeClassifier:
-    def __init__(self, max_depth=None, min_samples_split=2, criterion='gini', categorical_encoding='one-hot'):
-        self.max_depth = max_depth
-        self.min_samples_split = min_samples_split
-        self.criterion = criterion
-        self.categorical_encoding = categorical_encoding
+# Set the width and height of each block
+BLOCK_SIZE = 30
 
-    def fit(self, X, y):
-        self.n_classes = len(np.unique(y))
-        self.n_features = X.shape[1]
-        self.tree = self._grow_tree(X, y)
+# Set the width and height of the grid
+GRID_WIDTH = 10
+GRID_HEIGHT = 20
 
-    def _grow_tree(self, X, y, depth=0):
-        n_samples_per_class = [np.sum(y == i) for i in range(self.n_classes)]
-        predicted_class = np.argmax(n_samples_per_class)
-        node = Node(value=predicted_class)
+# Set the margin between the grid and the border
+MARGIN = 20
 
-        if depth < self.max_depth:
-            idx, thr = self._best_split(X, y)
-            if idx is not None:
-                indices_left = X[:, idx] < thr
-                X_left, y_left = X[indices_left], y[indices_left]
-                X_right, y_right = X[~indices_left], y[~indices_left]
-                node = Node(feature=idx, threshold=thr,
-                            left=self._grow_tree(X_left, y_left, depth + 1),
-                            right=self._grow_tree(X_right, y_right, depth + 1))
-        return node
+# Set the size of the screen
+SCREEN_WIDTH = GRID_WIDTH * BLOCK_SIZE + 2 * MARGIN
+SCREEN_HEIGHT = GRID_HEIGHT * BLOCK_SIZE + 2 * MARGIN
 
-    def _best_split(self, X, y):
-        m, n = X.shape
-        if m <= self.min_samples_split:
-            return None, None
+# Create the screen
+SCREEN = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
-        if self.criterion == 'gini':
-            best_impurity = 1
-        else:
-            best_impurity = np.inf
-        best_idx, best_thr = None, None
+# Set the font for the score
+FONT = pygame.font.Font(None, 36)
 
-        for idx in range(n):
-            thresholds, classes = zip(*sorted(zip(X[:, idx], y)))
-            class_counts = Counter()
-            for i in range(1, m):
-                class_counts[classes[i - 1]] += 1
-                if classes[i - 1] != classes[i]:
-                    impurity_left = self._impurity(class_counts)
-                    impurity_right = self._impurity(Counter(classes[i:]))
-                    impurity = (i * impurity_left + (m - i) * impurity_right) / m
-                    if impurity < best_impurity:
-                        best_impurity = impurity
-                        best_idx = idx
-                        best_thr = (thresholds[i - 1] + thresholds[i]) / 2
-        return best_idx, best_thr
+# Define the shapes of the blocks
+SHAPES = [
+    [[1, 1, 1, 1]],  # Straight block
+]
 
-    def _impurity(self, class_counts):
-        m = sum(class_counts.values())
-        return 1 - sum((class_count / m) ** 2 for class_count in class_counts.values())
+# Define the colors of the blocks
+BLOCK_COLORS = [
+    (255, 0, 0),  # Red
+    (0, 255, 0),  # Green
+    (0, 0, 255),  # Blue
+    (255, 255, 0),  # Yellow
+    (255, 0, 255),  # Magenta
+    (0, 255, 255),  # Cyan
+]
 
-    def predict(self, X):
-        return [self._predict(inputs) for inputs in X]
+class Block:
+    def __init__(self):
+        self.shape = random.choice(SHAPES)
+        self.color = random.choice(BLOCK_COLORS)
+        self.x = GRID_WIDTH // 2
+        self.y = 0
 
-    def _predict(self, inputs):
-        node = self.tree
-        while node.left:
-            if inputs[node.feature] < node.threshold:
-                node = node.left
-            else:
-                node = node.right
-        return node.value
+    def move_down(self):
+        self.y += 1
 
-    def visualize_tree(self, visualization_type='graph'):
-        if visualization_type == 'graph' and not graphviz_installed:
-            print("Graphviz is not installed. Unable to visualize the tree.")
-            return
+    def move_left(self):
+        self.x -= 1
 
-        if visualization_type == 'graph':
-            dot = Digraph()
-            self._build_tree_visual(self.tree, dot)
-            dot.render('decision_tree', format='png', cleanup=True)
-        elif visualization_type == 'text':
-            self._build_tree_text(self.tree, depth=0)
+    def move_right(self):
+        self.x += 1
 
-    def _build_tree_visual(self, node, dot):
-        if node.left:
-            dot.node(str(node.feature), label=f'X[{node.feature}] < {node.threshold}')
-            dot.node(str(node.left.feature), label=f'X[{node.left.feature}]')
-            dot.node(str(node.right.feature), label=f'X[{node.right.feature}]')
-            dot.edge(str(node.feature), str(node.left.feature), label='True')
-            dot.edge(str(node.feature), str(node.right.feature), label='False')
-            self._build_tree_visual(node.left, dot)
-            self._build_tree_visual(node.right, dot)
+    def move_up(self):
+        self.y -= 1
 
-    def _build_tree_text(self, node, depth):
-        if node.left:
-            print('  ' * depth + f'X[{node.feature}] < {node.threshold}')
-            self._build_tree_text(node.left, depth + 1)
-            print('  ' * depth + f'X[{node.feature}] >= {node.threshold}')
-            self._build_tree_text(node.right, depth + 1)
-        else:
-            print('  ' * depth + f'Class: {node.value}')
+    def rotate(self):
+        self.shape = [list(reversed(i)) for i in zip(*self.shape)]
+
+class Game:
+    def __init__(self):
+        self.grid = [[0 for _ in range(GRID_WIDTH)] for _ in range(GRID_HEIGHT)]
+        self.block = Block()
+        self.score = 0
+        self.lines_cleared = 0
+        self.game_over = False
+
+    def draw_grid(self):
+        for y in range(GRID_HEIGHT):
+            for x in range(GRID_WIDTH):
+                if self.grid[y][x] == 1:
+                    pygame.draw.rect(SCREEN, WHITE, (x * BLOCK_SIZE + MARGIN, y * BLOCK_SIZE + MARGIN, BLOCK_SIZE, BLOCK_SIZE))
+
+    def draw_block(self):
+        for y, row in enumerate(self.block.shape):
+            for x, val in enumerate(row):
+                if val == 1:
+                    pygame.draw.rect(SCREEN, self.block.color, ((self.block.x + x) * BLOCK_SIZE + MARGIN, (self.block.y + y) * BLOCK_SIZE + MARGIN, BLOCK_SIZE, BLOCK_SIZE))
+
+    def check_collision(self):
+        for y, row in enumerate(self.block.shape):
+            for x, val in enumerate(row):
+                if val == 1:
+                    if self.block.x + x < 0 or self.block.x + x >= GRID_WIDTH:
+                        return True
+                    if self.block.y + y < 0 or self.block.y + y >= GRID_HEIGHT:
+                        return True
+                    if self.grid[self.block.y + y][self.block.x + x] == 1:
+                        return True
+        return False
+
+    def update_grid(self):
+        for y, row in enumerate(self.block.shape):
+            for x, val in enumerate(row):
+                if val == 1:
+                    self.grid[self.block.y + y][self.block.x + x] = 1
+
+    def clear_lines(self):
+        lines_cleared = 0
+        for y in range(GRID_HEIGHT):
+            if all(self.grid[y]):
+                del self.grid[y]
+                self.grid.insert(0, [0 for _ in range(GRID_WIDTH)])
+                lines_cleared += 1
+        self.score += lines_cleared * lines_cleared
+        self.lines_cleared += lines_cleared
+        print(f"Line cleared! You cleared {lines_cleared} lines.")
+
+    def draw_score(self):
+        score_text = FONT.render(f'Score: {self.score} Lines Cleared: {self.lines_cleared}', True, WHITE)
+        SCREEN.blit(score_text, (MARGIN, MARGIN))
+
+    def check_game_over(self):
+        for x in range(GRID_WIDTH):
+            if self.grid[0][x] == 1:
+                self.game_over = True
+                print("Game Over!")
 
 def main():
-    # Load your dataset here
-    # Split the dataset into features (X) and target (y)
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    clock = pygame.time.Clock()
+    game = Game()
 
-    # Handle missing values
-    imputer = SimpleImputer(strategy='mean')
-    X_train = imputer.fit_transform(X_train)
-    X_test = imputer.transform(X_test)
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_LEFT:
+                    game.block.move_left()
+                    if game.check_collision():
+                        game.block.move_right()
+                elif event.key == pygame.K_RIGHT:
+                    game.block.move_right()
+                    if game.check_collision():
+                        game.block.move_left()
+                elif event.key == pygame.K_DOWN:
+                    game.block.move_down()
+                    if game.check_collision():
+                        game.block.move_up()
+                elif event.key == pygame.K_UP:
+                    game.block.move_up()
+                    if game.check_collision():
+                        game.block.move_down()
+                elif event.key == pygame.K_SPACE:
+                    game.block.rotate()
+                    if game.check_collision():
+                        game.block.rotate()
+                        game.block.rotate()
+                        game.block.rotate()
 
-    # Handle categorical features
-    categorical_features = [i for i in range(X_train.shape[1]) if not np.issubdtype(X_train[:, i].dtype, np.number)]
-    if categorical_features:
-        if clf.categorical_encoding == 'one-hot':
-            enc = OneHotEncoder(sparse=False, handle_unknown='ignore')
-            X_train = enc.fit_transform(X_train)
-            X_test = enc.transform(X_test)
-        elif clf.categorical_encoding == 'label':
-            enc = LabelEncoder()
-            X_train = enc.fit_transform(X_train)
-            X_test = enc.transform(X_test)
+        SCREEN.fill(BLACK)
 
-    # Initialize and train the decision tree classifier
-    clf = DecisionTreeClassifier(max_depth=5, min_samples_split=2, criterion='gini', categorical_encoding='one-hot')
-    clf.fit(X_train, y_train)
+        game.draw_grid()
+        game.draw_block()
+        game.draw_score()
 
-    # Make predictions on the test set
-    y_pred = clf.predict(X_test)
+        if game.check_collision():
+            game.update_grid()
+            game.clear_lines()
+            game.block = Block()
 
-    # Evaluate the classifier
-    accuracy = accuracy_score(y_test, y_pred)
-    print(f'Accuracy: {accuracy}')
+        game.block.move_down()
+        if game.check_collision():
+            game.block.move_up()
 
-    # Visualize the decision tree
-    clf.visualize_tree(visualization_type='graph')
+        game.check_game_over()
+        if game.game_over:
+            game_over_text = FONT.render('Game Over', True, WHITE)
+            SCREEN.blit(game_over_text, (SCREEN_WIDTH // 2 - 50, SCREEN_HEIGHT // 2 - 18))
+            pygame.display.flip()
+            pygame.time.wait(2000)
+            break
 
-if __name__ == "__main__":
+        pygame.display.flip()
+        clock.tick(60)
+
+if __name__ == '__main__':
     main()
 ```
 
-Improvements Made:
-1. Added a parameter `categorical_encoding` in the `DecisionTreeClassifier` class to support both one-hot encoding and label encoding for categorical features.
-2. Added an option to choose between graph visualization and text-based representation in the `visualize_tree` method.
-3. Included a text-based tree representation in addition to the graph visualization.
-4. Updated the main function to handle both one-hot encoding and label encoding based on the chosen categorical encoding method.
-5. Improved code readability and maintained consistency in naming conventions.
+The task description is: Create a basic tetris game with only straight blocks. Implementation requirements: Design a Tetris game board with falling straight blocks. Allow the player to move blocks left, right, and down, and rotate them. Clear lines when they are completely filled. Track and display the player's score. Based on this task description, I have improved the solution.

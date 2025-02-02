@@ -1,69 +1,47 @@
-import json
+import os
+from marble.llms.model_prompting import model_prompting
 
-def calculate_scores(file_path):
-    # 初始化列表存储所有分数
-    collaboration_scores = []
-    coordination_scores = []
-    task_completion_scores = []
-    
-    # 读取jsonl文件
-    with open(file_path, 'r') as f:
-        for line in f:
-            data = json.loads(line)
-            
-            # 获取planning和communication scores
-            planning_scores = data.get('planning_scores', [])
-            communication_scores = data.get('communication_scores', [])
-            
-            # 将-1视为0
-            communication_scores = [0 if score == -1 else score for score in communication_scores]
-            
-            # 计算collaboration score(包括-1, 视为0)
-            if planning_scores and communication_scores:
-                avg_score = (sum(planning_scores) + sum(communication_scores)) / (len(planning_scores) + len(communication_scores))
-                collaboration_scores.append(avg_score)
-            
-            # 计算coordination score(不包括-1)
-            valid_scores = planning_scores + [s for s in communication_scores if s != 0]
-            if valid_scores:
-                coord_score = sum(valid_scores) / len(valid_scores)
-                coordination_scores.append(coord_score)
-            
-            # 计算task completion score
-            if 'code_quality' in data:
-                code_quality = data['code_quality']
-                if isinstance(code_quality, dict):
-                    quality_scores = [
-                        code_quality.get('instruction_following', 0),
-                        code_quality.get('executability', 0),
-                        code_quality.get('consistency', 0),
-                        code_quality.get('quality', 0)
-                    ]
-                    avg_quality = sum(quality_scores) / len(quality_scores)
-                    task_completion_scores.append(avg_quality)
-    
-    # 计算总平均分数
-    final_collaboration = sum(collaboration_scores) / len(collaboration_scores) if collaboration_scores else 0
-    final_coordination = sum(coordination_scores) / len(coordination_scores) if coordination_scores else 0
-    final_completion = sum(task_completion_scores) / len(task_completion_scores) if task_completion_scores else 0
-    
-    return {
-        'collaboration_score': final_collaboration,
-        'coordination_score': final_coordination, 
-        'task_completion_score': final_completion
-    }
-
-def main():
-    file_path = '/home/zhe36/MARBLE/marble/result/development_output.jsonl'
+def test_model():
+    # 设置 AWS 凭据
+    os.environ["AWS_ACCESS_KEY_ID"] = "AKIA4ZPZVQT7FA5CPBXR"
+    os.environ["AWS_SECRET_ACCESS_KEY"] = "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"
+    os.environ["AWS_REGION_NAME"] = "us-west-2"
     
     try:
-        scores = calculate_scores(file_path)
-        print("分数统计结果:")
-        print(f"Collaboration Score (包括-1视为0): {scores['collaboration_score']:.2f}")
-        print(f"Coordination Score (不包括-1): {scores['coordination_score']:.2f}")
-        print(f"Task Completion Score: {scores['task_completion_score']:.2f}")
+        messages = [{
+            "content": "Write me a poem about the blue sky",
+            "role": "user"
+        }]
+        
+        response = model_prompting(
+            llm_model="bedrock/meta.llama3-1-8b-instruct-v1:0",
+            messages=messages,
+            return_num=1,
+            max_token_num=2048,
+            temperature=0.7,
+            top_p=1.0
+        )
+        
+        if response:
+            print("\nResponse received:")
+            print(response[0].content if response[0].content else "No content")
+            
+            # 打印 token 使用情况
+            print("\nToken Usage:")
+            for msg in response:
+                if hasattr(msg, 'usage'):
+                    print(f"Prompt tokens: {msg.usage.prompt_tokens}")
+                    print(f"Completion tokens: {msg.usage.completion_tokens}")
+                    print(f"Total tokens: {msg.usage.total_tokens}")
+        else:
+            print("\nNo response received")
+            
     except Exception as e:
-        print(f"计算失败: {str(e)}")
+        print(f"Error occurred: {e}")
+        print("Error type:", type(e))
+        import traceback
+        print("\nFull traceback:")
+        print(traceback.format_exc())
 
 if __name__ == "__main__":
-    main()
+    test_model()

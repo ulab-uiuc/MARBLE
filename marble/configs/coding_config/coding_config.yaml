@@ -12,24 +12,24 @@ relationships:
   - [agent3, agent2, "collaborates with"]
   # - [agent3, agent4, "collaborates with"]
 
-llm: "gpt-3.5-turbo"
+llm: "together_ai/meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo"
 
 environment:
   type: Coding
   name: "Coding Environment"
   workspace_dir: "workspace"
-  max_iterations: 5
+  max_iterations: 4
 
 task:
   content: |-
     Software Development Task:
 
-    Build a decision tree classifier supporting both numerical and categorical features
+    Create a basic tetris game with only straight blocks
     1. Implementation requirements:
-       - Use recursive partitioning based on information gain or Gini index.
-       - Handle missing values and categorical features.
-       - Implement tree visualization or text-based representation.
-       - Evaluate the classifier using test data.
+       - Design a Tetris game board with falling straight blocks.
+       - Allow the player to move blocks left, right, and down, and rotate them.
+       - Clear lines when they are completely filled.
+       - Track and display the player's score.
 
 
     2. Project structure:

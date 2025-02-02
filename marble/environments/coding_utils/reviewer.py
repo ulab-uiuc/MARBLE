@@ -4,25 +4,6 @@ import datetime
 from typing import Dict, Any
 from marble.llms.model_prompting import model_prompting
 
-def extract_python_code(content: str) -> str:
-    """
-    Extracts Python code from a string that may contain Markdown-style code blocks.
-    
-    Args:
-        content (str): The input content containing Python code wrapped in Markdown.
-    
-    Returns:
-        str: Extracted Python code, or the original content if no Markdown-style block is found.
-    """
-    start_marker = "```python"
-    end_marker = "```"
-    start_idx = content.find(start_marker)
-    end_idx = content.find(end_marker, start_idx + len(start_marker))
-    
-    if start_idx != -1 and end_idx != -1:
-        return content[start_idx + len(start_marker):end_idx].strip()
-    return content
-
 def give_advice_and_revise_handler(env, task_description: str, model_name: str, file_path: str = "solution.py") -> Dict[str, Any]:
     """
     Reads solution.py content, provides improvement suggestions based on task description, and revises the code accordingly.
@@ -38,6 +19,7 @@ def give_advice_and_revise_handler(env, task_description: str, model_name: str, 
         Dict[str, Any]: Result of the operation containing advice and revised code
     """
     try:
+        
         full_path = os.path.join(env.workspace_dir, os.path.basename(file_path))
         advice_path = os.path.join(env.workspace_dir, "advices.json")
 
@@ -51,9 +33,6 @@ def give_advice_and_revise_handler(env, task_description: str, model_name: str, 
         with open(full_path, 'r') as file:
             existing_code = file.read()
 
-        # Extract actual Python code if wrapped in Markdown
-        python_code = extract_python_code(existing_code)
-
         # Step 1: Generate advice
         system_prompt_advice = (
             "You are a Python code reviewer. Check if the given code satisfies the task description provided below. "
@@ -61,7 +40,7 @@ def give_advice_and_revise_handler(env, task_description: str, model_name: str, 
             "'You should ... as the task description ...'.\n\n"
             f"Task Description:\n{task_description}\n"
             "\nCode to Review:\n"
-            f"{python_code}\n"
+            f"{existing_code}\n"
         )
 
         user_prompt_advice = "Check if the code meets the task description and provide actionable suggestions in the specified format."
@@ -73,7 +52,7 @@ def give_advice_and_revise_handler(env, task_description: str, model_name: str, 
                 {"role": "user", "content": user_prompt_advice}
             ],
             return_num=1,
-            max_token_num=2048,
+            max_token_num=4096,
             temperature=0.0
         )[0]
 
@@ -109,7 +88,7 @@ def give_advice_and_revise_handler(env, task_description: str, model_name: str, 
             "I have improved the solution.'\n\n"
             f"Task Description:\n{task_description}\n"
             "\nExisting Code:\n"
-            f"{python_code}\n"
+            f"{existing_code}\n"
             "\nPrevious Code Review Suggestions:\n"
             f"{latest_suggestions}\n"
             "\nPlease consider these suggestions while improving the code."
@@ -124,7 +103,7 @@ def give_advice_and_revise_handler(env, task_description: str, model_name: str, 
                 {"role": "user", "content": user_prompt_revise}
             ],
             return_num=1,
-            max_token_num=2048,
+            max_token_num=4096,
             temperature=0.0
         )[0]
 
@@ -137,7 +116,7 @@ def give_advice_and_revise_handler(env, task_description: str, model_name: str, 
         return {
             "success": True,
             "message": f"Code review and revision completed. Suggestions saved to {advice_path} and solution revised at {full_path}",
-            "original_code": python_code,
+            "original_code": existing_code,
             "suggestions": latest_suggestions,
             "improved_code": improved_code
         }
@@ -166,7 +145,8 @@ def register_reviewer_actions(env):
                         },
                         "model_name": {
                             "type": "string", 
-                            "description": "Name of the LLM model to use (e.g., 'gpt-3.5-turbo', 'gpt-4')"
+                            "description": "Name of the LLM model to use)",
+                            "default": "together_ai/meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo" 
                         },
                         "file_path": {
                             "type": "string",

@@ -6,7 +6,7 @@ UPDATE_SCRIPT="/home/zhe36/MARBLE/marble/environments/coding_utils/update_config
 RUN_DEMO_SCRIPT="/home/zhe36/MARBLE/marble/run_demo.sh"
 
 # Loop from id=1 to id=10
-for id in {1..10}; do
+for id in {17..100}; do
     echo "Processing task with ID=$id..."
 
     # Clean the workspace directory

@@ -16,6 +16,7 @@ def create_solution_handler(env, task_description: str, model_name: str, file_pa
         Dict[str, Any]: Result of the operation
     """
     try:
+        
         # Construct full path using workspace directory
         workspace_dir = env.workspace_dir  # This should be "marble/workspace"
         full_path = os.path.join(workspace_dir, file_path)
@@ -45,7 +46,7 @@ def create_solution_handler(env, task_description: str, model_name: str, file_pa
                 {"role": "user", "content": user_prompt}
             ],
             return_num=1,
-            max_token_num=2048,
+            max_token_num=4096,
             temperature=0.0
         )[0]
 
@@ -133,7 +134,7 @@ def create_solution_handler(env, task_description: str, model_name: str, file_pa
 #                 {"role": "user", "content": user_prompt}
 #             ],
 #             return_num=1,
-#             max_token_num=2048,
+#             max_token_num=4096,
 #             temperature=0.0
 #         )[0]
 
@@ -176,7 +177,8 @@ def register_coder_actions(env):
                         },
                         "model_name": {
                             "type": "string", 
-                            "description": "Name of the LLM model to use (e.g., 'gpt-3.5-turbo', 'gpt-4')"
+                            "description": "Name of the LLM model to use",
+                            "default": "together_ai/meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo" 
                         },
                         "file_path": {
                             "type": "string",
@@ -207,7 +209,7 @@ def register_coder_actions(env):
     #                     },
     #                     "model_name": {
     #                         "type": "string", 
-    #                         "description": "Name of the LLM model to use (e.g., 'gpt-3.5-turbo', 'gpt-4')"
+    #                         "description": "Name of the LLM model to use"
     #                     },
     #                     "file_path": {
     #                         "type": "string",

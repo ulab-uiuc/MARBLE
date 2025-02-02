@@ -285,6 +285,7 @@ class Engine:
                 #     break
                 summary_data["iterations"].append(iteration_data)
             # At the end, add the scores to summary_data
+            
             summary_data["planning_scores"] = self.evaluator.metrics["planning_score"]
             summary_data["communication_scores"] = self.evaluator.metrics["communication_score"]
             summary_data["token_usage"] = self._get_totoal_token_usage()
@@ -301,6 +302,7 @@ class Engine:
                     self.evaluator.evaluate_code_quality(task=self.task, code_result=code)
                     summary_data["code_quality"] = self.evaluator.metrics["code_quality"]
                     self.logger.info(f"Code quality evaluation results: {self.evaluator.metrics['code_quality']}")
+            
 
         except Exception:
             self.logger.exception("An error occurred during graph-based coordination.")
