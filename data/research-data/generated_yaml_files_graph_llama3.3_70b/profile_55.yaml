@@ -1,0 +1,290 @@
+agents:
+- agent_id: agent1
+  profile: 'I am a researcher dedicated to addressing the critical intersection of
+    privacy and machine learning, particularly in sensitive domains such as healthcare
+    and chemical data analysis. My recent work, including the development of the Privately
+    Encoded Open Datasets with Public Labels (PEOPL) framework, focuses on enabling
+    organizations to share encoded data for training machine learning models while
+    safeguarding sensitive information. I have introduced innovative information-theoretic
+    metrics to evaluate privacy and utility, demonstrating that our randomized encoding
+    schemes can effectively withstand computational attacks while maintaining competitive
+    prediction accuracy.
+
+
+    In my pursuit of privacy-preserving techniques, I developed Syfer, a neural obfuscation
+    method that protects against re-identification attacks while preserving predictive
+    utility. This work highlights my commitment to balancing privacy and performance,
+    particularly in healthcare applications where data sensitivity is paramount.
+
+
+    Additionally, I have explored automated methods for extracting structured chemical
+    reaction data from literature, employing deep learning frameworks to enhance data
+    efficiency and accuracy in this critical area of research. My work on the Blank
+    Language Model (BLM) showcases my interest in natural language processing, where
+    I have developed a model capable of generating coherent text sequences through
+    a dynamic blank-filling approach.
+
+
+    Overall, my research is driven by a passion for creating robust, privacy-aware
+    machine learning solutions that can be applied across various domains, ultimately
+    contributing to safer and more effective data sharing practices.'
+  type: BaseAgent
+- agent_id: agent2
+  profile: 'I am a researcher dedicated to advancing the field of natural language
+    processing (NLP) and machine learning, with a particular focus on optimizing language
+    models and enhancing their capabilities. My recent work includes the development
+    of the Block Transformer architecture, which innovatively combines global and
+    local modeling to significantly improve inference throughput, achieving 10-20x
+    gains compared to traditional transformers. I have also explored the challenges
+    of open-domain question answering, proposing a novel methodology that leverages
+    entailment graphs to enhance knowledge retrieval and mitigate sparsity issues.
+
+
+    In addition, I am passionate about continual learning and have constructed benchmarks
+    to analyze transfer scenarios, aiming to maximize positive transfer while minimizing
+    negative impacts. My research extends to hyperparameter optimization, where I
+    integrate Bayesian optimization with risk control to ensure reliable model performance
+    across various objectives.
+
+
+    I have also introduced frameworks like Confident Adaptive Language Modeling (CALM)
+    to dynamically allocate computational resources based on input complexity, and
+    the Retrieving Visual Facts (RVF) framework for few-shot visual question answering.
+    My work emphasizes the importance of effective data augmentation and active learning
+    strategies in low-resource settings, demonstrating significant performance improvements.
+
+
+    Through my contributions, I strive to bridge the gap between theoretical advancements
+    and practical applications, ensuring that our models are not only powerful but
+    also efficient and adaptable to real-world challenges. I am committed to pushing
+    the boundaries of what language models can achieve, while also addressing ethical
+    considerations and biases inherent in AI systems.'
+  type: BaseAgent
+- agent_id: agent3
+  profile: 'I am a researcher dedicated to advancing the field of natural language
+    processing (NLP) through innovative architectures and methodologies. My recent
+    work has focused on optimizing large language models (LLMs) to enhance their efficiency
+    and performance. For instance, I developed the Block Transformer architecture,
+    which employs a hierarchical global-to-local modeling approach to significantly
+    improve inference throughput by isolating expensive self-attention computations.
+
+
+    I also introduced TACT, a dataset designed to evaluate LLMs'' reasoning capabilities,
+    revealing their limitations in aggregating information across texts. This led
+    to the development of a focused modeling framework that enhances LLM performance
+    on complex tasks. My research on locally-attributable text generation has further
+    refined how LLMs can provide concise citations, improving the verification process
+    for generated content.
+
+
+    In addition, I have explored parameter sharing in LLMs through Recursive Transformers,
+    achieving substantial performance gains while reducing model size. My work on
+    the Differentiable Search Index (DSI) has simplified information retrieval, demonstrating
+    strong generalization capabilities.
+
+
+    I am passionate about addressing the challenges of multi-label conformal prediction
+    and extending its applications across various domains. My recent contributions
+    also include a unified framework for pre-training models that enhances their effectiveness
+    across diverse datasets and tasks. By pushing the boundaries of what LLMs can
+    achieve, I aim to contribute to the development of more efficient and capable
+    NLP systems.'
+  type: BaseAgent
+- agent_id: agent4
+  profile: "I am a researcher dedicated to harnessing the power of artificial intelligence\
+    \ (AI) and machine learning (ML) to improve cancer risk assessment and early detection.\
+    \ My recent work has focused on developing innovative models that leverage medical\
+    \ imaging data, particularly in the context of lung and breast cancer. For instance,\
+    \ I created Sybil, a deep learning model that predicts individual lung cancer\
+    \ risk from a single low-dose computed tomography (LDCT) scan, achieving impressive\
+    \ accuracy across multiple validation datasets. \n\nIn the realm of breast cancer,\
+    \ I developed Mirai, a mammography-based risk assessment tool that outperforms\
+    \ traditional models and demonstrates consistent performance across diverse populations.\
+    \ My research emphasizes the importance of integrating AI into clinical workflows\
+    \ to enhance screening strategies and ultimately improve patient outcomes. \n\n\
+    Additionally, I have explored the intersection of natural language processing\
+    \ (NLP) and healthcare, creating algorithms that can interpret unstructured text\
+    \ from pathology reports to aid in diagnosis and treatment planning. My work also\
+    \ addresses critical issues of data privacy and utility in healthcare, proposing\
+    \ methods like NeuraCrypt and Syfer to enable secure data sharing while maintaining\
+    \ predictive accuracy.\n\nThrough my research, I aim to bridge the gap between\
+    \ advanced AI methodologies and practical clinical applications, ensuring that\
+    \ these technologies can be effectively utilized to benefit patients and healthcare\
+    \ providers alike."
+  type: BaseAgent
+- agent_id: agent5
+  profile: 'I am a researcher dedicated to advancing the field of radiology through
+    innovative machine learning techniques, particularly in the realm of image retrieval
+    and analysis. My recent work focuses on leveraging vision transformers (ViTs)
+    to enhance the retrieval of visually and semantically similar radiological images,
+    achieving significant performance metrics on large datasets like the NIH Chest
+    Radiographs and NLST Chest CTs. I have developed robust algorithms for quantifying
+    emphysema severity from CT scans, addressing the limitations of traditional methods
+    and demonstrating high accuracy in classification.
+
+
+    Additionally, I have created radiology-specific BERT models to identify and correct
+    speech recognition errors in radiology reports, showcasing the potential of natural
+    language processing in improving clinical documentation. My research also explores
+    the long-term effects of transarterial chemoembolization on portal venous pressure,
+    contributing valuable insights into patient outcomes.
+
+
+    I am passionate about applying federated learning to enhance collaborative healthcare
+    research, as demonstrated during the COVID-19 pandemic, where I helped develop
+    a model that predicts oxygen requirements without compromising patient data privacy.
+    My work aims to bridge the gap between advanced computational techniques and practical
+    clinical applications, ultimately improving diagnostic accuracy and patient care
+    in radiology.'
+  type: BaseAgent
+coordinate_mode: graph
+engine_planner:
+  initial_progress: Starting the collaborative research idea generation based on the
+    provided Introduction.
+environment:
+  max_iterations: 5
+  name: Research Collaboration Environment
+  type: Research
+llm: together_ai/meta-llama/Meta-Llama-3.3-70B-Instruct-Turbo
+memory:
+  type: SharedMemory
+metrics:
+  diversity_of_perspectives: true
+  engagement_level: true
+  evaluate_llm: gpt-4o-mini
+  relevance: true
+output:
+  file_path: result/discussion_output_llama3.3_70b.jsonl
+  format: jsonl
+relationships:
+- - agent1
+  - agent2
+  - collaborate with
+- - agent1
+  - agent3
+  - collaborate with
+- - agent1
+  - agent4
+  - collaborate with
+- - agent1
+  - agent5
+  - collaborate with
+- - agent2
+  - agent3
+  - collaborate with
+- - agent2
+  - agent4
+  - collaborate with
+- - agent2
+  - agent5
+  - collaborate with
+- - agent3
+  - agent4
+  - collaborate with
+- - agent3
+  - agent5
+  - collaborate with
+- - agent4
+  - agent5
+  - collaborate with
+task:
+  content: "\n            Dear Research Team,\n\n            You are collaborating\
+    \ to generate a new research idea based on the following Introduction:\n\n   \
+    \         **Introduction**\n\n               1 Introduction  Language models (LMs)\
+    \ have emerged as powerful tools for solving natural language processing (NLP)\
+    \ tasks. Given an input prompt, LMs generate a response from some predicted distribution\
+    \ over output text sequences. For modern models, these generations are often coherent\
+    \ and contextually relevant. At the same time, these generations can still contain\
+    \ mistakes, and lack certain aspects of robustness and reliability in terms of\
+    \ providing accurate, trustworthy predictions Jones and Steinhardt (2022); Krishna\
+    \ et al. (2021); Lin et al. (2022a); Mallen et al. (2022); Srivastava et al. (2022);\
+    \ Wang et al. (2023). Unfortunately, quantifying the uncertainty in LM outputs\
+    \ has remained a major challenge.   Conformal prediction is a popular model-agnostic\
+    \ and distribution-free method for creating prediction sets that contain the correct\
+    \ answers with high probability Angelopoulos et al. (2023; 2021a; 2021b); Bates\
+    \ et al. (2020); Lei et al. (2018); Romano et al. (2019); Vovk et al. (2005).\
+    \ Applying conformal prediction to generative models such as LMs, however, is\
+    \ challenging due to (a) the unbounded nature of their output space (i.e., all\
+    \ possible text sequences), and (b) the limited available (tractable) mechanisms\
+    \ for exploring all possible predictions. In particular, LMs can typically only\
+    \ approximately search or sample candidate responses. Furthermore, while several\
+    \ possible responses might be acceptable (e.g., correct or factual), small differences\
+    \ can result in abrupt changes in coherence or meaning.   In this paper, we propose\
+    \ an extension of conformal prediction that is tailored specifically to generative\
+    \ LMs. We only assume that the (potentially black-box) LM that is given to us\
+    \ can be used to sample diverse output sequences, together with their evaluated\
+    \ model likelihoods (i.e., the output token sequence logits). Like conformal prediction,\
+    \ our method offers a rigorous coverage guarantee by constructing prediction sets\
+    \ that, in our case, provably contain at least one acceptable response with high\
+    \ probability. Unlike conformal prediction, however, we do not enumerate the entire\
+    \ output space (which is impossible). Instead, we derive a calibrated stopping\
+    \ rule for sampling different outputs from the LM that get added to a growing\
+    \ output set of candidates, until we are confident that the output set is sufficient.\
+    \ Since not all samples from the LM may be high quality (e.g., some may be redundant,\
+    \ incoherent, or have lower confidence), we also simultaneously calibrate a rejection\
+    \ rule for removing candidates from the output set—while still ensuring that our\
+    \ coverage bound is not violated. This gives the benefit of making our output\
+    \ sets not only accurate, but also precise (i.e., small).   Figure 1: Our conformal\
+    \ procedure samples candidate outputs from some blackbox LM until a stopping rule\
+    \ is reached. Each sample is added to the output conformal set if it meets both\
+    \ a minimum estimated quality and a diversity criterion. The procedure is calibrated\
+    \ to stop when at least one candidate y\U0001D466yitalic_y from the conformal\
+    \ set is admissible (A⁢(y)=1)\U0001D434\U0001D4661(A(y)=1)( italic_A ( italic_y\
+    \ ) = 1 ) with high probability. In this example, samples y1subscript\U0001D466\
+    1y_{1}italic_y start_POSTSUBSCRIPT 1 end_POSTSUBSCRIPT and y2subscript\U0001D466\
+    2y_{2}italic_y start_POSTSUBSCRIPT 2 end_POSTSUBSCRIPT are in-admissible because\
+    \ they hallucinate the presence of “edema” (in orange) and “hilar congestion”\
+    \ (in magenta), respectively. The minimal output set includes y3subscript\U0001D466\
+    3y_{3}italic_y start_POSTSUBSCRIPT 3 end_POSTSUBSCRIPT, which is admissible. \
+    \  To more concretely describe the exact type of guarantee that we\n\n       \
+    \     **Your Task**\n\n            1. **Literature Review**: Analyze the Introduction\
+    \ provided and conduct a brief literature review to understand the current state\
+    \ of research in this area.\n\n            2. **Brainstorming**: Collaboratively\
+    \ brainstorm potential research ideas that build upon or address gaps in the Introduction.\n\
+    \n            3. **Summarization**: Summarize your collective ideas.\n\n     \
+    \       4. **Formulate a New Research Idea**: Develop a new research proposal\
+    \ in the format of the '5q', defined below:\n\n               **Here is a high-level\
+    \ summarized insight of a research field Machine Learning.**\n\n             \
+    \  **Here are the five core questions:**\n\n               **[Question 1] - What\
+    \ is the problem?**\n\n               Formulate the specific research question\
+    \ you aim to address. Only output one question and do not include any more information.\n\
+    \n               **[Question 2] - Why is it interesting and important?**\n\n \
+    \              Explain the broader implications of solving this problem for the\
+    \ research community.\n               Discuss how such a paper will affect future\
+    \ research.\n               Discuss how addressing this question could advance\
+    \ knowledge or lead to practical applications.\n\n               **[Question 3]\
+    \ - Why is it hard?**\n\n               Discuss the challenges and complexities\
+    \ involved in solving this problem.\n               Explain why naive or straightforward\
+    \ approaches may fail.\n               Identify any technical, theoretical, or\
+    \ practical obstacles that need to be overcome. MAKE IT CLEAR.\n\n           \
+    \    **[Question 4] - Why hasn't it been solved before?**\n\n               Identify\
+    \ gaps or limitations in previous research or existing solutions.\n          \
+    \     Discuss any barriers that have prevented this problem from being solved\
+    \ until now.\n               Explain how your approach differs from or improves\
+    \ upon prior work. MAKE IT CLEAR.\n\n               **[Question 5] - What are\
+    \ the key components of my approach and results?**\n\n               Outline your\
+    \ proposed methodology in detail, including the method, dataset, and metrics that\
+    \ you plan to use.\n               Describe the expected outcomes. MAKE IT CLEAR.\n\
+    \n            Please work together to produce the '5q' for your proposed research\
+    \ idea.\n\n            Good luck!\n            "
+  output_format: "You should answer the task in the following format:\n          \
+    \      **[Question 1] - What is the problem?**\n\n                Formulate the\
+    \ specific research question you aim to address. Only output one question and\
+    \ do not include any more information.\n\n                **[Question 2] - Why\
+    \ is it interesting and important?**\n\n                Explain the broader implications\
+    \ of solving this problem for the research community.\n                Discuss\
+    \ how such a paper will affect future research.\n                Discuss how addressing\
+    \ this question could advance knowledge or lead to practical applications.\n\n\
+    \                **[Question 3] - Why is it hard?**\n\n                Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \        Explain why naive or straightforward approaches may fail.\n         \
+    \       Identify any technical, theoretical, or practical obstacles that need\
+    \ to be overcome. MAKE IT CLEAR.\n\n                **[Question 4] - Why hasn't\
+    \ it been solved before?**\n\n                Identify gaps or limitations in\
+    \ previous research or existing solutions.\n                Discuss any barriers\
+    \ that have prevented this problem from being solved until now.\n            \
+    \    Explain how your approach differs from or improves upon prior work. MAKE\
+    \ IT CLEAR.\n\n                **[Question 5] - What are the key components of\
+    \ my approach and results?**\n\n                Outline your proposed methodology\
+    \ in detail, including the method, dataset, and metrics that you plan to use.\n\
+    \                Describe the expected outcomes. MAKE IT CLEAR."

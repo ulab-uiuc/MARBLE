@@ -1,0 +1,222 @@
+agents:
+- agent_id: agent1
+  profile: 'I am a researcher dedicated to advancing the field of molecular representation
+    learning and graph-based machine learning. My recent work focuses on self-supervised
+    learning (SSL) techniques, particularly leveraging persistent homology to enhance
+    molecular property prediction. I have explored the integration of transformer
+    architectures with directed acyclic graphs (DAGs), developing efficient attention
+    mechanisms that outperform traditional graph neural networks (GNNs) in various
+    tasks.
+
+
+    My research also delves into hierarchical distance structural encoding (HDSE)
+    to improve graph transformers'' ability to capture complex structures, demonstrating
+    significant advancements in graph classification and regression tasks. Additionally,
+    I have pioneered a novel framework for generating compact and interpretable node
+    representations, which enhances both speed and memory efficiency in large-scale
+    graph inference.
+
+
+    Beyond molecular and graph learning, I have contributed to the understanding of
+    scholarly impact through the development of GeneticFlow, a graph-based profiling
+    system that provides structured insights into academic contributions. My work
+    also investigates cognitive biases in information retrieval systems, introducing
+    metrics to assess their vulnerability to the decoy effect.
+
+
+    Overall, my research aims to bridge theoretical advancements with practical applications,
+    enhancing our understanding of complex data structures and their implications
+    across various domains. I am passionate about creating innovative solutions that
+    not only push the boundaries of machine learning but also provide meaningful insights
+    into real-world challenges.'
+  type: BaseAgent
+- agent_id: agent2
+  profile: 'I am a researcher deeply engaged in the intersection of data mining, machine
+    learning, and statistical analysis, with a particular focus on modeling human
+    mobility and solving complex partial differential equations (PDEs). My recent
+    work has centered on developing innovative algorithms for inferring mobility patterns
+    from sparse trajectory data, achieving significant improvements in accuracy through
+    deep learning architectures. I have also explored user-driven design processes
+    in visual analytics, emphasizing the importance of analytical representation to
+    bridge the gap between user needs and technical implementation.
+
+
+    In addition to mobility modeling, I have contributed to the theoretical foundations
+    of machine learning algorithms, particularly in the context of regularized pairwise
+    ranking and online gradient descent in reproducing kernel Hilbert spaces. My research
+    extends to the application of neural networks in solving PDEs, where I have established
+    rigorous theoretical analyses to enhance the performance of physics-informed neural
+    networks on complex surfaces.
+
+
+    I am passionate about advancing the understanding of statistical inference in
+    randomized experiments, providing new insights into causal effects and variance
+    estimation. My work also delves into the realm of graph theory, where I have developed
+    algorithms to improve the clarity of visual representations of non-planar graphs.
+
+
+    Overall, my research aims to combine theoretical rigor with practical applications,
+    driving innovation in how we analyze and interpret complex data across various
+    domains.'
+  type: BaseAgent
+- agent_id: agent3
+  profile: 'As a researcher deeply immersed in the field of graph neural networks
+    (GNNs) and machine learning, my work is driven by a passion for understanding
+    and enhancing the capabilities of these powerful models. My recent publications
+    reflect a commitment to addressing the limitations of existing GNN architectures
+    and exploring innovative solutions. For instance, I developed Position-aware GNNs
+    (P-GNNs) to improve node embeddings by capturing their positions within the broader
+    graph structure, achieving significant performance gains in various prediction
+    tasks.
+
+
+    I also introduced Identity-aware GNNs (ID-GNNs), which enhance the expressive
+    power of message passing by considering node identities during aggregation. This
+    work has led to substantial accuracy improvements across challenging prediction
+    tasks. Additionally, I recognized the need for effective frameworks in dynamic
+    graph representation learning, resulting in the creation of ROLAND, which allows
+    for seamless adaptation of static GNNs to dynamic environments.
+
+
+    My research extends beyond GNNs; I have explored the architectural design space
+    of GNNs, identifying optimal designs for diverse tasks and releasing tools like
+    GraphGym to facilitate this exploration. I am also passionate about improving
+    the efficiency of automated machine learning (AutoML) methods, as demonstrated
+    by my work on FALCON and AutoTransfer, which leverage design graphs and task embeddings
+    to enhance model performance and search efficiency.
+
+
+    Through my research, I aim to bridge the gap between theoretical advancements
+    and practical applications, ultimately contributing to the evolution of intelligent
+    systems that can better understand and navigate complex relational data.'
+  type: BaseAgent
+coordinate_mode: graph
+engine_planner:
+  initial_progress: Starting the collaborative research idea generation based on the
+    provided Introduction.
+environment:
+  max_iterations: 5
+  name: Research Collaboration Environment
+  type: Research
+llm: together_ai/meta-llama/Meta-Llama-3.3-70B-Instruct-Turbo
+memory:
+  type: SharedMemory
+metrics:
+  diversity_of_perspectives: true
+  engagement_level: true
+  evaluate_llm: gpt-4o-mini
+  relevance: true
+output:
+  file_path: result/discussion_output_llama3.3_70b.jsonl
+  format: jsonl
+relationships:
+- - agent1
+  - agent2
+  - collaborate with
+- - agent1
+  - agent3
+  - collaborate with
+- - agent2
+  - agent3
+  - collaborate with
+task:
+  content: "\n            Dear Research Team,\n\n            You are collaborating\
+    \ to generate a new research idea based on the following Introduction:\n\n   \
+    \         **Introduction**\n\n               1 Introduction  Node classification\
+    \ is a fundamental task in graph machine learning, with high-impact applications\
+    \ across many fields such as social network analysis, bioinformatics, and recommendation\
+    \ systems. Graph Neural Networks (GNNs)  [20, 28, 65, 72, 49, 33, 8, 76, 18, 9,\
+    \ 51, 4, 73, 56, 10, 52, 53, 66, 77, 37] have emerged as a powerful class of models\
+    \ for tackling the node classification task. GNNs operate by iteratively aggregating\
+    \ information from a node’s neighbors, a process known as message passing [19],\
+    \ leveraging both the graph structure and node features to learn useful node representations\
+    \ for classification. While GNNs have achieved notable success, studies have identified\
+    \ several limitations, including over-smoothing [35], over-squashing [1], lack\
+    \ of sensitivity to heterophily [81], and challenges in capturing long-range dependencies\
+    \ [11].   Recently, Graph Transformers (GTs) [50, 48, 23] have gained prominence\
+    \ as popular alternatives to GNNs. Unlike GNNs, which primarily aggregate local\
+    \ neighborhood information, the Transformer architecture [64] can capture interactions\
+    \ between any pair of nodes via a self-attention layer. GTs have achieved significant\
+    \ success in graph-level tasks, e.g., graph classification involving small-scale\
+    \ graphs like molecular graphs [13, 74, 30, 42, 55, 6]. This success has inspired\
+    \ efforts [12, 17, 71, 70, 69, 79, 82, 15, 60, 7, 29, 40, 38] to utilize GTs to\
+    \ tackle node classification tasks, especially on large-scale graphs, addressing\
+    \ the aforementioned limitations of GNNs. While recent advancements in state-of-the-art\
+    \ GTs [12, 71] have shown promising results, it’s observed that many of these\
+    \ models, whether explicitly or implicitly, still rely on GNNs for learning local\
+    \ node representations, integrating them alongside the global attention mechanisms\
+    \ for a more comprehensive representation.   This prompts us to reconsider: Could\
+    \ the potential of message-passing GNNs for node classification have been previously\
+    \ underestimated? While prior research has addressed this issue to some extent\
+    \ [24, 14, 68, 44, 54], these studies have limitations in terms of scope and comprehensiveness,\
+    \ including a restricted number and diversity of datasets, as well as an incomplete\
+    \ examination of hyperparameters. In this study, we comprehensively reassess the\
+    \ performance of GNNs for node classification, utilizing three classic GNN models—GCN\
+    \ [28], GAT [64], and GraphSAGE [20]—across 18 real-world benchmark datasets that\
+    \ include homophilous, heterophilous, and large-scale graphs. We examine the influence\
+    \ of key hyperparameters on GNN training, including normalization [2, 26], dropout\
+    \ [63], residual connections [21], network depth, and the utilization of the jumping\
+    \ knowledge mode [73]. We summarize the key findings in our empirical study as\
+    \ follows:     •  With proper hyperparameter tuning, classic GNNs can achieve\
+    \ highly competitive performance in node classification across homophilous and\
+    \ heterophilous graphs with up to millions of nodes. Notably, classic GNNs outperform\
+    \ state-of-the-art GTs, achieving the top rank on 17 out of 18 datasets. This\
+    \ indicates that the previously claimed superiority of GTs over GNNs may have\
+    \ been overstated, possibly due to suboptimal hyperparameter configurations in\
+    \ GNN evaluations.    •  Our ablation studies have yielded valuable insights into\
+    \ GNN hyperparameters for node classification. We demonstrate that (1) normalization\
+    \ is essential for large-scale graphs; (2) dropout consistently proves beneficial;\
+    \ (3) residual connections can significantly enhance performance, especially on\
+    \ heterophilous graphs; (4) GNNs on heterophilous graphs tend to perform better\
+    \ with deeper layers; and (5)\n\n            **Your Task**\n\n            1. **Literature\
+    \ Review**: Analyze the Introduction provided and conduct a brief literature review\
+    \ to understand the current state of research in this area.\n\n            2.\
+    \ **Brainstorming**: Collaboratively brainstorm potential research ideas that\
+    \ build upon or address gaps in the Introduction.\n\n            3. **Summarization**:\
+    \ Summarize your collective ideas.\n\n            4. **Formulate a New Research\
+    \ Idea**: Develop a new research proposal in the format of the '5q', defined below:\n\
+    \n               **Here is a high-level summarized insight of a research field\
+    \ Machine Learning.**\n\n               **Here are the five core questions:**\n\
+    \n               **[Question 1] - What is the problem?**\n\n               Formulate\
+    \ the specific research question you aim to address. Only output one question\
+    \ and do not include any more information.\n\n               **[Question 2] -\
+    \ Why is it interesting and important?**\n\n               Explain the broader\
+    \ implications of solving this problem for the research community.\n         \
+    \      Discuss how such a paper will affect future research.\n               Discuss\
+    \ how addressing this question could advance knowledge or lead to practical applications.\n\
+    \n               **[Question 3] - Why is it hard?**\n\n               Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \       Explain why naive or straightforward approaches may fail.\n          \
+    \     Identify any technical, theoretical, or practical obstacles that need to\
+    \ be overcome. MAKE IT CLEAR.\n\n               **[Question 4] - Why hasn't it\
+    \ been solved before?**\n\n               Identify gaps or limitations in previous\
+    \ research or existing solutions.\n               Discuss any barriers that have\
+    \ prevented this problem from being solved until now.\n               Explain\
+    \ how your approach differs from or improves upon prior work. MAKE IT CLEAR.\n\
+    \n               **[Question 5] - What are the key components of my approach and\
+    \ results?**\n\n               Outline your proposed methodology in detail, including\
+    \ the method, dataset, and metrics that you plan to use.\n               Describe\
+    \ the expected outcomes. MAKE IT CLEAR.\n\n            Please work together to\
+    \ produce the '5q' for your proposed research idea.\n\n            Good luck!\n\
+    \            "
+  output_format: "You should answer the task in the following format:\n          \
+    \      **[Question 1] - What is the problem?**\n\n                Formulate the\
+    \ specific research question you aim to address. Only output one question and\
+    \ do not include any more information.\n\n                **[Question 2] - Why\
+    \ is it interesting and important?**\n\n                Explain the broader implications\
+    \ of solving this problem for the research community.\n                Discuss\
+    \ how such a paper will affect future research.\n                Discuss how addressing\
+    \ this question could advance knowledge or lead to practical applications.\n\n\
+    \                **[Question 3] - Why is it hard?**\n\n                Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \        Explain why naive or straightforward approaches may fail.\n         \
+    \       Identify any technical, theoretical, or practical obstacles that need\
+    \ to be overcome. MAKE IT CLEAR.\n\n                **[Question 4] - Why hasn't\
+    \ it been solved before?**\n\n                Identify gaps or limitations in\
+    \ previous research or existing solutions.\n                Discuss any barriers\
+    \ that have prevented this problem from being solved until now.\n            \
+    \    Explain how your approach differs from or improves upon prior work. MAKE\
+    \ IT CLEAR.\n\n                **[Question 5] - What are the key components of\
+    \ my approach and results?**\n\n                Outline your proposed methodology\
+    \ in detail, including the method, dataset, and metrics that you plan to use.\n\
+    \                Describe the expected outcomes. MAKE IT CLEAR."

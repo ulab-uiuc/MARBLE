@@ -1,0 +1,257 @@
+agents:
+- agent_id: agent1
+  profile: 'I am a researcher deeply engaged in the intersection of graph theory,
+    machine learning, and privacy-preserving algorithms. My recent work has focused
+    on advancing the understanding and application of differential privacy in various
+    contexts, particularly in hidden-state Noisy-SGD algorithms and machine unlearning
+    frameworks. I have developed innovative methods such as Langevin unlearning, which
+    integrates noisy gradient descent with privacy guarantees, and I have explored
+    the complexities of graph data removal in the context of graph neural networks
+    (GNNs).
+
+
+    My research also delves into the geometric properties of data, where I have contributed
+    to the study of hypergraphs and their applications in community detection and
+    classification. I introduced AllSet, a hypergraph neural network paradigm that
+    leverages deep learning techniques to enhance performance across various datasets.
+    Additionally, I have pioneered methods for support estimation in the presence
+    of sampling artifacts, particularly in the context of computational biology.
+
+
+    I am particularly passionate about creating frameworks that ensure privacy while
+    maintaining the utility of machine learning models, as evidenced by my work on
+    certified graph unlearning and privacy-preserving relational learning pipelines.
+    My goal is to bridge the gap between theoretical advancements and practical applications,
+    ensuring that our models can operate effectively in sensitive domains while adhering
+    to privacy standards. Through my research, I aim to contribute to the development
+    of robust, efficient, and privacy-conscious machine learning systems.'
+  type: BaseAgent
+- agent_id: agent2
+  profile: 'I am a researcher with a diverse background in statistical analysis, machine
+    learning, and the intersection of technology and human interaction. My recent
+    work has focused on several key areas, including the convergence of eigenvalue
+    distributions in sample covariance matrices, the universality of singular values
+    in random matrices, and the stability of principal component analysis (PCA) under
+    data resampling. I have also explored innovative applications in mixed reality,
+    developing a system that enhances user interaction through haptic feedback using
+    generative AI.
+
+
+    In addition to my work in statistical methods, I have delved into knowledge graph
+    embeddings, proposing a novel approach that captures contextual dependencies among
+    entities and relations. My research extends to cross-technology communication,
+    where I developed a neural network-based framework that simplifies the complexities
+    of wireless interactions. I am particularly interested in the implications of
+    large language models and their supply chains, aiming to address challenges in
+    software engineering and security.
+
+
+    My interdisciplinary approach combines theoretical insights with practical applications,
+    as seen in my work on grain boundary energy distribution in materials science
+    and event detection in natural language processing. I strive to bridge gaps between
+    theory and application, contributing to advancements in both fundamental research
+    and real-world technologies. Through my research, I aim to foster a deeper understanding
+    of complex systems and enhance the capabilities of emerging technologies.'
+  type: BaseAgent
+- agent_id: agent3
+  profile: 'I am a researcher deeply engaged in the intersection of machine learning
+    and optimization, with a particular focus on developing innovative models and
+    algorithms for complex problems. My recent work includes the development of DualVDT,
+    a generative model for time-series forecasting that leverages dual reparametrized
+    variational mechanisms to enhance performance through denoising latent variables.
+    This model exemplifies my commitment to advancing the theoretical foundations
+    of machine learning while providing practical solutions.
+
+
+    I have also explored the representation of anti-symmetric functions in high dimensions
+    and established significant results regarding the convergence properties of coordinate
+    gradient descent in non-convex optimization. My research extends to the realm
+    of graph neural networks (GNNs), where I investigate their expressive power in
+    solving quadratic programming and mixed-integer linear programming problems. I
+    have demonstrated that GNNs can effectively represent key properties of optimization
+    tasks, paving the way for more efficient algorithms.
+
+
+    Additionally, I am interested in machine unlearning, where I proposed Langevin
+    unlearning, a framework that combines privacy guarantees with efficient unlearning
+    processes. My work is characterized by a blend of theoretical rigor and empirical
+    validation, as I strive to contribute to both the understanding and application
+    of advanced machine learning techniques in real-world scenarios. Through my research,
+    I aim to bridge the gap between theory and practice, providing insights that can
+    drive innovation in optimization and machine learning.'
+  type: BaseAgent
+- agent_id: agent4
+  profile: 'I am a researcher dedicated to the intersection of optimization, machine
+    learning, and recommendation systems. My work primarily focuses on developing
+    innovative algorithms and models that enhance the way we aggregate information
+    and generate user-centric content. Recently, I introduced a new family of minmax
+    rank aggregation problems, tackling their NP-hard nature with constant-approximation
+    algorithms, and applying these methods to real-world scenarios like the Mallows
+    model and genomic data.
+
+
+    In the realm of multi-criteria recommender systems, I have pioneered the use of
+    variational autoencoders to derive latent embeddings from user reviews, enabling
+    a more nuanced understanding of user-item relationships. This approach has proven
+    to significantly outperform traditional models across various datasets.
+
+
+    Additionally, I have made strides in decomposable submodular function minimization
+    by leveraging incidence relations to improve convergence rates of solvers. My
+    latest work, RevGAN, showcases my commitment to personalization in user-generated
+    content, as it generates controllable and high-quality reviews based on specified
+    sentimental and stylistic inputs. This model not only enhances the coherence and
+    quality of generated reviews but also aligns closely with the statistical properties
+    of organic reviews, demonstrating the potential for practical applications in
+    content generation.
+
+
+    Through my research, I aim to bridge theoretical advancements with practical applications,
+    ultimately enhancing user experiences in digital environments.'
+  type: BaseAgent
+coordinate_mode: graph
+engine_planner:
+  initial_progress: Starting the collaborative research idea generation based on the
+    provided Introduction.
+environment:
+  max_iterations: 5
+  name: Research Collaboration Environment
+  type: Research
+llm: together_ai/meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo
+memory:
+  type: SharedMemory
+metrics:
+  diversity_of_perspectives: true
+  engagement_level: true
+  evaluate_llm: gpt-4o-mini
+  relevance: true
+output:
+  file_path: result/discussion_output_llama3.1_8b.jsonl
+  format: jsonl
+relationships:
+- - agent1
+  - agent2
+  - collaborate with
+- - agent1
+  - agent3
+  - collaborate with
+- - agent1
+  - agent4
+  - collaborate with
+- - agent2
+  - agent3
+  - collaborate with
+- - agent2
+  - agent4
+  - collaborate with
+- - agent3
+  - agent4
+  - collaborate with
+task:
+  content: "\n            Dear Research Team,\n\n            You are collaborating\
+    \ to generate a new research idea based on the following Introduction:\n\n   \
+    \         **Introduction**\n\n               1 Introduction  Machine learning\
+    \ models usually learn from user data where data privacy has to be respected.\
+    \ Certain laws, such as European Union’s General Data Protection Regulation (GDPR),\
+    \ are in place to ensure “the right to be forgotten”, which requires corporations\
+    \ to erase all information pertaining to a user if they request to remove their\
+    \ data. It is insufficient to comply with such privacy regulation by only removing\
+    \ user data from the dataset, as machine learning models can memorize training\
+    \ data information and risk information leakage [1, 2]. A naive approach to adhere\
+    \ to this privacy regulation is to retrain the model from scratch after every\
+    \ data removal request. Apparently, this approach is prohibitively expensive in\
+    \ practice for frequent data removal requests and the goal of machine unlearning\
+    \ is to perform efficient model updates so that the resulting model is (approximately)\
+    \ the same as retraining statistically. Various machine unlearning strategies\
+    \ have been proposed, including exact [3, 4, 5, 6] and approximate approaches [7,\
+    \ 8, 9, 10, 11]. The later approaches allow a slight misalignment between the\
+    \ unlearned model and the retraining one in distribution under a notion similar\
+    \ to Differential Privacy (DP) [12].   The most popular approach for privatizing\
+    \ machine learning models with DP guarantee is arguably noisy stochastic gradient\
+    \ methods including the celebrated DP-SGD [13]. Mini-batch training is one of\
+    \ its critical components, which not only benefits privacy through the effect\
+    \ of privacy amplification by subsampling  [14] but also provides improved convergence\
+    \ of the underlying optimization process. Several recent works [9, 11] based on\
+    \ full-batch (noisy) gradient methods may achieve certified approximate unlearning.\
+    \ Unfortunately, their analysis is restricted to the full-batch setting and it\
+    \ is non-trivial to extend these works to the mini-batch setting with tight approximate\
+    \ unlearning guarantees. The main challenge is to incorporate the randomness in\
+    \ the mini-batch sampling into the sensitivity-based analysis [9] or the Langevin-dynamics-based [11]\
+    \ analysis.   We aim to study mini-batch noisy gradient methods for certified\
+    \ approximate unlearning. The high-level idea of our unlearning framework is illustrated\
+    \ in Figure 1. Given a training dataset \U0001D49F\U0001D49F\\mathcal{D}caligraphic_D\
+    \ and a fixed mini-batch sequence ℬℬ\\mathcal{B}caligraphic_B, the model first\
+    \ learns and then unlearns given unlearning requests, both via the projected noisy\
+    \ stochastic gradient descent (PNSGD). For sufficient learning epochs, we prove\
+    \ that the law of the PNSGD learning process converges to a unique stationary\
+    \ distribution ν\U0001D49F|ℬsubscript\U0001D708conditional\U0001D49Fℬ\\nu_{\\\
+    mathcal{D}|\\mathcal{B}}italic_ν start_POSTSUBSCRIPT caligraphic_D | caligraphic_B\
+    \ end_POSTSUBSCRIPT (Theorem 3.1). When an unlearning request arrives, we update\
+    \ \U0001D49F\U0001D49F\\mathcal{D}caligraphic_D to an adjacent dataset \U0001D49F\
+    ′superscript\U0001D49F′\\mathcal{D}^{\\prime}caligraphic_D start_POSTSUPERSCRIPT\
+    \ ′ end_POSTSUPERSCRIPT so that the data point subject to such request is removed.\
+    \ The approximate unlearning problem can then be viewed as moving from the current\
+    \ distribution ν\U0001D49F|ℬsubscript\U0001D708conditional\U0001D49Fℬ\\nu_{\\\
+    mathcal{D}|\\mathcal{B}}italic_ν start_POSTSUBSCRIPT caligraphic_D | caligraphic_B\
+    \ end_POSTSUBSCRIPT to the target distribution ν\U0001D49F′|ℬsubscript\U0001D708\
+    conditionalsuperscript\U0001D49F′ℬ\\nu_{\\mathcal{D}^{\\prime}|\\mathcal{B}}italic_ν\
+    \ start_POSTSUBSCRIPT caligraphic_D start_POSTSUPERSCRIPT ′ end_POSTSUPERSCRIPT\
+    \ | caligraphic_B end_POSTSUBSCRIPT until ε\U0001D700\\varepsilonitalic_ε-close\
+    \ in Rényi divergence for the desired privacy loss ε\U0001D700\\varepsilonitalic_ε111We\
+    \ refer privacy loss as two-sided Rényi divergence of two distributions, which\
+    \ we defined as Rényi difference in Definition 2.1..   Our key observation is\
+    \ that the results of Altschuler and Talwar [15, 16], which study the convergence\
+    \ of PNSGD under the (strong) convexity assumption, can be leveraged after we\
+    \ formulate the approximate unlearning as above. They show that the Rényi divergence\
+    \ of two\n\n            **Your Task**\n\n            1. **Literature Review**:\
+    \ Analyze the Introduction provided and conduct a brief literature review to understand\
+    \ the current state of research in this area.\n\n            2. **Brainstorming**:\
+    \ Collaboratively brainstorm potential research ideas that build upon or address\
+    \ gaps in the Introduction.\n\n            3. **Summarization**: Summarize your\
+    \ collective ideas.\n\n            4. **Formulate a New Research Idea**: Develop\
+    \ a new research proposal in the format of the '5q', defined below:\n\n      \
+    \         **Here is a high-level summarized insight of a research field Machine\
+    \ Learning.**\n\n               **Here are the five core questions:**\n\n    \
+    \           **[Question 1] - What is the problem?**\n\n               Formulate\
+    \ the specific research question you aim to address. Only output one question\
+    \ and do not include any more information.\n\n               **[Question 2] -\
+    \ Why is it interesting and important?**\n\n               Explain the broader\
+    \ implications of solving this problem for the research community.\n         \
+    \      Discuss how such a paper will affect future research.\n               Discuss\
+    \ how addressing this question could advance knowledge or lead to practical applications.\n\
+    \n               **[Question 3] - Why is it hard?**\n\n               Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \       Explain why naive or straightforward approaches may fail.\n          \
+    \     Identify any technical, theoretical, or practical obstacles that need to\
+    \ be overcome. MAKE IT CLEAR.\n\n               **[Question 4] - Why hasn't it\
+    \ been solved before?**\n\n               Identify gaps or limitations in previous\
+    \ research or existing solutions.\n               Discuss any barriers that have\
+    \ prevented this problem from being solved until now.\n               Explain\
+    \ how your approach differs from or improves upon prior work. MAKE IT CLEAR.\n\
+    \n               **[Question 5] - What are the key components of my approach and\
+    \ results?**\n\n               Outline your proposed methodology in detail, including\
+    \ the method, dataset, and metrics that you plan to use.\n               Describe\
+    \ the expected outcomes. MAKE IT CLEAR.\n\n            Please work together to\
+    \ produce the '5q' for your proposed research idea.\n\n            Good luck!\n\
+    \            "
+  output_format: "You should answer the task in the following format:\n          \
+    \      **[Question 1] - What is the problem?**\n\n                Formulate the\
+    \ specific research question you aim to address. Only output one question and\
+    \ do not include any more information.\n\n                **[Question 2] - Why\
+    \ is it interesting and important?**\n\n                Explain the broader implications\
+    \ of solving this problem for the research community.\n                Discuss\
+    \ how such a paper will affect future research.\n                Discuss how addressing\
+    \ this question could advance knowledge or lead to practical applications.\n\n\
+    \                **[Question 3] - Why is it hard?**\n\n                Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \        Explain why naive or straightforward approaches may fail.\n         \
+    \       Identify any technical, theoretical, or practical obstacles that need\
+    \ to be overcome. MAKE IT CLEAR.\n\n                **[Question 4] - Why hasn't\
+    \ it been solved before?**\n\n                Identify gaps or limitations in\
+    \ previous research or existing solutions.\n                Discuss any barriers\
+    \ that have prevented this problem from being solved until now.\n            \
+    \    Explain how your approach differs from or improves upon prior work. MAKE\
+    \ IT CLEAR.\n\n                **[Question 5] - What are the key components of\
+    \ my approach and results?**\n\n                Outline your proposed methodology\
+    \ in detail, including the method, dataset, and metrics that you plan to use.\n\
+    \                Describe the expected outcomes. MAKE IT CLEAR."

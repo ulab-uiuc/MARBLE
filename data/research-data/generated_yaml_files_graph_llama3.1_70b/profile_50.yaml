@@ -1,0 +1,295 @@
+agents:
+- agent_id: agent1
+  profile: 'I am a researcher dedicated to advancing the field of machine learning,
+    particularly through the application of graph neural networks (GNNs) in healthcare
+    and bioinformatics. My recent work focuses on developing innovative models for
+    predicting dose-volume histograms (DVHs) in radiation therapy, where I introduced
+    the Dose Graph Neural Network (DoseGNN). This model not only enhances prediction
+    accuracy but also facilitates seamless collaboration between clinicians and AI
+    through natural language processing.
+
+
+    I have also explored the limitations of traditional GNNs in analyzing complex
+    biological data, leading to the creation of the PathFormer architecture, which
+    integrates signaling networks and omics data for improved biomarker identification
+    and disease diagnosis. My research emphasizes interpretability, as seen in my
+    development of the SANEpool model, which reveals essential therapeutic targets
+    in drug synergy predictions.
+
+
+    In addition to my work in healthcare, I have contributed to the optimization of
+    directed acyclic graphs (DAGs) through the PACE framework, which enhances the
+    efficiency of neural architecture search. My commitment to open science is reflected
+    in my development of the Open Circuit Benchmark (OCB) for analog circuit design
+    automation, promoting reproducibility and collaboration in the field.
+
+
+    Overall, my research aims to bridge the gap between advanced machine learning
+    techniques and practical applications in healthcare, ensuring that AI-driven solutions
+    are both effective and interpretable for real-world use.'
+  type: BaseAgent
+- agent_id: agent2
+  profile: 'I am a researcher dedicated to advancing the field of graph neural networks
+    (GNNs) and their applications in various domains, particularly in the context
+    of foundation models. My recent work focuses on developing innovative frameworks
+    that bridge the gap between traditional GNNs and the capabilities of large language
+    models (LLMs). For instance, I introduced GOFA, a generative graph language model
+    that integrates GNN layers with pre-trained LLMs, enabling self-supervised pretraining
+    and task fluidity while maintaining graph awareness.
+
+
+    I also created TAGLAS, an atlas of text-attributed graph datasets, which standardizes
+    the representation of graph data and facilitates the training of graph-language
+    models across diverse domains. My research has led to the development of novel
+    architectures like PathFormer, which significantly improves biomarker identification
+    in omics data analysis, and the Magnetic Graph Neural Network (MAG-GNN), which
+    optimizes subgraph selection for enhanced expressivity without sacrificing efficiency.
+
+
+    Additionally, I have explored the challenges of deep GNNs, proposing a "deep GNN,
+    shallow sampler" design principle that enhances both accuracy and computational
+    efficiency. My work aims to create unified models capable of addressing multiple
+    graph tasks, exemplified by the One for All (OFA) framework, which leverages text-attributed
+    graphs for cross-domain learning.
+
+
+    Through my research, I strive to push the boundaries of what is possible in graph
+    learning, making significant contributions to both theoretical understanding and
+    practical applications.'
+  type: BaseAgent
+- agent_id: agent3
+  profile: 'I am a researcher dedicated to unraveling the complexities of cellular
+    signaling pathways, particularly in the context of Alzheimer’s Disease (AD) and
+    other critical health conditions. My recent work has focused on developing innovative
+    graph-based models to analyze single-cell RNA sequencing (scRNA-seq) and multi-omics
+    data, which are essential for understanding intricate signaling mechanisms and
+    identifying potential therapeutic targets.
+
+
+    One of my notable contributions is the PathFinder model, a graph transformer designed
+    to infer multi-cell signaling pathways, which has shown promising results in various
+    cohorts, including those related to AD. Additionally, I created mosGraphGen, a
+    tool that generates biologically meaningful multi-omics signaling graphs, facilitating
+    the integration of diverse omics data for deeper insights into disease mechanisms.
+
+
+    I also developed mosGraphGPT, a foundation model that leverages multi-omic data
+    to enhance disease classification and interpretability. My work with mosGraphFlow
+    further advances the analysis of multi-omic datasets, identifying key biomarkers
+    associated with AD.
+
+
+    Recognizing the limitations of existing graph neural networks (GNNs) in omics
+    data analysis, I introduced PathFormer, which significantly improves prediction
+    accuracy and reproducibility in biomarker identification. My latest framework,
+    UNGNN, employs universal graph normalization to enhance GNN performance in gene
+    network representation learning.
+
+
+    Through my research, I aim to bridge the gap between complex biological data and
+    actionable insights, ultimately contributing to precision medicine and improved
+    therapeutic strategies. My work is publicly accessible, and I am committed to
+    fostering collaboration and innovation in the field.'
+  type: BaseAgent
+- agent_id: agent4
+  profile: 'I am a researcher dedicated to unraveling the complex signaling mechanisms
+    underlying Alzheimer’s Disease (AD) and other diseases through innovative computational
+    methods. My recent work has focused on developing advanced graph-based models
+    to analyze large-scale single-cell RNA sequencing (scRNA-seq) and multi-omics
+    datasets. One of my key contributions is the PathFinder model, a graph transformer
+    that effectively infers intra- and inter-cellular signaling pathways, enabling
+    the identification of novel interaction networks among various cell types in the
+    context of AD.
+
+
+    In addition to PathFinder, I have created mosGraphGen, a tool that generates biologically
+    meaningful multi-omics signaling graphs, facilitating the integration of diverse
+    omics data for downstream analysis. My work also includes the development of mosGraphGPT,
+    a foundation model that leverages multi-omic data to improve disease classification
+    and uncover critical signaling interactions.
+
+
+    I am particularly interested in addressing the limitations of existing graph neural
+    networks (GNNs) in omics data analysis. My novel GNN architecture, PathFormer,
+    integrates signaling networks and prior knowledge to enhance biomarker identification
+    and disease prediction accuracy. Furthermore, I introduced the Universal Normalized
+    GNN (UNGNN) framework, which optimizes GNN performance through universal graph
+    normalization.
+
+
+    Through my research, I aim to provide insights into disease mechanisms and identify
+    therapeutic targets, ultimately contributing to the advancement of precision medicine.
+    My work is publicly accessible, and I am committed to fostering collaboration
+    and innovation in the field of computational biology.'
+  type: BaseAgent
+- agent_id: agent5
+  profile: "I am a dedicated researcher specializing in Alzheimer's disease (AD) and\
+    \ its underlying biological mechanisms, with a strong focus on the role of biomarkers\
+    \ in understanding disease progression and facilitating early diagnosis. My recent\
+    \ work has involved extensive proteomic analyses of cerebrospinal fluid (CSF)\
+    \ to identify dysregulated proteins associated with AD, leading to the development\
+    \ of highly accurate machine learning models that predict biomarker positivity\
+    \ and clinical status. \n\nI have also explored the impact of genetic factors,\
+    \ such as the APOE ε4 allele, on cognitive decline and inflammatory responses\
+    \ in older adults, revealing critical insights into how these factors influence\
+    \ AD pathology. My research extends to innovative studies like the Dominantly\
+    \ Inherited Alzheimer Network Observational Study (DIAN Obs), where I contribute\
+    \ to a comprehensive understanding of brain aging in individuals at risk for autosomal\
+    \ dominant AD.\n\nAdditionally, I have investigated the physiological effects\
+    \ of spaceflight on human health, providing valuable insights into immune adaptations\
+    \ and telomere dynamics. My work emphasizes the importance of diverse biomarker\
+    \ assessments, including plasma and CSF measures, to enhance our understanding\
+    \ of AD and improve clinical outcomes. Through my research, I aim to bridge the\
+    \ gap between laboratory findings and clinical applications, ultimately contributing\
+    \ to more effective diagnostics and therapeutic strategies for Alzheimer's disease."
+  type: BaseAgent
+coordinate_mode: graph
+engine_planner:
+  initial_progress: Starting the collaborative research idea generation based on the
+    provided Introduction.
+environment:
+  max_iterations: 5
+  name: Research Collaboration Environment
+  type: Research
+llm: together_ai/meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo
+memory:
+  type: SharedMemory
+metrics:
+  diversity_of_perspectives: true
+  engagement_level: true
+  evaluate_llm: gpt-4o-mini
+  relevance: true
+output:
+  file_path: result/discussion_output_llama3.1_70b.jsonl
+  format: jsonl
+relationships:
+- - agent1
+  - agent2
+  - collaborate with
+- - agent1
+  - agent3
+  - collaborate with
+- - agent1
+  - agent4
+  - collaborate with
+- - agent1
+  - agent5
+  - collaborate with
+- - agent2
+  - agent3
+  - collaborate with
+- - agent2
+  - agent4
+  - collaborate with
+- - agent2
+  - agent5
+  - collaborate with
+- - agent3
+  - agent4
+  - collaborate with
+- - agent3
+  - agent5
+  - collaborate with
+- - agent4
+  - agent5
+  - collaborate with
+task:
+  content: "\n            Dear Research Team,\n\n            You are collaborating\
+    \ to generate a new research idea based on the following Introduction:\n\n   \
+    \         **Introduction**\n\n            ABSTRACT The expressivity of Graph Neural\
+    \ Networks (GNNs) has been studied broadly in recent years to reveal the design\
+    \ principles for more powerful GNNs. Graph canonization is known as a typical\
+    \ approach to distinguish non-isomorphic graphs, yet rarely adopted when developing\
+    \ expressive GNNs. This paper proposes to maximize the expressivity of GNNs by\
+    \ graph canonization, then the power of such GNNs is studies from the perspective\
+    \ of model stability. A stable GNN will map similar graphs to close graph representations\
+    \ in the vectorial space, and the stability of GNNs is critical to generalize\
+    \ their performance to unseen graphs. We theoretically reveal the trade-off of\
+    \ expressivity and stability in graph-canonization- enhanced GNNs. Then we introduce\
+    \ a notion of universal graph canonization as the general solution to address\
+    \ the trade-off and characterize a widely applicable suffi- cient condition to\
+    \ solve the universal graph canonization. A comprehensive set ofexperiments, ESAN\
+    \ is equipped with ED policy. 22results. First, we find that UGC-GNN significantly\
+    \ reduces the computation complexity compared to high-order GNN PPGN, and this\
+    \ observation can be explained by the O(n3)time complexity of PPGN and the large\
+    \ size of graphs. On the other hand, NGNN suffers from large subgraph sizes caused\
+    \ by the large average node degree in these datasets, then the extra computation\
+    \ burden is also larger than popular graph datasets with small average node degree\
+    \ (like OGB and TU datasets). In addition, we need to point out that ESAN with\
+    \ EGO and EGO+ policy can be considered as a subgraph-based GNN. However, when\
+    \ the node-deleted subgraphs (ND) and the edge-deleted subgraphs (ED) polices\
+    \ are used, a graph is mapped to the set of subgraphs obtained by removing a single\
+    \ node or edge, then ESAN can be understood through the marking prism. In ourAppendix\
+    \ I shows that UGC-GNN can significantly reduce the computation time. Sepcifically,\
+    \ UGC-GNN only requires about1 4and1 10average time per epoch compared to subgraph-based\
+    \ GNN (NGNN) and high-order GNN (PPGN), respectively. The optimal solution to\
+    \ the challenging gene network analysis. Table 5. Gene networks are the prevailing\
+    \ data structure in Bioinformatics (Podolsky & Greene, 2011; Carew et al., 2008).\
+    \ Recent years, it has emerged as a popular topic of developing the de facto standard\
+    \ for effective representation learningMethods Accuracy ↑ F1 score ↑ Accuracy\
+    \ ↑ F1 score ↑ Accuracy ↑ F1 score ↑ GIN 0.496 ±0.042 0.484 ±0.036 0.471 ±0.039\
+    \ 0482 ±0.041 0.537 ±0.045 0.512 ±0.047 GCN 0.561 ±0.049 0.535 ±0.021 0.520 ±0.036\
+    \ 0.571 ±0.032 0.593 ±0.039 0.561 ±0.042 GIN + GC 0.483 ±0.026 0.472 ±0.031 0.486\
+    \ ±0.041 0.510 ±0.037 0.539 ±0.041 0.532 ±0.069 GCN + GC 0.522 ±0.019 0.539 ±0.031\
+    \ 0.508 ±0.032 0.527 ±0.031 0.544 ±0.025 0.582 ±0.042 GIN + UGC 0.561 ±0.027 0.570\
+    \ ±0.031 0.697 ±0.041 0.624 ±0.037 0.589 ±0.041 0.562 ±0.069 GCN + UGC 0.572 ±0.021\
+    \ 0.619 ±0.037 0.658 ±0.030 0.621 ±0.021 0.619 ±0.025 0.581 ±0.031 UGC-GNN (GIN)\
+    \ 0.624 ±0.036 0.713 ±0.022 0.701 ±0.025 0.689 ±0.019 0.714 ±0.011 0.701 ±0.032\
+    \ UGC-GNN (GCN) 0.603 ±0.031 0.652 ±0.020 0.724 ±0.021 0.697 ±0.019 0.691 ±0.013\
+    \ 0.706 ±0.029 Table 8: Ablation studymethods to gene network representation learning.\
+    \ B M OREREFERENCES Ralph Abboud, Ismail Ilkan Ceylan, Martin Grohe, and Thomas\
+    \ Lukasiewicz. The surprising power of graph neural networks with random node\
+    \ initialization. arXiv preprint arXiv:2010.01179 , 2020. Mariet Allen, Minerva\
+    \ M Carrasquillo, Cory Funk, Benjamin D Heavner, Fanggeng Zou, Curtis S Younkin,\
+    \ Jeremy D Burgess, High-Seng Chai, Julia Crook,\n\n            **Your Task**\n\
+    \n            1. **Literature Review**: Analyze the Introduction provided and\
+    \ conduct a brief literature review to understand the current state of research\
+    \ in this area.\n\n            2. **Brainstorming**: Collaboratively brainstorm\
+    \ potential research ideas that build upon or address gaps in the Introduction.\n\
+    \n            3. **Summarization**: Summarize your collective ideas.\n\n     \
+    \       4. **Formulate a New Research Idea**: Develop a new research proposal\
+    \ in the format of the '5q', defined below:\n\n               **Here is a high-level\
+    \ summarized insight of a research field Machine Learning.**\n\n             \
+    \  **Here are the five core questions:**\n\n               **[Question 1] - What\
+    \ is the problem?**\n\n               Formulate the specific research question\
+    \ you aim to address. Only output one question and do not include any more information.\n\
+    \n               **[Question 2] - Why is it interesting and important?**\n\n \
+    \              Explain the broader implications of solving this problem for the\
+    \ research community.\n               Discuss how such a paper will affect future\
+    \ research.\n               Discuss how addressing this question could advance\
+    \ knowledge or lead to practical applications.\n\n               **[Question 3]\
+    \ - Why is it hard?**\n\n               Discuss the challenges and complexities\
+    \ involved in solving this problem.\n               Explain why naive or straightforward\
+    \ approaches may fail.\n               Identify any technical, theoretical, or\
+    \ practical obstacles that need to be overcome. MAKE IT CLEAR.\n\n           \
+    \    **[Question 4] - Why hasn't it been solved before?**\n\n               Identify\
+    \ gaps or limitations in previous research or existing solutions.\n          \
+    \     Discuss any barriers that have prevented this problem from being solved\
+    \ until now.\n               Explain how your approach differs from or improves\
+    \ upon prior work. MAKE IT CLEAR.\n\n               **[Question 5] - What are\
+    \ the key components of my approach and results?**\n\n               Outline your\
+    \ proposed methodology in detail, including the method, dataset, and metrics that\
+    \ you plan to use.\n               Describe the expected outcomes. MAKE IT CLEAR.\n\
+    \n            Please work together to produce the '5q' for your proposed research\
+    \ idea.\n\n            Good luck!\n            "
+  output_format: "You should answer the task in the following format:\n          \
+    \      **[Question 1] - What is the problem?**\n\n                Formulate the\
+    \ specific research question you aim to address. Only output one question and\
+    \ do not include any more information.\n\n                **[Question 2] - Why\
+    \ is it interesting and important?**\n\n                Explain the broader implications\
+    \ of solving this problem for the research community.\n                Discuss\
+    \ how such a paper will affect future research.\n                Discuss how addressing\
+    \ this question could advance knowledge or lead to practical applications.\n\n\
+    \                **[Question 3] - Why is it hard?**\n\n                Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \        Explain why naive or straightforward approaches may fail.\n         \
+    \       Identify any technical, theoretical, or practical obstacles that need\
+    \ to be overcome. MAKE IT CLEAR.\n\n                **[Question 4] - Why hasn't\
+    \ it been solved before?**\n\n                Identify gaps or limitations in\
+    \ previous research or existing solutions.\n                Discuss any barriers\
+    \ that have prevented this problem from being solved until now.\n            \
+    \    Explain how your approach differs from or improves upon prior work. MAKE\
+    \ IT CLEAR.\n\n                **[Question 5] - What are the key components of\
+    \ my approach and results?**\n\n                Outline your proposed methodology\
+    \ in detail, including the method, dataset, and metrics that you plan to use.\n\
+    \                Describe the expected outcomes. MAKE IT CLEAR."

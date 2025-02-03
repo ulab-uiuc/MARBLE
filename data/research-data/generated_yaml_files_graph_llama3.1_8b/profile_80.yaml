@@ -1,0 +1,303 @@
+agents:
+- agent_id: agent1
+  profile: 'I am a researcher deeply engaged in the intersection of knowledge graphs,
+    statistical relational AI, and automated reasoning. My work primarily focuses
+    on enhancing the capabilities of knowledge graphs through innovative modeling
+    techniques and efficient inference methods. I have developed novel approaches
+    to knowledge graph completion, such as SimplE, which improves link prediction
+    by learning dependent embeddings for entities. My research also explores the integration
+    of language models for knowledge extraction, revealing phenomena like Frequency
+    Shock that can hinder performance.
+
+
+    In my recent work, I have tackled the challenges of reasoning with contradictory
+    information and the complexities of structured complex task decomposition using
+    large language models. I introduced the LAMBADA algorithm for backward chaining
+    reasoning, which significantly improves proof-finding efficiency. Additionally,
+    I have investigated the trade-offs in training language models on synthetic data,
+    demonstrating that weaker models can sometimes yield better results than stronger
+    ones in generating training data.
+
+
+    My contributions extend to developing relational neural networks and representation
+    learning models for attributed graphs, as well as advancing automated reasoning
+    techniques that can handle inconsistencies in real-world data. I am passionate
+    about pushing the boundaries of what is possible in AI and machine learning, striving
+    to create models that not only perform well but also provide interpretable and
+    reliable results across various applications.'
+  type: BaseAgent
+- agent_id: agent2
+  profile: 'I am a researcher deeply engaged in the intersection of statistical learning,
+    machine learning, and network theory. My recent work has focused on developing
+    innovative methodologies for testing and estimating properties of complex distributions,
+    particularly in the context of Markov chains and Ising models. I initiated the
+    study of Markov chain testing, proposing efficient testers for identity testing
+    of symmetric Markov chains based on a single trajectory, which has significant
+    implications for understanding dynamic systems.
+
+
+    I have also explored the nuances of contrastive learning, revealing the conditions
+    under which increasing negative samples can enhance or degrade performance. My
+    investigations into asynchronous Gibbs sampling have led to new insights on estimating
+    expectations in graphical models, demonstrating the robustness of these methods
+    in practical applications.
+
+
+    In addition to theoretical advancements, I have contributed to the understanding
+    of neural networks, particularly regarding sparsity in activations and the implications
+    for model efficiency. My work on causal language modeling has shown that Transformers
+    can learn complex reasoning tasks, such as solving Sudoku puzzles, highlighting
+    the potential of these models in capturing intricate relationships.
+
+
+    I am passionate about bridging theory and practice, as evidenced by my research
+    on networked data and dependencies in regression models. My goal is to develop
+    statistically efficient methods that can handle the complexities of real-world
+    data while providing robust performance guarantees. Through my work, I aim to
+    advance our understanding of machine learning frameworks and their applications
+    across various domains.'
+  type: BaseAgent
+- agent_id: agent3
+  profile: 'I am a researcher deeply engaged in the intersection of theoretical physics
+    and machine learning, with a particular focus on black hole thermodynamics, quantum
+    gravity, and probabilistic graphical models. My recent work has explored the fascinating
+    implications of traversable wormholes and the Page curve in warped Anti-de Sitter
+    black holes, where I utilized quantum extremal surface prescriptions to uncover
+    the intricate relationships between entanglement entropy and black hole thermodynamics.
+
+
+    I have also investigated the universal relations among various black hole models,
+    such as Power-Maxwell and Gauss-Bonnet black holes, revealing robust connections
+    that enhance our understanding of their thermodynamic properties. My research
+    extends to the application of fractional calculus in gravitational physics, where
+    I demonstrated how fractional generalizations can lead to new insights in spacetime
+    structure.
+
+
+    In addition to my theoretical pursuits, I have ventured into the realm of machine
+    learning, particularly in developing efficient inference algorithms for probabilistic
+    graphical models. My work on contextual symmetries and lifted inference has shown
+    significant computational gains, particularly in computer vision applications.
+    I have also contributed to the development of AccentDB, a curated database aimed
+    at improving automatic speech recognition systems for non-native speakers.
+
+
+    Overall, my research aims to bridge the gap between complex theoretical frameworks
+    and practical applications, fostering a deeper understanding of both the universe''s
+    fundamental laws and the technologies that can enhance our interaction with it.'
+  type: BaseAgent
+- agent_id: agent4
+  profile: 'As a researcher deeply immersed in the field of graph neural networks
+    (GNNs) and their applications, my work focuses on enhancing the capabilities and
+    understanding of these powerful models. My recent publications reflect a commitment
+    to addressing the limitations of existing GNN architectures and exploring innovative
+    solutions. For instance, I developed Position-aware GNNs (P-GNNs) to better capture
+    the positional context of nodes within graphs, significantly improving performance
+    in tasks like link prediction and community detection.
+
+
+    I also introduced Identity-aware GNNs (ID-GNNs), which extend the expressive power
+    of traditional GNNs by incorporating node identity during message passing. This
+    advancement has led to substantial accuracy improvements across various prediction
+    tasks. My research doesn''t stop at static graphs; I proposed the ROLAND framework
+    to effectively adapt static GNNs for dynamic graphs, enabling real-time updates
+    and scalable training.
+
+
+    In addition to architectural innovations, I have explored the design space of
+    GNNs, systematically analyzing over 315,000 configurations to provide guidelines
+    for optimal model selection across different tasks. My work on AutoML, particularly
+    with FALCON and AutoTransfer, aims to streamline the process of finding effective
+    neural architectures by leveraging prior knowledge and enhancing search efficiency.
+
+
+    Through these contributions, I strive to push the boundaries of what GNNs can
+    achieve, fostering a deeper understanding of their structure and performance while
+    making them more accessible for real-world applications.'
+  type: BaseAgent
+- agent_id: agent5
+  profile: 'I am a researcher deeply engaged in the intersection of machine learning,
+    cognitive science, and artificial intelligence. My work primarily focuses on enhancing
+    the capabilities of intelligent agents through innovative approaches in hierarchical
+    reinforcement learning, language grounding, and meta-learning. Recently, I have
+    explored how to leverage human data to inform goal-directed behavior in complex
+    environments, demonstrating that using natural language to parameterize sub-goals
+    can significantly improve agent performance.
+
+
+    I am particularly interested in understanding the inductive biases that govern
+    how machine learning models generalize, drawing parallels between human cognition
+    and artificial systems. My research has revealed that while neural networks often
+    exhibit feature-biased and exemplar-based generalization, they can also learn
+    abstract rules under certain conditions, akin to human reasoning.
+
+
+    In addition to my work on generalization, I have investigated the role of causal
+    reasoning in reinforcement learning, showing that agents can learn to make causal
+    inferences through model-free approaches. I also focus on the interpretability
+    of machine learning models, examining how their decision-making processes align
+    with human visual perception.
+
+
+    Through my research, I aim to bridge the gap between human-like reasoning and
+    machine learning, contributing to the development of more sophisticated AI systems
+    that can understand and interact with the world in a human-relevant manner. My
+    work not only advances theoretical understanding but also has practical implications
+    for building intelligent systems capable of complex reasoning and decision-making.'
+  type: BaseAgent
+coordinate_mode: graph
+engine_planner:
+  initial_progress: Starting the collaborative research idea generation based on the
+    provided Introduction.
+environment:
+  max_iterations: 5
+  name: Research Collaboration Environment
+  type: Research
+llm: together_ai/meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo
+memory:
+  type: SharedMemory
+metrics:
+  diversity_of_perspectives: true
+  engagement_level: true
+  evaluate_llm: gpt-4o-mini
+  relevance: true
+output:
+  file_path: result/discussion_output_llama3.1_8b.jsonl
+  format: jsonl
+relationships:
+- - agent1
+  - agent2
+  - collaborate with
+- - agent1
+  - agent3
+  - collaborate with
+- - agent1
+  - agent4
+  - collaborate with
+- - agent1
+  - agent5
+  - collaborate with
+- - agent2
+  - agent3
+  - collaborate with
+- - agent2
+  - agent4
+  - collaborate with
+- - agent2
+  - agent5
+  - collaborate with
+- - agent3
+  - agent4
+  - collaborate with
+- - agent3
+  - agent5
+  - collaborate with
+- - agent4
+  - agent5
+  - collaborate with
+task:
+  content: "\n            Dear Research Team,\n\n            You are collaborating\
+    \ to generate a new research idea based on the following Introduction:\n\n   \
+    \         **Introduction**\n\n               1 Introduction  Large Language Models\
+    \ (LLMs) have demonstrated an extraordinary evolution, not only in their output\
+    \ quality but also in their burgeoning capabilities. A significant direction of\
+    \ development has been models’ ability to perform increasingly general forms of\
+    \ reasoning that were previously not possible. The emergence of these novel capabilities\
+    \ necessitates the development of robust evaluation benchmarks and metrics to\
+    \ measure and enhance model performance in these specific areas.   The ability\
+    \ of LLMs to reason over text has improved in leaps and bounds, and has been studied\
+    \ extensively (Lewkowycz et al., 2022; Wei et al., 2022; Rajani et al., 2019).\
+    \ More recent developments in multi-modal models has opened up a new space of\
+    \ reasoning problems, moving toward the capability to reason across multiple,\
+    \ potentially disparate, sources of information presented in various formats (Reid\
+    \ et al., 2024; Team et al., 2023; Achiam et al., 2023; Anthropic, 2024). This\
+    \ multi-modal reasoning capability has numerous applications, from complex problem-solving\
+    \ to information synthesis. In this paper, we focus on a specific aspect of this\
+    \ capability: multi-image reasoning. A large portion of the current benchmarks\
+    \ for multi-modal evaluation are based on a single image (Lu et al., 2023, 2022;\
+    \ Kazemi et al., 2023a; Lu et al., 2021; Liu et al., 2023; Lindström and Abraham,\
+    \ 2022; Fu et al., 2023; Antol et al., 2015; Goyal et al., 2017; Marino et al.,\
+    \ 2019). We address the lack of dedicated evaluation frameworks in this domain\
+    \ by introducing a comprehensive benchmark designed to specifically assess and\
+    \ improve this skill in LLMs.   Figure 1:  Model performances on \U0001D5B1\U0001D5BE\
+    \U0001D5AC\U0001D5A8\U0001D5B1\U0001D5BE\U0001D5AC\U0001D5A8\\mathsf{ReMI}sansserif_ReMI.\
+    \   We focus specifically on reasoning problems where besides visual understanding,\
+    \ one needs to find a step-by-step solution to a problem. This process often involves\
+    \ combining information across text and multiple images – a skill that is currently\
+    \ not extensively evaluated in existing benchmarks. This contribution aims to\
+    \ catalyze progress in multi-image reasoning, ultimately enabling LLMs to better\
+    \ navigate and extract insights from the increasingly complex information landscape\
+    \ of our digital world.   We introduce \U0001D5B1\U0001D5BE\U0001D5AC\U0001D5A8\
+    \U0001D5B1\U0001D5BE\U0001D5AC\U0001D5A8\\mathsf{ReMI}sansserif_ReMI, a new benchmark\
+    \ designed for Reasoning with Multiple Images. Our goal is to cover a broad spectrum\
+    \ of domains where integrating information across multiple modalities is necessary,\
+    \ as well as various key properties unique to multi-image reasoning. To achieve\
+    \ this, we have developed 13 tasks that span a range of domains and properties.\
+    \ The domains covered in \U0001D5B1\U0001D5BE\U0001D5AC\U0001D5A8\U0001D5B1\U0001D5BE\
+    \U0001D5AC\U0001D5A8\\mathsf{ReMI}sansserif_ReMI include algebra, calculus, geometry,\
+    \ graph theory, physics, temporal and spatial/maps reasoning, tabular and chart\
+    \ understanding, coding, and logic. The properties covered by \U0001D5B1\U0001D5BE\
+    \U0001D5AC\U0001D5A8\U0001D5B1\U0001D5BE\U0001D5AC\U0001D5A8\\mathsf{ReMI}sansserif_ReMI include\
+    \ sequential vs set consumption of image information, problems that require reasoning\
+    \ over images demonstrating a similar concept (e.g., two charts) or different\
+    \ concepts (e.g., geometry shape and a table), images that are interleaved or\
+    \ not interleaved with the text, and the number of separate images provided as\
+    \ input. Our tasks require reasoning over up to six images, with all tasks requiring\
+    \ reasoning over at least two images. Table 1 outlines the tasks, domains and\
+    \ properties. Our images comprise a variety of heterogeneous image types including\
+    \ charts, tables, equations, emojis, graphs, shapes, maps, clocks, physical objects,\
+    \ LaTeX diagrams, functions, etc.   We evaluate state-of-the-art LLMs on \U0001D5B1\
+    \U0001D5BE\U0001D5AC\U0001D5A8\U0001D5B1\U0001D5BE\U0001D5AC\U0001D5A8\\mathsf{ReMI}sansserif_ReMI and\
+    \ compare their performance to humans, showing that model performances remain\
+    \ substantially behind human performance (see Fig 1).\n\n            **Your Task**\n\
+    \n            1. **Literature Review**: Analyze the Introduction provided and\
+    \ conduct a brief literature review to understand the current state of research\
+    \ in this area.\n\n            2. **Brainstorming**: Collaboratively brainstorm\
+    \ potential research ideas that build upon or address gaps in the Introduction.\n\
+    \n            3. **Summarization**: Summarize your collective ideas.\n\n     \
+    \       4. **Formulate a New Research Idea**: Develop a new research proposal\
+    \ in the format of the '5q', defined below:\n\n               **Here is a high-level\
+    \ summarized insight of a research field Machine Learning.**\n\n             \
+    \  **Here are the five core questions:**\n\n               **[Question 1] - What\
+    \ is the problem?**\n\n               Formulate the specific research question\
+    \ you aim to address. Only output one question and do not include any more information.\n\
+    \n               **[Question 2] - Why is it interesting and important?**\n\n \
+    \              Explain the broader implications of solving this problem for the\
+    \ research community.\n               Discuss how such a paper will affect future\
+    \ research.\n               Discuss how addressing this question could advance\
+    \ knowledge or lead to practical applications.\n\n               **[Question 3]\
+    \ - Why is it hard?**\n\n               Discuss the challenges and complexities\
+    \ involved in solving this problem.\n               Explain why naive or straightforward\
+    \ approaches may fail.\n               Identify any technical, theoretical, or\
+    \ practical obstacles that need to be overcome. MAKE IT CLEAR.\n\n           \
+    \    **[Question 4] - Why hasn't it been solved before?**\n\n               Identify\
+    \ gaps or limitations in previous research or existing solutions.\n          \
+    \     Discuss any barriers that have prevented this problem from being solved\
+    \ until now.\n               Explain how your approach differs from or improves\
+    \ upon prior work. MAKE IT CLEAR.\n\n               **[Question 5] - What are\
+    \ the key components of my approach and results?**\n\n               Outline your\
+    \ proposed methodology in detail, including the method, dataset, and metrics that\
+    \ you plan to use.\n               Describe the expected outcomes. MAKE IT CLEAR.\n\
+    \n            Please work together to produce the '5q' for your proposed research\
+    \ idea.\n\n            Good luck!\n            "
+  output_format: "You should answer the task in the following format:\n          \
+    \      **[Question 1] - What is the problem?**\n\n                Formulate the\
+    \ specific research question you aim to address. Only output one question and\
+    \ do not include any more information.\n\n                **[Question 2] - Why\
+    \ is it interesting and important?**\n\n                Explain the broader implications\
+    \ of solving this problem for the research community.\n                Discuss\
+    \ how such a paper will affect future research.\n                Discuss how addressing\
+    \ this question could advance knowledge or lead to practical applications.\n\n\
+    \                **[Question 3] - Why is it hard?**\n\n                Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \        Explain why naive or straightforward approaches may fail.\n         \
+    \       Identify any technical, theoretical, or practical obstacles that need\
+    \ to be overcome. MAKE IT CLEAR.\n\n                **[Question 4] - Why hasn't\
+    \ it been solved before?**\n\n                Identify gaps or limitations in\
+    \ previous research or existing solutions.\n                Discuss any barriers\
+    \ that have prevented this problem from being solved until now.\n            \
+    \    Explain how your approach differs from or improves upon prior work. MAKE\
+    \ IT CLEAR.\n\n                **[Question 5] - What are the key components of\
+    \ my approach and results?**\n\n                Outline your proposed methodology\
+    \ in detail, including the method, dataset, and metrics that you plan to use.\n\
+    \                Describe the expected outcomes. MAKE IT CLEAR."

@@ -5,7 +5,7 @@ import yaml
 
 # 定义输入 JSON 文件所在目录和输出 YAML 文件目录
 json_files_dir = "./researchtown_json"  # 存放三个 JSON 文件的文件夹
-output_dir = "./generated_yaml_files_graph_gpt_35"
+output_dir = "./generated_yaml_files_graph_llama3.3_70b"
 
 # 如果输出目录不存在则创建之
 os.makedirs(output_dir, exist_ok=True)
@@ -110,7 +110,7 @@ for json_filename in json_filenames:
         yaml_data = {
             "coordinate_mode": "graph",
             "relationships": relationships,
-            "llm": "gpt-3.5-turbo",
+            "llm": "together_ai/meta-llama/Meta-Llama-3.3-70B-Instruct-Turbo",
             "environment": {
                 "type": "Research",
                 "name": "Research Collaboration Environment",
@@ -161,7 +161,7 @@ for json_filename in json_filenames:
             },
             "output": {
                 "format": "jsonl",
-                "file_path": "result/discussion_output_35.jsonl"
+                "file_path": "result/discussion_output_llama3.3_70b.jsonl"
             }
         }
 

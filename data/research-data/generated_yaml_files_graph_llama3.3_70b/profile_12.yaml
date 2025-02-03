@@ -1,0 +1,268 @@
+agents:
+- agent_id: agent1
+  profile: 'I am a researcher deeply engaged in the intersection of graph neural networks
+    (GNNs) and machine learning, with a particular focus on their applications in
+    dynamic and signed networks. My work explores the rich syntactic diversity of
+    the English language, revealing how non-canonical constructions enhance discourse
+    coherence. This linguistic insight informs my approach to developing models that
+    effectively capture complex relationships in graph data.
+
+
+    In my recent research, I introduced the Pyramid Graph Neural Network (PyGNN),
+    which innovatively combines downsampling and filtering techniques to learn multi-scale
+    node embeddings. I also pioneered a model that integrates GNNs with Marked Temporal
+    Point Processes for event forecasting on Continuous Time Dynamic Graphs, demonstrating
+    significant improvements in both accuracy and efficiency.
+
+
+    My contributions extend to the development of GNNRank, a framework for ranking
+    recovery using directed graphs, and the creation of PyTorch Geometric Signed Directed,
+    a comprehensive software package for analyzing signed and directed networks. I
+    have also explored the magnetic signed Laplacian to enhance spectral GNN architectures,
+    achieving state-of-the-art results in various tasks.
+
+
+    Additionally, I have investigated the challenges of node clustering in directed
+    networks, proposing innovative methods that leverage directionality as a key signal
+    rather than a nuisance. My work emphasizes the importance of uncertainty quantification
+    in stock price forecasting using Bayesian neural networks, particularly during
+    volatile periods like the COVID-19 pandemic.
+
+
+    Through my research, I aim to bridge theoretical insights with practical applications,
+    contributing to the advancement of GNN methodologies and their deployment in real-world
+    scenarios.'
+  type: BaseAgent
+- agent_id: agent2
+  profile: 'I am a researcher deeply engaged in the intersection of graph theory,
+    machine learning, and statistical modeling. My recent work has focused on innovative
+    methods for graph generation, particularly through my development of SteinGen,
+    which leverages Stein''s method and Markov Chain Monte Carlo techniques to generate
+    high-quality graph samples from limited data. I have also explored the dynamics
+    of brain states under deep anesthesia using fMRI data, revealing insights into
+    functional complexity and modular organization.
+
+
+    My research extends to the theoretical underpinnings of graph neural networks
+    (GNNs), where I have derived novel bounds on generalization error in over-parameterized
+    regimes, enhancing our understanding of their performance. I have contributed
+    to scalable graph representation learning with the L2G2G method, which improves
+    accuracy without sacrificing efficiency.
+
+
+    In addition, I have developed tools for assessing the quality of synthetic data
+    generators, such as AgraSSt, which provides a principled approach to evaluate
+    graph generators. My work on signed and directed networks has culminated in the
+    creation of PyTorch Geometric Signed Directed, a comprehensive software package
+    that facilitates research in this area.
+
+
+    Overall, my research aims to bridge theoretical insights with practical applications,
+    enhancing our ability to analyze complex networks and generate meaningful synthetic
+    data. I am passionate about advancing the field and contributing to the development
+    of robust methodologies that can be applied across various domains.'
+  type: BaseAgent
+- agent_id: agent3
+  profile: 'I am a researcher specializing in graph machine learning and its intersection
+    with optimization techniques. My recent work has focused on the innovative application
+    of bilevel optimization to graph learning, culminating in the development of BloomGML,
+    which recasts various graph learning methods as special cases of this framework.
+    This approach not only enhances the flexibility of energy functions in graph neural
+    networks (GNNs) but also bridges connections with non-GNN-based methods, such
+    as knowledge graph embeddings and label propagation.
+
+
+    In addition to my work on graph learning, I have explored the challenges of aligning
+    large language models with human preferences through direct preference optimization
+    (DPO). My research identifies critical shortcomings in existing DPO methods and
+    proposes a novel loss function that addresses these limitations, supported by
+    empirical results.
+
+
+    Recognizing the gap in predictive modeling for relational databases (RDBs), I
+    have also developed 4DBInfer, an open-source toolbox that facilitates the conversion
+    of multi-table datasets into graph representations while preserving their tabular
+    characteristics. This work aims to establish public benchmarks for RDBs, enabling
+    more effective comparisons and advancements in predictive modeling.
+
+
+    Overall, my research is driven by a commitment to enhancing the scalability, interpretability,
+    and performance of machine learning models across diverse data structures, and
+    I am dedicated to making my findings accessible through open-source initiatives.'
+  type: BaseAgent
+- agent_id: agent4
+  profile: 'I am a researcher specializing in graph representation learning and its
+    applications across various domains, including finance and network analysis. My
+    recent work has focused on developing scalable and efficient methods for generating
+    node embeddings and analyzing complex networks. For instance, I introduced L2G2G,
+    a Local2Global approach that enhances the accuracy of graph autoencoders while
+    maintaining scalability, and SaGess, a discrete denoising diffusion model capable
+    of generating large real-world networks.
+
+
+    I have also explored the intersection of causality and financial forecasting,
+    demonstrating how causal discovery algorithms can outperform traditional feature
+    selection techniques in predicting asset returns. My research extends to the development
+    of novel frameworks for time series generation and analysis, such as CTWALK, which
+    combines temporal random walks with conditional GANs to faithfully replicate observed
+    dependencies in graph data.
+
+
+    In addition to these contributions, I have created DIGRAC, a self-supervised graph
+    neural network framework for node clustering in directed networks, and SSSNET,
+    which focuses on semi-supervised clustering of signed networks. My work emphasizes
+    the importance of directionality and polarization effects in network analysis,
+    providing new insights and methodologies for understanding complex relationships
+    within data.
+
+
+    Through my research, I aim to bridge theoretical advancements with practical applications,
+    contributing to the growing field of graph neural networks and their utility in
+    real-world scenarios.'
+  type: BaseAgent
+coordinate_mode: graph
+engine_planner:
+  initial_progress: Starting the collaborative research idea generation based on the
+    provided Introduction.
+environment:
+  max_iterations: 5
+  name: Research Collaboration Environment
+  type: Research
+llm: together_ai/meta-llama/Meta-Llama-3.3-70B-Instruct-Turbo
+memory:
+  type: SharedMemory
+metrics:
+  diversity_of_perspectives: true
+  engagement_level: true
+  evaluate_llm: gpt-4o-mini
+  relevance: true
+output:
+  file_path: result/discussion_output_llama3.3_70b.jsonl
+  format: jsonl
+relationships:
+- - agent1
+  - agent2
+  - collaborate with
+- - agent1
+  - agent3
+  - collaborate with
+- - agent1
+  - agent4
+  - collaborate with
+- - agent2
+  - agent3
+  - collaborate with
+- - agent2
+  - agent4
+  - collaborate with
+- - agent3
+  - agent4
+  - collaborate with
+task:
+  content: "\n            Dear Research Team,\n\n            You are collaborating\
+    \ to generate a new research idea based on the following Introduction:\n\n   \
+    \         **Introduction**\n\n            ABSTRACT The angular synchronization\
+    \ problem aims to accurately estimate (up to a constant additive phase) a set\
+    \ of unknown angles θ1, . . . , θ nPr0,2πqfrom mnoisy mea- surements of their\
+    \ offsets θi´θjmod2π.Applications include, for example, sensor network localization,\
+    \ phase retrieval, and distributed clock synchronization. An extension of the\
+    \ problem to the heterogeneous setting (dubbed k-synchronization) is to estimate\
+    \ kgroups of angles simultaneously, given noisy observations (with unknown group\
+    \ assignment) from each group. Existingmethods fall behind the trivial baseline.\
+    \ To show the effect of a linear combination of LcycleandLupset, we empirically\
+    \ test Lcycle`τLupset, withτvarying from 0 to 0.9; see Fig. 33 (the others are\
+    \ omitted but could lead to the sameresults for η“0.9as in general allexperiments\
+    \ also show that as the problem becomes harder (e.g. as the noise level increases\
+    \ and the network becomes sparser), a smaller coefficient of Lupset(even zero)\
+    \ is preferred, which indicates that Lcycleplays a more essential role in the\
+    \ more challenging scenarios. To assess the effect of fine-tuning (via projected\
+    \ gradient steps) over the baselines, we apply the same number of projected gradient\
+    \ descent steps as GNNSync to the comparative baselines and report the performance\
+    \ in Figures 34 and 35. We observe that even when applying these fine-tuning steps,\
+    \ the baselines are usually beaten by our end-to-end trainable GNNSync pipeline.\
+    \ 0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 η0.00.51.01.52.02.53.03.5MSE k1EROp5N360stylegamma\
+    \ (a) ERO 1pp“0.05q 0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 η0.00.51.01.52.02.5MSE\
+    \ k1EROp5N360stylemulti normal1 (b) ERO 2pp“0.05q 0.0 0.1 0.2 0.3 0.4 0.5 0.6\
+    \ 0.7 0.8 0.9 η0.00.51.01.52.02.53.0MSE k1EROp5N360stylemulti normal0 (c) ERO\
+    \ 3pp“0.05q 0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 η0.00.51.01.52.02.5MSE k1EROp5N360styleblock\
+    \ normal6 (d) ERO 4pp“0.05q 0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 η0.00.51.01.52.02.53.03.5MSE\
+    \ k1EROp10N360stylegamma (e) ERO 1pp“0.1q 0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8\
+    \ 0.9 η0.00.51.01.52.0MSE k1EROp10N360stylemulti normal1 (f) ERO 2pp“0.1q 0.0\
+    \ 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 η0.00.51.01.52.02.5MSE k1EROp10N360stylemulti\
+    \ normal0 (g) ERO 3pp“0.1q 0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 η0.00.51.01.52.02.5MSE\
+    \ k1EROp10N360styleblock normal6 (h) ERO 4pp“0.1q 0.0 0.1 0.2 0.3 0.4 0.5 0.6\
+    \ 0.7 0.8 0.9 η0.00.51.01.52.02.53.0MSE k1EROp15N360stylegamma (i) ERO 1pp“0.15q\
+    \ 0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 η0.00.51.01.52.0MSE k1EROp15N360stylemulti\
+    \ normal1 (j) ERO 2pp“0.15q 0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 η0.00.51.01.52.02.5MSE\
+    \ k1EROp15N360stylemulti normal0 (k) ERO 3pp“0.15q 0.0 0.1 0.2 0.3 0.4 0.5 0.6\
+    \ 0.7 0.8 0.9 η0.00.51.01.52.0MSE k1EROp15N360styleblock normal6 (l) ERO 4pp“0.15q\
+    \ Figure 28: MSE performance comparison on GNNSync variants on angular synchronization\
+    \ ( k“1) for ERO models. pis the network density and ηis the noise level. Error\
+    \ bars indicate one standard deviation. 41Published as a conference paper at ICLR\
+    \ 2024 0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 η1.001.251.501.752.002.252.502.753.00MSE\
+    \ k2EROp5N360stylegamma (a) ERO 1pp“0.05q 0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 η0.51.01.52.02.5MSE\
+    \ k2EROp5N360stylemulti normal1 (b) ERO 2pp“0.05q 0.0 0.1 0.2 0.3 0.4 0.5 0.6\
+    \ 0.7 η0.751.001.251.501.752.002.252.50MSE k2EROp5N360stylemulti normal0 (c) ERO\
+    \ 3pp“0.05q 0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 η0.51.01.52.02.5MSE k2EROp5N360styleblock\
+    \ normal6 (d) ERO 4pp“0.05q 0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 η0.51.01.52.02.5MSE\
+    \ k2EROp10N360stylegamma (e) ERO 1pp“0.1q 0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 η0.51.01.52.0MSE\
+    \ k2EROp10N360stylemulti normal1 (f) ERO 2pp“0.1q 0.0 0.1 0.2 0.3 0.4 0.5 0.6\
+    \ 0.7 η0.60.81.01.21.41.61.82.02.2MSE k2EROp10N360stylemulti normal0 (g) ERO 3pp“0.1q\
+    \ 0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 η0.500.751.001.251.501.752.00MSE k2EROp10N360styleblock\
+    \ normal6 (h) ERO 4pp“0.1q 0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 η0.51.01.52.02.5MSE\
+    \ k2EROp15N360stylegamma (i) ERO 1pp“0.15q 0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 η0.000.250.500.751.001.251.501.752.00MSE\
+    \ k2EROp15N360stylemulti normal1 (j) ERO 2pp“0.15q 0.0 0.1 0.2 0.3 0.4 0.5 0.6\
+    \ 0.7 η0.60.81.01.21.41.61.82.02.2MSE k2EROp15N360stylemulti normal0 (k) ERO 3pp“0.15q\
+    \ 0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 η0.500.751.001.251.501.752.00MSE k2EROp15N360styleblock\
+    \ normal6 (l) ERO 4pp“0.15q Figure 29:\n\n            **Your Task**\n\n      \
+    \      1. **Literature Review**: Analyze the Introduction provided and conduct\
+    \ a brief literature review to understand the current state of research in this\
+    \ area.\n\n            2. **Brainstorming**: Collaboratively brainstorm potential\
+    \ research ideas that build upon or address gaps in the Introduction.\n\n    \
+    \        3. **Summarization**: Summarize your collective ideas.\n\n          \
+    \  4. **Formulate a New Research Idea**: Develop a new research proposal in the\
+    \ format of the '5q', defined below:\n\n               **Here is a high-level\
+    \ summarized insight of a research field Machine Learning.**\n\n             \
+    \  **Here are the five core questions:**\n\n               **[Question 1] - What\
+    \ is the problem?**\n\n               Formulate the specific research question\
+    \ you aim to address. Only output one question and do not include any more information.\n\
+    \n               **[Question 2] - Why is it interesting and important?**\n\n \
+    \              Explain the broader implications of solving this problem for the\
+    \ research community.\n               Discuss how such a paper will affect future\
+    \ research.\n               Discuss how addressing this question could advance\
+    \ knowledge or lead to practical applications.\n\n               **[Question 3]\
+    \ - Why is it hard?**\n\n               Discuss the challenges and complexities\
+    \ involved in solving this problem.\n               Explain why naive or straightforward\
+    \ approaches may fail.\n               Identify any technical, theoretical, or\
+    \ practical obstacles that need to be overcome. MAKE IT CLEAR.\n\n           \
+    \    **[Question 4] - Why hasn't it been solved before?**\n\n               Identify\
+    \ gaps or limitations in previous research or existing solutions.\n          \
+    \     Discuss any barriers that have prevented this problem from being solved\
+    \ until now.\n               Explain how your approach differs from or improves\
+    \ upon prior work. MAKE IT CLEAR.\n\n               **[Question 5] - What are\
+    \ the key components of my approach and results?**\n\n               Outline your\
+    \ proposed methodology in detail, including the method, dataset, and metrics that\
+    \ you plan to use.\n               Describe the expected outcomes. MAKE IT CLEAR.\n\
+    \n            Please work together to produce the '5q' for your proposed research\
+    \ idea.\n\n            Good luck!\n            "
+  output_format: "You should answer the task in the following format:\n          \
+    \      **[Question 1] - What is the problem?**\n\n                Formulate the\
+    \ specific research question you aim to address. Only output one question and\
+    \ do not include any more information.\n\n                **[Question 2] - Why\
+    \ is it interesting and important?**\n\n                Explain the broader implications\
+    \ of solving this problem for the research community.\n                Discuss\
+    \ how such a paper will affect future research.\n                Discuss how addressing\
+    \ this question could advance knowledge or lead to practical applications.\n\n\
+    \                **[Question 3] - Why is it hard?**\n\n                Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \        Explain why naive or straightforward approaches may fail.\n         \
+    \       Identify any technical, theoretical, or practical obstacles that need\
+    \ to be overcome. MAKE IT CLEAR.\n\n                **[Question 4] - Why hasn't\
+    \ it been solved before?**\n\n                Identify gaps or limitations in\
+    \ previous research or existing solutions.\n                Discuss any barriers\
+    \ that have prevented this problem from being solved until now.\n            \
+    \    Explain how your approach differs from or improves upon prior work. MAKE\
+    \ IT CLEAR.\n\n                **[Question 5] - What are the key components of\
+    \ my approach and results?**\n\n                Outline your proposed methodology\
+    \ in detail, including the method, dataset, and metrics that you plan to use.\n\
+    \                Describe the expected outcomes. MAKE IT CLEAR."

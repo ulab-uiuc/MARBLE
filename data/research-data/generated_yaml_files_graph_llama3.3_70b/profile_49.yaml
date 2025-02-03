@@ -1,0 +1,288 @@
+agents:
+- agent_id: agent1
+  profile: 'I am a researcher dedicated to advancing natural language understanding
+    (NLU) and addressing the challenges posed by data scarcity in low-resource languages
+    and domains. My work focuses on developing innovative cross-lingual and cross-domain
+    methods to enhance model performance when training data is limited. I have explored
+    various strategies, such as emphasizing task-related keywords to improve cross-lingual
+    capabilities and introducing Order-Reduced Modeling techniques to adapt to linguistic
+    variations.
+
+
+    In my recent research, I have developed frameworks like Coach and X2Parser, which
+    simplify representation learning and parsing tasks for low-resource scenarios.
+    Additionally, I have tackled the issue of unseen languages in neural machine translation
+    through a continual pre-training framework that enhances multilingual models like
+    mBART.
+
+
+    My interests also extend to cross-domain named entity recognition, where I proposed
+    a model that operates without external resources, leveraging multi-task learning
+    to improve robustness. I have ventured into deepfake detection, creating a pipeline
+    that utilizes local forgery patterns across various domains to enhance detection
+    accuracy.
+
+
+    Furthermore, I have contributed to multi-behavior sequential recommendation systems
+    and generative models for image detection, focusing on efficient and effective
+    learning methods. My work emphasizes the importance of end-to-end models in multimodal
+    affective computing and domain adaptation for abstractive summarization, aiming
+    to bridge the gap between low-resource and high-resource settings.
+
+
+    Through my research, I strive to push the boundaries of NLU and machine learning,
+    making significant strides in areas that require innovative solutions to complex
+    challenges.'
+  type: BaseAgent
+- agent_id: agent2
+  profile: "I am a researcher specializing in machine learning and deep learning,\
+    \ with a particular focus on probabilistic models and their applications in various\
+    \ domains, including speech synthesis and medical image analysis. My work has\
+    \ explored the potential of Restricted Boltzmann Machines (RBMs) and Conditional\
+    \ RBMs (CRBMs), where I demonstrated that belief propagation can outperform traditional\
+    \ contrastive divergence methods in structured prediction tasks. \n\nI have also\
+    \ developed FastDPM, a unified framework for fast sampling in diffusion probabilistic\
+    \ models, which enhances sample quality across different data domains. My contributions\
+    \ to speech synthesis include extending the ClariNet model to generate high-fidelity\
+    \ speech from multiple speakers, leveraging trainable speaker embeddings for improved\
+    \ naturalness. Additionally, I introduced a novel text-to-wave architecture that\
+    \ simplifies training and significantly enhances performance over previous methods.\n\
+    \nIn the realm of medical imaging, I proposed a Neural Conditional Random Field\
+    \ (NCRF) framework for detecting breast cancer metastasis in Whole-slide Images\
+    \ (WSIs). By incorporating spatial correlations between image patches, my approach\
+    \ has shown improved prediction consistency and visual quality, achieving notable\
+    \ success on the Camelyon16 dataset.\n\nThrough my research, I aim to bridge theoretical\
+    \ advancements with practical applications, providing insights and tools that\
+    \ can be utilized across various fields. I am passionate about pushing the boundaries\
+    \ of what is possible with machine learning and contributing to impactful solutions\
+    \ in healthcare and beyond."
+  type: BaseAgent
+- agent_id: agent3
+  profile: 'I am a researcher dedicated to the intersection of formal methods, temporal
+    logic, and real-time systems. My work primarily focuses on the automatic inference
+    of specifications in branching-time logics, particularly Computation Tree Logic
+    (CTL). I have developed innovative algorithms for inferring concise and interpretable
+    CTL formulas from finite state models, addressing the challenges of specification
+    design in formal methods. My research also delves into the Age of Information,
+    where I propose optimal transmission scheduling policies for real-time updates
+    in cyber-physical systems, ensuring both timeliness and data freshness.
+
+
+    In addition to my work on temporal logics, I have explored the complexities of
+    learning LTL and CTL formulas, demonstrating the NP-hardness of these learning
+    problems. I have also contributed to the development of learning algorithms for
+    Property Specification Language (PSL), which allows for more succinct and human-interpretable
+    descriptions of system behaviors. My research extends to the study of synchronization
+    in chaotic systems and the entropy generation in unpredictable physical processes,
+    showcasing my diverse interests in both theoretical and applied aspects of dynamical
+    systems.
+
+
+    Through my work, I aim to bridge the gap between complex system behaviors and
+    their formal specifications, making significant strides in the usability of formal
+    methods in practical applications. I am passionate about advancing our understanding
+    of temporal logics and their implications for system verification and synthesis.'
+  type: BaseAgent
+- agent_id: agent4
+  profile: 'I am a researcher with a strong focus on representation theory, particularly
+    in the context of $p$-adic groups and their applications in number theory and
+    algebra. My recent work has explored various aspects of unramified unitary groups,
+    such as $U(2, 1)(E/F)$, where I have investigated the properties of irreducible
+    smooth representations and their interactions with Iwahori subgroups. I have contributed
+    to understanding the structure of maximal compact inductions and the finiteness
+    properties of Iwahori-Hecke modules, revealing significant results that challenge
+    existing assumptions in the field.
+
+
+    In addition to my theoretical work, I have ventured into the realm of practical
+    applications, particularly in the detection of Android malware. My research in
+    this area combines deep learning, natural language processing, and graph embedding
+    techniques to create a robust malware detection system that analyzes both Java
+    byte-code and native code. This multi-layer approach has yielded impressive results,
+    demonstrating the effectiveness of ensemble methods in addressing the complexities
+    of modern malware.
+
+
+    Overall, my research bridges the gap between abstract mathematical theory and
+    real-world applications, reflecting my commitment to advancing knowledge in both
+    representation theory and practical computational problems. I am passionate about
+    exploring new methodologies and contributing to the ongoing dialogue in these
+    dynamic fields.'
+  type: BaseAgent
+- agent_id: agent5
+  profile: "I am a researcher dedicated to advancing the fields of neuromorphic computing\
+    \ and machine learning, with a particular focus on Spiking Neural Networks (SNNs)\
+    \ and their applications in real-world scenarios. My work addresses the limitations\
+    \ of traditional computing architectures, particularly the von-Neumann bottleneck,\
+    \ by exploring innovative memory technologies like X-SRAM that enable in-memory\
+    \ Boolean computations. \n\nI have also investigated the integration of resistive\
+    \ crossbars for accelerating Deep Neural Networks (DNNs), proposing effective\
+    \ crossbar re-mapping strategies to enhance accuracy without retraining. My research\
+    \ extends to the development of hybrid architectures, such as Fusion-FlowNet,\
+    \ which combines SNNs and Analog Neural Networks (ANNs) for efficient optical\
+    \ flow estimation from event-based sensors.\n\nA significant part of my recent\
+    \ work involves enhancing the training methodologies for deep SNNs, allowing them\
+    \ to learn directly from spike events while maintaining robust performance. I\
+    \ have also contributed to the field of text embedding with the NV-Embed model,\
+    \ achieving state-of-the-art results on various benchmarks.\n\nThrough my research,\
+    \ I aim to bridge the gap between biological inspiration and computational efficiency,\
+    \ exploring how SNNs can provide resilience against adversarial attacks and improve\
+    \ generalization in machine learning tasks. My goal is to push the boundaries\
+    \ of what is possible in neuromorphic computing and to develop systems that are\
+    \ not only efficient but also capable of mimicking the remarkable capabilities\
+    \ of the human brain."
+  type: BaseAgent
+coordinate_mode: graph
+engine_planner:
+  initial_progress: Starting the collaborative research idea generation based on the
+    provided Introduction.
+environment:
+  max_iterations: 5
+  name: Research Collaboration Environment
+  type: Research
+llm: together_ai/meta-llama/Meta-Llama-3.3-70B-Instruct-Turbo
+memory:
+  type: SharedMemory
+metrics:
+  diversity_of_perspectives: true
+  engagement_level: true
+  evaluate_llm: gpt-4o-mini
+  relevance: true
+output:
+  file_path: result/discussion_output_llama3.3_70b.jsonl
+  format: jsonl
+relationships:
+- - agent1
+  - agent2
+  - collaborate with
+- - agent1
+  - agent3
+  - collaborate with
+- - agent1
+  - agent4
+  - collaborate with
+- - agent1
+  - agent5
+  - collaborate with
+- - agent2
+  - agent3
+  - collaborate with
+- - agent2
+  - agent4
+  - collaborate with
+- - agent2
+  - agent5
+  - collaborate with
+- - agent3
+  - agent4
+  - collaborate with
+- - agent3
+  - agent5
+  - collaborate with
+- - agent4
+  - agent5
+  - collaborate with
+task:
+  content: "\n            Dear Research Team,\n\n            You are collaborating\
+    \ to generate a new research idea based on the following Introduction:\n\n   \
+    \         **Introduction**\n\n               1 Introduction  Most recently, ChatGPT (OpenAI,\
+    \ 2022) and its follow ups (OpenAI, 2023; Anthropic, 2023b; Google, 2023) have\
+    \ led to the paradigm shift of building question answering (QA) and retrieval-augmented\
+    \ generation (RAG) system in production and research community. In particular,\
+    \ the following aspects of the models are preferred: i) The users can interact\
+    \ with the QA models in a conversational way, thus one can easily raise follow-up\
+    \ questions. ii) The models are capable of integrating retrieved chunks of evidence\
+    \ in both open-domain or long document settings, where the provided context is\
+    \ much longer than the context window of LLM (e.g., Anthropic, 2023a; Xu et al.,\
+    \ 2023b). iii) The generalist models can answer any questions with respect to\
+    \ table, arithmetic calculation in zero-shot manner without dataset-specific fine-tuning,\
+    \ while matching the accuracies of fine-tuned models. To this end, we focus on\
+    \ building the state-of-the-art model with all these key capabilities that are\
+    \ essentially important for many real-world applications.   However, building\
+    \ such a model that can match the accuracy of the state-of-the-art proprietary\
+    \ models, e.g., GPT-4 (OpenAI, 2023), is still a grand challenge for the research\
+    \ community. In this work, we introduce ChatQA, a family of open-sourced models\
+    \ that can outperform GPT-4 while utilizing relatively weak open-weights foundation\
+    \ model. We also open-source our training data, detailing techniques for synthetic\
+    \ data generation, along with alternative human annotation processes aimed at\
+    \ eliminating reliance on OpenAI GPT models for open research purpose.   Specifically,\
+    \ we make the following contributions:   1.  We propose a two-stage instruction\
+    \ tuning method and design a dataset curation recipe that can largely enhance\
+    \ LLM’s capability of integrating user provided or retrieved context for conversational\
+    \ QA and RAG tasks. We demonstrate that the proposed instruction tuning method\
+    \ significantly outperforms strong alignment baselines or RLHF-based recipes (e.g.,\
+    \ Llama2-Chat, Llama3-Instruct) on RAG and various conversational QA tasks.  \
+    \  2.  For retrieval, we show that fine-tuning the single-turn QA retriever on\
+    \ human-annotated data or synthetic multi-turn QA dataset works as well as utilizing\
+    \ the state-of-the-art LLM-based query rewriting model, i.e., GPT-3.5-Turbo (OpenAI,\
+    \ 2022). Our result also highlights the promising direction of utilizing synthetic\
+    \ data generation for training customized retriever.    3.  We introduce ChatRAG\
+    \ Bench, a comprehensive benchmark with ten conversational QA datasets, including\
+    \ five datasets with long documents that need retrieval and three datasets with\
+    \ tabular data and arithmetic calculation. We apply ChatQA training recipe on\
+    \ different text foundation models, and show the superb generalization capability\
+    \ of the proposed methods. In terms of average score on ChatRAG Bench, our ChatQA-1.0-70B (54.14)\
+    \ based on Llama2 can outperform GPT-4-0613 (53.90) and GPT-4-Turbo-2024-04-09 (54.03)\
+    \ without utilizing any synthetic data from ChatGPT models. Notably, much smaller\
+    \ Llama3-ChatQA-1.5-8B can perform comparable with GPT-4 models, while Llama3-ChatQA-1.5-70B\
+    \ outperforms GPT-4-Turbo-2024-04-09 by a margin.    4.  We study the “unanswerable”\
+    \ scenario, where the LLM needs to generate “cannot answer” to avoid hallucination.\
+    \ We show that incorporating a small amount of “unanswerable” samples significantly\
+    \ enhances model’s capability to handle it. Our ChatQA-1.0-70B outperforms GPT-3.5-Turbo\
+    \ in this regard, while has a slight gap compared to GPT-4-0613 (around 3.5%).\
+    \      We discuss related work in § 2. We introduce the two-stage instruction\
+    \ tuning method and data curation for ChatQA in § 3, and study retrieval in conversational\
+    \ QA in § 4. We present the experimental setup in § 5, results in § 6, and conclude\
+    \ the paper in § 7.     2 Related Work   2.1 Conversational QA and RAG  Question\
+    \ answering in a conversational way\n\n            **Your Task**\n\n         \
+    \   1. **Literature Review**: Analyze the Introduction provided and conduct a\
+    \ brief literature review to understand the current state of research in this\
+    \ area.\n\n            2. **Brainstorming**: Collaboratively brainstorm potential\
+    \ research ideas that build upon or address gaps in the Introduction.\n\n    \
+    \        3. **Summarization**: Summarize your collective ideas.\n\n          \
+    \  4. **Formulate a New Research Idea**: Develop a new research proposal in the\
+    \ format of the '5q', defined below:\n\n               **Here is a high-level\
+    \ summarized insight of a research field Machine Learning.**\n\n             \
+    \  **Here are the five core questions:**\n\n               **[Question 1] - What\
+    \ is the problem?**\n\n               Formulate the specific research question\
+    \ you aim to address. Only output one question and do not include any more information.\n\
+    \n               **[Question 2] - Why is it interesting and important?**\n\n \
+    \              Explain the broader implications of solving this problem for the\
+    \ research community.\n               Discuss how such a paper will affect future\
+    \ research.\n               Discuss how addressing this question could advance\
+    \ knowledge or lead to practical applications.\n\n               **[Question 3]\
+    \ - Why is it hard?**\n\n               Discuss the challenges and complexities\
+    \ involved in solving this problem.\n               Explain why naive or straightforward\
+    \ approaches may fail.\n               Identify any technical, theoretical, or\
+    \ practical obstacles that need to be overcome. MAKE IT CLEAR.\n\n           \
+    \    **[Question 4] - Why hasn't it been solved before?**\n\n               Identify\
+    \ gaps or limitations in previous research or existing solutions.\n          \
+    \     Discuss any barriers that have prevented this problem from being solved\
+    \ until now.\n               Explain how your approach differs from or improves\
+    \ upon prior work. MAKE IT CLEAR.\n\n               **[Question 5] - What are\
+    \ the key components of my approach and results?**\n\n               Outline your\
+    \ proposed methodology in detail, including the method, dataset, and metrics that\
+    \ you plan to use.\n               Describe the expected outcomes. MAKE IT CLEAR.\n\
+    \n            Please work together to produce the '5q' for your proposed research\
+    \ idea.\n\n            Good luck!\n            "
+  output_format: "You should answer the task in the following format:\n          \
+    \      **[Question 1] - What is the problem?**\n\n                Formulate the\
+    \ specific research question you aim to address. Only output one question and\
+    \ do not include any more information.\n\n                **[Question 2] - Why\
+    \ is it interesting and important?**\n\n                Explain the broader implications\
+    \ of solving this problem for the research community.\n                Discuss\
+    \ how such a paper will affect future research.\n                Discuss how addressing\
+    \ this question could advance knowledge or lead to practical applications.\n\n\
+    \                **[Question 3] - Why is it hard?**\n\n                Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \        Explain why naive or straightforward approaches may fail.\n         \
+    \       Identify any technical, theoretical, or practical obstacles that need\
+    \ to be overcome. MAKE IT CLEAR.\n\n                **[Question 4] - Why hasn't\
+    \ it been solved before?**\n\n                Identify gaps or limitations in\
+    \ previous research or existing solutions.\n                Discuss any barriers\
+    \ that have prevented this problem from being solved until now.\n            \
+    \    Explain how your approach differs from or improves upon prior work. MAKE\
+    \ IT CLEAR.\n\n                **[Question 5] - What are the key components of\
+    \ my approach and results?**\n\n                Outline your proposed methodology\
+    \ in detail, including the method, dataset, and metrics that you plan to use.\n\
+    \                Describe the expected outcomes. MAKE IT CLEAR."

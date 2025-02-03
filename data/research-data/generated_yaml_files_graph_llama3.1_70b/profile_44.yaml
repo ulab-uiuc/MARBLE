@@ -1,0 +1,261 @@
+agents:
+- agent_id: agent1
+  profile: 'I am a researcher dedicated to advancing the fields of geometric deep
+    learning and biomedical applications through innovative neural network architectures.
+    My recent work has focused on developing models that ensure equivariance in various
+    contexts, such as the InfGCN, which combines coefficient learning with residual
+    operators to learn mappings in 3D Euclidean space. This model not only captures
+    geometric information effectively but also outperforms state-of-the-art architectures
+    in large-scale electron density datasets.
+
+
+    In the realm of biomedical literature, I have pioneered an end-to-end deep learning
+    approach for Named Entity Recognition (NER) specifically targeting genomic variants.
+    This work bridges the gap between generic NER algorithms and low-resource applications,
+    achieving promising results without the need for hand-crafted features.
+
+
+    I have also explored point cloud analysis through a novel framework that introduces
+    orientations for each point, enhancing the message passing scheme in graph neural
+    networks. This approach has proven competitive in both point cloud analysis and
+    physical modeling tasks.
+
+
+    My research extends to enhancing geometric GNNs with Neural P$^3$M, which incorporates
+    mesh points to better capture long-range interactions in molecular systems. Additionally,
+    I developed PepFlow, a multi-modal deep generative model for designing full-atom
+    peptides, showcasing significant potential in drug discovery.
+
+
+    Through my work, I aim to push the boundaries of what is possible in machine learning,
+    particularly in applications that require a deep understanding of geometric and
+    biological complexities.'
+  type: BaseAgent
+- agent_id: agent2
+  profile: "I am a researcher dedicated to unraveling the complexities of protein\
+    \ structures and their interactions, as well as advancing the field of polaritonic\
+    \ materials. My work spans a range of innovative approaches, from developing the\
+    \ Directed Weight Neural Network to capture intricate geometric relations among\
+    \ amino acids, to proposing a novel geodesic loss function that enhances the performance\
+    \ of protein folding models like AlphaFold2. \n\nI have also pioneered methods\
+    \ for functional genome-wide association studies (fGWAS) that incorporate longitudinal\
+    \ data, enabling a deeper understanding of genetic influences on complex traits.\
+    \ My statistical frameworks for detecting gene-gene interactions have proven effective\
+    \ in analyzing high-dimensional genetic data, particularly in studies like the\
+    \ Framingham Heart Study.\n\nIn the realm of nanotechnology, I have explored the\
+    \ manipulation of mid-infrared light using hyperbolic phonon polaritons in van\
+    \ der Waals materials, achieving unprecedented quality factors in optical nanoresonators.\
+    \ My research on polariton optics has led to the development of novel devices\
+    \ that promise to revolutionize integrated photonic circuits and sensing technologies.\n\
+    \nThrough my work, I aim to bridge the gap between computational biology and advanced\
+    \ materials science, leveraging cutting-edge techniques to address pressing challenges\
+    \ in both fields. I am passionate about pushing the boundaries of what is possible\
+    \ in protein design and optical materials, and I am committed to contributing\
+    \ to the future of biomedicine and nanotechnology."
+  type: BaseAgent
+- agent_id: agent3
+  profile: 'I am a researcher deeply engaged in the intersection of computational
+    biology, machine learning, and optimization. My work primarily focuses on protein
+    structure prediction, where I have developed innovative statistical machine learning
+    methods to enhance sequence/structure alignments, particularly for distantly related
+    proteins. I introduced a regression-tree based Conditional Random Fields model
+    that leverages structural features to improve alignment accuracy, and a probabilistic
+    consistency approach for multiple template threading, which significantly enhances
+    structure predictions.
+
+
+    In addition to protein modeling, I have explored the application of genetic algorithms
+    in deep reinforcement learning, proposing Genetic Policy Optimization (GPO) to
+    improve sample efficiency. My research also extends to generating molecular conformations
+    from molecular graphs, where I developed a novel probabilistic framework that
+    combines flow-based and energy-based models to capture complex atom dependencies.
+
+
+    I am particularly interested in the challenges of imitation learning and have
+    created a state-only imitation learning algorithm that effectively addresses discrepancies
+    between expert and imitator environments. My work on maximum entropy policy optimization
+    has led to the development of the Stein variational policy gradient method, which
+    enhances exploration and performance in reinforcement learning tasks.
+
+
+    Furthermore, I have contributed to the understanding of hyperbolic geometry in
+    data representation, proposing a hyperbolic SVM for improved classification in
+    complex networks. My recent work on localized inference algorithms for large graphical
+    models and diffusion component analysis for gene function prediction showcases
+    my commitment to integrating advanced machine learning techniques with biological
+    insights. Overall, my research aims to bridge the gap between computational methods
+    and biological applications, driving innovation in both fields.'
+  type: BaseAgent
+- agent_id: agent4
+  profile: 'As a researcher deeply immersed in the field of graph neural networks
+    (GNNs) and their applications, my work primarily revolves around enhancing the
+    capabilities and understanding of these powerful models. My recent publications
+    reflect a commitment to addressing the limitations of existing GNN architectures.
+    For instance, I developed Position-aware GNNs (P-GNNs) to better capture the positional
+    context of nodes within graphs, which has proven effective in various prediction
+    tasks, achieving significant performance improvements.
+
+
+    I am particularly interested in the interplay between graph structures and predictive
+    performance, as demonstrated in my work on relational graphs that reveal a "sweet
+    spot" for optimizing neural network architectures. This exploration has led to
+    the creation of Identity-aware GNNs (ID-GNNs), which enhance the expressive power
+    of message-passing frameworks by incorporating node identities during the aggregation
+    process.
+
+
+    Additionally, I have tackled the challenges posed by dynamic graphs through the
+    ROLAND framework, which allows for the seamless adaptation of static GNNs to dynamic
+    environments. My research also extends to automated machine learning (AutoML),
+    where I introduced FALCON and AutoTransfer to streamline the design process and
+    improve efficiency in model selection.
+
+
+    Overall, my goal is to push the boundaries of GNN research, providing innovative
+    solutions that not only advance theoretical understanding but also yield practical
+    applications across various domains. I am passionate about creating frameworks
+    that facilitate the exploration of GNN design spaces, ultimately contributing
+    to the evolution of intelligent systems.'
+  type: BaseAgent
+coordinate_mode: graph
+engine_planner:
+  initial_progress: Starting the collaborative research idea generation based on the
+    provided Introduction.
+environment:
+  max_iterations: 5
+  name: Research Collaboration Environment
+  type: Research
+llm: together_ai/meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo
+memory:
+  type: SharedMemory
+metrics:
+  diversity_of_perspectives: true
+  engagement_level: true
+  evaluate_llm: gpt-4o-mini
+  relevance: true
+output:
+  file_path: result/discussion_output_llama3.1_70b.jsonl
+  format: jsonl
+relationships:
+- - agent1
+  - agent2
+  - collaborate with
+- - agent1
+  - agent3
+  - collaborate with
+- - agent1
+  - agent4
+  - collaborate with
+- - agent2
+  - agent3
+  - collaborate with
+- - agent2
+  - agent4
+  - collaborate with
+- - agent3
+  - agent4
+  - collaborate with
+task:
+  content: "\n            Dear Research Team,\n\n            You are collaborating\
+    \ to generate a new research idea based on the following Introduction:\n\n   \
+    \         **Introduction**\n\n               1 Introduction  Recently, conditional\
+    \ flow matching (CFM) models [36] have achieved remarkable success in various\
+    \ generative domains including image generation [36, 18, 28], molecule [55, 54,\
+    \ 30] and protein design [62, 11], and sequence generation [56, 37, 13]. While\
+    \ attempts to generalize CFM and diffusion models to discrete categorical data\
+    \ have been made, they typically exert ad hoc assumptions on the structure of\
+    \ the discrete distribution. One group of work relies on stochastic jumps of Markov\
+    \ chains in either the discrete-time [6, 37, 1] or continuous-time setting [12,\
+    \ 51, 13] that discards the continuous nature of the underlying categorical distributions.\
+    \ Other work directly works with the probability simplex [7, 56] or the corresponding\
+    \ logit space [27, 38, 23] with potentially imperfect assumptions that fail to\
+    \ capitulate the underlying true geometry of the statistical manifold. Furthermore,\
+    \ likelihood is often approximated by variational bounds in previous discrete\
+    \ generative models due to the lack of tractable exact likelihood.   We propose\
+    \ to incorporate the intrinsic geometry of the statistical manifold by viewing\
+    \ categorical data as points on the statistical manifold of categorical distributions.\
+    \ Inspired by the mathematical results from information theory, we utilize the\
+    \ Fisher information metric [48] to naturally equip such a manifold with a Riemannian\
+    \ structure and develop an efficient generative training scheme for learning the\
+    \ vector fields without stability issues. We summarize our contributions as the\
+    \ following:   (1) We propose Statistical Flow Matching (SFM), a novel and mathematically\
+    \ rigorous generative framework on the manifold of parameterized probability measures.\
+    \ SFM does not pose any prior assumptions on the statistical manifold but instead\
+    \ deduces its intrinsic geometry via mathematical tools. To tackle the discrete\
+    \ generation problem, we instantiate SFM on the manifold of categorical distributions.\
+    \ We deduce closed-form exponential and logarithm maps and develop an efficient\
+    \ flow-matching training algorithm that avoids numerical issues by leveraging\
+    \ a diffeomorphism between manifolds. SFM effectively leverages the intrinsic\
+    \ geometric properties by following the shortest paths of geodesics between the\
+    \ noise and target distributions on the statistical manifold.   (2) Our distinctive\
+    \ geometric perspective of the statistical manifold allows us to further apply\
+    \ optimal transport during training and derive tractable exact likelihood for\
+    \ any given sample of probability measure, both of which are unachievable for\
+    \ most existing methods. We also introduce new theoretical insights by establishing\
+    \ connections among Riemannian flow matching, information geometry, and natural\
+    \ gradient descent, which allows us to interpret SFM as following the steepest\
+    \ descent of the natural gradient from the optimization angle.   (3) We demonstrated\
+    \ with a toy example on simplex that SFM can learn more complex patterns on the\
+    \ statistical manifold where existing models often fail due to impromptu prior\
+    \ assumptions. We further conducted extensive experiments on diverse real-world\
+    \ discrete generation tasks involving computer vision, natural language processing,\
+    \ and bioinformatics. SFM consistently outperformed existing diffusion or flow-based\
+    \ models and also achieved comparable results with autoregressive models on character-level\
+    \ generation.     2 Preliminary   2.1 Information Geometry  In this work, we are\
+    \ interested in learning a parameterized family of probability measures. It is\
+    \ known from information theory that all probability measures over the sample\
+    \ space form the structure known as statistical manifold. Mathematically, consider\
+    \ probability densities p=d⁢μd⁢ν:\U0001D4B3→ℝ:\U0001D45D\U0001D451\U0001D707\U0001D451\
+    \U0001D708→\U0001D4B3ℝp=\\frac{d\\mu}{d\\nu}:\\mathcal{X}\\to\\mathbb{R}italic_p\
+    \ =\n\n            **Your Task**\n\n            1. **Literature Review**: Analyze\
+    \ the Introduction provided and conduct a brief literature review to understand\
+    \ the current state of research in this area.\n\n            2. **Brainstorming**:\
+    \ Collaboratively brainstorm potential research ideas that build upon or address\
+    \ gaps in the Introduction.\n\n            3. **Summarization**: Summarize your\
+    \ collective ideas.\n\n            4. **Formulate a New Research Idea**: Develop\
+    \ a new research proposal in the format of the '5q', defined below:\n\n      \
+    \         **Here is a high-level summarized insight of a research field Machine\
+    \ Learning.**\n\n               **Here are the five core questions:**\n\n    \
+    \           **[Question 1] - What is the problem?**\n\n               Formulate\
+    \ the specific research question you aim to address. Only output one question\
+    \ and do not include any more information.\n\n               **[Question 2] -\
+    \ Why is it interesting and important?**\n\n               Explain the broader\
+    \ implications of solving this problem for the research community.\n         \
+    \      Discuss how such a paper will affect future research.\n               Discuss\
+    \ how addressing this question could advance knowledge or lead to practical applications.\n\
+    \n               **[Question 3] - Why is it hard?**\n\n               Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \       Explain why naive or straightforward approaches may fail.\n          \
+    \     Identify any technical, theoretical, or practical obstacles that need to\
+    \ be overcome. MAKE IT CLEAR.\n\n               **[Question 4] - Why hasn't it\
+    \ been solved before?**\n\n               Identify gaps or limitations in previous\
+    \ research or existing solutions.\n               Discuss any barriers that have\
+    \ prevented this problem from being solved until now.\n               Explain\
+    \ how your approach differs from or improves upon prior work. MAKE IT CLEAR.\n\
+    \n               **[Question 5] - What are the key components of my approach and\
+    \ results?**\n\n               Outline your proposed methodology in detail, including\
+    \ the method, dataset, and metrics that you plan to use.\n               Describe\
+    \ the expected outcomes. MAKE IT CLEAR.\n\n            Please work together to\
+    \ produce the '5q' for your proposed research idea.\n\n            Good luck!\n\
+    \            "
+  output_format: "You should answer the task in the following format:\n          \
+    \      **[Question 1] - What is the problem?**\n\n                Formulate the\
+    \ specific research question you aim to address. Only output one question and\
+    \ do not include any more information.\n\n                **[Question 2] - Why\
+    \ is it interesting and important?**\n\n                Explain the broader implications\
+    \ of solving this problem for the research community.\n                Discuss\
+    \ how such a paper will affect future research.\n                Discuss how addressing\
+    \ this question could advance knowledge or lead to practical applications.\n\n\
+    \                **[Question 3] - Why is it hard?**\n\n                Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \        Explain why naive or straightforward approaches may fail.\n         \
+    \       Identify any technical, theoretical, or practical obstacles that need\
+    \ to be overcome. MAKE IT CLEAR.\n\n                **[Question 4] - Why hasn't\
+    \ it been solved before?**\n\n                Identify gaps or limitations in\
+    \ previous research or existing solutions.\n                Discuss any barriers\
+    \ that have prevented this problem from being solved until now.\n            \
+    \    Explain how your approach differs from or improves upon prior work. MAKE\
+    \ IT CLEAR.\n\n                **[Question 5] - What are the key components of\
+    \ my approach and results?**\n\n                Outline your proposed methodology\
+    \ in detail, including the method, dataset, and metrics that you plan to use.\n\
+    \                Describe the expected outcomes. MAKE IT CLEAR."

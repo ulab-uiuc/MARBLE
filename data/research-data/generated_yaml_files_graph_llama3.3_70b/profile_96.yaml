@@ -1,0 +1,304 @@
+agents:
+- agent_id: agent1
+  profile: 'I am a researcher deeply engaged in the intersection of machine learning
+    and high-energy physics, with a focus on developing innovative neural network
+    architectures that enhance predictive performance while ensuring robustness and
+    interpretability. My recent work has introduced novel techniques such as Moment
+    Decomposition (MoDe) to improve classifiers for detecting new physics without
+    inducing localized structures, and I have explored the application of Wasserstein
+    metrics in particle physics through the Energy Mover''s Distance (EMD).
+
+
+    I am particularly interested in the inductive biases that can be integrated into
+    neural networks, such as monotonicity, which is crucial for interpretability and
+    fairness across various domains, including finance and medicine. My architecture
+    designs, which include weight-constrained models with residual connections, have
+    demonstrated state-of-the-art performance in challenging tasks, including the
+    classification of subatomic particle decays at the CERN Large Hadron Collider.
+
+
+    Additionally, I have developed the Nuclear Co-Learned Representations (NuCLR)
+    model, which predicts nuclear observables with remarkable precision, revealing
+    insights into fundamental nuclear phenomena. My research also delves into mechanistic
+    interpretability, where I extract meaningful representations from neural networks
+    trained on complex data, providing a deeper understanding of the underlying physics.
+
+
+    Through my work, I aim to bridge the gap between theoretical insights and practical
+    applications, leveraging advanced machine learning techniques to tackle pressing
+    challenges in physics and beyond. My ongoing investigations into phenomena like
+    grokking further highlight my commitment to understanding the dynamics of learning
+    in neural networks, ultimately contributing to the evolution of intelligent systems.'
+  type: BaseAgent
+- agent_id: agent2
+  profile: 'I am a researcher deeply engaged in the intersection of machine learning
+    and high-energy physics, with a focus on developing innovative neural architectures
+    that enhance model robustness and interpretability. My recent work has centered
+    on constraining the Lipschitz constant of neural networks, which not only improves
+    their expressiveness but also ensures monotonicity in outputs—an essential feature
+    for applications in finance, medicine, and particle physics.
+
+
+    One of my notable contributions is the introduction of a novel architecture for
+    estimating the Wasserstein metric, specifically tailored for high-energy particle
+    physics applications. This work has the potential to transform data-driven collider
+    phenomenology by providing a differentiable method for calculating the Energy
+    Mover''s Distance (EMD). Additionally, I have developed the Diffusion Models of
+    Structured Knowledge (DiSK), which excels in modeling structured data, achieving
+    state-of-the-art performance across various datasets.
+
+
+    My research also delves into the challenges of real-time data processing at the
+    Large Hadron Collider, where I have integrated monotonic Lipschitz neural networks
+    into the LHCb trigger system, enhancing its robustness against detector instabilities.
+    Furthermore, I have explored the phenomenon of grokking in neural networks, revealing
+    insights into the structured representations that lead to delayed generalization.
+
+
+    Through my work, I aim to bridge the gap between theoretical advancements in machine
+    learning and practical applications in physics, ultimately contributing to a deeper
+    understanding of both fields.'
+  type: BaseAgent
+- agent_id: agent3
+  profile: 'I am a researcher deeply engaged in the study of emergent communication
+    among deep network agents, with a focus on understanding the evolution of language
+    and its implications for artificial intelligence. My recent work explores how
+    agents develop communication protocols while solving joint tasks, revealing insights
+    into the nature of human language evolution. I have investigated the visual representations
+    that agents create during referential games, highlighting the disconnect between
+    their symbol usage and the conceptual properties of the objects they represent.
+
+
+    I am particularly interested in the robustness of machine learning models, especially
+    in the context of vision-language tasks. My research has led to the development
+    of novel models, such as DISCO Nets, which efficiently sample from posterior distributions,
+    and the Multi-Level Variational Autoencoder (ML-VAE), designed to learn disentangled
+    representations of grouped observations. I have also contributed to the understanding
+    of how inductive biases in model architectures affect generalization and robustness
+    to distributional shifts.
+
+
+    In addition to theoretical advancements, I have created tools like EGG to facilitate
+    research in emergent language communication, aiming to lower barriers for researchers
+    in this exciting field. My work emphasizes the importance of interpretability
+    and fairness in machine learning, advocating for a shift towards context-dependent
+    assessments of fairness that involve stakeholders in the evaluation process.
+
+
+    Overall, my research bridges the gap between theoretical insights and practical
+    applications, striving to enhance our understanding of language emergence, model
+    robustness, and the ethical implications of AI systems.'
+  type: BaseAgent
+- agent_id: agent4
+  profile: 'I am a researcher deeply engaged in the field of natural language processing
+    (NLP), with a particular focus on understanding and improving the capabilities
+    of neural machine translation (NMT) and natural language inference (NLI) models.
+    My recent work has highlighted critical shortcomings in transformer-based models,
+    especially regarding their handling of gendered language in translation tasks.
+    I developed a comprehensive evaluation scheme and dataset to address these issues,
+    aiming to spur advancements in the NMT community.
+
+
+    In addition to my work on gender morphology, I have contributed to the development
+    of the Multi-Genre Natural Language Inference (MultiNLI) corpus, which has become
+    a cornerstone for evaluating sentence understanding models. My research also delves
+    into the intricacies of pragmatic inference, where I created the IMPPRES dataset
+    to assess how well models like BERT can handle complex inference types.
+
+
+    I am particularly interested in the biases that can emerge in AI models, especially
+    in generative dialogue systems. My investigations into the effects of training
+    data on model behavior have led to the development of techniques to mitigate these
+    biases, ensuring more equitable AI interactions.
+
+
+    Through my work, I strive to bridge the gap between linguistic theory and practical
+    applications in NLP, employing rigorous methodologies to probe the inner workings
+    of models and enhance their performance across diverse tasks. My goal is to contribute
+    to a more nuanced understanding of language processing and to develop models that
+    are not only accurate but also fair and robust.'
+  type: BaseAgent
+- agent_id: agent5
+  profile: 'I am a researcher dedicated to advancing the fields of machine learning,
+    federated learning, and network optimization. My recent work focuses on understanding
+    the learning dynamics of gradient descent in weakly convex settings, where I have
+    established generalization error bounds that are more flexible than previous approaches.
+    I have also explored the intricacies of federated data analytics, developing privacy-aware
+    compression mechanisms that enhance utility while maintaining user privacy.
+
+
+    In the realm of federated learning, I introduced the Interpolated Minimum Variance
+    Unbiased (MVU) mechanism, which significantly improves the scalability and privacy-utility
+    trade-offs in communication-efficient private learning. My empirical studies on
+    local SGD have revealed critical insights into the trade-offs between communication
+    costs and model accuracy, particularly in large-scale settings.
+
+
+    I am particularly passionate about addressing the challenges posed by data and
+    system heterogeneity in federated recommendation systems. My framework, RF², quantifies
+    the impact of these interdependencies on model quality and fairness, highlighting
+    the necessity of realistic modeling in achieving equitable outcomes.
+
+
+    Additionally, I have ventured into the realm of generative models, developing
+    a differentially private retrieval-augmented diffusion model that generates high-quality
+    images while ensuring privacy. My work on network congestion control leverages
+    reinforcement learning to optimize strategies in real-world environments, demonstrating
+    the potential of asynchronous RL in enhancing bandwidth utilization.
+
+
+    Through my research, I aim to bridge theoretical insights with practical applications,
+    contributing to the development of robust, efficient, and privacy-preserving machine
+    learning systems.'
+  type: BaseAgent
+coordinate_mode: graph
+engine_planner:
+  initial_progress: Starting the collaborative research idea generation based on the
+    provided Introduction.
+environment:
+  max_iterations: 5
+  name: Research Collaboration Environment
+  type: Research
+llm: together_ai/meta-llama/Meta-Llama-3.3-70B-Instruct-Turbo
+memory:
+  type: SharedMemory
+metrics:
+  diversity_of_perspectives: true
+  engagement_level: true
+  evaluate_llm: gpt-4o-mini
+  relevance: true
+output:
+  file_path: result/discussion_output_llama3.3_70b.jsonl
+  format: jsonl
+relationships:
+- - agent1
+  - agent2
+  - collaborate with
+- - agent1
+  - agent3
+  - collaborate with
+- - agent1
+  - agent4
+  - collaborate with
+- - agent1
+  - agent5
+  - collaborate with
+- - agent2
+  - agent3
+  - collaborate with
+- - agent2
+  - agent4
+  - collaborate with
+- - agent2
+  - agent5
+  - collaborate with
+- - agent3
+  - agent4
+  - collaborate with
+- - agent3
+  - agent5
+  - collaborate with
+- - agent4
+  - agent5
+  - collaborate with
+task:
+  content: "\n            Dear Research Team,\n\n            You are collaborating\
+    \ to generate a new research idea based on the following Introduction:\n\n   \
+    \         **Introduction**\n\n             Introduction Although today’s best\
+    \ language models produce impressively cogent, articulate text by learning the\
+    \ statistics of language, they still struggle to reliably retrieve information\
+    \ seen during training. Models are known to suffer from hallucinations, potentially\
+    \ responding with fabricated content that differs from the knowledge present in\
+    \ training data. Hallucinations pose a significant hurdle to the adoption of language\
+    \ models, especially in domains where reliable knowledge retrieval is paramount\
+    \ (Dahl et al., 2024). A well-studied failure mode underlying hallucinations is\
+    \ the reversal curse , which ascribes this deficiency to the precise order of\
+    \ words presented to the model at train-time (Berglund et al., 2023; Allen-Zhu\
+    \ & Li, 2023). For example, a model trained on sentences where Parisalways appears\
+    \ as the subject of the sentence, such as “Paris is the capital of France” , can\
+    \ be tuned to answer “Paris is the capital of which country?” but not“What is\
+    \ the capital of France?” , even though these two formulations encode the same\
+    \ underlying information. Existing approaches aimed at mitigating the reversal\
+    \ curse have focused on data augmentations that involve training on both the forward\
+    \ and reversed tokens (Golovneva et al., 2024). In this work, we focus on learning\
+    \ objectives. In Section 2, we propose the factorization curse , a framework that\
+    \ characterizes the reversal curse as a failure to model the same joint distribution\
+    \ under different factorizations. We show the prevailing left-to-right next token\
+    \ prediction, autoregressive (AR) objective used in popular large models such\
+    \ as GPT (Radford et al., 2019) and Llama models (Touvron et al., 2023a,b), underlies\
+    \ the reversal curse. We illustrate in Figure 1 how the factorization in AR training\
+    \ only encodes information based on prior context, thereby limiting how well the\
+    \ model can retrieve information based on later context . Through this lens, we\
+    \ show the reversal curse is not merely a failure to learn logical implications,\
+    \ but a more general problem related to learning objectives. Given this framework,\
+    \ we hypothesize in Section 2.1 that factorization agnostic models, i.e., models\
+    \ trained in a manner that is less dependent on the specific token order while\
+    \ preserving the overall meaning, can store knowledge better and are less prone\
+    \ to the reversal curse. To validate our hypothesis and explore 1arXiv:2406.05183v1\
+    \  [cs.LG]  7 Jun 20242. What is the capital of France?1. Paris is the capital\
+    \ of which country? Paris is the capital of France.Training / Finetuning  CorpusQuestions\
+    \  at inference \U0001F916: France \U0001F916 \U0001F916: BaguetteWhich factorizations\
+    \ can next-token prediction learn?Paris is the capital ofis the capital of France\
+    \ \U0001F916 \U0001F916Model PredictionContext \U0001F916Figure 1 (Left)Reversal\
+    \ curse from training a model on sentences with ParisbeforeFrance.(Right) Left-to-right\
+    \ objective does not learn how to predict early tokens from later ones even if\
+    \ the information content is the same. The model overfits to a specific factorization\
+    \ of the joint distribution over tokens, and is unable to answer questions that\
+    \ require reasoning about a different factorization. potential solutions, we conduct\
+    \ extensive Experiments in Factorization-Agnostic Training Retrieval Task. We\
+    \ are particularly interested in models’ ability to recall knowledge from data\
+    \ they were trained on. We will use a simple toy task, adapted from Golovneva\
+    \ et al. (2024), to evaluate this capability. First, we generate a collection\
+    \ of key-value pairs which are each composed of a sequence {ti}i∈Sof tokens, e.g.,\
+    \ consider the key-value pair t0t1:t2t3. Each key/value is\n\n            **Your\
+    \ Task**\n\n            1. **Literature Review**: Analyze the Introduction provided\
+    \ and conduct a brief literature review to understand the current state of research\
+    \ in this area.\n\n            2. **Brainstorming**: Collaboratively brainstorm\
+    \ potential research ideas that build upon or address gaps in the Introduction.\n\
+    \n            3. **Summarization**: Summarize your collective ideas.\n\n     \
+    \       4. **Formulate a New Research Idea**: Develop a new research proposal\
+    \ in the format of the '5q', defined below:\n\n               **Here is a high-level\
+    \ summarized insight of a research field Machine Learning.**\n\n             \
+    \  **Here are the five core questions:**\n\n               **[Question 1] - What\
+    \ is the problem?**\n\n               Formulate the specific research question\
+    \ you aim to address. Only output one question and do not include any more information.\n\
+    \n               **[Question 2] - Why is it interesting and important?**\n\n \
+    \              Explain the broader implications of solving this problem for the\
+    \ research community.\n               Discuss how such a paper will affect future\
+    \ research.\n               Discuss how addressing this question could advance\
+    \ knowledge or lead to practical applications.\n\n               **[Question 3]\
+    \ - Why is it hard?**\n\n               Discuss the challenges and complexities\
+    \ involved in solving this problem.\n               Explain why naive or straightforward\
+    \ approaches may fail.\n               Identify any technical, theoretical, or\
+    \ practical obstacles that need to be overcome. MAKE IT CLEAR.\n\n           \
+    \    **[Question 4] - Why hasn't it been solved before?**\n\n               Identify\
+    \ gaps or limitations in previous research or existing solutions.\n          \
+    \     Discuss any barriers that have prevented this problem from being solved\
+    \ until now.\n               Explain how your approach differs from or improves\
+    \ upon prior work. MAKE IT CLEAR.\n\n               **[Question 5] - What are\
+    \ the key components of my approach and results?**\n\n               Outline your\
+    \ proposed methodology in detail, including the method, dataset, and metrics that\
+    \ you plan to use.\n               Describe the expected outcomes. MAKE IT CLEAR.\n\
+    \n            Please work together to produce the '5q' for your proposed research\
+    \ idea.\n\n            Good luck!\n            "
+  output_format: "You should answer the task in the following format:\n          \
+    \      **[Question 1] - What is the problem?**\n\n                Formulate the\
+    \ specific research question you aim to address. Only output one question and\
+    \ do not include any more information.\n\n                **[Question 2] - Why\
+    \ is it interesting and important?**\n\n                Explain the broader implications\
+    \ of solving this problem for the research community.\n                Discuss\
+    \ how such a paper will affect future research.\n                Discuss how addressing\
+    \ this question could advance knowledge or lead to practical applications.\n\n\
+    \                **[Question 3] - Why is it hard?**\n\n                Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \        Explain why naive or straightforward approaches may fail.\n         \
+    \       Identify any technical, theoretical, or practical obstacles that need\
+    \ to be overcome. MAKE IT CLEAR.\n\n                **[Question 4] - Why hasn't\
+    \ it been solved before?**\n\n                Identify gaps or limitations in\
+    \ previous research or existing solutions.\n                Discuss any barriers\
+    \ that have prevented this problem from being solved until now.\n            \
+    \    Explain how your approach differs from or improves upon prior work. MAKE\
+    \ IT CLEAR.\n\n                **[Question 5] - What are the key components of\
+    \ my approach and results?**\n\n                Outline your proposed methodology\
+    \ in detail, including the method, dataset, and metrics that you plan to use.\n\
+    \                Describe the expected outcomes. MAKE IT CLEAR."
