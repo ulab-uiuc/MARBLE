@@ -1,0 +1,299 @@
+agents:
+- agent_id: agent1
+  profile: 'I am a researcher deeply engaged in the intersection of machine learning,
+    probabilistic modeling, and explainable AI. My work spans a variety of topics,
+    including neural knowledge base embeddings, variational inference, and Gaussian
+    processes. Recently, I have focused on developing frameworks that integrate symbolic
+    knowledge with learning processes, enabling models to handle unseen entities by
+    learning from natural language descriptions, akin to human semantic learning.
+
+
+    I have made significant contributions to variational Bayesian neural networks,
+    introducing functional variational Bayesian neural networks (fBNNs) that maximize
+    the Evidence Lower Bound directly on stochastic processes. This approach allows
+    for rich prior specifications and reliable uncertainty estimates, scaling effectively
+    to large datasets. My research also delves into implicit distributions, where
+    I have developed novel gradient estimators and variational inference techniques
+    that address challenges in high-dimensional latent variable models.
+
+
+    In addition to theoretical advancements, I am passionate about practical applications.
+    My work on explainable neural modules (XNMs) leverages scene graphs for structured
+    reasoning, enhancing interpretability in visual reasoning tasks. I also explore
+    efficient sampling strategies in discrete diffusion models, improving sample quality
+    while reducing computational costs.
+
+
+    Overall, my research aims to dismantle the black-box nature of complex models,
+    fostering a deeper understanding of their inner workings while pushing the boundaries
+    of what is possible in machine learning.'
+  type: BaseAgent
+- agent_id: agent2
+  profile: 'I am a researcher dedicated to enhancing the reliability and performance
+    of machine learning models, particularly in critical applications such as drug
+    discovery and robotics. My recent work has focused on addressing the challenges
+    of overconfident mis-predictions in Graph Neural Networks (GNNs) through the development
+    of distance-aware GNNs, specifically GNN-SNGP. This framework not only improves
+    prediction calibration but also maintains accuracy, as demonstrated through extensive
+    evaluations on the CardioTox benchmark and other established datasets.
+
+
+    In addition to my work on GNNs, I have explored the potential of text diffusion
+    models as an alternative to autoregressive decoding for large language models
+    (LLMs). My findings indicate that while diffusion models may not outperform AR
+    models in all tasks, they show significant promise in areas like code synthesis
+    and extractive question answering, especially when adapting existing AR models
+    through our AR2Diff method.
+
+
+    I am also passionate about probing the reliability of pretrained models across
+    various tasks in both vision and language domains. My work on ViT-Plex and T5-Plex
+    has led to state-of-the-art improvements in model reliability, simplifying the
+    evaluation process and enhancing performance across multiple decision-making tasks.
+
+
+    Furthermore, I am investigating the integration of vision-language models into
+    end-to-end robotic control systems. By co-fine-tuning these models with robotic
+    trajectory data, I aim to enable emergent semantic reasoning and improved generalization
+    in robotic actions. My research is driven by a commitment to advancing the capabilities
+    of AI systems, ensuring they are not only powerful but also reliable and adaptable
+    in real-world scenarios.'
+  type: BaseAgent
+- agent_id: agent3
+  profile: 'I am a researcher with a diverse background in mathematical physics, statistical
+    mechanics, and machine learning. My work spans various topics, including the quantization
+    of Hamiltonian structures, the dynamics of driven tagged particles in exclusion
+    processes, and the application of Bluetooth Low Energy (BLE) technology in IoT
+    systems. Recently, I have focused on enhancing the efficiency of Vision Transformers
+    through innovative token pruning methods, which significantly reduce computational
+    costs while maintaining model performance.
+
+
+    In my research, I have developed frameworks for analyzing complex systems, such
+    as inexact power iteration methods for solving high-dimensional eigenvalue problems
+    in quantum many-body physics. I have also explored convergence rates in Wasserstein
+    distance for deterministic nonuniformly hyperbolic systems and sequential dynamical
+    systems, contributing to the understanding of their stability and behavior.
+
+
+    My latest work introduces a self-consistent deep-learning framework for analyzing
+    noisy deterministic time series, enabling unsupervised filtering and state-space
+    reconstruction. This approach reveals underlying dynamical structures without
+    prior information, showcasing the potential of deep learning in uncovering complex
+    patterns in data.
+
+
+    Overall, my research aims to bridge theoretical insights with practical applications,
+    leveraging advanced mathematical techniques and machine learning to address real-world
+    challenges across various domains.'
+  type: BaseAgent
+- agent_id: agent4
+  profile: 'I am a researcher specializing in advanced statistical methods and their
+    applications in machine learning and Bayesian inference. My work primarily focuses
+    on developing innovative algorithms for state-space models, Monte Carlo methods,
+    and optimal transport, with a strong emphasis on enhancing computational efficiency
+    and accuracy.
+
+
+    In my recent publications, I have introduced Ensemble Rejection Sampling for exact
+    simulation in non-linear state-space models, and I have explored the use of Wasserstein
+    barycenters for distributed consensus in probability measures. I have also contributed
+    to the understanding of Neural Ordinary Differential Equations (ODEs) and their
+    limitations, proposing Augmented Neural ODEs as a more expressive alternative.
+
+
+    My research extends to variable selection techniques in high-dimensional data,
+    where I have developed Bayesian interpretations of penalized optimization approaches.
+    I am particularly interested in the interplay between theory and practical applications,
+    as evidenced by my work on particle filters and their efficiency improvements
+    through Rao-Blackwellisation.
+
+
+    Overall, my goal is to bridge the gap between complex statistical theory and real-world
+    applications, providing robust methodologies that can be applied across various
+    domains, including finance, robotics, and computer vision. I am passionate about
+    pushing the boundaries of statistical learning and contributing to the evolving
+    landscape of machine learning.'
+  type: BaseAgent
+- agent_id: agent5
+  profile: 'I am a researcher specializing in advanced statistical methods and machine
+    learning, with a particular focus on variational inference, Markov Chain Monte
+    Carlo (MCMC) techniques, and their applications in complex models. My work has
+    led to the development of innovative algorithms such as local expectation gradients
+    for efficient stochastic variational inference, and a novel framework for combining
+    MCMC and variational inference that enhances predictive performance.
+
+
+    I have explored the intricacies of probabilistic modeling, introducing methods
+    for approximate inference that leverage reparametrization and MCMC, as well as
+    efficient approximations for softmax probabilities in large-scale classification
+    tasks. My research also delves into adaptive MCMC schemes, where I have proposed
+    robust algorithms that learn optimal proposal distributions, significantly improving
+    sampling efficiency in high-dimensional spaces.
+
+
+    In the realm of reinforcement learning, I have developed a Bayesian transfer learning
+    framework that integrates prior knowledge into learning algorithms, demonstrating
+    its effectiveness in various tasks. My contributions extend to online changepoint
+    detection in deep learning models, where I introduced a method that efficiently
+    identifies distributional changes over time.
+
+
+    I am passionate about pushing the boundaries of machine learning and statistical
+    inference, striving to create scalable and efficient solutions that can be applied
+    to real-world problems. My work not only addresses theoretical challenges but
+    also emphasizes practical applications, as evidenced by my successful implementations
+    in diverse domains, including Gaussian processes and federated learning.'
+  type: BaseAgent
+coordinate_mode: graph
+engine_planner:
+  initial_progress: Starting the collaborative research idea generation based on the
+    provided Introduction.
+environment:
+  max_iterations: 5
+  name: Research Collaboration Environment
+  type: Research
+llm: gpt-3.5-turbo
+memory:
+  type: SharedMemory
+metrics:
+  diversity_of_perspectives: true
+  engagement_level: true
+  evaluate_llm: gpt-4o-mini
+  relevance: true
+output:
+  file_path: result/discussion_output_35.jsonl
+  format: jsonl
+relationships:
+- - agent1
+  - agent2
+  - collaborate with
+- - agent1
+  - agent3
+  - collaborate with
+- - agent1
+  - agent4
+  - collaborate with
+- - agent1
+  - agent5
+  - collaborate with
+- - agent2
+  - agent3
+  - collaborate with
+- - agent2
+  - agent4
+  - collaborate with
+- - agent2
+  - agent5
+  - collaborate with
+- - agent3
+  - agent4
+  - collaborate with
+- - agent3
+  - agent5
+  - collaborate with
+- - agent4
+  - agent5
+  - collaborate with
+task:
+  content: "\n            Dear Research Team,\n\n            You are collaborating\
+    \ to generate a new research idea based on the following Introduction:\n\n   \
+    \         **Introduction**\n\n               1 Introduction  Since their inception\
+    \ [1, 2, 3], diffusion models have emerged as the workhorse for generative media,\
+    \ achieving state-of-the-art in tasks such as image synthesis [4, 5, 6], audio [7,\
+    \ 8] and video generation [9, 10, 11, 12, 13]. The majority of existing successes\
+    \ are for continuous state space diffusions. While diffusion models have been\
+    \ extended to discrete state spaces [1, 14, 15] and have been successfully applied\
+    \ to applications ranging from graph generation [16], text-to-sound generation\
+    \ [17] or protein design [18], they remain not as widely used as their continuous\
+    \ counterparts as they are not competitive with autoregressive models in important\
+    \ domains such as text modeling. This has motivated the development of continuous\
+    \ space diffusion models where the discrete data are embedded in the Euclidean\
+    \ space [19, 20, 21, 22, 23] or the simplex [24, 25, 26, 27, 28]. We believe that\
+    \ one of the reasons for the limited success of discrete diffusions is that they\
+    \ have been hindered by fairly complex formulations and training objectives. This\
+    \ paper is a step towards closing this gap.   In this work, we focus on “masked”\
+    \ (or “absorbing”) diffusions, a discrete diffusion formulation first presented\
+    \ by Austin et al. [14], and later explored by the literature from various perspectives\
+    \ [29, 30, 31, 32]. We follow here a continuous-time framework which has proven\
+    \ very useful to improve the training and understanding of continuous state space\
+    \ diffusions [see e.g., 3, 33, 34]. We make several technical contributions which\
+    \ simplify the training of these models and improve significantly their performance.\
+    \ Our contributions are as follows:   •  By using elementary arguments, we establish\
+    \ several properties for the forward process induced by this model and its corresponding\
+    \ time reversal, improving our understanding of this model class.    •  We provide\
+    \ a remarkably simple expression of the Evidence Lower Bound (ELBO) for masked\
+    \ diffusion models, showing that it corresponds to a weighted integral over time\
+    \ of cross-entropy losses. Similarly to continuous space diffusions [33], this\
+    \ objective can be rewritten in terms of signal-to-noise ratio and exhibits invariance\
+    \ properties.    •  We develop a unifying understanding of previously proposed\
+    \ continuous-time discrete diffusion models [29, 35, 32], revealing the changes\
+    \ they made to our ELBO objective and/or model parameterization. We show that\
+    \ these changes either lead to expensive model evaluations, or large variance\
+    \ in training, or breaking the consistency between forward and reverse processes.\
+    \    •  On GPT-2 scale text modeling and pixel-level image modeling tasks, masked\
+    \ diffusions trained using our simple ELBO objective outperform previous proposals,\
+    \ leading to the best likelihood and zero-shot transfer performance among discrete\
+    \ diffusion models.    •  Finally, based on our simplified masked diffusion formulation,\
+    \ we propose a generalized masked diffusion model that allows state-dependent\
+    \ masking schedules. This generalized masked diffusion model further improves\
+    \ predictive performance on test likelihoods.        2 Masked Diffusion    Assume\
+    \ our data lives in a finite discrete state space of size m\U0001D45Amitalic_m.\
+    \ We use the integers 0,1,…,m−101…\U0001D45A10,1,\\dots,m-10 , 1 , … , italic_m\
+    \ - 1 and their corresponding one-hot vectors e0,e1,…,em−1subscript\U0001D452\
+    0subscript\U0001D4521…subscript\U0001D452\U0001D45A1e_{0},e_{1},\\dots,e_{m-1}italic_e\
+    \ start_POSTSUBSCRIPT 0 end_POSTSUBSCRIPT , italic_e start_POSTSUBSCRIPT 1 end_POSTSUBSCRIPT\
+    \ , … , italic_e start_POSTSUBSCRIPT italic_m - 1 end_POSTSUBSCRIPT to represent\
+    \ the states.111We make no assumption on the ordering of states — any permutation\
+    \ of the integers will give the same result. In\n\n            **Your Task**\n\
+    \n            1. **Literature Review**: Analyze the Introduction provided and\
+    \ conduct a brief literature review to understand the current state of research\
+    \ in this area.\n\n            2. **Brainstorming**: Collaboratively brainstorm\
+    \ potential research ideas that build upon or address gaps in the Introduction.\n\
+    \n            3. **Summarization**: Summarize your collective ideas.\n\n     \
+    \       4. **Formulate a New Research Idea**: Develop a new research proposal\
+    \ in the format of the '5q', defined below:\n\n               **Here is a high-level\
+    \ summarized insight of a research field Machine Learning.**\n\n             \
+    \  **Here are the five core questions:**\n\n               **[Question 1] - What\
+    \ is the problem?**\n\n               Formulate the specific research question\
+    \ you aim to address. Only output one question and do not include any more information.\n\
+    \n               **[Question 2] - Why is it interesting and important?**\n\n \
+    \              Explain the broader implications of solving this problem for the\
+    \ research community.\n               Discuss how such a paper will affect future\
+    \ research.\n               Discuss how addressing this question could advance\
+    \ knowledge or lead to practical applications.\n\n               **[Question 3]\
+    \ - Why is it hard?**\n\n               Discuss the challenges and complexities\
+    \ involved in solving this problem.\n               Explain why naive or straightforward\
+    \ approaches may fail.\n               Identify any technical, theoretical, or\
+    \ practical obstacles that need to be overcome. MAKE IT CLEAR.\n\n           \
+    \    **[Question 4] - Why hasn't it been solved before?**\n\n               Identify\
+    \ gaps or limitations in previous research or existing solutions.\n          \
+    \     Discuss any barriers that have prevented this problem from being solved\
+    \ until now.\n               Explain how your approach differs from or improves\
+    \ upon prior work. MAKE IT CLEAR.\n\n               **[Question 5] - What are\
+    \ the key components of my approach and results?**\n\n               Outline your\
+    \ proposed methodology in detail, including the method, dataset, and metrics that\
+    \ you plan to use.\n               Describe the expected outcomes. MAKE IT CLEAR.\n\
+    \n            Please work together to produce the '5q' for your proposed research\
+    \ idea.\n\n            Good luck!\n            "
+  output_format: "You should answer the task in the following format:\n          \
+    \      **[Question 1] - What is the problem?**\n\n                Formulate the\
+    \ specific research question you aim to address. Only output one question and\
+    \ do not include any more information.\n\n                **[Question 2] - Why\
+    \ is it interesting and important?**\n\n                Explain the broader implications\
+    \ of solving this problem for the research community.\n                Discuss\
+    \ how such a paper will affect future research.\n                Discuss how addressing\
+    \ this question could advance knowledge or lead to practical applications.\n\n\
+    \                **[Question 3] - Why is it hard?**\n\n                Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \        Explain why naive or straightforward approaches may fail.\n         \
+    \       Identify any technical, theoretical, or practical obstacles that need\
+    \ to be overcome. MAKE IT CLEAR.\n\n                **[Question 4] - Why hasn't\
+    \ it been solved before?**\n\n                Identify gaps or limitations in\
+    \ previous research or existing solutions.\n                Discuss any barriers\
+    \ that have prevented this problem from being solved until now.\n            \
+    \    Explain how your approach differs from or improves upon prior work. MAKE\
+    \ IT CLEAR.\n\n                **[Question 5] - What are the key components of\
+    \ my approach and results?**\n\n                Outline your proposed methodology\
+    \ in detail, including the method, dataset, and metrics that you plan to use.\n\
+    \                Describe the expected outcomes. MAKE IT CLEAR."

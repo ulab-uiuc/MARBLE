@@ -1,0 +1,261 @@
+agents:
+- agent_id: agent1
+  profile: 'I am a researcher with a diverse background in theoretical physics, focusing
+    on nuclear physics, statistical inference, and machine learning. My recent work
+    has explored the unitary correlation operator method (UCOM) and similarity renormalization
+    group theory (SRG) within the no-core Monte Carlo shell model (MCSM) framework,
+    particularly for light nuclei like \(^{3}\)H and \(^{4}\)He. I have investigated
+    the binding of multiple muons in heavy nuclei, revealing significant implications
+    for the proton-dripline on the nuclear chart.
+
+
+    In the realm of statistical inference, I have developed non-asymptotic bounds
+    for confidence sets and introduced innovative independence testing criteria based
+    on entropy-regularized optimal transport. My work in orthogonal statistical learning
+    has established new bounds on excess risk, enhancing our understanding of nuisance
+    components in statistical prediction.
+
+
+    Additionally, I have applied covariant density functional theory to study the
+    hot nucleus \(^{162}\)Dy and \(^{171}\)Yb, analyzing phase transitions and thermodynamic
+    properties. My research also extends to machine learning, where I have proposed
+    a score-based change detection method to monitor model behavior over time, ensuring
+    robust performance in evolving data environments.
+
+
+    Overall, my interdisciplinary approach combines theoretical insights with practical
+    applications, contributing to advancements in both fundamental physics and machine
+    learning methodologies.'
+  type: BaseAgent
+- agent_id: agent2
+  profile: 'I am a researcher specializing in optimization, machine learning, and
+    their applications in various domains, including vision and healthcare. My recent
+    work has focused on distributionally robust optimization (DRO), where I developed
+    Drago, a stochastic primal-dual algorithm that achieves state-of-the-art linear
+    convergence rates for strongly convex-strongly concave DRO problems. I also introduced
+    Prospect, a gradient-based algorithm that simplifies hyperparameter tuning while
+    ensuring rapid convergence across diverse benchmarks.
+
+
+    In addition to optimization, I have explored the robustness of blind deconvolution
+    methods, deriving new insights that enhance their performance in real-world applications.
+    My research extends to neural network architecture search, where I formulated
+    a resource-constrained optimization problem that identifies high-performing architectures
+    efficiently.
+
+
+    I am particularly interested in uncertainty quantification in machine learning
+    models. My work on Gated Recurrent Units (GRUs) has led to a novel approach for
+    deterministic uncertainty estimation, which is computationally efficient and applicable
+    to unsupervised image sequence prediction.
+
+
+    Moreover, I have developed hyppo, a unified library for multivariate hypothesis
+    testing, and contributed to advancements in information-theoretic quantities estimation
+    using decision forest-based methods. My research also includes innovative applications
+    in medical imaging, where I created DUAL-GLOW, a generative model for synthesizing
+    PET images from MRI data, demonstrating significant improvements in performance.
+
+
+    Through my work, I aim to bridge theoretical advancements with practical applications,
+    contributing to the fields of machine learning and data science.'
+  type: BaseAgent
+- agent_id: agent3
+  profile: 'I am a researcher with a strong focus on stochastic processes, optimal
+    transport, and their applications in finance and probability theory. My work explores
+    the intricate relationships between random variables, market dynamics, and the
+    mathematical structures that underpin them. Recently, I have developed a black-box
+    algorithm for portfolio management that leverages convex risk measures, providing
+    traders with optimal capital requirements and trading strategies.
+
+
+    My research also delves into the sharpness principle in probabilistic forecasting,
+    the properties of symmetry-resistant random variables, and the concentration inequalities
+    of multidimensional semimartingales. I have made significant contributions to
+    the understanding of optimal transport problems, particularly in the context of
+    entropic costs and their convergence properties.
+
+
+    In addition, I have investigated the behavior of interacting systems of Brownian
+    motions and their long-range dependencies, as well as the dynamics of card shuffling
+    models that reveal fascinating mixing properties. My work on strict local martingales
+    has provided new insights into their behavior under various conditions, with implications
+    for financial modeling.
+
+
+    Through my research, I aim to bridge theoretical advancements with practical applications,
+    particularly in finance, where understanding the probabilistic underpinnings of
+    market behavior is crucial. I am passionate about exploring new mathematical frameworks
+    and methodologies that can enhance our understanding of complex systems.'
+  type: BaseAgent
+- agent_id: agent4
+  profile: "I am a researcher deeply engaged in the intersection of statistical learning,\
+    \ optimization, and machine learning. My work primarily focuses on developing\
+    \ robust methodologies for high-dimensional data analysis and deep learning architectures.\
+    \ Recently, I have explored the theoretical foundations of change-point detection\
+    \ in Gaussian vectors, providing adaptive tests that are optimal in high-dimensional\
+    \ settings. \n\nI have also contributed to the understanding of convolutional\
+    \ networks by translating them into their kernel-based counterparts, revealing\
+    \ the underlying similarities and enhancing their training efficiency. My research\
+    \ extends to optimization algorithms, where I introduced the Semi-Proximal Mirror-Prox\
+    \ algorithm, which addresses non-smooth composite minimization problems with optimal\
+    \ convergence rates.\n\nIn addition, I have investigated long-range dependencies\
+    \ in sequence data, proposing a statistical framework that connects real-world\
+    \ data with deep learning representations. My work on federated learning frameworks\
+    \ aims to address the challenges posed by heterogeneous client devices, ensuring\
+    \ robust performance across diverse data distributions.\n\nI am passionate about\
+    \ bridging theoretical insights with practical applications, as evidenced by my\
+    \ development of efficient estimators for signal recovery in noise and my exploration\
+    \ of independence testing through optimal transport. My goal is to advance the\
+    \ field of machine learning by providing innovative solutions that are both theoretically\
+    \ sound and practically applicable."
+  type: BaseAgent
+coordinate_mode: graph
+engine_planner:
+  initial_progress: Starting the collaborative research idea generation based on the
+    provided Introduction.
+environment:
+  max_iterations: 5
+  name: Research Collaboration Environment
+  type: Research
+llm: gpt-3.5-turbo
+memory:
+  type: SharedMemory
+metrics:
+  diversity_of_perspectives: true
+  engagement_level: true
+  evaluate_llm: gpt-4o-mini
+  relevance: true
+output:
+  file_path: result/discussion_output_35.jsonl
+  format: jsonl
+relationships:
+- - agent1
+  - agent2
+  - collaborate with
+- - agent1
+  - agent3
+  - collaborate with
+- - agent1
+  - agent4
+  - collaborate with
+- - agent2
+  - agent3
+  - collaborate with
+- - agent2
+  - agent4
+  - collaborate with
+- - agent3
+  - agent4
+  - collaborate with
+task:
+  content: "\n            Dear Research Team,\n\n            You are collaborating\
+    \ to generate a new research idea based on the following Introduction:\n\n   \
+    \         **Introduction**\n\n               1 Introduction  Deep neural networks\
+    \ have shown remarkable success at learning task-specific representations of data\
+    \ when provided supervision from massive amounts of labeled training examples.\
+    \ Recent trends, however, have shifted toward task-agnostic, universal representations\
+    \ that may be easily fine-tuned or even have zero-shot capabilities out-of-the-box.\
+    \ Supervised learning, stricto sensu, is too limited a framework for these billion-parameter,\
+    \ data-hungry models, and a question at the heart of modern machine learning is\
+    \ learning from unlabelled, partially labeled, or weakly labeled data.   This\
+    \ need has paved the way for the current generation of self-supervised learning\
+    \ (SSL) approaches that circumvent the need for large amounts of strong labels.\
+    \ In SSL, a model is trained on a generic pseudo-task that can be performed on\
+    \ unlabelled data, such as relating the two modalities of an image-caption pair\
+    \ or two augmentations of the same image. Despite several modern foundation models\
+    \ such as DINO (Caron et al., 2021; Oquab et al., 2024) and CLIP (Radford et al.,\
+    \ 2021) being trained in this fashion, many aspects of SSL remain baffling.  \
+    \ In particular, the training process of self-supervised models often outgrows\
+    \ and “breaks the rules” of the standard empirical risk minimization (ERM) toolkit.\
+    \ ERM combines two well-understood techniques: minibatch sampling and gradient-based\
+    \ optimization using backpropagation. SSL, on the other hand, adds clever, less-understood\
+    \ techniques to the training pipeline. To illustrate this, consider a minibatch\
+    \ ℳn={Z1,…,Zn}subscriptℳ\U0001D45Bsubscript\U0001D44D1…subscript\U0001D44D\U0001D45B\
+    \\mathcal{M}_{n}=\\left\\{Z_{1},\\ldots,Z_{n}\\right\\}caligraphic_M start_POSTSUBSCRIPT\
+    \ italic_n end_POSTSUBSCRIPT = { italic_Z start_POSTSUBSCRIPT 1 end_POSTSUBSCRIPT\
+    \ , … , italic_Z start_POSTSUBSCRIPT italic_n end_POSTSUBSCRIPT } of training\
+    \ examples and let Pnsubscript\U0001D443\U0001D45BP_{n}italic_P start_POSTSUBSCRIPT\
+    \ italic_n end_POSTSUBSCRIPT be the empirical distribution of the minibatch. For\
+    \ a model parameterized by θ∈ℝd\U0001D703superscriptℝ\U0001D451\\theta\\in\\mathbb{R}^{d}italic_θ\
+    \ ∈ blackboard_R start_POSTSUPERSCRIPT italic_d end_POSTSUPERSCRIPT with associated\
+    \ loss function ℓθsubscriptℓ\U0001D703\\ell_{\\theta}roman_ℓ start_POSTSUBSCRIPT\
+    \ italic_θ end_POSTSUBSCRIPT, a standard stochastic supervised learning algorithm,\
+    \ e.g., Adam, involves computing the minibatch loss    \U0001D53CZ∼Pn⁢[ℓθ⁢(Z)]=1n⁢∑i=1nℓθ⁢(Zi)subscript\U0001D53C\
+    similar-to\U0001D44Dsubscript\U0001D443\U0001D45Bdelimited-[]subscriptℓ\U0001D703\
+    \U0001D44D1\U0001D45Bsuperscriptsubscript\U0001D4561\U0001D45Bsubscriptℓ\U0001D703\
+    subscript\U0001D44D\U0001D456\\displaystyle{\\mathbb{E}}_{Z\\sim P_{n}}\\left[\\\
+    ell_{\\theta}(Z)\\right]=\\frac{1}{% n}\\sum_{i=1}^{n}\\ell_{\\theta}(Z_{i})blackboard_E\
+    \ start_POSTSUBSCRIPT italic_Z ∼ italic_P start_POSTSUBSCRIPT italic_n end_POSTSUBSCRIPT\
+    \ end_POSTSUBSCRIPT [ roman_ℓ start_POSTSUBSCRIPT italic_θ end_POSTSUBSCRIPT (\
+    \ italic_Z ) ] = divide start_ARG 1 end_ARG start_ARG italic_n end_ARG ∑ start_POSTSUBSCRIPT\
+    \ italic_i = 1 end_POSTSUBSCRIPT start_POSTSUPERSCRIPT italic_n end_POSTSUPERSCRIPT\
+    \ roman_ℓ start_POSTSUBSCRIPT italic_θ end_POSTSUBSCRIPT ( italic_Z start_POSTSUBSCRIPT\
+    \ italic_i end_POSTSUBSCRIPT )  (1)   and backpropagating through it to produce\
+    \ a minibatch stochastic gradient estimate. The algorithm then proceeds with the\
+    \ stochastic gradient training, or a variant thereof.   On the other hand, self-supervised\
+    \ methods often modify this recipe by intervening on the optimization algorithm\
+    \ in a minibatch-specific way. For example, SwaV (Caron et al., 2020) passes the\
+    \ minibatch examples through the model’s encoder and clusters output vectors to\
+    \ generate pseudo-labels for a prediction task. In teacher-student architectures\
+    \ such as BYOL (Grill et al., 2020) and DINO (Caron et al., 2021), the data are\
+    \ passed through two networks, where the “student” is updated via backpropagation\
+    \ and the “teacher” is updated by cloning the student’s weights in regular intervals.\
+    \ In CLIP (Radford et al., 2021), a model optimizes the sum of two cross entropy\
+    \ loss terms, where the predicted class probabilities on example i\U0001D456iitalic_i\
+    \ are generated by comparison to all other elements of the minibatch. These steps\
+    \ are often motivated as constraints to avoid representation collapse, wherein\
+    \ the pseudo-task can be solved by a trivial representation, e.g. mapping all\
+    \ data to the zero vector. Conceptually, however, it is difficult to see what\
+    \ exactly is being optimized when introducing\n\n            **Your Task**\n\n\
+    \            1. **Literature Review**: Analyze the Introduction provided and conduct\
+    \ a brief literature review to understand the current state of research in this\
+    \ area.\n\n            2. **Brainstorming**: Collaboratively brainstorm potential\
+    \ research ideas that build upon or address gaps in the Introduction.\n\n    \
+    \        3. **Summarization**: Summarize your collective ideas.\n\n          \
+    \  4. **Formulate a New Research Idea**: Develop a new research proposal in the\
+    \ format of the '5q', defined below:\n\n               **Here is a high-level\
+    \ summarized insight of a research field Machine Learning.**\n\n             \
+    \  **Here are the five core questions:**\n\n               **[Question 1] - What\
+    \ is the problem?**\n\n               Formulate the specific research question\
+    \ you aim to address. Only output one question and do not include any more information.\n\
+    \n               **[Question 2] - Why is it interesting and important?**\n\n \
+    \              Explain the broader implications of solving this problem for the\
+    \ research community.\n               Discuss how such a paper will affect future\
+    \ research.\n               Discuss how addressing this question could advance\
+    \ knowledge or lead to practical applications.\n\n               **[Question 3]\
+    \ - Why is it hard?**\n\n               Discuss the challenges and complexities\
+    \ involved in solving this problem.\n               Explain why naive or straightforward\
+    \ approaches may fail.\n               Identify any technical, theoretical, or\
+    \ practical obstacles that need to be overcome. MAKE IT CLEAR.\n\n           \
+    \    **[Question 4] - Why hasn't it been solved before?**\n\n               Identify\
+    \ gaps or limitations in previous research or existing solutions.\n          \
+    \     Discuss any barriers that have prevented this problem from being solved\
+    \ until now.\n               Explain how your approach differs from or improves\
+    \ upon prior work. MAKE IT CLEAR.\n\n               **[Question 5] - What are\
+    \ the key components of my approach and results?**\n\n               Outline your\
+    \ proposed methodology in detail, including the method, dataset, and metrics that\
+    \ you plan to use.\n               Describe the expected outcomes. MAKE IT CLEAR.\n\
+    \n            Please work together to produce the '5q' for your proposed research\
+    \ idea.\n\n            Good luck!\n            "
+  output_format: "You should answer the task in the following format:\n          \
+    \      **[Question 1] - What is the problem?**\n\n                Formulate the\
+    \ specific research question you aim to address. Only output one question and\
+    \ do not include any more information.\n\n                **[Question 2] - Why\
+    \ is it interesting and important?**\n\n                Explain the broader implications\
+    \ of solving this problem for the research community.\n                Discuss\
+    \ how such a paper will affect future research.\n                Discuss how addressing\
+    \ this question could advance knowledge or lead to practical applications.\n\n\
+    \                **[Question 3] - Why is it hard?**\n\n                Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \        Explain why naive or straightforward approaches may fail.\n         \
+    \       Identify any technical, theoretical, or practical obstacles that need\
+    \ to be overcome. MAKE IT CLEAR.\n\n                **[Question 4] - Why hasn't\
+    \ it been solved before?**\n\n                Identify gaps or limitations in\
+    \ previous research or existing solutions.\n                Discuss any barriers\
+    \ that have prevented this problem from being solved until now.\n            \
+    \    Explain how your approach differs from or improves upon prior work. MAKE\
+    \ IT CLEAR.\n\n                **[Question 5] - What are the key components of\
+    \ my approach and results?**\n\n                Outline your proposed methodology\
+    \ in detail, including the method, dataset, and metrics that you plan to use.\n\
+    \                Describe the expected outcomes. MAKE IT CLEAR."

@@ -1,0 +1,294 @@
+agents:
+- agent_id: agent1
+  profile: "I am a researcher dedicated to advancing our understanding of language\
+    \ models and their capabilities in reasoning, generation, and multimodal comprehension.\
+    \ My work explores the intersection of natural language processing and cognitive\
+    \ science, particularly how neural models can capture human-like conceptual associations\
+    \ and reasoning processes. \n\nIn my recent projects, I developed COD3S, a method\
+    \ that enhances semantic diversity in sentence generation, and TV-TREES, a multimodal\
+    \ entailment tree generator that improves video understanding through interpretable\
+    \ reasoning. I also introduced NELLIE, a system that combines neural language\
+    \ modeling with symbolic reasoning to produce grounded, interpretable answers\
+    \ to questions.\n\nMy research extends to structured language generation, where\
+    \ I leverage Frame Semantic theory to guide infilling tasks, and I have created\
+    \ KNUDGE, a dialogue generation framework for video game environments that reflects\
+    \ complex narrative structures. Additionally, I have tackled challenges in statutory\
+    \ reasoning and open-domain question answering, proposing innovative methods to\
+    \ enhance model robustness against adversarial attacks.\n\nThrough my work, I\
+    \ aim to bridge the gap between traditional symbolic reasoning and modern neural\
+    \ approaches, fostering systems that are not only effective but also interpretable\
+    \ and grounded in human knowledge. My ongoing research continues to explore how\
+    \ language models can learn and generalize from demonstrations, ultimately contributing\
+    \ to the development of more intelligent and adaptable AI systems."
+  type: BaseAgent
+- agent_id: agent2
+  profile: 'I am a researcher dedicated to advancing the field of natural language
+    processing (NLP) and its applications across various domains. My work primarily
+    focuses on enhancing the capabilities of language models (LMs) and developing
+    innovative solutions for challenges such as source code search, dialectal language
+    processing, and controlled text generation.
+
+
+    In my recent publications, I have explored the limitations of existing code search
+    engines and proposed new methodologies to improve their performance, particularly
+    in understanding high-level natural language queries. I have also investigated
+    the potential of self-training pre-trained language models in zero- and few-shot
+    scenarios, demonstrating significant improvements in tasks like named entity recognition
+    and part-of-speech tagging for dialectal Arabic.
+
+
+    My research extends to predicting book success using pretrained sentence embeddings
+    and readability scores, as well as tackling the unique challenges of dialogue
+    summarization. I have developed novel algorithms for controlled text generation
+    and explored the calibration of LMs to mitigate hallucinations, enhancing their
+    reliability and trustworthiness.
+
+
+    Additionally, I have introduced innovative approaches like GRACE for guiding reasoning
+    in multi-step tasks and FactCheckMate for preemptively detecting and mitigating
+    hallucinations in LMs. My work emphasizes the importance of leveraging internal
+    representations of LMs for improved performance and transparency.
+
+
+    Through my research, I aim to bridge the gap between theoretical advancements
+    and practical applications, contributing to the development of more robust and
+    interpretable NLP systems.'
+  type: BaseAgent
+- agent_id: agent3
+  profile: 'I am a researcher dedicated to advancing the understanding of language
+    models and their applications in multi-modal contexts. My recent work has focused
+    on systematic generalization in grounded language understanding, particularly
+    through the analysis of the grounded SCAN (gSCAN) benchmark. I discovered that
+    general-purpose Transformer models can outperform specialized approaches, revealing
+    fundamental challenges in systematic generalization that extend beyond visual
+    context.
+
+
+    I have also developed innovative frameworks such as the Concept and Relation Graph
+    (CRG) and the Composer neural network, which enhance visually grounded concept
+    learning by effectively composing complex concepts from primitive ones. My exploration
+    of large language models (LLMs) has led me to draw parallels between their evolutionary
+    processes and human cultural evolution, utilizing a Bayesian framework to predict
+    and guide their development.
+
+
+    In the realm of object tracking, I introduced Quasi-Dense Similarity Learning
+    and Quasi-Dense Tracking (QDTrack), which significantly improve tracking performance
+    by leveraging dense sampling of object regions. My work on contextual hallucinations
+    in LLMs has resulted in the Lookback Lens, a model that effectively detects and
+    mitigates inaccuracies in generated responses.
+
+
+    Through systematic studies of inductive reasoning capabilities in LMs, I have
+    highlighted their strengths in hypothesis generation while revealing gaps in rule
+    application. My research aims to bridge the gap between human-like reasoning and
+    machine learning, paving the way for more robust and interpretable AI systems.'
+  type: BaseAgent
+- agent_id: agent4
+  profile: 'I am a researcher deeply engaged in the intersection of natural language
+    processing (NLP) and machine learning, with a particular focus on humor detection,
+    text classification, and information retrieval. My recent work has explored innovative
+    approaches to assess humor in text, leveraging large datasets from platforms like
+    Reddit to train models that achieve human-level performance in identifying humorous
+    content. I have also conducted comprehensive studies on the impact of preprocessing
+    techniques on model run-time and accuracy, revealing strategies that can significantly
+    enhance efficiency without sacrificing performance.
+
+
+    My research extends to understanding the nuances of negation in information retrieval
+    systems, where I established benchmarks to evaluate how different architectures
+    handle this common linguistic phenomenon. Additionally, I have investigated transfer
+    learning strategies, providing insights into when to employ various methods for
+    optimal results across NLP tasks.
+
+
+    I am particularly interested in the challenges posed by multilingual text in federated
+    learning and have developed frameworks to improve speech translation systems,
+    especially in code-switching contexts. My work on large language models (LLMs)
+    has led to the development of novel prompting techniques that enhance grounding
+    in generated responses, as well as the creation of datasets like FollowIR to improve
+    instruction-following capabilities in information retrieval systems.
+
+
+    Through my research, I aim to bridge the gap between human-like understanding
+    and machine learning capabilities, pushing the boundaries of what NLP systems
+    can achieve in real-world applications.'
+  type: BaseAgent
+- agent_id: agent5
+  profile: 'I am a researcher deeply engaged in the intersection of natural language
+    processing (NLP) and knowledge representation. My work spans a variety of topics,
+    including story generation, question answering, and reasoning over natural language.
+    I have explored the complexities of aviation incident narratives, developing simple
+    incident generators that leverage world simulation techniques. My analysis of
+    Recognizing Textual Entailment (RTE) has highlighted the importance of world knowledge
+    in making accurate inferences, particularly in cases where lexical overlap does
+    not guarantee entailment.
+
+
+    One of my significant contributions is Macaw, a versatile generative question-answering
+    system that outperforms larger models like GPT-3 on various tasks. I have also
+    tackled the scalable oversight problem in language models, demonstrating their
+    surprising ability to generalize from easy to hard data. My research on explanation
+    datasets has led to improved explanation quality in multihop question answering,
+    while my work on RuleTakers has shown that transformers can effectively reason
+    over natural language without formal representations.
+
+
+    Additionally, I have developed resources like GenericsKB, a large knowledge base
+    of generic statements, and the Semantic Lexicon, which aids in understanding processes
+    through background knowledge. My recent work with ProofWriter has advanced the
+    ability of generative models to produce implications and proofs from natural language
+    theories, pushing the boundaries of what neural methods can achieve in systematic
+    reasoning. I am passionate about creating tools and datasets that enhance the
+    capabilities of AI systems, making them more interpretable and effective in real-world
+    applications.'
+  type: BaseAgent
+coordinate_mode: graph
+engine_planner:
+  initial_progress: Starting the collaborative research idea generation based on the
+    provided Introduction.
+environment:
+  max_iterations: 5
+  name: Research Collaboration Environment
+  type: Research
+llm: gpt-4o-mini
+memory:
+  type: SharedMemory
+metrics:
+  diversity_of_perspectives: true
+  engagement_level: true
+  evaluate_llm: gpt-4o-mini
+  relevance: true
+output:
+  file_path: result/discussion_output_4o_mini.jsonl
+  format: jsonl
+relationships:
+- - agent1
+  - agent2
+  - collaborate with
+- - agent1
+  - agent3
+  - collaborate with
+- - agent1
+  - agent4
+  - collaborate with
+- - agent1
+  - agent5
+  - collaborate with
+- - agent2
+  - agent3
+  - collaborate with
+- - agent2
+  - agent4
+  - collaborate with
+- - agent2
+  - agent5
+  - collaborate with
+- - agent3
+  - agent4
+  - collaborate with
+- - agent3
+  - agent5
+  - collaborate with
+- - agent4
+  - agent5
+  - collaborate with
+task:
+  content: "\n            Dear Research Team,\n\n            You are collaborating\
+    \ to generate a new research idea based on the following Introduction:\n\n   \
+    \         **Introduction**\n\n               1 Introduction  Recently there have\
+    \ been rapid advances in training language models (LMs) to generate code rather\
+    \ than natural language (NL), following the intuition that code may be more effective\
+    \ than NL for certain tasks, such as those requiring complex calculations, iteration,\
+    \ or data structure manipulation(Chen et al., 2022; Gao et al., 2023). Although\
+    \ successful, these works have mostly evaluated on tasks conducive to a programmatic\
+    \ paradigm, such as symbolic manipulation or algorithmic reasoning – where a clear\
+    \ compilable program can be envisioned. However, it is unclear how to apply this\
+    \ approach to “softer” reasoning tasks such as commonsense and social reasoning\
+    \ tasks, where algorithmic solutions are less obvious (Zhang et al., 2023a). \
+    \  Figure 1: Example from the CoGEX dataset automatically converted from an Alpaca (Taori\
+    \ et al., 2023) instance via LLM prompting. We train the model to receive the\
+    \ instruction and input and generate the Python program and function call (as\
+    \ an intermediate), before outputting the final dictionary that contains the answer\
+    \ and any intermediate reasoning steps.     Our goal is to expand an LM’s program\
+    \ synthesis skills to such softer reasoning tasks. Our approach leverages the\
+    \ insight that as well as synthesizing code, LMs can also emulate the execution\
+    \ of code, including emulating function calls defined only by name and documentation,\
+    \ but lacking full code implementation. Such pseudo-programs may include both\
+    \ well-defined reasoning steps such as math or algorithmic tasks, as well as function\
+    \ calls for less precise forms of reasoning, such as commonsense. This work explores\
+    \ whether such programs can be generated and pseudo-executed to solve soft reasoning\
+    \ tasks as well as traditional algorithmic tasks.   To achieve this, we propose\
+    \ a novel approach: training models to follow NL instructions by generating a\
+    \ program and then emulating that program’s code execution. Our paradigm, called\
+    \ CoGEX, changes the inference process to (1) generate a Python function given\
+    \ an arbitrary instruction and optional input, (2) generate a call to that function,\
+    \ and (3) produce the result of simulating its execution. Unlike other work (Zhang\
+    \ et al., 2023b; Li et al., 2023), we do not use a Python interpreter to execute\
+    \ any code; rather, the model is trained to emulate execution. This allows the\
+    \ generated code to deliberately include calls to underspecified functions (i.e.,\
+    \ where only the function name and documentation are included), because the LM\
+    \ execution emulator is able to speculate on those functions’ behaviors using\
+    \ its latent knowledge. We train the model to not only output the result of pseudo-executing\
+    \ the code but also the results of intermediate function calls in the code. This\
+    \ gives us an improved level of interpretability and systematicity. CoGEX thus\
+    \ suggests a way to leverage the flexible ad-hoc reasoning of LLMs as subroutines\
+    \ while encouraging programmatic reasoning via the top-level program. We train\
+    \ CoGEX models by adapting the recent Alpaca instruction tuning dataset (Taori\
+    \ et al., 2023) into a set of analogous Pythonic examples by prompting GPT-4 to\
+    \ perform the conversion, and then use the resulting CoGEX dataset to fine-tune\
+    \ smaller (7B and 13B) LMs to answer instructions via code.   The CoGEX paradigm\
+    \ allows us to explore a new way to learn new tasks: identifying a general program\
+    \ that applies across a task, such that new task instances can be solved by emulating\
+    \ calls to that one program. Inspired by work on hard prompt\n\n            **Your\
+    \ Task**\n\n            1. **Literature Review**: Analyze the Introduction provided\
+    \ and conduct a brief literature review to understand the current state of research\
+    \ in this area.\n\n            2. **Brainstorming**: Collaboratively brainstorm\
+    \ potential research ideas that build upon or address gaps in the Introduction.\n\
+    \n            3. **Summarization**: Summarize your collective ideas.\n\n     \
+    \       4. **Formulate a New Research Idea**: Develop a new research proposal\
+    \ in the format of the '5q', defined below:\n\n               **Here is a high-level\
+    \ summarized insight of a research field Machine Learning.**\n\n             \
+    \  **Here are the five core questions:**\n\n               **[Question 1] - What\
+    \ is the problem?**\n\n               Formulate the specific research question\
+    \ you aim to address. Only output one question and do not include any more information.\n\
+    \n               **[Question 2] - Why is it interesting and important?**\n\n \
+    \              Explain the broader implications of solving this problem for the\
+    \ research community.\n               Discuss how such a paper will affect future\
+    \ research.\n               Discuss how addressing this question could advance\
+    \ knowledge or lead to practical applications.\n\n               **[Question 3]\
+    \ - Why is it hard?**\n\n               Discuss the challenges and complexities\
+    \ involved in solving this problem.\n               Explain why naive or straightforward\
+    \ approaches may fail.\n               Identify any technical, theoretical, or\
+    \ practical obstacles that need to be overcome. MAKE IT CLEAR.\n\n           \
+    \    **[Question 4] - Why hasn't it been solved before?**\n\n               Identify\
+    \ gaps or limitations in previous research or existing solutions.\n          \
+    \     Discuss any barriers that have prevented this problem from being solved\
+    \ until now.\n               Explain how your approach differs from or improves\
+    \ upon prior work. MAKE IT CLEAR.\n\n               **[Question 5] - What are\
+    \ the key components of my approach and results?**\n\n               Outline your\
+    \ proposed methodology in detail, including the method, dataset, and metrics that\
+    \ you plan to use.\n               Describe the expected outcomes. MAKE IT CLEAR.\n\
+    \n            Please work together to produce the '5q' for your proposed research\
+    \ idea.\n\n            Good luck!\n            "
+  output_format: "You should answer the task in the following format:\n          \
+    \      **[Question 1] - What is the problem?**\n\n                Formulate the\
+    \ specific research question you aim to address. Only output one question and\
+    \ do not include any more information.\n\n                **[Question 2] - Why\
+    \ is it interesting and important?**\n\n                Explain the broader implications\
+    \ of solving this problem for the research community.\n                Discuss\
+    \ how such a paper will affect future research.\n                Discuss how addressing\
+    \ this question could advance knowledge or lead to practical applications.\n\n\
+    \                **[Question 3] - Why is it hard?**\n\n                Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \        Explain why naive or straightforward approaches may fail.\n         \
+    \       Identify any technical, theoretical, or practical obstacles that need\
+    \ to be overcome. MAKE IT CLEAR.\n\n                **[Question 4] - Why hasn't\
+    \ it been solved before?**\n\n                Identify gaps or limitations in\
+    \ previous research or existing solutions.\n                Discuss any barriers\
+    \ that have prevented this problem from being solved until now.\n            \
+    \    Explain how your approach differs from or improves upon prior work. MAKE\
+    \ IT CLEAR.\n\n                **[Question 5] - What are the key components of\
+    \ my approach and results?**\n\n                Outline your proposed methodology\
+    \ in detail, including the method, dataset, and metrics that you plan to use.\n\
+    \                Describe the expected outcomes. MAKE IT CLEAR."
