@@ -1,0 +1,267 @@
+agents:
+- agent_id: agent1
+  profile: 'I am a researcher with a strong focus on the intersection of mathematics,
+    machine learning, and computer vision. My work spans a variety of topics, including
+    the development of robust Markov Decision Processes (MDPs) and the exploration
+    of regularized MDPs to enhance policy optimization. I have made significant contributions
+    to understanding the performance of robust policies under various uncertainty
+    sets, improving sample complexity, and establishing theoretical foundations for
+    adaptive reduction methods in MDPs.
+
+
+    In the realm of optimization, I have advanced the convergence rates of communication-efficient
+    algorithms like Sign Stochastic Gradient Descent (signSGD) through innovative
+    techniques such as Sign-based Stochastic Variance Reduction (SSVR). My research
+    also delves into the underexplored potential of audio in object recognition, leading
+    to the development of YOSS ("You Only Speak Once to See"), which integrates audio
+    cues with visual models for enhanced object grounding.
+
+
+    I am particularly passionate about bridging theoretical insights with practical
+    applications, as evidenced by my work on stochastic gradient descent in the context
+    of infinite variance gradients. By extending existing theories to multidimensional
+    cases, I aim to provide a deeper understanding of the algorithm''s behavior in
+    challenging scenarios. Overall, my research is driven by a desire to push the
+    boundaries of knowledge in these fields and to contribute to the development of
+    more effective and intuitive systems in machine learning and computer vision.'
+  type: BaseAgent
+- agent_id: agent2
+  profile: 'I am a researcher with a diverse background in numerical methods, machine
+    learning, and blockchain technology. My recent work focuses on developing innovative
+    numerical schemes for stochastic partial differential equations, such as the stochastic
+    Burgers and Allen-Cahn equations, utilizing spectral Galerkin methods and advanced
+    temporal discretization techniques. I have also explored the intersection of deep
+    learning and reinforcement learning, proposing algorithms that enhance sample-efficient
+    exploration in continuous control tasks.
+
+
+    In the realm of blockchain, I have tackled the challenges of transaction fees
+    and security in mempool designs, proposing middleware solutions that optimize
+    transaction execution and defend against denial-of-service attacks. My research
+    extends to adaptive variance reduction methods for stochastic optimization, where
+    I introduced novel techniques that achieve optimal convergence rates with weaker
+    assumptions.
+
+
+    Additionally, I am passionate about applying my expertise to practical problems,
+    such as developing a real-time LiDAR SLAM system that integrates dense mesh mapping
+    with localization, significantly improving accuracy and efficiency. My interdisciplinary
+    approach allows me to address complex challenges across various domains, from
+    medical image registration to e-commerce entity typing, where I leverage advanced
+    machine learning techniques to enhance performance and adaptability. I am committed
+    to pushing the boundaries of research and contributing to advancements in both
+    theoretical and applied sciences.'
+  type: BaseAgent
+- agent_id: agent3
+  profile: 'I am a researcher with a diverse background in task planning, quantum
+    computing, and theoretical physics. My recent work focuses on developing innovative
+    methods for task allocation in national economic mobilization using Hierarchical
+    Task Networks (HTN). I have designed algorithms that optimize task allocation
+    while addressing resource shortages, demonstrating their effectiveness through
+    real-world case studies.
+
+
+    In the realm of probabilistic planning, I introduced the High-Quality Contingent
+    Planner (HQCP), which extends HTN planning to accommodate partial observability.
+    This work emphasizes generating high-quality plans in uncertain environments,
+    showcasing my commitment to enhancing planning methodologies.
+
+
+    My research also delves into quantum computing, particularly the Cross-resonance
+    (CR) gate architecture. I proposed a novel architecture that mitigates quantum
+    crosstalk and frequency collisions, crucial for scaling up superconducting quantum
+    processors. This work addresses the wiring challenges associated with controlling
+    large numbers of qubits, paving the way for more efficient quantum systems.
+
+
+    Additionally, I explore fundamental aspects of black hole thermodynamics and integrable
+    systems in theoretical physics, contributing to our understanding of complex physical
+    phenomena. My interdisciplinary approach combines practical applications with
+    theoretical insights, reflecting my passion for advancing knowledge across multiple
+    domains.'
+  type: BaseAgent
+- agent_id: agent4
+  profile: 'I am a researcher with a diverse background in thermodynamics, control
+    systems, optimization, and machine learning. My recent work has focused on developing
+    thermodynamically consistent approaches to model the Gibbs energy of metallic
+    elements, particularly exploring the behavior of thermal vacancies in body-centered
+    cubic tungsten. I have also made significant contributions to the field of Boolean
+    control networks (BCNs), proposing unified methods to determine various types
+    of observability and introducing weighted pair graphs to enhance our understanding
+    of their structure.
+
+
+    In optimization, I have investigated dynamic regret in online algorithms, improving
+    existing bounds and developing adaptive algorithms that perform well in dynamic
+    environments. My research extends to the analysis of electronic structures in
+    materials science, where I have explored the magnetic properties of iron chalcogenides
+    and their relation to superconductivity.
+
+
+    Additionally, I have delved into the realm of generative models, proposing a novel
+    Context-Enhanced Feature Alignment (CEFA) module to improve human-object interaction
+    detection in images. This work addresses the challenges posed by domain gaps in
+    generated data, showcasing my commitment to bridging theoretical advancements
+    with practical applications.
+
+
+    Overall, my research is characterized by a strong emphasis on interdisciplinary
+    approaches, combining theoretical insights with empirical validation to tackle
+    complex problems across various domains.'
+  type: BaseAgent
+coordinate_mode: graph
+engine_planner:
+  initial_progress: Starting the collaborative research idea generation based on the
+    provided Introduction.
+environment:
+  max_iterations: 5
+  name: Research Collaboration Environment
+  type: Research
+llm: gpt-3.5-turbo
+memory:
+  type: SharedMemory
+metrics:
+  diversity_of_perspectives: true
+  engagement_level: true
+  evaluate_llm: gpt-4o-mini
+  relevance: true
+output:
+  file_path: result/discussion_output_35.jsonl
+  format: jsonl
+relationships:
+- - agent1
+  - agent2
+  - collaborate with
+- - agent1
+  - agent3
+  - collaborate with
+- - agent1
+  - agent4
+  - collaborate with
+- - agent2
+  - agent3
+  - collaborate with
+- - agent2
+  - agent4
+  - collaborate with
+- - agent3
+  - agent4
+  - collaborate with
+task:
+  content: "\n            Dear Research Team,\n\n            You are collaborating\
+    \ to generate a new research idea based on the following Introduction:\n\n   \
+    \         **Introduction**\n\n               1 Introduction  Online convex optimization\
+    \ (OCO) stands as a pivotal online learning framework for modeling many real-world\
+    \ sequential predictions and decision-making problems (Hazan, 2016). OCO is commonly\
+    \ formulated as a repeated game between the learner and the environment with the\
+    \ following protocol. In each round t∈[T]\U0001D461delimited-[]\U0001D447t\\in[T]italic_t\
+    \ ∈ [ italic_T ], the learner chooses a decision \U0001D431tsubscript\U0001D431\
+    \U0001D461\\mathbf{x}_{t}bold_x start_POSTSUBSCRIPT italic_t end_POSTSUBSCRIPT\
+    \ from a convex domain \U0001D4B3⊆ℝd\U0001D4B3superscriptℝ\U0001D451\\mathcal{X}\\\
+    subseteq\\mathbb{R}^{d}caligraphic_X ⊆ blackboard_R start_POSTSUPERSCRIPT italic_d\
+    \ end_POSTSUPERSCRIPT; after submitting this decision, the learner suffers a loss\
+    \ ft⁢(\U0001D431t)subscript\U0001D453\U0001D461subscript\U0001D431\U0001D461f_{t}(\\\
+    mathbf{x}_{t})italic_f start_POSTSUBSCRIPT italic_t end_POSTSUBSCRIPT ( bold_x\
+    \ start_POSTSUBSCRIPT italic_t end_POSTSUBSCRIPT ) and observes the gradient feedback,\
+    \ where ft:\U0001D4B3↦ℝ:subscript\U0001D453\U0001D461maps-to\U0001D4B3ℝf_{t}\\\
+    colon\\mathcal{X}\\mapsto\\mathbb{R}italic_f start_POSTSUBSCRIPT italic_t end_POSTSUBSCRIPT\
+    \ : caligraphic_X ↦ blackboard_R is a convex function selected by the environment.\
+    \ The goal of the learner is to minimize the cumulative loss over T\U0001D447\
+    Titalic_T rounds, i.e., ∑t=1Tft⁢(\U0001D431t)superscriptsubscript\U0001D4611\U0001D447\
+    subscript\U0001D453\U0001D461subscript\U0001D431\U0001D461\\sum_{t=1}^{T}f_{t}(\\\
+    mathbf{x}_{t})∑ start_POSTSUBSCRIPT italic_t = 1 end_POSTSUBSCRIPT start_POSTSUPERSCRIPT\
+    \ italic_T end_POSTSUPERSCRIPT italic_f start_POSTSUBSCRIPT italic_t end_POSTSUBSCRIPT\
+    \ ( bold_x start_POSTSUBSCRIPT italic_t end_POSTSUBSCRIPT ), and the standard\
+    \ performance measure is the regret (Cesa-Bianchi and Lugosi, 2006):    RegT=∑t=1Tft⁢(\U0001D431\
+    t)−min\U0001D431∈\U0001D4B3⁢∑t=1Tft⁢(\U0001D431),subscriptReg\U0001D447superscriptsubscript\U0001D461\
+    1\U0001D447subscript\U0001D453\U0001D461subscript\U0001D431\U0001D461subscript\U0001D431\
+    \U0001D4B3superscriptsubscript\U0001D4611\U0001D447subscript\U0001D453\U0001D461\
+    \U0001D431\\textsc{Reg}_{T}=\\sum_{t=1}^{T}f_{t}(\\mathbf{x}_{t})-\\min_{\\mathbf{x}\\\
+    in% \\mathcal{X}}\\sum_{t=1}^{T}f_{t}(\\mathbf{x}),Reg start_POSTSUBSCRIPT italic_T\
+    \ end_POSTSUBSCRIPT = ∑ start_POSTSUBSCRIPT italic_t = 1 end_POSTSUBSCRIPT start_POSTSUPERSCRIPT\
+    \ italic_T end_POSTSUPERSCRIPT italic_f start_POSTSUBSCRIPT italic_t end_POSTSUBSCRIPT\
+    \ ( bold_x start_POSTSUBSCRIPT italic_t end_POSTSUBSCRIPT ) - roman_min start_POSTSUBSCRIPT\
+    \ bold_x ∈ caligraphic_X end_POSTSUBSCRIPT ∑ start_POSTSUBSCRIPT italic_t = 1\
+    \ end_POSTSUBSCRIPT start_POSTSUPERSCRIPT italic_T end_POSTSUPERSCRIPT italic_f\
+    \ start_POSTSUBSCRIPT italic_t end_POSTSUBSCRIPT ( bold_x ) ,  (1)   which quantifies\
+    \ the difference between the cumulative loss of the online learner and that of\
+    \ the best decision chosen in hindsight.   Although there are plenty of algorithms\
+    \ to minimize the regret of convex functions, including general convex, exponentially\
+    \ concave (abbr. exp-concave) and strongly convex functions (Zinkevich, 2003;\
+    \ Shalev-Shwartz et al., 2007; Hazan et al., 2007), most of them can only handle\
+    \ one specific function type, and need to estimate the moduli of strong convexity\
+    \ and exp-concavity. The demand for prior knowledge regarding function types motivates\
+    \ the development of universal algorithms for OCO, which aim to attain minimax\
+    \ optimal regret guarantees for multiple types of convex functions simultaneously (Bartlett\
+    \ et al., 2008; van Erven and Koolen, 2016; Wang et al., 2019; Mhammedi et al.,\
+    \ 2019; Zhang et al., 2022; Yan et al., 2023). State-of-the-art methods typically\
+    \ adopt a two-layer structure following the prediction with expert advice (PEA)\
+    \ framework (Cesa-Bianchi and Lugosi, 2006). More specifically, they maintain\
+    \ O⁢(log⁡T)\U0001D442\U0001D447O(\\log T)italic_O ( roman_log italic_T ) expert-algorithms\
+    \ with different configurations to handle the uncertainty of functions and deploy\
+    \ a meta-algorithm to track the best one. While this two-layer framework has demonstrated\
+    \ effectiveness in endowing algorithms with universality, it raises concerns regarding\
+    \ the computational efficiency. Since each expert-algorithm needs to execute one\
+    \ projection onto the feasible domain \U0001D4B3\U0001D4B3\\mathcal{X}caligraphic_X\
+    \ per round, standard universal algorithms perform O⁢(log⁡T)\U0001D442\U0001D447\
+    O(\\log T)italic_O ( roman_log italic_T ) projections in each round, which can\
+    \ be time-consuming in practical scenarios particularly when projecting onto some\
+    \ complicated domains.   In the literature, there exists an effort to reduce the\
+    \ number of projections required by universal algorithms tailored for exp-concave\
+    \ functions (Mhammedi et al., 2019). This is achieved by applying the black-box\
+    \ reduction of (Cutkosky and Orabona, 2018), which reduces an OCO problem on the\
+    \ original (but can be complicated) feasible domain to a more manageable one on\
+    \ a simpler domain, such as an Euclidean ball. Deploying an existing universal\
+    \ algorithm (van Erven and Koolen, 2016) on the reduced problem enables us to\
+    \ attain optimal regret for\n\n            **Your Task**\n\n            1. **Literature\
+    \ Review**: Analyze the Introduction provided and conduct a brief literature review\
+    \ to understand the current state of research in this area.\n\n            2.\
+    \ **Brainstorming**: Collaboratively brainstorm potential research ideas that\
+    \ build upon or address gaps in the Introduction.\n\n            3. **Summarization**:\
+    \ Summarize your collective ideas.\n\n            4. **Formulate a New Research\
+    \ Idea**: Develop a new research proposal in the format of the '5q', defined below:\n\
+    \n               **Here is a high-level summarized insight of a research field\
+    \ Machine Learning.**\n\n               **Here are the five core questions:**\n\
+    \n               **[Question 1] - What is the problem?**\n\n               Formulate\
+    \ the specific research question you aim to address. Only output one question\
+    \ and do not include any more information.\n\n               **[Question 2] -\
+    \ Why is it interesting and important?**\n\n               Explain the broader\
+    \ implications of solving this problem for the research community.\n         \
+    \      Discuss how such a paper will affect future research.\n               Discuss\
+    \ how addressing this question could advance knowledge or lead to practical applications.\n\
+    \n               **[Question 3] - Why is it hard?**\n\n               Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \       Explain why naive or straightforward approaches may fail.\n          \
+    \     Identify any technical, theoretical, or practical obstacles that need to\
+    \ be overcome. MAKE IT CLEAR.\n\n               **[Question 4] - Why hasn't it\
+    \ been solved before?**\n\n               Identify gaps or limitations in previous\
+    \ research or existing solutions.\n               Discuss any barriers that have\
+    \ prevented this problem from being solved until now.\n               Explain\
+    \ how your approach differs from or improves upon prior work. MAKE IT CLEAR.\n\
+    \n               **[Question 5] - What are the key components of my approach and\
+    \ results?**\n\n               Outline your proposed methodology in detail, including\
+    \ the method, dataset, and metrics that you plan to use.\n               Describe\
+    \ the expected outcomes. MAKE IT CLEAR.\n\n            Please work together to\
+    \ produce the '5q' for your proposed research idea.\n\n            Good luck!\n\
+    \            "
+  output_format: "You should answer the task in the following format:\n          \
+    \      **[Question 1] - What is the problem?**\n\n                Formulate the\
+    \ specific research question you aim to address. Only output one question and\
+    \ do not include any more information.\n\n                **[Question 2] - Why\
+    \ is it interesting and important?**\n\n                Explain the broader implications\
+    \ of solving this problem for the research community.\n                Discuss\
+    \ how such a paper will affect future research.\n                Discuss how addressing\
+    \ this question could advance knowledge or lead to practical applications.\n\n\
+    \                **[Question 3] - Why is it hard?**\n\n                Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \        Explain why naive or straightforward approaches may fail.\n         \
+    \       Identify any technical, theoretical, or practical obstacles that need\
+    \ to be overcome. MAKE IT CLEAR.\n\n                **[Question 4] - Why hasn't\
+    \ it been solved before?**\n\n                Identify gaps or limitations in\
+    \ previous research or existing solutions.\n                Discuss any barriers\
+    \ that have prevented this problem from being solved until now.\n            \
+    \    Explain how your approach differs from or improves upon prior work. MAKE\
+    \ IT CLEAR.\n\n                **[Question 5] - What are the key components of\
+    \ my approach and results?**\n\n                Outline your proposed methodology\
+    \ in detail, including the method, dataset, and metrics that you plan to use.\n\
+    \                Describe the expected outcomes. MAKE IT CLEAR."

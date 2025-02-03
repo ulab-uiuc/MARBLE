@@ -1,0 +1,272 @@
+agents:
+- agent_id: agent1
+  profile: 'I am a researcher specializing in video action detection and object recognition,
+    with a focus on developing innovative, efficient models that enhance performance
+    while simplifying the detection process. My recent work has led to the creation
+    of the STMixer, a one-stage sparse action detector that leverages adaptive feature
+    sampling and dynamic feature mixing to achieve state-of-the-art results across
+    multiple benchmarks. This approach allows for a more flexible and context-aware
+    detection of actions, significantly improving performance in interaction-related
+    classes.
+
+
+    In addition to action detection, I have explored query-based object detection
+    through my work on AdaMixer, which enhances the adaptability of query decoding
+    processes. This model achieves impressive accuracy on the MS COCO benchmark while
+    maintaining architectural simplicity, demonstrating that effective design can
+    lead to faster convergence and better performance.
+
+
+    I am also passionate about addressing challenges in sentiment analysis, particularly
+    in understanding sarcasm in social media. My proposed DialoGPT model utilizes
+    pre-training on sarcasm tasks and incorporates contextual information, achieving
+    advanced performance metrics.
+
+
+    Furthermore, I have introduced a novel supervisory paradigm called Mutual Supervision
+    (MuSu) for dense object detectors, which ensures consistency between classification
+    and regression heads by assigning training samples based on their respective scores.
+    This work not only guarantees convergence but also inspires further research into
+    the interaction between classification and regression tasks.
+
+
+    Overall, my research aims to push the boundaries of action detection and object
+    recognition, making significant strides in both performance and efficiency.'
+  type: BaseAgent
+- agent_id: agent2
+  profile: 'I am a researcher dedicated to advancing the field of computer vision,
+    particularly through the innovative application of Vision Transformers (ViTs)
+    and self-supervised learning techniques. My recent work has focused on enhancing
+    visual recognition capabilities by developing novel attention mechanisms, such
+    as Group-Mix Attention (GMA), which captures multi-granularity correlations among
+    tokens and groups. This has led to the creation of the GroupMixFormer, achieving
+    state-of-the-art performance in various tasks with fewer parameters.
+
+
+    I have also explored unsupervised audio-visual pre-training, introducing a speed
+    co-augmentation method that significantly enhances learned representations. My
+    research extends to video action detection, where I developed the Cycle Actor-Context
+    Relation network (CycleACR) to improve relation modeling between actors and scene
+    context, achieving top results on popular datasets.
+
+
+    In the realm of self-supervised video pre-training, I have demonstrated the efficacy
+    of VideoMAE, showcasing its ability to train billion-parameter models efficiently.
+    My work emphasizes the importance of generalization in video models, leading to
+    the development of a degradation-free pre-training strategy that retains the generalization
+    ability of text encoders.
+
+
+    I am passionate about creating efficient frameworks, such as the Efficient Video
+    Action Detection (EVAD) and AdaptFormer, which enhance the adaptability of ViTs
+    across various tasks while minimizing computational costs. My research aims to
+    push the boundaries of what is possible in video understanding, and I am committed
+    to sharing my findings with the community through open-source code and collaborative
+    efforts.'
+  type: BaseAgent
+- agent_id: agent3
+  profile: 'I am a researcher dedicated to advancing the field of video understanding,
+    with a particular focus on video frame interpolation, object tracking, and action
+    detection. My recent work has led to the development of innovative frameworks
+    such as the EMA-VFI for efficient video frame interpolation, which unifies motion
+    and appearance information extraction, achieving state-of-the-art performance
+    with reduced computational overhead.
+
+
+    I have also pioneered the CoMAE framework, which employs a self-supervised hybrid
+    pre-training strategy for RGB and depth modalities, demonstrating remarkable data
+    efficiency and competitive performance against state-of-the-art methods. My contributions
+    extend to video object segmentation with the JointFormer, which enhances feature
+    extraction and information propagation through a novel joint modeling approach.
+
+
+    In the realm of action detection, I introduced the Cycle Actor-Context Relation
+    network (CycleACR) to improve relation modeling between actors and scene context,
+    achieving significant performance gains on popular datasets. My work on the STMixer
+    has further streamlined action detection into a one-stage process, enhancing adaptability
+    and efficiency.
+
+
+    I am also passionate about addressing domain shift challenges in object detection
+    through the Task-specific Inconsistency Alignment (TIA) method, which optimizes
+    classification and localization tasks separately for improved performance. My
+    latest endeavor, InternVideo, explores general video foundation models, achieving
+    state-of-the-art results across various video tasks.
+
+
+    Through my research, I aim to push the boundaries of video understanding, making
+    significant strides in both theoretical frameworks and practical applications.
+    I am committed to sharing my findings and tools with the community to foster further
+    advancements in this exciting field.'
+  type: BaseAgent
+- agent_id: agent4
+  profile: 'I am a researcher dedicated to advancing the field of vision-language
+    models, focusing on enhancing their adaptability and efficiency in real-world
+    applications. My recent work includes the development of DistributiOnal Test-time
+    Adaptation (Dota), which allows models like CLIP to continually learn from their
+    deployment environments by estimating test sample distributions and incorporating
+    human feedback. This approach addresses the challenges of catastrophic forgetting
+    in test-time dynamic adapters.
+
+
+    I also introduced VideoLLM-MoD, a novel method that optimizes vision token processing
+    in long-term video scenarios, achieving significant reductions in computational
+    costs while maintaining or improving performance. My exploration of generative
+    pre-training for long-form video understanding led to the creation of the Storyboard20K
+    dataset, which facilitates the learning of complex video concepts through visual
+    locations.
+
+
+    In addition, I have developed innovative techniques like Visualized In-Context
+    Text Processing (VisInContext) to efficiently handle longer in-context lengths
+    in multimodal models, and the COntrastive-Streamlined MultimOdal framework, which
+    enhances performance in image-text tasks while reducing model complexity. My work
+    on self-supervised category-level pose estimation has also yielded promising results,
+    demonstrating the potential of diffusion-driven networks for multi-object tasks.
+
+
+    Overall, my research aims to bridge the gap between vision and language, making
+    models more robust and efficient for diverse applications, while also addressing
+    the challenges posed by data scarcity and computational constraints.'
+  type: BaseAgent
+coordinate_mode: graph
+engine_planner:
+  initial_progress: Starting the collaborative research idea generation based on the
+    provided Introduction.
+environment:
+  max_iterations: 5
+  name: Research Collaboration Environment
+  type: Research
+llm: gpt-3.5-turbo
+memory:
+  type: SharedMemory
+metrics:
+  diversity_of_perspectives: true
+  engagement_level: true
+  evaluate_llm: gpt-4o-mini
+  relevance: true
+output:
+  file_path: result/discussion_output_35.jsonl
+  format: jsonl
+relationships:
+- - agent1
+  - agent2
+  - collaborate with
+- - agent1
+  - agent3
+  - collaborate with
+- - agent1
+  - agent4
+  - collaborate with
+- - agent2
+  - agent3
+  - collaborate with
+- - agent2
+  - agent4
+  - collaborate with
+- - agent3
+  - agent4
+  - collaborate with
+task:
+  content: "\n            Dear Research Team,\n\n            You are collaborating\
+    \ to generate a new research idea based on the following Introduction:\n\n   \
+    \         **Introduction**\n\n             Introduction Designing neural architectures\
+    \ for visual recognition has long been an appealing yet challenging topic in the\
+    \ com- puter vision community. Convolutional neural networks (CNNs) [28, 18, 20,\
+    \ 42, 33] use convolutional ﬁlters on ev- ery unit of images or feature maps to\
+    \ build features. Re- cently proposed vision transformers [11, 54, 32, 60] use\
+    \ attention operation on each patch or unit to dynamically interact with other\
+    \ units to mimic human attention mech- anism. Both convolution-based and Transformer-based\
+    \ ar- chitectures need to traverse every unit, like pixel or patch \0: Corresponding\
+    \ Author. oursparse paradigm latent space,limitedtokens … image space,denseunits\
+    \ denseparadigm traverse#: H×W#: N ≪H×W… extractadjustFigure 1: Dense versus our\
+    \ proposed sparse paradigm for visual recognition. The dense paradigm requires\
+    \ traversing H\x02Wunits to perform convolution or attention, while our proposed\
+    \ sparse paradigm performs transformers over only Nlatent tokens where N\x1CH\x02\
+    W. on the grid map, to densely perform operations. This dense per-unit traversal\
+    \ originates from sliding windows [39], re- ﬂecting the assumption that foreground\
+    \ objects may appear uniformly with respect to spatial locations in an image.\
+    \ However, as humans, we do not need to examine every detail in a scene to recognize\
+    \ it. Instead, we are fast enough to ﬁrst roughly ﬁnd discriminative regions of\
+    \ interest with several glimpses and then recognize textures, edges, and high-level\
+    \ semantics within these regions [10, 37, 23, 46]. This contrasts greatly with\
+    \ existing visual networks, where the convention is to exhaustively traverse every\
+    \ visual unit. The dense paradigm incurs soaring computational costs with larger\
+    \ input resolutions and does not directly provide details about what a vision\
+    \ model is looking at in an image. In this paper, we propose a new vision architecture,\
+    \ coined SparseFormer , to explore sparse visual recognition by explicitly imitating\
+    \ the perception mechanism of human eyes. Speciﬁcally, SparseFormer learns to\
+    \ represent an im- age by latent transformers along with a highly limited num-\
+    \ ber of tokens ( e.g., down to 49) in the latent space from the very beginning\
+    \ . Each latent token is associated with a region of interest (RoI) descriptor,\
+    \ and the token RoI can be reﬁned across stages. Given an image, SparseFormer\
+    \ ﬁrst extracts image features by a lightweight early convolution module. A latent\
+    \ focusing transformer adjusts token RoIs to focus on foregrounds and sparsely\
+    \ extracts image features accord- ing to these token RoIs to build latent token\
+    \ embeddings in 1arXiv:2304.03768v1  [cs.CV]  7 Apr 2023an iterative manner. SparseFormer\
+    \ then feeds tokens with these region features into a larger and deeper network,\
+    \ i.e. a standard transformer encoder in the latent space, to enable precise recognition.\
+    \ The transformer operations are only applied over the limited tokens in the latent\
+    \ space. Since the number of latent tokens is highly limited (e.g.,49) and the\
+    \ feature sampling procedure is sparse (i.e., based on di- rect bilinear interpolation),\
+    \ it is reasonable to call our ar- chitecture a sparse approach for visual recognition.\
+    \ The overall computational cost of SparseFormer is almost irrel- evant to the\
+    \ input resolution except for the early convolution part, which is lightweight\
+    \ in our design. Moreover, Sparse- Former can be supervised solely with classiﬁcation\
+    \ signals in an end-to-end manner without requiring separate prior training with\
+    \ localizing signals. As an initial step to sparse visual recognition, the aim\
+    \ of SparseFormer is to explore an alternative paradigm for vi- sion modeling,\
+    \ rather than state-of-the-art results are shown in Table 8. segmentor GFLOPs\
+    \ mIoU mAcc Swin-T [32] + UperNet [65] 236 44.4 56.0 SF-T w/ 49 tokens 33 36.1\
+    \ 46.0 SF-T w/ 256 tokens 39 42.9\n\n            **Your Task**\n\n           \
+    \ 1. **Literature Review**: Analyze the Introduction provided and conduct a brief\
+    \ literature review to understand the current state of research in this area.\n\
+    \n            2. **Brainstorming**: Collaboratively brainstorm potential research\
+    \ ideas that build upon or address gaps in the Introduction.\n\n            3.\
+    \ **Summarization**: Summarize your collective ideas.\n\n            4. **Formulate\
+    \ a New Research Idea**: Develop a new research proposal in the format of the\
+    \ '5q', defined below:\n\n               **Here is a high-level summarized insight\
+    \ of a research field Machine Learning.**\n\n               **Here are the five\
+    \ core questions:**\n\n               **[Question 1] - What is the problem?**\n\
+    \n               Formulate the specific research question you aim to address.\
+    \ Only output one question and do not include any more information.\n\n      \
+    \         **[Question 2] - Why is it interesting and important?**\n\n        \
+    \       Explain the broader implications of solving this problem for the research\
+    \ community.\n               Discuss how such a paper will affect future research.\n\
+    \               Discuss how addressing this question could advance knowledge or\
+    \ lead to practical applications.\n\n               **[Question 3] - Why is it\
+    \ hard?**\n\n               Discuss the challenges and complexities involved in\
+    \ solving this problem.\n               Explain why naive or straightforward approaches\
+    \ may fail.\n               Identify any technical, theoretical, or practical\
+    \ obstacles that need to be overcome. MAKE IT CLEAR.\n\n               **[Question\
+    \ 4] - Why hasn't it been solved before?**\n\n               Identify gaps or\
+    \ limitations in previous research or existing solutions.\n               Discuss\
+    \ any barriers that have prevented this problem from being solved until now.\n\
+    \               Explain how your approach differs from or improves upon prior\
+    \ work. MAKE IT CLEAR.\n\n               **[Question 5] - What are the key components\
+    \ of my approach and results?**\n\n               Outline your proposed methodology\
+    \ in detail, including the method, dataset, and metrics that you plan to use.\n\
+    \               Describe the expected outcomes. MAKE IT CLEAR.\n\n           \
+    \ Please work together to produce the '5q' for your proposed research idea.\n\n\
+    \            Good luck!\n            "
+  output_format: "You should answer the task in the following format:\n          \
+    \      **[Question 1] - What is the problem?**\n\n                Formulate the\
+    \ specific research question you aim to address. Only output one question and\
+    \ do not include any more information.\n\n                **[Question 2] - Why\
+    \ is it interesting and important?**\n\n                Explain the broader implications\
+    \ of solving this problem for the research community.\n                Discuss\
+    \ how such a paper will affect future research.\n                Discuss how addressing\
+    \ this question could advance knowledge or lead to practical applications.\n\n\
+    \                **[Question 3] - Why is it hard?**\n\n                Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \        Explain why naive or straightforward approaches may fail.\n         \
+    \       Identify any technical, theoretical, or practical obstacles that need\
+    \ to be overcome. MAKE IT CLEAR.\n\n                **[Question 4] - Why hasn't\
+    \ it been solved before?**\n\n                Identify gaps or limitations in\
+    \ previous research or existing solutions.\n                Discuss any barriers\
+    \ that have prevented this problem from being solved until now.\n            \
+    \    Explain how your approach differs from or improves upon prior work. MAKE\
+    \ IT CLEAR.\n\n                **[Question 5] - What are the key components of\
+    \ my approach and results?**\n\n                Outline your proposed methodology\
+    \ in detail, including the method, dataset, and metrics that you plan to use.\n\
+    \                Describe the expected outcomes. MAKE IT CLEAR."

@@ -1,0 +1,293 @@
+agents:
+- agent_id: agent1
+  profile: 'I am a researcher dedicated to advancing the field of molecular docking
+    and structure-based drug design (SBDD) through innovative computational methods.
+    My recent work has led to the development of DeltaDock, a robust framework that
+    enhances molecular docking efficiency by integrating ligand-dependent binding
+    site prediction with multi-scale iterative refinement. This two-step approach
+    not only improves docking accuracy but also addresses challenges such as generalization
+    to unseen proteins and the prediction of physically valid structures.
+
+
+    In addition to DeltaDock, I have introduced Multi-task Bioassay Pre-training (MBP),
+    a pioneering framework that leverages a large dataset, ChEMBL-Dock, to enhance
+    protein-ligand binding affinity (PLBA) predictions. By treating the prediction
+    of different affinity labels as distinct tasks, MBP effectively learns transferable
+    structural knowledge, demonstrating significant improvements in model performance.
+
+
+    My research also encompasses a comprehensive review of geometric deep learning
+    applications in SBDD, where I analyze foundational tasks, prevalent 3D protein
+    representations, and the challenges and opportunities within the field. I am passionate
+    about bridging the gap between computational methods and practical applications
+    in drug discovery, and I continuously seek to refine and expand the capabilities
+    of machine learning in this domain. Through my work, I aim to contribute to the
+    development of more efficient and reliable tools for drug design, ultimately facilitating
+    the discovery of novel therapeutics.'
+  type: BaseAgent
+- agent_id: agent2
+  profile: 'I am a researcher dedicated to advancing the fields of drug discovery
+    and machine learning, particularly through the lens of structure-based drug design
+    (SBDD) and graph neural networks (GNNs). My recent work has focused on developing
+    innovative generative models that bridge the gap between molecular structure and
+    function, such as DrugGPS, which enhances the generalizability of drug design
+    by leveraging subpocket similarities. I also introduced PocketFlow, a model that
+    incorporates protein-ligand interaction priors to generate high-affinity binding
+    pockets efficiently.
+
+
+    In addition to drug design, I have explored the intersection of GNNs and explainability,
+    proposing the Prototype Graph Neural Network (ProtGNN) to provide inherent interpretability
+    in GNN predictions. My research also addresses the challenges of federated learning,
+    particularly in detecting and mitigating model poisoning attacks through frameworks
+    like FLDetector and FLCert.
+
+
+    I am passionate about integrating deep learning with biochemical insights to create
+    robust models that can predict molecular properties and design functional proteins.
+    My work, including the development of MolCode and DeltaDock, emphasizes the importance
+    of both 2D and 3D molecular representations, showcasing the potential of machine
+    learning in drug discovery and bioengineering. Through my research, I aim to contribute
+    to the understanding and application of advanced computational techniques in real-world
+    biological contexts, ultimately facilitating the design of novel therapeutics.'
+  type: BaseAgent
+- agent_id: agent3
+  profile: 'I am a researcher dedicated to advancing the field of structure-based
+    drug design, with a particular focus on molecular docking and protein-ligand interaction
+    prediction. My recent work has led to the development of DiffBindFR, a full-atom
+    diffusion-based flexible docking model that excels in accurately predicting protein-ligand
+    binding modes, even in challenging scenarios where the protein binding conformation
+    is unknown. This model not only enhances the accuracy of binding structure predictions
+    but also ensures physical plausibility and detailed atomic interactions, making
+    it a valuable tool for drug design using Apo and AlphaFold2 structures.
+
+
+    In addition, I have introduced DeepRLI, a novel architecture for protein-ligand
+    interaction prediction that integrates a fully connected graph representation
+    of complexes. By leveraging advanced graph transformer layers and a multi-objective
+    training strategy, DeepRLI effectively addresses the complexities of binding affinity
+    prediction, docking, and virtual screening. This holistic approach allows the
+    model to generalize beyond crystal structures, demonstrating balanced performance
+    across various tasks.
+
+
+    Through my research, I aim to bridge the gap between computational methods and
+    practical applications in drug discovery, contributing to more efficient and accurate
+    predictions that can significantly impact the development of new therapeutics.'
+  type: BaseAgent
+- agent_id: agent4
+  profile: 'I am a researcher deeply engaged in the study of condensed matter physics
+    and mathematical analysis, with a particular focus on non-Hermitian systems, quantum
+    mechanics, and the intricacies of elliptic equations. My recent work has explored
+    the fascinating realm of quantum random walks, where I developed analytical approaches
+    to understand the effects of decoherence, revealing how these walks can exhibit
+    Gaussian limiting distributions under certain conditions.
+
+
+    I have also made significant contributions to the understanding of non-Hermitian
+    skin effects, proposing a unified framework that bridges the gap between traditional
+    Hermitian systems and their non-Hermitian counterparts. My research delves into
+    the algebraic non-Hermitian skin effect, showcasing how these systems behave differently
+    based on their geometrical configurations. Additionally, I have investigated the
+    spectral stability of non-Hermitian systems, uncovering surprising non-local effects
+    that challenge conventional wisdom.
+
+
+    In the realm of mathematical analysis, I have focused on the regularity of viscosity
+    solutions for fully nonlinear elliptic equations, establishing new results that
+    enhance our understanding of boundary differentiability and regularity conditions.
+    My work aims to provide clear insights and practical methods for tackling complex
+    problems in both theoretical and applied contexts.
+
+
+    Overall, my research is driven by a passion for uncovering the underlying principles
+    of physical systems and mathematical structures, with the goal of advancing our
+    understanding of these intricate fields.'
+  type: BaseAgent
+- agent_id: agent5
+  profile: 'I am a researcher dedicated to advancing the fields of drug discovery
+    and molecular design through innovative computational methods. My recent work
+    has focused on developing deep learning models that enhance retrosynthesis planning
+    and molecular generation. For instance, I introduced an attention-based Transformer
+    model that achieved state-of-the-art accuracy in predicting single-step organic
+    reactions, demonstrating its potential in multi-step retrosynthetic pathway planning.
+
+
+    I am particularly passionate about the intersection of generative models and drug
+    design. My work on the Ligand Neural Network (L-Net) has enabled the direct generation
+    of high-quality 3D structures of drug-like molecules, which is crucial for structure-based
+    molecular design. Additionally, I developed DeepLigBuilder+, a model that not
+    only generates 3D molecular structures but also proposes synthetic pathways, significantly
+    accelerating the drug discovery process.
+
+
+    My research also emphasizes the importance of interpretability in quantitative
+    structure-property relationship (QSPR) studies. By employing molecular graph encoding
+    convolutional networks, I have constructed models that achieve high predictive
+    power while maintaining interpretability, as evidenced by my work on acute oral
+    toxicity predictions.
+
+
+    Furthermore, I have tackled the challenges of molecular docking with DiffBindFR,
+    a diffusion-based flexible docking model that accurately predicts protein-ligand
+    interactions. This model enhances the accuracy of binding pose predictions, making
+    it a valuable tool for structure-based drug design.
+
+
+    Overall, my work aims to bridge the gap between computational methods and practical
+    applications in drug discovery, providing novel strategies and tools to facilitate
+    the development of effective therapeutics.'
+  type: BaseAgent
+coordinate_mode: graph
+engine_planner:
+  initial_progress: Starting the collaborative research idea generation based on the
+    provided Introduction.
+environment:
+  max_iterations: 5
+  name: Research Collaboration Environment
+  type: Research
+llm: gpt-3.5-turbo
+memory:
+  type: SharedMemory
+metrics:
+  diversity_of_perspectives: true
+  engagement_level: true
+  evaluate_llm: gpt-4o-mini
+  relevance: true
+output:
+  file_path: result/discussion_output_35.jsonl
+  format: jsonl
+relationships:
+- - agent1
+  - agent2
+  - collaborate with
+- - agent1
+  - agent3
+  - collaborate with
+- - agent1
+  - agent4
+  - collaborate with
+- - agent1
+  - agent5
+  - collaborate with
+- - agent2
+  - agent3
+  - collaborate with
+- - agent2
+  - agent4
+  - collaborate with
+- - agent2
+  - agent5
+  - collaborate with
+- - agent3
+  - agent4
+  - collaborate with
+- - agent3
+  - agent5
+  - collaborate with
+- - agent4
+  - agent5
+  - collaborate with
+task:
+  content: "\n            Dear Research Team,\n\n            You are collaborating\
+    \ to generate a new research idea based on the following Introduction:\n\n   \
+    \         **Introduction**\n\n               1 Introduction  Recent advancement\
+    \ in geometric deep learning (GDL) [1, 2, 3] presents an innovative and promising\
+    \ molecular docking paradigm to predict and understand the interactions between\
+    \ target proteins and drugs, which is of paramount importance for drug discovery [4,\
+    \ 5]. Unlike traditional docking methods that employ optimization algorithms to\
+    \ sample and identify best binding poses [6, 7], GDL methods interpret molecular\
+    \ docking as either a regression or generation task, eliminating the need for\
+    \ intensive candidate sampling [8, 9, 10]. Studies have demonstrated that GDL\
+    \ methods outperform their traditional counterparts, delivering enhancements in\
+    \ both the accuracy of binding pose predictions, as measured by the root-mean-square\
+    \ deviation (RMSD) metric, and the inference efficiency [11, 12].   According\
+    \ to whether a prior pocket is given, molecular docking can be divided into blind\
+    \ and site-specific docking [13]. Traditional sampling methods adeptly navigate\
+    \ both scenarios, primarily differing in the scope of the search space they explore.\
+    \ In contrast, GDL methods typically specialize in either one. For instance, EquiBind [8],\
+    \ and DiffDock [9] are designed for blind docking, neglecting the incorporation\
+    \ of binding pockets. Uni-Mol [14] and DiffBind-FR [15] concentrate on site-specific\
+    \ docking and only protein atomic level structure within a defined radius (usually\
+    \ 6-12 Å) of the co-crystal is modeled. Despite some progress, these methods not\
+    \ only fail to handle two docking settings smoothly like traditional methods,\
+    \ but also confronted with certain limitations. For blind docking methods, they\
+    \ ignore the fine-grained protein side-chain structure. Regarding the site-specific\
+    \ docking methods, when dealing with pockets larger than the predetermined cutoff\
+    \ or when there is a requirement to model extensive pocket surrounding structures\
+    \ to account for long-range interactions, these methods significantly deteriorate\
+    \ in performance [16] and the demand for computational resources can escalate\
+    \ significantly, as evidenced in Appendix.A.2 and Appendix.A.3.   Besides these\
+    \ challenges, current GDL methods face additional limitations due to the lack\
+    \ of inductive biases, such as penalties for steric clashes or constraints on\
+    \ ligand mobility, leading to the generation of unrealistic docking poses. Buttenschoen\
+    \ et al. [16] proposed the PoseBusters test suit to verify and highlight these\
+    \ problems. In addition to the RMSD between predicted and ground-truth poses,\
+    \ the test suite incorporates 18 checks, encompassing chemical validity and consistency,\
+    \ intramolecular validity, and intermolecular validity. According to the test\
+    \ suite, the previously highest-performing method, DiffDock, achieves a success\
+    \ rate of only 14%. This is significantly lower than the 38% success rate achieved\
+    \ when chemical validity is not taken into account.   To resolve these problems,\
+    \ we propose DeltaDock, a unified GDL framework for accurate, efficient, and physically\
+    \ valid docking. DeltaDock is a two-stage framework consisting of a pocket prediction\
+    \ stage and a site-specific docking stage. With \"Delta\", we mean that the optimal\
+    \ poses are predicted by iteratively refining the input structures in the second\
+    \ docking stage. The first pocket prediction stage is specialized for blind docking,\
+    \ where a binding pocket is identified from a set of candidates through a novel\
+    \ contrastive pocket-ligand alignment module CPLA. Then in the second stage, within\
+    \ the pockets predefined or selected by CPLA, binding structures are predicted\
+    \ in a bi-level coarse-to-fine iterative refinement module Bi-EGMN. This module\
+    \ prioritizes the residue-level structure covered by a large outer box (Fig.4)\
+    \ for pose positioning and coarse structure prediction. And the atom-level structure,\n\
+    \n            **Your Task**\n\n            1. **Literature Review**: Analyze the\
+    \ Introduction provided and conduct a brief literature review to understand the\
+    \ current state of research in this area.\n\n            2. **Brainstorming**:\
+    \ Collaboratively brainstorm potential research ideas that build upon or address\
+    \ gaps in the Introduction.\n\n            3. **Summarization**: Summarize your\
+    \ collective ideas.\n\n            4. **Formulate a New Research Idea**: Develop\
+    \ a new research proposal in the format of the '5q', defined below:\n\n      \
+    \         **Here is a high-level summarized insight of a research field Machine\
+    \ Learning.**\n\n               **Here are the five core questions:**\n\n    \
+    \           **[Question 1] - What is the problem?**\n\n               Formulate\
+    \ the specific research question you aim to address. Only output one question\
+    \ and do not include any more information.\n\n               **[Question 2] -\
+    \ Why is it interesting and important?**\n\n               Explain the broader\
+    \ implications of solving this problem for the research community.\n         \
+    \      Discuss how such a paper will affect future research.\n               Discuss\
+    \ how addressing this question could advance knowledge or lead to practical applications.\n\
+    \n               **[Question 3] - Why is it hard?**\n\n               Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \       Explain why naive or straightforward approaches may fail.\n          \
+    \     Identify any technical, theoretical, or practical obstacles that need to\
+    \ be overcome. MAKE IT CLEAR.\n\n               **[Question 4] - Why hasn't it\
+    \ been solved before?**\n\n               Identify gaps or limitations in previous\
+    \ research or existing solutions.\n               Discuss any barriers that have\
+    \ prevented this problem from being solved until now.\n               Explain\
+    \ how your approach differs from or improves upon prior work. MAKE IT CLEAR.\n\
+    \n               **[Question 5] - What are the key components of my approach and\
+    \ results?**\n\n               Outline your proposed methodology in detail, including\
+    \ the method, dataset, and metrics that you plan to use.\n               Describe\
+    \ the expected outcomes. MAKE IT CLEAR.\n\n            Please work together to\
+    \ produce the '5q' for your proposed research idea.\n\n            Good luck!\n\
+    \            "
+  output_format: "You should answer the task in the following format:\n          \
+    \      **[Question 1] - What is the problem?**\n\n                Formulate the\
+    \ specific research question you aim to address. Only output one question and\
+    \ do not include any more information.\n\n                **[Question 2] - Why\
+    \ is it interesting and important?**\n\n                Explain the broader implications\
+    \ of solving this problem for the research community.\n                Discuss\
+    \ how such a paper will affect future research.\n                Discuss how addressing\
+    \ this question could advance knowledge or lead to practical applications.\n\n\
+    \                **[Question 3] - Why is it hard?**\n\n                Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \        Explain why naive or straightforward approaches may fail.\n         \
+    \       Identify any technical, theoretical, or practical obstacles that need\
+    \ to be overcome. MAKE IT CLEAR.\n\n                **[Question 4] - Why hasn't\
+    \ it been solved before?**\n\n                Identify gaps or limitations in\
+    \ previous research or existing solutions.\n                Discuss any barriers\
+    \ that have prevented this problem from being solved until now.\n            \
+    \    Explain how your approach differs from or improves upon prior work. MAKE\
+    \ IT CLEAR.\n\n                **[Question 5] - What are the key components of\
+    \ my approach and results?**\n\n                Outline your proposed methodology\
+    \ in detail, including the method, dataset, and metrics that you plan to use.\n\
+    \                Describe the expected outcomes. MAKE IT CLEAR."

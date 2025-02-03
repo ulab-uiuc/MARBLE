@@ -1,0 +1,294 @@
+agents:
+- agent_id: agent1
+  profile: 'I am a researcher dedicated to advancing the fields of deep learning and
+    computer vision, with a particular focus on innovative solutions for data efficiency
+    and representation learning. My recent work has explored novel techniques for
+    knowledge distillation, enabling effective model compression without the extensive
+    fine-tuning typically required. By leveraging label-free data, I have developed
+    methods that allow compressed networks to achieve high accuracy in a fraction
+    of the time and data.
+
+
+    I am also passionate about harnessing the potential of radio frequency (RF) signals
+    for computer vision tasks, particularly in challenging environments where traditional
+    visual data is unavailable. My research has led to the development of models like
+    RF-Diary, which can caption daily life activities through walls and occlusions,
+    and a neural network that recognizes human actions using RF signals, even in low-light
+    conditions. These contributions aim to bridge the gap between human activity recognition
+    and the limitations of visual data.
+
+
+    Additionally, I have tackled the challenges of unconditional generation in generative
+    models, proposing a framework that significantly enhances generation quality without
+    relying on human-annotated labels. My work on loss-resilient video conferencing
+    frameworks, such as Reparo, demonstrates my commitment to improving real-time
+    communication technologies by addressing packet loss issues through generative
+    deep learning.
+
+
+    Overall, my research is driven by a desire to push the boundaries of what is possible
+    in machine learning and computer vision, making technology more efficient, accessible,
+    and capable of operating in diverse real-world scenarios.'
+  type: BaseAgent
+- agent_id: agent2
+  profile: "I am a researcher dedicated to advancing the field of representation learning,\
+    \ particularly through the lens of contrastive learning and knowledge transfer.\
+    \ My work has focused on developing innovative methods that enhance the performance\
+    \ of neural networks across various tasks, including knowledge distillation, self-supervised\
+    \ learning, and multi-task learning. \n\nIn my recent publications, I have explored\
+    \ the potential of contrastive learning to capture structural knowledge from teacher\
+    \ networks, leading to significant improvements in knowledge transfer tasks. My\
+    \ work on SimDis has established new state-of-the-art baselines for distillation,\
+    \ while my investigations into generative models have opened new avenues for learning\
+    \ visual representations without relying on traditional datasets. \n\nI have also\
+    \ delved into the challenges of decentralized learning with unlabeled data, demonstrating\
+    \ the robustness of self-supervised learning methods in heterogeneous environments.\
+    \ My research emphasizes the importance of view selection in contrastive learning,\
+    \ revealing how reducing mutual information between views can enhance representation\
+    \ quality. \n\nThrough my contributions, I aim to bridge the gap between theoretical\
+    \ insights and practical applications, providing scalable solutions that leverage\
+    \ the power of self-supervised and contrastive learning. I am passionate about\
+    \ pushing the boundaries of what is possible in visual representation learning\
+    \ and am excited to continue exploring this dynamic field."
+  type: BaseAgent
+- agent_id: agent3
+  profile: 'I am a researcher specializing in coarse-grained molecular dynamics (CGMD)
+    modeling, with a particular focus on simulating erythrocyte membranes. My recent
+    work has led to the development of a two-component CGMD model that effectively
+    combines the lipid bilayer and the erythrocyte cytoskeleton. This innovative approach
+    allows for the exploration of both the fluidic behavior of the lipid bilayer and
+    the elastic properties of the cytoskeleton, enabling simulations that cover large
+    spatial and temporal scales.
+
+
+    Through my research, I have gained insights into the mechanical properties of
+    the erythrocyte membrane under various shear conditions. I have discovered that
+    at low shear strain rates, the shear stress is predominantly influenced by the
+    spectrin network, while at higher strain rates, the viscosity of the lipid bilayer
+    plays a more significant role. Additionally, I have investigated how changes in
+    the connectivity of the spectrin network affect the shear modulus of the membrane.
+
+
+    My work not only enhances our understanding of erythrocyte membrane mechanics
+    but also contributes to the broader field of biophysics by providing a framework
+    for simulating complex biological systems. I am passionate about leveraging computational
+    models to uncover the intricate behaviors of cellular structures and their implications
+    in health and disease.'
+  type: BaseAgent
+- agent_id: agent4
+  profile: 'I am a researcher with a strong focus on algorithm design and analysis,
+    particularly in the realms of combinatorial optimization and machine learning.
+    My recent work has delved into classical problems such as the Unbounded Subset
+    Sum, where I developed a novel two-phase approach that led to the first near-linear
+    algorithms for related problems like CoinChange and Residue Table. This work not
+    only advances theoretical understanding but also provides practical algorithms
+    with significant efficiency improvements.
+
+
+    In the field of machine learning, I have explored the structure of activations
+    in language models, demonstrating that they can be effectively modeled as sparse
+    linear combinations of feature vectors. My metrics for assessing sparsity have
+    proven useful in evaluating various language models, revealing insights into their
+    activation patterns.
+
+
+    Additionally, I have tackled questions in additive combinatorics, particularly
+    regarding the density of Fourier-uniform subsets and their relation to arithmetic
+    progressions. My findings contribute to a deeper understanding of these mathematical
+    structures and their implications for algorithmic complexity.
+
+
+    I am also passionate about improving generative processes in machine learning.
+    My recent work on the Restart sampling algorithm has shown promising results in
+    balancing speed and sample quality in diffusion models, outperforming existing
+    methods in both efficiency and accuracy.
+
+
+    Overall, my research aims to bridge theoretical insights with practical applications,
+    driving advancements in both algorithmic efficiency and machine learning methodologies.'
+  type: BaseAgent
+- agent_id: agent5
+  profile: 'I am a researcher deeply engaged in the field of computer vision, with
+    a particular focus on developing innovative architectures and techniques that
+    enhance image recognition, object detection, and segmentation. My work has significantly
+    contributed to the evolution of convolutional neural networks (CNNs) and their
+    applications in real-world scenarios.
+
+
+    One of my notable contributions is the introduction of Group Normalization (GN),
+    which provides a robust alternative to Batch Normalization, particularly for small
+    batch sizes. This advancement has improved the training of deep networks across
+    various tasks, including object detection and segmentation. Additionally, I developed
+    the Mask R-CNN framework, which has set new standards in instance segmentation
+    by efficiently detecting objects while generating high-quality segmentation masks.
+
+
+    I have also explored the potential of Siamese networks for unsupervised representation
+    learning, leading to the creation of SimSiam, a method that achieves competitive
+    results without relying on negative samples or large batches. My research on the
+    Region Proposal Network (RPN) has streamlined object detection processes, allowing
+    for nearly cost-free region proposals that enhance the performance of detection
+    networks.
+
+
+    Through my work, I aim to push the boundaries of what is possible in computer
+    vision, addressing challenges such as dataset bias and the need for efficient
+    training methods. I am committed to making my findings accessible to the community,
+    as evidenced by the open-source code I release alongside my publications. My goal
+    is to inspire further research and innovation in the field, ultimately contributing
+    to the development of more intelligent and capable visual recognition systems.'
+  type: BaseAgent
+coordinate_mode: graph
+engine_planner:
+  initial_progress: Starting the collaborative research idea generation based on the
+    provided Introduction.
+environment:
+  max_iterations: 5
+  name: Research Collaboration Environment
+  type: Research
+llm: gpt-4o-mini
+memory:
+  type: SharedMemory
+metrics:
+  diversity_of_perspectives: true
+  engagement_level: true
+  evaluate_llm: gpt-4o-mini
+  relevance: true
+output:
+  file_path: result/discussion_output_4o_mini.jsonl
+  format: jsonl
+relationships:
+- - agent1
+  - agent2
+  - collaborate with
+- - agent1
+  - agent3
+  - collaborate with
+- - agent1
+  - agent4
+  - collaborate with
+- - agent1
+  - agent5
+  - collaborate with
+- - agent2
+  - agent3
+  - collaborate with
+- - agent2
+  - agent4
+  - collaborate with
+- - agent2
+  - agent5
+  - collaborate with
+- - agent3
+  - agent4
+  - collaborate with
+- - agent3
+  - agent5
+  - collaborate with
+- - agent4
+  - agent5
+  - collaborate with
+task:
+  content: "\n            Dear Research Team,\n\n            You are collaborating\
+    \ to generate a new research idea based on the following Introduction:\n\n   \
+    \         **Introduction**\n\n               1 Introduction  Autoregressive models\
+    \ are currently the de facto solution to generative models in natural language\
+    \ processing [38, 39, 3]. These models predict the next word or token in a sequence\
+    \ based on the previous words as input. Given the discrete nature of languages,\
+    \ the inputs and outputs of these models are in a categorical, discrete-valued\
+    \ space. This prevailing approach has led to a widespread belief that autoregressive\
+    \ models are inherently linked to discrete representations.   As a result, research\
+    \ on generalizing autoregressive models to continuous-valued domains—most notably,\
+    \ image generation—has intensely focused on discretizing the data [6, 13, 40].\
+    \ A commonly adopted strategy is to train a discrete-valued tokenizer on images,\
+    \ which involves a finite vocabulary obtained by vector quantization (VQ) [51,\
+    \ 41]. Autoregressive models are then operated on the discrete-valued token space,\
+    \ analogous to their language counterparts.   In this work, we aim to address\
+    \ the following question: Is it necessary for autoregressive models to be coupled\
+    \ with vector-quantized representations? We note that the autoregressive nature,\
+    \ i.e., “predicting next tokens based on previous ones”, is independent of whether\
+    \ the values are discrete or continuous. What is needed is to model the per-token\
+    \ probability distribution, which can be measured by a loss function and used\
+    \ to draw samples from. Discrete-valued representations can be conveniently modeled\
+    \ by a categorical distribution, but it is not conceptually necessary. If alternative\
+    \ models for per-token probability distributions are presented, autoregressive\
+    \ models can be approached without vector quantization.   With this observation,\
+    \ we propose to model the per-token probability distribution by a diffusion procedure\
+    \ operating on continuous-valued domains. Our methodology leverages the principles\
+    \ of diffusion models [45, 24, 33, 10] for representing arbitrary probability\
+    \ distributions. Specifically, our method autoregressively predicts a vector z\U0001D467\
+    zitalic_z for each token, which serves as a conditioning for a denoising network\
+    \ (e.g., a small MLP). The denoising diffusion procedure enables us to represent\
+    \ an underlying distribution p⁢(x|z)\U0001D45Dconditional\U0001D465\U0001D467\
+    p(x|z)italic_p ( italic_x | italic_z ) for the output x\U0001D465xitalic_x (Figure 1).\
+    \ This small denoising network is trained jointly with the autoregressive model,\
+    \ with continuous-valued tokens as the input and target. Conceptually, this small\
+    \ prediction head, applied to each token, behaves like a loss function for measuring\
+    \ the quality of z\U0001D467zitalic_z. We refer to this loss function as Diffusion\
+    \ Loss.      Figure 1: Diffusion Loss. Given a continuous-valued token x\U0001D465\
+    xitalic_x to be predicted, the autoregressive model produces a vector z\U0001D467\
+    zitalic_z, which serves as the condition of a denoising diffusion network (a small\
+    \ MLP). This offers a way to model the probability distribution p⁢(x|z)\U0001D45D\
+    conditional\U0001D465\U0001D467p(x|z)italic_p ( italic_x | italic_z ) of this\
+    \ token. This network is trained jointly with the autoregressive model by backpropagation.\
+    \ At inference time, with a predicted z\U0001D467zitalic_z, running the reverse\
+    \ diffusion procedure can sample a token following the distribution: x∼p⁢(x|z)similar-to\U0001D465\
+    \U0001D45Dconditional\U0001D465\U0001D467x\\sim p(x|z)italic_x ∼ italic_p ( italic_x\
+    \ | italic_z ). This method eliminates the need for discrete-valued tokenizers.\
+    \    Our approach eliminates the need for discrete-valued tokenizers. Vector-quantized\
+    \ tokenizers are difficult to train and are sensitive to gradient approximation\
+    \ strategies [51, 41, 40, 27]. Their reconstruction quality often falls short\
+    \ compared to continuous-valued counterparts [42]. Our approach allows autoregressive\
+    \ models to enjoy the benefits of higher-quality, non-quantized tokenizers.  \
+    \ To broaden the scope, we further unify standard autoregressive (AR)\n\n    \
+    \        **Your Task**\n\n            1. **Literature Review**: Analyze the Introduction\
+    \ provided and conduct a brief literature review to understand the current state\
+    \ of research in this area.\n\n            2. **Brainstorming**: Collaboratively\
+    \ brainstorm potential research ideas that build upon or address gaps in the Introduction.\n\
+    \n            3. **Summarization**: Summarize your collective ideas.\n\n     \
+    \       4. **Formulate a New Research Idea**: Develop a new research proposal\
+    \ in the format of the '5q', defined below:\n\n               **Here is a high-level\
+    \ summarized insight of a research field Machine Learning.**\n\n             \
+    \  **Here are the five core questions:**\n\n               **[Question 1] - What\
+    \ is the problem?**\n\n               Formulate the specific research question\
+    \ you aim to address. Only output one question and do not include any more information.\n\
+    \n               **[Question 2] - Why is it interesting and important?**\n\n \
+    \              Explain the broader implications of solving this problem for the\
+    \ research community.\n               Discuss how such a paper will affect future\
+    \ research.\n               Discuss how addressing this question could advance\
+    \ knowledge or lead to practical applications.\n\n               **[Question 3]\
+    \ - Why is it hard?**\n\n               Discuss the challenges and complexities\
+    \ involved in solving this problem.\n               Explain why naive or straightforward\
+    \ approaches may fail.\n               Identify any technical, theoretical, or\
+    \ practical obstacles that need to be overcome. MAKE IT CLEAR.\n\n           \
+    \    **[Question 4] - Why hasn't it been solved before?**\n\n               Identify\
+    \ gaps or limitations in previous research or existing solutions.\n          \
+    \     Discuss any barriers that have prevented this problem from being solved\
+    \ until now.\n               Explain how your approach differs from or improves\
+    \ upon prior work. MAKE IT CLEAR.\n\n               **[Question 5] - What are\
+    \ the key components of my approach and results?**\n\n               Outline your\
+    \ proposed methodology in detail, including the method, dataset, and metrics that\
+    \ you plan to use.\n               Describe the expected outcomes. MAKE IT CLEAR.\n\
+    \n            Please work together to produce the '5q' for your proposed research\
+    \ idea.\n\n            Good luck!\n            "
+  output_format: "You should answer the task in the following format:\n          \
+    \      **[Question 1] - What is the problem?**\n\n                Formulate the\
+    \ specific research question you aim to address. Only output one question and\
+    \ do not include any more information.\n\n                **[Question 2] - Why\
+    \ is it interesting and important?**\n\n                Explain the broader implications\
+    \ of solving this problem for the research community.\n                Discuss\
+    \ how such a paper will affect future research.\n                Discuss how addressing\
+    \ this question could advance knowledge or lead to practical applications.\n\n\
+    \                **[Question 3] - Why is it hard?**\n\n                Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \        Explain why naive or straightforward approaches may fail.\n         \
+    \       Identify any technical, theoretical, or practical obstacles that need\
+    \ to be overcome. MAKE IT CLEAR.\n\n                **[Question 4] - Why hasn't\
+    \ it been solved before?**\n\n                Identify gaps or limitations in\
+    \ previous research or existing solutions.\n                Discuss any barriers\
+    \ that have prevented this problem from being solved until now.\n            \
+    \    Explain how your approach differs from or improves upon prior work. MAKE\
+    \ IT CLEAR.\n\n                **[Question 5] - What are the key components of\
+    \ my approach and results?**\n\n                Outline your proposed methodology\
+    \ in detail, including the method, dataset, and metrics that you plan to use.\n\
+    \                Describe the expected outcomes. MAKE IT CLEAR."
