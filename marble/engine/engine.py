@@ -60,6 +60,8 @@ class Engine:
 
         self.logger.info("Engine initialized.")
 
+        self.agent_roles = {agent_config["agent_id"]: agent_config.get("role", "unknown") for agent_config in config.agents}
+
 
     def _initialize_environment(self, env_config: Dict[str, Any]) -> BaseEnvironment:
         """
@@ -91,23 +93,32 @@ class Engine:
         else:
             raise ValueError(f"Unsupported environment type: {env_type}")
 
+    # def _initialize_agents(self, agent_configs: List[Dict[str, Any]]) -> List[BaseAgent]:
+    #     """
+    #     Initialize agents based on configurations.
+
+    #     Args:
+    #         agent_configs (List[dict]): List of agent configurations.
+
+    #     Returns:
+    #         List[BaseAgent]: List of agent instances.
+    #     """
+    #     agents = []
+    #     llm = self.config.llm
+    #     for agent_config in agent_configs:
+    #         agent_type = agent_config.get("type")
+    #         agent = BaseAgent(config=agent_config, env=self.environment, model=llm)
+    #         agents.append(agent)
+    #         self.logger.debug(f"Agent '{agent.agent_id}' of type '{agent_type}' initialized.")
+    #     return agents
+
     def _initialize_agents(self, agent_configs: List[Dict[str, Any]]) -> List[BaseAgent]:
-        """
-        Initialize agents based on configurations.
-
-        Args:
-            agent_configs (List[dict]): List of agent configurations.
-
-        Returns:
-            List[BaseAgent]: List of agent instances.
-        """
         agents = []
-        llm = self.config.llm
         for agent_config in agent_configs:
-            agent_type = agent_config.get("type")
-            agent = BaseAgent(config=agent_config, env=self.environment, model=llm)
+            agent_llm = agent_config.get("llm", self.config.llm)  # 使用 agent 级别的 LLM，默认用全局 LLM
+            agent = BaseAgent(config=agent_config, env=self.environment, model=agent_llm)
             agents.append(agent)
-            self.logger.debug(f"Agent '{agent.agent_id}' of type '{agent_type}' initialized.")
+            self.logger.debug(f"Agent '{agent.agent_id}' using LLM: '{agent_llm}' initialized.")
         return agents
 
     def _initialize_memory(self, memory_config: Dict[str, Any]) -> Union[SharedMemory, BaseMemory]:
@@ -192,15 +203,15 @@ class Engine:
 
             summary_data["iterations"].append(iteration_data)
 
-                    # Evaluate communication
-            if iteration_data["communications"]:
-                iteration_data_communications = iteration_data.get("communications")
-                assert isinstance(iteration_data_communications, list)
-                communications_str = self._format_communications(iteration_data_communications)
-                self.evaluator.evaluate_communication(self.task, communications_str)
-            else:
-                # Store -1 if communications are empty
-                self.evaluator.metrics["communication_score"].append(-1)
+            #         # Evaluate communication
+            # if iteration_data["communications"]:
+            #     iteration_data_communications = iteration_data.get("communications")
+            #     assert isinstance(iteration_data_communications, list)
+            #     communications_str = self._format_communications(iteration_data_communications)
+            #     self.evaluator.evaluate_communication(self.task, communications_str, self.agent_roles)
+            # else:
+            #     # Store -1 if communications are empty
+            #     self.evaluator.metrics["communication_score"].append(-1)
 
             # Evaluate planning
             agent_profiles = self._get_agent_profiles()
@@ -212,7 +223,7 @@ class Engine:
             results_str = self._format_results(iteration_data_task_results)
             iteration_data_summary = iteration_data.get("summary")
             assert isinstance(iteration_data_summary, str)
-            self.evaluator.evaluate_planning(iteration_data_summary, agent_profiles, agent_tasks_str, results_str)
+            # self.evaluator.evaluate_planning(iteration_data_summary, agent_profiles, agent_tasks_str, results_str, self.agent_roles)
             self.evaluator.evaluate_kpi(self.task, results_str)
 
             while self.current_iteration < self.max_iterations:
@@ -263,15 +274,15 @@ class Engine:
                 iteration_data["summary"] = summary_from_planner.content
 
 
-                # Evaluate communication
-                if iteration_data["communications"]:
-                    iteration_data_communications = iteration_data.get("communications")
-                    assert isinstance(iteration_data_communications, list)
-                    communications_str = self._format_communications(iteration_data_communications)
-                    self.evaluator.evaluate_communication(self.task, communications_str)
-                else:
-                    # Store -1 if communications are empty
-                    self.evaluator.metrics["communication_score"].append(-1)
+                # # Evaluate communication
+                # if iteration_data["communications"]:
+                #     iteration_data_communications = iteration_data.get("communications")
+                #     assert isinstance(iteration_data_communications, list)
+                #     communications_str = self._format_communications(iteration_data_communications)
+                #     self.evaluator.evaluate_communication(self.task, communications_str, self.agent_roles)
+                # else:
+                #     # Store -1 if communications are empty
+                #     self.evaluator.metrics["communication_score"].append(-1)
 
                 # Evaluate planning
                 agent_profiles = self._get_agent_profiles()
@@ -283,7 +294,7 @@ class Engine:
                 results_str = self._format_results(iteration_data_task_results)
                 iteration_data_summary = iteration_data.get("summary")
                 assert isinstance(iteration_data_summary, str)
-                self.evaluator.evaluate_planning(iteration_data_summary, agent_profiles, agent_tasks_str, results_str)
+                # self.evaluator.evaluate_planning(iteration_data_summary, agent_profiles, agent_tasks_str, results_str, self.agent_roles)
                 self.evaluator.evaluate_kpi(self.task, results_str)
                 # Decide whether to continue or terminate
                 continue_simulation = self.planner.decide_next_step(agents_results)
@@ -307,6 +318,10 @@ class Engine:
                 iteration_data_summary = iteration_data.get("summary")
                 assert isinstance(iteration_data_summary, str)
                 self.evaluator.evaluate_task_research(self.task, iteration_data_summary)
+                summary_data['task_evaluation'] = self.evaluator.metrics["task_evaluation"]
+                self.logger.info("Engine graph-based coordination loop completed.")
+            elif self.environment.name == 'World Simulation Environment':
+                self.evaluator.evaluate_task_world(self.task, iteration_data["summary"])
                 summary_data['task_evaluation'] = self.evaluator.metrics["task_evaluation"]
                 self.logger.info("Engine graph-based coordination loop completed.")
             self.logger.info("Engine graph-based coordination loop completed.")
