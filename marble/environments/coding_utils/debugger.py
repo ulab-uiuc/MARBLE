@@ -58,7 +58,6 @@ def run_and_debug_solution_handler(env, model_name: str, file_path: str = "solut
         with open(full_path, 'w') as file:
             file.write(python_code)
 
-        # Attempt to run the Python code
         try:
             result = subprocess.run(
                 ["python3", full_path],

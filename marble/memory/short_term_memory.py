@@ -68,7 +68,7 @@ class ShortTermMemory(BaseMemory):
             prompt += f"{idx}. {str(information)}\n"
 
         summary = model_prompting(
-            llm_model="together_ai/meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo",
+            llm_model="meta-llama/Llama-3.1-70B-Instruct",
             messages=[{"role": "system", "content": prompt}],
             return_num=1,
             max_token_num=512,

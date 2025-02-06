@@ -30,7 +30,7 @@ class BaseAgent:
     Base class for all agents.
     """
 
-    def __init__(self, config: Dict[str, Union[Any, Dict[str, Any]]], env: EnvType, shared_memory: Union[SharedMemory, None] = None, model: str = "together_ai/meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo"):
+    def __init__(self, config: Dict[str, Union[Any, Dict[str, Any]]], env: EnvType, shared_memory: Union[SharedMemory, None] = None, model: str = "meta-llama/Llama-3.1-70B-Instruct"):
         """
         Initialize the agent.
 

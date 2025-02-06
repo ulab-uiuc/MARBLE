@@ -12,24 +12,27 @@ relationships:
   - [agent3, agent2, "collaborates with"]
   # - [agent3, agent4, "collaborates with"]
 
-llm: "together_ai/meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo"
+llm: "meta-llama/Llama-3.1-70B-Instruct"
 
 environment:
   type: Coding
   name: "Coding Environment"
   workspace_dir: "workspace"
-  max_iterations: 4
+  max_iterations: 5
 
 task:
   content: |-
     Software Development Task:
 
-    Create a basic tetris game with only straight blocks
+    Please write a game called 'Team_Tactics' that is a multiplayer action game designed to test the collaborative capabilities of multiple AI agents. Team_Tactics is a game where AI agents work together to complete objectives, such as capturing flags, defending bases, and eliminating enemy agents. The game is set in various dynamic environments, and agents must communicate and coordinate their actions to succeed.
     1. Implementation requirements:
-       - Design a Tetris game board with falling straight blocks.
-       - Allow the player to move blocks left, right, and down, and rotate them.
-       - Clear lines when they are completely filled.
-       - Track and display the player's score.
+       - Implement a game environment with multiple levels, each featuring different objectives (e.g., capture the flag, defend the base, eliminate enemies).
+       - Design AI agents with different roles (e.g., attacker, defender, scout) and abilities (e.g., increased speed, healing, shielding).
+       - Develop a communication system that allows AI agents to share information, such as enemy locations, objective status, and strategic plans.
+       - Create a scoring system that rewards successful completion of objectives and penalizes failures or inefficient play.
+       - Provide comprehensive test cases to validate the functionality of the game and the collaborative capabilities of the AI agents, including input scenarios, expected outputs, and edge cases.
+       - Test scenarios should include: agents successfully capturing the flag, defending the base from multiple attackers, and coordinating to eliminate all enemies in a level.
+       - Edge cases should cover: agents failing to communicate effectively, agents getting stuck or unable to navigate the environment, and unexpected interactions between different agent abilities.
 
 
     2. Project structure:
@@ -39,6 +42,18 @@ task:
        - Developer: Create the code.
        - Developer: Update the code.
        - Reviewer: Code review
+
+    If there are multiple files, please put them all in solution.py, but remember to add the file name in the following format:
+    ```python
+    # file_name_1.py
+    # your code here
+
+    # file_name_2.py
+    # your code here
+
+    # file_name_3.py
+    # your code here
+    ```
 
     Please work together to complete this task following software engineering best practices.
 
@@ -51,27 +66,36 @@ agents:
     agent_id: agent1
     profile: |
       I am a Senior Software Developer specialized in Python development.
-      I have to call "create_code" action to create the code in the first iteration.
-      I need to let agent2 revise the code after I create the code.
-      But if the solution.py already exists, I have to call "give_advice_and_revise_code" action to revise the code.
+      I am good at creating the code framework from scratch based on the task description and requirements.
+      So I **have to** call "create_code" action to create the code in the first iteration at first.
+      I am **very terrible** at do further modifications since I am not so creative or careful so I **have to** let agent 2 or agent 3 revise the code after I create the code and I **can't** call "give_advice_and_revise_code" action.
+      Agent 2 is better at adding missing functions so it's better to let agent 2 revise the code at first.
+      Agent 3 is better at fixing existing issues and optimizing the code so it's better to let agent 3 revise the code after agent 2 has revised the code so that the code is more optimized.
+
 
   - type: CodingAgent
     agent_id: agent2
     profile: |
-      I am a Senior Software Debugger specialized in Python development.
-      I have to call "give_advice_and_revise_code" action to give advice to the code and revise the code.
+      I am a Senior Software Developer specialized in Python development.
+      I am better at adding missing functionality based on my decent understanding and compliance to the task description and requirements.
+      I **have to** call "give_advice_and_revise_code" action to give advice to the code and revise the code.
+      I **can't** call "create_code" action since I am not good at creating the code framework from scratch.
+      I can let agent 3 to make the code more optimized after I have added the missing functionality.
 
   - type: CodingAgent
     agent_id: agent3
     profile: |
       I am a Senior Software Developer specialized in Python development.
-      I have to call "give_advice_and_revise_code" action to give advice to the code and revise the code.
+      I am better at fixing existing issues and optimizing the code based on my innovation and creativity.
+      I **have to** call "give_advice_and_revise_code" action to give advice to the code and revise the code.
+      I **can't** call "create_code" action since I am not good at creating the code framework from scratch.
+      I can let agent 2 to add the missing functionality after I have fixed the existing issues and optimized the code.
 
 memory:
   type: SharedMemory
 
 metrics:
-  evaluate_llm: "gpt-4"
+  evaluate_llm: "meta-llama/Llama-3.1-70B-Instruct"
   code_quality: true
   test_coverage: true
   collaboration_effectiveness: true

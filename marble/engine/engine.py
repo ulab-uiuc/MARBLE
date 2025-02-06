@@ -297,8 +297,10 @@ class Engine:
                 self.logger.info("Engine graph-based coordination loop completed.")
             self.logger.info("Engine graph-based coordination loop completed.")
             if self.environment.name == 'Coding Environment':
-                code = self._read_code_from_file('/home/zhe36/MARBLE/marble/workspace/solution.py')
+                self.logger.info("Environment is Coding Environment, evaluating code quality...")
+                code = self._read_code_from_file('/opt/dlami/nvme/zhe/MARBLE/marble/workspace/solution.py')
                 if code:
+                    self.logger.info("Code found, evaluating code quality...")
                     self.evaluator.evaluate_code_quality(task=self.task, code_result=code)
                     summary_data["code_quality"] = self.evaluator.metrics["code_quality"]
                     self.logger.info(f"Code quality evaluation results: {self.evaluator.metrics['code_quality']}")
@@ -407,7 +409,7 @@ class Engine:
                 summary_data['task_evaluation'] = self.evaluator.metrics["task_evaluation"]
                 self.logger.info("Engine graph-based coordination loop completed.")
             if self.environment.name == 'Coding Environment':
-                code = self._read_code_from_file('/home/zhe36/MARBLE/marble/workspace/solution.py')
+                code = self._read_code_from_file('/opt/dlami/nvme/zhe/MARBLE/marble/workspace/solution.py')
                 if code:
                     self.evaluator.evaluate_code_quality(task=self.task, code_result=code)
                     summary_data["code_quality"] = self.evaluator.metrics["code_quality"]
@@ -510,7 +512,7 @@ class Engine:
                 summary_data['task_evaluation'] = self.evaluator.metrics["task_evaluation"]
                 self.logger.info("Engine graph-based coordination loop completed.")
             if self.environment.name == 'Coding Environment':
-                code = self._read_code_from_file('/home/zhe36/MARBLE/marble/workspace/solution.py')
+                code = self._read_code_from_file('/opt/dlami/nvme/zhe/MARBLE/marble/workspace/solution.py')
                 if code:
                     self.evaluator.evaluate_code_quality(task=self.task, code_result=code)
                     summary_data["code_quality"] = self.evaluator.metrics["code_quality"]
@@ -598,7 +600,7 @@ class Engine:
                 summary_data['task_evaluation'] = self.evaluator.metrics["task_evaluation"]
                 self.logger.info("Engine graph-based coordination loop completed.")
             if self.environment.name == 'Coding Environment':
-                code = self._read_code_from_file('/home/zhe36/MARBLE/marble/workspace/solution.py')
+                code = self._read_code_from_file('/opt/dlami/nvme/zhe/MARBLE/marble/workspace/solution.py')
                 if code:
                     self.evaluator.evaluate_code_quality(task=self.task, code_result=code)
                     summary_data["code_quality"] = self.evaluator.metrics["code_quality"]

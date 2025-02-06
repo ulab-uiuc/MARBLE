@@ -4,10 +4,12 @@ Base agent module.
 
 import json
 import uuid
+import os
 from collections import defaultdict
 from typing import Any, Dict, List, Optional, Tuple, TypeVar, Union
 
 from litellm import token_counter
+from ruamel.yaml import YAML
 
 from marble.environments import BaseEnvironment, WebEnvironment, CodingEnvironment
 from marble.llms.model_prompting import model_prompting
@@ -30,7 +32,7 @@ class CodingAgent:
     Base class for all agents.
     """
 
-    def __init__(self, config: Dict[str, Union[Any, Dict[str, Any]]], env: EnvType, shared_memory: Union[SharedMemory, None] = None, model: str = "together_ai/meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo"):
+    def __init__(self, config: Dict[str, Union[Any, Dict[str, Any]]], env: EnvType, shared_memory: Union[SharedMemory, None] = None, model: str = "meta-llama/Llama-3.1-70B-Instruct"):
         """
         Initialize the agent.
 
@@ -100,6 +102,39 @@ class CodingAgent:
         self.task_history.append(task)
         self.logger.info(f"Agent '{self.agent_id}' acting on task '{task}'.")
         tools = [self.env.action_handler_descriptions[name] for name in self.env.action_handler_descriptions]
+        
+        # 从配置文件读取完整的task description和requirements
+        config_path = "/opt/dlami/nvme/zhe/MARBLE/marble/configs/coding_config/coding_config.yaml"
+        full_task_description = task
+        requirements = ""
+        
+        if os.path.exists(config_path):
+            try:
+                yaml = YAML()
+                with open(config_path, 'r', encoding='utf-8') as f:
+                    config = yaml.load(f)
+                
+                # 获取完整的task description和requirements
+                full_task_description = config['task']['content']
+                
+                # 提取requirements部分
+                requirements_start = "1. Implementation requirements:\n"
+                requirements_end = "\n\n2. Project structure:"
+                requirements = full_task_description[
+                    full_task_description.find(requirements_start) + len(requirements_start):
+                    full_task_description.find(requirements_end)
+                ].strip()
+            except Exception as e:
+                self.logger.error(f"Error reading config file: {e}")
+        
+        # 更新task以包含完整描述和需求
+        task = f"""Complete Task Description:
+{full_task_description}
+
+Implementation Requirements:
+{requirements}
+"""
+
         available_agents = {}
         for agent_id_1, agent_id_2, relationship in self.agent_graph.relationships:
             if agent_id_1 != self.agent_id and agent_id_2 != self.agent_id:
@@ -148,7 +183,7 @@ class CodingAgent:
         tools.append(new_communication_session_description)
         act_task = (
             f"You are {self.agent_id}: {self.profile}\n"
-            f"This is your task: {task}\n"
+            f"This is your task: {task}\n"  # 现在包含了完整的描述和需求
             f"These are the ids and profiles of other agents you can interact with:\n"
             f"{agent_descriptions}"
             f"But you do not have to communcate with other agents.\n"

@@ -20,7 +20,7 @@ class EnginePlanner:
     The EnginePlanner class handles task assignment and scheduling for agents.
     """
 
-    def __init__(self, agent_graph: AgentGraph, memory: Any, config: Dict[str, Any], task:str, model:str="together_ai/meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo"):
+    def __init__(self, agent_graph: AgentGraph, memory: Any, config: Dict[str, Any], task:str, model:str="meta-llama/Llama-3.1-70B-Instruct"):
         """
         Initialize the EnginePlanner.
 
@@ -157,13 +157,15 @@ class EnginePlanner:
             prompt += f"- {result}\n"
 
         prompt += (
-            "\nRespond with a JSON object containing a single key 'continue' set to true or false.\n"
+            "\nYou must respond with a valid JSON object containing a single key 'continue' set to true or false.\n"
             "Some times the results will have a key call success and its value is true, but this does not mean the task is completed, This only means the tool execute successfully.\n"
             "You should analyze the results and decide whether the task is completed or not.\n"
-            "Example:\n"
+            "Your response must be a valid JSON object in exactly this format:\n"
             "{\n"
-            '  "continue": True\n'
-            "}"
+            '  "continue": true\n'
+            "}\n"
+            "If you cannot provide a JSON response, simply respond with 'true' or 'false' to indicate whether to continue.\n"
+            "Do not include any additional text, explanation, or formatting."
         )
 
         messages = [{"role": "system", "content": prompt}]
@@ -177,11 +179,50 @@ class EnginePlanner:
         )
         messages = [{"role": "system", "content": prompt}, {"role": "assistant", "content": response[0].content}]
         self.token_usage += token_counter(model=self.model, messages=messages)
+        
         try:
-            decision = json.loads(response[0].content if response[0].content else "")
-            self.logger.debug(f"Received continuation decision: {decision}")
-            bool_decision:bool = decision.get("continue", False)
-            return bool_decision
-        except json.JSONDecodeError as e:
-            self.logger.error(f"Failed to parse JSON decision response: {e}")
+            # 清理响应内容
+            content = response[0].content.strip() if response[0].content else ""
+            
+            # 尝试提取JSON部分
+            json_start = content.find('{')
+            json_end = content.rfind('}') + 1
+            
+            if json_start >= 0 and json_end > json_start:
+                json_str = content[json_start:json_end]
+                try:
+                    decision = json.loads(json_str)
+                    self.logger.debug(f"Received continuation decision: {decision}")
+                    bool_decision: bool = decision.get("continue", False)
+                    return bool_decision
+                except json.JSONDecodeError as e:
+                    self.logger.error(f"Failed to parse extracted JSON: {e}, falling back to keyword analysis")
+            else:
+                self.logger.warning("No valid JSON found in response, falling back to keyword analysis")
+            
+            # 关键词分析作为备选方案
+            continue_keywords = {'true', 'yes', 'continue', 'True', 'TRUE', 'Yes', 'YES'}
+            stop_keywords = {'false', 'no', 'stop', 'False', 'FALSE', 'No', 'NO', 'completed', 'done', 'finished'}
+            
+            # 转换内容为小写进行比较
+            content_lower = content.lower()
+            
+            # 检查是否包含继续关键词
+            for keyword in continue_keywords:
+                if keyword.lower() in content_lower:
+                    self.logger.info(f"Found continue keyword: {keyword}")
+                    return True
+                    
+            # 检查是否包含停止关键词
+            for keyword in stop_keywords:
+                if keyword.lower() in content_lower:
+                    self.logger.info(f"Found stop keyword: {keyword}")
+                    return False
+                    
+            # 如果没有找到任何关键词，返回默认值（结束）
+            self.logger.warning("No keywords found in response, defaulting to terminate")
+            return False
+            
+        except Exception as e:
+            self.logger.error(f"Error processing decision response: {e}, defaulting to terminate")
             return False

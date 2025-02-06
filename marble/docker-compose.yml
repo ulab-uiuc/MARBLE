@@ -1,0 +1,31 @@
+x-vllm-server-base: &vllm-server-base
+  image: vllm/vllm-openai:latest
+  ipc: host
+  command:
+    - --disable-log-requests   # To save your eyes from the logs
+    - --model=meta-llama/Llama-3.1-70B-Instruct
+    - --tensor-parallel-size=4
+    - --tool-call-parser=llama3_json
+    - --enable-auto-tool-choice
+  volumes:
+    - /opt/dlami/nvme/zhe/.cache/huggingface:/root/.cache/huggingface:rw
+
+services:
+  vllm-server-0:
+    <<: *vllm-server-base
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              capabilities: [gpu]
+              device_ids: ['4', '5', '6', '7']
+
+  load-balancer:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - vllm-server-0
