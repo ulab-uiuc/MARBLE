@@ -34,7 +34,7 @@ llm: fireworks_ai/accounts/fireworks/models/llama-v3p1-70b-instruct
 environment:
   type: DB
   name: DB Simulation Environment
-  max_iterations: 10
+  max_iterations: 5
   init_sql: "-- 1. Students table (stores student information)\nCREATE TABLE students\
     \ (\n    student_id SERIAL PRIMARY KEY,  -- Unique student ID\n    first_name\
     \ VARCHAR(100),\n    last_name VARCHAR(100),\n    email VARCHAR(255) UNIQUE NOT\
@@ -95,23 +95,19 @@ task:
 
     Recently, during operation, the database has seen performance issues. Use sql
     queries to find out what is wrong, and find out the reason that caused it. The
-    root cause can be only two of the following: ''INSERT_LARGE_DATA'', ''MISSING_INDEXES'',
-    ''LOCK_CONTENTION'', ''VACUUM'', ''REDUNDANT_INDEX'', ''FETCH_LARGE_DATA''. The
-    planner should assign different agent to analyze possbility for each root cause
-    and make final decision. Agents can also chat with each other to share information.  Please
+    root cause can be only three of the following: ''INSERT_LARGE_DATA'', ''MISSING_INDEXES'',
+    ''LOCK_CONTENTION'', ''VACUUM'', ''REDUNDANT_INDEX'', ''FETCH_LARGE_DATA'', ''POOR_JOIN_PERFORMANCE,CPU_CONTENTION''.
+    The planner should assign different agent to analyze possbility for each root
+    cause and make final decision. Agents can also chat with each other to share information.  Please
     make the decision after using all these tools, as a premature decision may lead
-    to incorrect conclusions. If the last round involves the Agents investigating
-    via SQL queries, the next round should allow them to communicate to each other
-    and discuss. In this round, each agent could talk to one other agent. Otherwise,
-    assign the agents to investigate these reasons - agent1 on ''INSERT_LARGE_DATA'',
-    agent 2 on ''MISSING_INDEXES'', ..., agent5 on ''FETCH_LARGE_DATA''.
+    to incorrect conclusions.
 
     '
   output_format: "Please make the decision after exploring all rootcauses, as a premature\
     \ decision may lead to incorrect conclusions.\nPlease choose the most likely cause\
     \ of the database anomaly from the following list, based on the expert agents:\
     \ \n'INSERT_LARGE_DATA', 'LOCK_CONTENTION', 'VACUUM', 'REDUNDANT_INDEX', 'FETCH_LARGE_DATA'\n\
-    You can ONLY CHOOSE two.\nYou have access to the Database, and you can perform\
+    You can ONLY CHOOSE three.\nYou have access to the Database, and you can perform\
     \ queries to get the required information. Agents can also chat with each other\
     \ to share information.\nThese tables include:\n- `pg_stat_statements` (for detailed\
     \ query stats)\n- `pg_locks` (for lock waits and contention)\n- `pg_stat_user_indexes`\
@@ -128,7 +124,7 @@ task:
   root_causes:
   - INSERT_LARGE_DATA
   - LOCK_CONTENTION
-  number_of_labels_pred: 2
+  number_of_labels_pred: 3
 agents:
 - type: BaseAgent
   agent_id: agent1

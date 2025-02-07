@@ -1,0 +1,217 @@
+coordinate_mode: graph
+relationships:
+- - agent1
+  - agent2
+  - collaborate with
+- - agent1
+  - agent3
+  - collaborate with
+- - agent1
+  - agent4
+  - collaborate with
+- - agent1
+  - agent5
+  - collaborate with
+- - agent2
+  - agent3
+  - collaborate with
+- - agent2
+  - agent4
+  - collaborate with
+- - agent2
+  - agent5
+  - collaborate with
+- - agent3
+  - agent4
+  - collaborate with
+- - agent3
+  - agent5
+  - collaborate with
+- - agent4
+  - agent5
+  - collaborate with
+llm: gpt-3.5-turbo
+environment:
+  type: DB
+  name: DB Simulation Environment
+  max_iterations: 6
+  init_sql: "-- 1. Vehicles table (stores information about vehicles)\nCREATE TABLE\
+    \ vehicles (\n    vehicle_id SERIAL PRIMARY KEY,  -- Unique vehicle ID\n    vehicle_type\
+    \ VARCHAR(50) NOT NULL,  -- Type of vehicle (e.g., truck, bus, car)\n    license_plate\
+    \ VARCHAR(20) UNIQUE NOT NULL,  -- Vehicle license plate number\n    model VARCHAR(100),\
+    \  -- Vehicle model\n    capacity INT NOT NULL,  -- Capacity of the vehicle\n\
+    \    manufacturer VARCHAR(100),  -- Manufacturer of the vehicle\n    status VARCHAR(50)\
+    \ DEFAULT 'available',  -- Vehicle status (available, in repair, etc.)\n    created_at\
+    \ TIMESTAMP DEFAULT CURRENT_TIMESTAMP  -- Date of vehicle registration\n);\n\n\
+    -- 2. Drivers table (stores information about drivers)\nCREATE TABLE drivers (\n\
+    \    driver_id SERIAL PRIMARY KEY,  -- Unique driver ID\n    first_name VARCHAR(100)\
+    \ NOT NULL,  -- Driver's first name\n    last_name VARCHAR(100) NOT NULL,  --\
+    \ Driver's last name\n    date_of_birth DATE,  -- Driver's date of birth\n   \
+    \ license_number VARCHAR(50) UNIQUE NOT NULL,  -- Driver's license number\n  \
+    \  phone VARCHAR(20),  -- Driver's phone number\n    hire_date TIMESTAMP DEFAULT\
+    \ CURRENT_TIMESTAMP  -- Date the driver was hired\n);\n\n-- 3. Routes table (stores\
+    \ information about routes)\nCREATE TABLE routes (\n    route_id SERIAL PRIMARY\
+    \ KEY,  -- Unique route ID\n    start_location VARCHAR(100) NOT NULL,  -- Starting\
+    \ point of the route\n    end_location VARCHAR(100) NOT NULL,  -- Destination\
+    \ of the route\n    distance DECIMAL(10, 2) NOT NULL,  -- Distance in kilometers\n\
+    \    estimated_time TIME NOT NULL,  -- Estimated travel time\n    created_at TIMESTAMP\
+    \ DEFAULT CURRENT_TIMESTAMP  -- Date of route creation\n);\n\n-- 4. Trips table\
+    \ (stores information about each trip)\nCREATE TABLE trips (\n    trip_id SERIAL\
+    \ PRIMARY KEY,  -- Unique trip ID\n    vehicle_id INT REFERENCES vehicles(vehicle_id),\
+    \  -- Foreign key to vehicles\n    driver_id INT REFERENCES drivers(driver_id),\
+    \  -- Foreign key to drivers\n    route_id INT REFERENCES routes(route_id),  --\
+    \ Foreign key to routes\n    departure_time TIMESTAMP,  -- Time of departure\n\
+    \    arrival_time TIMESTAMP,  -- Time of arrival\n    status VARCHAR(50) DEFAULT\
+    \ 'scheduled',  -- Trip status (scheduled, completed, canceled)\n    created_at\
+    \ TIMESTAMP DEFAULT CURRENT_TIMESTAMP  -- Date of trip creation\n);\n\n-- 5. Cargo\
+    \ table (stores information about cargo being transported)\nCREATE TABLE cargo\
+    \ (\n    cargo_id SERIAL PRIMARY KEY,  -- Unique cargo ID\n    trip_id INT REFERENCES\
+    \ trips(trip_id),  -- Foreign key to trips\n    cargo_type VARCHAR(100),  -- Type\
+    \ of cargo (e.g., goods, passengers)\n    weight DECIMAL(10, 2),  -- Weight of\
+    \ the cargo in kilograms\n    description TEXT,  -- Description of the cargo\n\
+    \    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP  -- Date of cargo registration\n\
+    );\n\n-- 6. Maintenance table (stores maintenance records for vehicles)\nCREATE\
+    \ TABLE maintenance (\n    maintenance_id SERIAL PRIMARY KEY,  -- Unique maintenance\
+    \ ID\n    vehicle_id INT REFERENCES vehicles(vehicle_id),  -- Foreign key to vehicles\n\
+    \    maintenance_type VARCHAR(100),  -- Type of maintenance (e.g., oil change,\
+    \ tire replacement)\n    maintenance_date TIMESTAMP,  -- Date of maintenance\n\
+    \    cost DECIMAL(10, 2),  -- Cost of maintenance\n    description TEXT,  -- Description\
+    \ of the maintenance work done\n    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP\
+    \  -- Date of maintenance record creation\n);\n\n-- 7. Fuel_Logs table (stores\
+    \ fuel consumption records for vehicles)\nCREATE TABLE fuel_logs (\n    fuel_log_id\
+    \ SERIAL PRIMARY KEY,  -- Unique fuel log ID\n    vehicle_id INT REFERENCES vehicles(vehicle_id),\
+    \  -- Foreign key to vehicles\n    fuel_date TIMESTAMP,  -- Date of fuel log entry\n\
+    \    fuel_quantity DECIMAL(10, 2),  -- Amount of fuel added (in liters)\n    fuel_cost\
+    \ DECIMAL(10, 2),  -- Cost of the fuel\n    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP\
+    \  -- Date of fuel log creation\n);\n\n-- 8. Locations table (stores information\
+    \ about locations for trips and routes)\nCREATE TABLE locations (\n    location_id\
+    \ SERIAL PRIMARY KEY,  -- Unique location ID\n    location_name VARCHAR(100) NOT\
+    \ NULL,  -- Location name\n    latitude DECIMAL(9, 6),  -- Latitude of the location\n\
+    \    longitude DECIMAL(9, 6),  -- Longitude of the location\n    description TEXT,\
+    \  -- Description of the location\n    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP\
+    \  -- Date of location record creation\n);\n\n-- 9. Trip_Logs table (stores detailed\
+    \ logs of each trip)\nCREATE TABLE trip_logs (\n    log_id SERIAL PRIMARY KEY,\
+    \  -- Unique log ID\n    trip_id INT REFERENCES trips(trip_id),  -- Foreign key\
+    \ to trips\n    log_time TIMESTAMP,  -- Time of the log entry\n    log_description\
+    \ TEXT,  -- Description of what happened during the trip\n    location_id INT\
+    \ REFERENCES locations(location_id),  -- Foreign key to locations\n    created_at\
+    \ TIMESTAMP DEFAULT CURRENT_TIMESTAMP  -- Date of log entry\n);\n\n-- 10. Payments\
+    \ table (stores payment records for transportation services)\nCREATE TABLE payments\
+    \ (\n    payment_id SERIAL PRIMARY KEY,  -- Unique payment ID\n    trip_id INT\
+    \ REFERENCES trips(trip_id),  -- Foreign key to trips\n    amount DECIMAL(10,\
+    \ 2),  -- Amount paid for the trip\n    payment_method VARCHAR(50),  -- Payment\
+    \ method (e.g., credit card, cash)\n    payment_date TIMESTAMP,  -- Date of payment\n\
+    \    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP  -- Date of payment record\
+    \ creation\n);\n\n-- Sample Data Insertion\n\n-- Insert vehicles\nINSERT INTO\
+    \ vehicles (vehicle_type, license_plate, model, capacity, manufacturer)\nVALUES\
+    \ \n('Truck', 'ABC123', 'Model X', 20, 'Ford'),\n('Bus', 'XYZ789', 'Model Y',\
+    \ 50, 'Mercedes');\n\n-- Insert drivers\nINSERT INTO drivers (first_name, last_name,\
+    \ date_of_birth, license_number, phone)\nVALUES \n('John', 'Doe', '1985-06-15',\
+    \ 'DL12345', '555-1234'),\n('Jane', 'Smith', '1990-08-25', 'DL98765', '555-5678');\n\
+    \n-- Insert routes\nINSERT INTO routes (start_location, end_location, distance,\
+    \ estimated_time)\nVALUES \n('City A', 'City B', 100.5, '02:00:00'),\n('City C',\
+    \ 'City D', 150.0, '03:00:00');\n\n-- Insert trips\nINSERT INTO trips (vehicle_id,\
+    \ driver_id, route_id, departure_time, arrival_time, status)\nVALUES \n(1, 1,\
+    \ 1, '2024-12-01 08:00:00', '2024-12-01 10:00:00', 'completed'),\n(2, 2, 2, '2024-12-02\
+    \ 09:00:00', '2024-12-02 12:00:00', 'completed');\n\n-- Insert cargo\nINSERT INTO\
+    \ cargo (trip_id, cargo_type, weight, description)\nVALUES \n(1, 'Goods', 1000.00,\
+    \ 'Electronics shipment'),\n(2, 'Passengers', 3000.00, 'Tourists for sightseeing');\n\
+    \n-- Insert maintenance\nINSERT INTO maintenance (vehicle_id, maintenance_type,\
+    \ maintenance_date, cost, description)\nVALUES \n(1, 'Oil Change', '2024-11-20',\
+    \ 50.00, 'Routine oil change'),\n(2, 'Tire Replacement', '2024-11-25', 200.00,\
+    \ 'Replaced 2 tires');\n\n-- Insert fuel logs\nINSERT INTO fuel_logs (vehicle_id,\
+    \ fuel_date, fuel_quantity, fuel_cost)\nVALUES \n(1, '2024-12-01', 50.00, 100.00),\n\
+    (2, '2024-12-02', 70.00, 140.00);\n\n-- Insert locations\nINSERT INTO locations\
+    \ (location_name, latitude, longitude, description)\nVALUES \n('City A', 40.7128,\
+    \ -74.0060, 'Starting point of route 1'),\n('City B', 34.0522, -118.2437, 'Destination\
+    \ point of route 1');\n\n-- Insert trip logs\nINSERT INTO trip_logs (trip_id,\
+    \ log_time, log_description, location_id)\nVALUES \n(1, '2024-12-01 08:15:00',\
+    \ 'Departed City A', 1),\n(1, '2024-12-01 09:45:00', 'Arrived in City B', 2);\n\
+    \n-- Insert payments\nINSERT INTO payments (trip_id, amount, payment_method, payment_date)\n\
+    VALUES \n(1, 500.00, 'Credit Card', '2024-12-01'),\n(2, 1000.00, 'Cash', '2024-12-02');\n"
+  anomalies:
+  - anomaly: REDUNDANT_INDEX
+    threads: 100
+    ncolumn: 20
+    nrow: 20000
+    colsize: 100
+  - anomaly: VACUUM
+    threads: 100
+    ncolumn: 20
+    nrow: 20000
+    colsize: 100
+communication: false
+task:
+  content: 'This database schema covers multiple aspects of a transportation system,
+    including vehicles, drivers, routes, trips, cargo, maintenance, fuel logs, and
+    payments. It allows efficient tracking of trips, vehicle statuses, and associated
+    payments, ensuring smooth operations in a transportation company.
+
+    Recently, during operation, the database has seen performance issues. Use sql
+    queries to find out what is wrong, and find out the reason that caused it. The
+    root cause can be only two of the following: ''INSERT_LARGE_DATA'', ''MISSING_INDEXES'',
+    ''LOCK_CONTENTION'', ''VACUUM'', ''REDUNDANT_INDEX'', ''FETCH_LARGE_DATA''. The
+    planner should assign different agent to analyze possbility for each root cause
+    and make final decision. Agents can also chat with each other to share information.  Please
+    make the decision after using all these tools, as a premature decision may lead
+    to incorrect conclusions. If the last round involves the Agents investigating
+    via SQL queries, the next round should allow them to communicate to each other
+    and discuss. In this round, each agent could talk to one other agent. Otherwise,
+    assign the agents to investigate these reasons - agent1 on ''INSERT_LARGE_DATA'',
+    agent 2 on ''MISSING_INDEXES'', ..., agent5 on ''FETCH_LARGE_DATA''.
+
+    '
+  output_format: "Please make the decision after exploring all rootcauses, as a premature\
+    \ decision may lead to incorrect conclusions.\nPlease choose the most likely cause\
+    \ of the database anomaly from the following list, based on the expert agents:\
+    \ \n'INSERT_LARGE_DATA', 'LOCK_CONTENTION', 'VACUUM', 'REDUNDANT_INDEX', 'FETCH_LARGE_DATA'\n\
+    You can ONLY CHOOSE two.\nYou have access to the Database, and you can perform\
+    \ queries to get the required information. Agents can also chat with each other\
+    \ to share information.\nThese tables include:\n- `pg_stat_statements` (for detailed\
+    \ query stats)\n- `pg_locks` (for lock waits and contention)\n- `pg_stat_user_indexes`\
+    \ (for index usage)\n- `pg_indexes` (for index definitions)\n- `pg_stat_all_tables`\
+    \ (detailed statistics about vacuuming, auto vacuuming, and analyze operations\
+    \ for each table)\n- `pg_stat_progress_vacuum` (for vacuum progress)\n- `pg_stat_user_tables`\
+    \ (for dead tuples and vacuum stats)\n"
+  labels:
+  - INSERT_LARGE_DATA
+  - LOCK_CONTENTION
+  - VACUUM
+  - REDUNDANT_INDEX
+  - FETCH_LARGE_DATA
+  root_causes:
+  - REDUNDANT_INDEX
+  - VACUUM
+  number_of_labels_pred: 2
+agents:
+- type: BaseAgent
+  agent_id: agent1
+  profile: 'agent1 will explore the possibility of INSERT_LARGE_DATA as a root cause.
+    Recommended tables: `pg_stat_statements`. You can search for INSERTs.'
+- type: BaseAgent
+  agent_id: agent2
+  profile: 'agent2 will explore the possibility of LOCK_CONTENTION as a root cause.
+    Recommended tables: `pg_locks`.'
+- type: BaseAgent
+  agent_id: agent3
+  profile: 'agent3 will explore the possibility of VACUUM as a root cause. Recommended
+    to search for inappropiate VACUUMs from `pg_stat_all_tables`: SELECT query, calls,
+    total_plan_time, rows, mean_plan_time FROM pg_stat_statements WHERE query LIKE
+    ''VACUUM%'';'
+- type: BaseAgent
+  agent_id: agent4
+  profile: 'agent4 will explore the possibility of REDUNDANT_INDEX as a root cause.
+    Recommended tables: `pg_stat_user_indexes`, `pg_indexes`.'
+- type: BaseAgent
+  agent_id: agent5
+  profile: agent5 will explore the possibility of FETCH_LARGE_DATA as a root cause.
+    Recommended to search for SELECTs from `pg_stat_statements`.
+memory:
+  type: SharedMemory
+metrics:
+  accuracy: true
+  response_time: true
+output:
+  file_path: result/result_gpt-3.5-turbo/TRANSPORTATION_REDUNDANT_INDEX_VACUUM_RESULT.json
+engine_planner:
+  initial_progress: Starting the simulation.

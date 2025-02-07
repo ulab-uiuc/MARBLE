@@ -1,0 +1,183 @@
+coordinate_mode: graph
+relationships:
+- - agent1
+  - agent2
+  - collaborate with
+- - agent1
+  - agent3
+  - collaborate with
+- - agent1
+  - agent4
+  - collaborate with
+- - agent1
+  - agent5
+  - collaborate with
+- - agent2
+  - agent3
+  - collaborate with
+- - agent2
+  - agent4
+  - collaborate with
+- - agent2
+  - agent5
+  - collaborate with
+- - agent3
+  - agent4
+  - collaborate with
+- - agent3
+  - agent5
+  - collaborate with
+- - agent4
+  - agent5
+  - collaborate with
+llm: gpt-3.5-turbo
+environment:
+  type: DB
+  name: DB Simulation Environment
+  max_iterations: 6
+  init_sql: "-- 1. Users table (stores user information)\nCREATE TABLE users (\n \
+    \   user_id SERIAL PRIMARY KEY,  -- Unique user ID\n    first_name VARCHAR(100)\
+    \ NOT NULL,  -- User's first name\n    last_name VARCHAR(100) NOT NULL,  -- User's\
+    \ last name\n    email VARCHAR(255) UNIQUE NOT NULL,  -- Unique email\n    password_hash\
+    \ VARCHAR(255) NOT NULL,  -- Hashed password\n    created_at TIMESTAMP DEFAULT\
+    \ CURRENT_TIMESTAMP  -- Account creation time\n);\n\n-- 2. Accounts table (stores\
+    \ financial account details)\nCREATE TABLE accounts (\n    account_id SERIAL PRIMARY\
+    \ KEY,  -- Unique account ID\n    user_id INT REFERENCES users(user_id),  -- Foreign\
+    \ key to users\n    account_type VARCHAR(50) NOT NULL,  -- Type of account (e.g.,\
+    \ checking, savings)\n    balance DECIMAL(15, 2) NOT NULL DEFAULT 0,  -- Current\
+    \ balance\n    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP  -- Account creation\
+    \ time\n);\n\n-- 3. Transactions table (stores transaction details)\nCREATE TABLE\
+    \ transactions (\n    transaction_id SERIAL PRIMARY KEY,  -- Unique transaction\
+    \ ID\n    account_id INT REFERENCES accounts(account_id),  -- Foreign key to accounts\n\
+    \    transaction_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,  -- Date of transaction\n\
+    \    transaction_type VARCHAR(50) NOT NULL,  -- Type of transaction (e.g., deposit,\
+    \ withdrawal)\n    amount DECIMAL(15, 2) NOT NULL,  -- Transaction amount\n  \
+    \  description TEXT  -- Description of the transaction\n);\n\n-- 4. Investments\
+    \ table (stores investment details)\nCREATE TABLE investments (\n    investment_id\
+    \ SERIAL PRIMARY KEY,  -- Unique investment ID\n    user_id INT REFERENCES users(user_id),\
+    \  -- Foreign key to users\n    investment_name VARCHAR(255) NOT NULL,  -- Name\
+    \ of the investment\n    amount DECIMAL(15, 2) NOT NULL,  -- Investment amount\n\
+    \    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP  -- Investment date\n);\n\n\
+    -- 5. Investment_Transactions table (stores transactions for investments)\nCREATE\
+    \ TABLE investment_transactions (\n    investment_transaction_id SERIAL PRIMARY\
+    \ KEY,  -- Unique transaction ID\n    investment_id INT REFERENCES investments(investment_id),\
+    \  -- Foreign key to investments\n    transaction_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\
+    \  -- Date of the transaction\n    transaction_type VARCHAR(50) NOT NULL,  --\
+    \ Type of transaction (e.g., buy, sell)\n    amount DECIMAL(15, 2) NOT NULL, \
+    \ -- Amount of the transaction\n    price DECIMAL(15, 2) NOT NULL  -- Price per\
+    \ unit at the time of the transaction\n);\n\n-- Insert sample users\nINSERT INTO\
+    \ users (first_name, last_name, email, password_hash) \nVALUES \n('John', 'Doe',\
+    \ 'john.doe@example.com', 'hashed_password_1'),\n('Jane', 'Smith', 'jane.smith@example.com',\
+    \ 'hashed_password_2');\n\n-- Insert sample accounts\nINSERT INTO accounts (user_id,\
+    \ account_type, balance) \nVALUES \n(1, 'checking', 1000.00),\n(1, 'savings',\
+    \ 5000.00),\n(2, 'checking', 1500.00);\n\n-- Insert sample transactions for John\n\
+    INSERT INTO transactions (account_id, transaction_type, amount, description) \n\
+    VALUES \n(1, 'deposit', 500.00, 'Salary deposit'),\n(1, 'withdrawal', 200.00,\
+    \ 'ATM withdrawal'),\n(2, 'deposit', 1000.00, 'Transfer from savings');\n\n--\
+    \ Insert sample investments for John\nINSERT INTO investments (user_id, investment_name,\
+    \ amount) \nVALUES \n(1, 'Stocks', 1000.00),\n(1, 'Bonds', 3000.00);\n\n-- Insert\
+    \ sample investment transactions for John\nINSERT INTO investment_transactions\
+    \ (investment_id, transaction_type, amount, price) \nVALUES \n(1, 'buy', 1000.00,\
+    \ 50.00),  -- John buys 20 stocks at $50 each\n(1, 'sell', 500.00, 60.00);  --\
+    \ John sells 10 stocks at $60 each\n\n-- Query to retrieve account details for\
+    \ a user\nSELECT a.account_id, a.account_type, a.balance \nFROM accounts a\nJOIN\
+    \ users u ON a.user_id = u.user_id\nWHERE u.user_id = 1;  -- Accounts for John\n\
+    \n-- Query to retrieve all transactions for a user\nSELECT t.transaction_id, t.transaction_date,\
+    \ t.transaction_type, t.amount, t.description\nFROM transactions t\nJOIN accounts\
+    \ a ON t.account_id = a.account_id\nWHERE a.user_id = 1;  -- Transactions for\
+    \ John\n\n-- Query to retrieve all investments for a user\nSELECT i.investment_id,\
+    \ i.investment_name, i.amount\nFROM investments i\nWHERE i.user_id = 1;  -- Investments\
+    \ for John\n\n-- Query to retrieve all investment transactions for a user\nSELECT\
+    \ it.investment_transaction_id, it.transaction_date, it.transaction_type, it.amount,\
+    \ it.price\nFROM investment_transactions it\nJOIN investments i ON it.investment_id\
+    \ = i.investment_id\nWHERE i.user_id = 1;  -- Investment transactions for John\n\
+    \n-- Query to calculate the total balance of a user's accounts\nSELECT u.first_name,\
+    \ u.last_name, SUM(a.balance) AS total_balance\nFROM users u\nJOIN accounts a\
+    \ ON u.user_id = a.user_id\nGROUP BY u.user_id;\n\n-- Query to calculate the total\
+    \ amount of investments for a user\nSELECT u.first_name, u.last_name, SUM(i.amount)\
+    \ AS total_investments\nFROM users u\nJOIN investments i ON u.user_id = i.user_id\n\
+    GROUP BY u.user_id;\n\n-- Query to calculate profit/loss for a specific investment\
+    \ (stocks in this case)\nSELECT i.investment_name, SUM(it.amount * it.price) AS\
+    \ total_value, i.amount AS initial_investment,\n       (SUM(it.amount * it.price)\
+    \ - i.amount) AS profit_or_loss\nFROM investment_transactions it\nJOIN investments\
+    \ i ON it.investment_id = i.investment_id\nWHERE i.investment_name = 'Stocks'\n\
+    GROUP BY i.investment_name, i.amount;\n"
+  anomalies:
+  - anomaly: FETCH_LARGE_DATA
+    threads: 100
+    ncolumn: 20
+    nrow: 20000
+    colsize: 100
+communication: false
+task:
+  content: 'This database is used for managing financial data within a Finance Management
+    System. It tracks users, their accounts, transactions, investments, and investment
+    transactions.
+
+    Recently, during operation, the database has seen performance issues. Use sql
+    queries to find out what is wrong, and find out the reason that caused it. The
+    root cause can be only two of the following: ''INSERT_LARGE_DATA'', ''MISSING_INDEXES'',
+    ''LOCK_CONTENTION'', ''VACUUM'', ''REDUNDANT_INDEX'', ''FETCH_LARGE_DATA''. The
+    planner should assign different agent to analyze possbility for each root cause
+    and make final decision. Agents can also chat with each other to share information.  Please
+    make the decision after using all these tools, as a premature decision may lead
+    to incorrect conclusions. If the last round involves the Agents investigating
+    via SQL queries, the next round should allow them to communicate to each other
+    and discuss. In this round, each agent could talk to one other agent. Otherwise,
+    assign the agents to investigate these reasons - agent1 on ''INSERT_LARGE_DATA'',
+    agent 2 on ''MISSING_INDEXES'', ..., agent5 on ''FETCH_LARGE_DATA''.
+
+    '
+  output_format: "Please make the decision after exploring all rootcauses, as a premature\
+    \ decision may lead to incorrect conclusions.\nPlease choose the most likely cause\
+    \ of the database anomaly from the following list, based on the expert agents:\
+    \ \n'INSERT_LARGE_DATA', 'LOCK_CONTENTION', 'VACUUM', 'REDUNDANT_INDEX', 'FETCH_LARGE_DATA'\n\
+    You can ONLY CHOOSE two.\nYou have access to the Database, and you can perform\
+    \ queries to get the required information. Agents can also chat with each other\
+    \ to share information.\nThese tables include:\n- `pg_stat_statements` (for detailed\
+    \ query stats)\n- `pg_locks` (for lock waits and contention)\n- `pg_stat_user_indexes`\
+    \ (for index usage)\n- `pg_indexes` (for index definitions)\n- `pg_stat_all_tables`\
+    \ (detailed statistics about vacuuming, auto vacuuming, and analyze operations\
+    \ for each table)\n- `pg_stat_progress_vacuum` (for vacuum progress)\n- `pg_stat_user_tables`\
+    \ (for dead tuples and vacuum stats)\n"
+  labels:
+  - INSERT_LARGE_DATA
+  - LOCK_CONTENTION
+  - VACUUM
+  - REDUNDANT_INDEX
+  - FETCH_LARGE_DATA
+  root_causes:
+  - FETCH_LARGE_DATA
+  number_of_labels_pred: 2
+agents:
+- type: BaseAgent
+  agent_id: agent1
+  profile: 'agent1 will explore the possibility of INSERT_LARGE_DATA as a root cause.
+    Recommended tables: `pg_stat_statements`. You can search for INSERTs.'
+- type: BaseAgent
+  agent_id: agent2
+  profile: 'agent2 will explore the possibility of LOCK_CONTENTION as a root cause.
+    Recommended tables: `pg_locks`.'
+- type: BaseAgent
+  agent_id: agent3
+  profile: 'agent3 will explore the possibility of VACUUM as a root cause. Recommended
+    to search for inappropiate VACUUMs from `pg_stat_all_tables`: SELECT query, calls,
+    total_plan_time, rows, mean_plan_time FROM pg_stat_statements WHERE query LIKE
+    ''VACUUM%'';'
+- type: BaseAgent
+  agent_id: agent4
+  profile: 'agent4 will explore the possibility of REDUNDANT_INDEX as a root cause.
+    Recommended tables: `pg_stat_user_indexes`, `pg_indexes`.'
+- type: BaseAgent
+  agent_id: agent5
+  profile: agent5 will explore the possibility of FETCH_LARGE_DATA as a root cause.
+    Recommended to search for SELECTs from `pg_stat_statements`.
+memory:
+  type: SharedMemory
+metrics:
+  accuracy: true
+  response_time: true
+output:
+  file_path: result/result_gpt-3.5-turbo/FINANCE_FETCH_LARGE_DATA_RESULT.json
+engine_planner:
+  initial_progress: Starting the simulation.

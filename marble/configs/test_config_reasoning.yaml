@@ -1,0 +1,59 @@
+llm: "gpt-3.5-turbo"
+
+metrics:
+  evaluate_llm:
+    provider: "openai"
+    model: "gpt-3.5-turbo"
+  engagement_level: true
+  relevance: true
+  diversity_of_perspectives: true
+
+coordinate_mode: tree
+relationships:
+  - [agent1, agent2, "parent"]
+  - [agent1, agent3, "parent"]
+  - [agent2, agent4, "parent"]
+  - [agent3, agent5, "parent"]
+
+environment:
+  type: Base
+  name: "Discussion Simulation Environment"
+  max_iterations: 1
+
+task:
+  content: "Discuss the potential impact of AI on various industries."
+
+agents:
+  - type: BaseAgent
+    agent_id: agent1
+    strategy: cot  # 这里设置不同的 reasoning strategy
+    profile: "You are an AI researcher with a strategic and forward-thinking mindset. Your expertise lies in AI ethics and policy."
+
+  - type: BaseAgent
+    agent_id: agent2
+    strategy: cot
+    profile: "You are a software developer specializing in AI applications in healthcare. You are practical, focused on immediate applications and potential risks in healthcare."
+
+  - type: BaseAgent
+    agent_id: agent3
+    strategy: cot
+    profile: "You are an economist interested in the long-term effects of AI on the labor market. You tend to be analytical and cautious about AI's societal impacts."
+
+  - type: BaseAgent
+    agent_id: agent4
+    strategy: cot
+    profile: "You are a creative designer working with AI for art and media. You are optimistic and enjoy discussing how AI can transform creative processes."
+
+  - type: BaseAgent
+    agent_id: agent5
+    strategy: cot
+    profile: "You are a business analyst specializing in the financial sector. You are interested in how AI can affect financial markets and investment strategies."
+
+memory:
+  type: SharedMemory
+
+engine_planner:
+  initial_progress: "Starting the discussion on AI's impact across industries."
+
+output:
+  file_path: "result/discussion_output.jsonl"
