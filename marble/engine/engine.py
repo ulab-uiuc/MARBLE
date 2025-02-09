@@ -781,7 +781,7 @@ class Engine:
         file_path = self.config.output.get("file_path", "result/discussion_output.jsonl")
         try:
             with open(file_path, "a") as jsonl_file:
-                print(summary_data)
+                # print(summary_data)
                 jsonl_file.write(json.dumps(summary_data) + "\n")
 
                 jsonl_file.flush()

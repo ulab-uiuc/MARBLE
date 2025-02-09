@@ -20,7 +20,7 @@ for CONFIG_FILE in "$CONFIG_DIR"/*.yaml; do
     ((count++))
     # Skip files until count >= 24
 
-    if [ "$count" -ge 1 ] && [ "$count" -le 100 ]; then
+    if [ "$count" -ge 36 ] && [ "$count" -le 100 ]; then
 
         # Run the Python script and log the output
         python main.py --config "$CONFIG_FILE" | tee "logs/gpt-4o-mini-$(basename "$CONFIG_FILE" .yaml)_$(date +'%Y%m%d_%H%M%S').log"

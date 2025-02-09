@@ -96,6 +96,10 @@ for folder in folder_list:
 
         # Compare predictions with the gold label
         match_count = sum(g in predicted_labels for g in gold_labels)
+        # print(f"Predicted labels: {predicted_labels}")
+        # print(f"Gold labels: {gold_labels}")
+        # print(f"Match count: {match_count}\n")
+        # print(f"Accuracy: {match_count / len(gold_labels) if gold_labels else 0}\n")
         task_scores.append(match_count / len(gold_labels) if gold_labels else 0)
 
         # Add a delay to avoid API rate limits
