@@ -103,9 +103,9 @@ def process_jsonl_and_copy(jsonl_file, yaml_folder, dest_folder):
 
 def main():
     # Define sample file paths and folder names directly.
-    jsonl_file = "/Users/zhukunlun/Documents/GitHub/MARBLE/marble/result/discussion_output_35.jsonl"
-    yaml_folder = "/Users/zhukunlun/Documents/GitHub/MARBLE/marble/configs/generated_yaml_files_graph_gpt_35"                       # Folder containing YAML files
-    dest_folder = "/Users/zhukunlun/Documents/GitHub/MARBLE/marble/configs/generated_yaml_files_graph_gpt_35_test2" # Destination folder for YAML files with empty iterations
+    jsonl_file = "/Users/zhukunlun/Documents/GitHub/MARBLE/marble/result/discussion_output_llama3.3_70b.jsonl"
+    yaml_folder = "/Users/zhukunlun/Documents/GitHub/MARBLE/marble/configs/generated_yaml_files_graph_llama3.3_70b_100"                       # Folder containing YAML files
+    dest_folder = "/Users/zhukunlun/Documents/GitHub/MARBLE/marble/configs/generated_yaml_files_graph_llama3.3_70b_100_test2" # Destination folder for YAML files with empty iterations
 
     # Ensure the directory for the JSONL file exists (if needed)
     jsonl_dir = os.path.dirname(jsonl_file)

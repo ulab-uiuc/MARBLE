@@ -1,0 +1,214 @@
+agents:
+- agent_id: agent1
+  profile: 'I am a researcher dedicated to addressing critical challenges in machine
+    learning, particularly focusing on fairness, privacy, and security. My recent
+    work explores the intricate relationship between training data and model unfairness,
+    developing frameworks that quantify how changes in training samples can influence
+    fairness outcomes. I have pioneered methods for evaluating recommendation explanations
+    using counterfactual logic, which enhances user understanding and control over
+    recommendations.
+
+
+    In the realm of privacy, I have contributed to the development of robust frameworks
+    like Transcript Private Split Learning (TPSL) and adversarial training methods
+    to protect sensitive information in federated learning settings. My research also
+    delves into the vulnerabilities of large language models (LLMs) and proposes innovative
+    solutions for watermarking outputs and mitigating hallucinations, ensuring that
+    these models align with human values while maintaining their utility.
+
+
+    I am particularly interested in the intersection of machine learning and security,
+    having investigated backdoor attacks and their implications in real-world scenarios,
+    such as facial recognition. My work emphasizes the need for effective defenses
+    against these threats, highlighting the importance of understanding both digital
+    and physical attack vectors.
+
+
+    Through my research, I aim to provide practical guidelines for practitioners,
+    ensuring that machine learning systems are not only effective but also fair and
+    secure. I am committed to advancing the field by developing methodologies that
+    enhance the ethical deployment of AI technologies.'
+  type: BaseAgent
+- agent_id: agent2
+  profile: 'I am a researcher dedicated to advancing the fields of machine learning
+    and artificial intelligence, with a particular focus on large language models
+    (LLMs) and their applications. My recent work has centered on watermarking LLM
+    outputs, where I developed a novel model-level watermarking approach that embeds
+    detectable signals into the model weights. This innovative method enhances the
+    robustness and adaptability of watermarks, allowing for effective tracking of
+    misuse while maintaining the model''s utility. I also contributed to the integration
+    of multi-access edge computing with blockchain technology, proposing an intelligent
+    transaction migration scheme that significantly reduces latency in high data flow
+    scenarios.
+
+
+    In addition, I have tackled the challenge of synthesizing SQL queries from natural
+    language, introducing SQLNet—a sketch-based approach that overcomes the "order-matters"
+    problem inherent in sequence-to-sequence models. This work has demonstrated substantial
+    improvements in performance on the WikiSQL task.
+
+
+    My research also delves into enhancing the adversarial robustness of deep neural
+    networks through Lipschitz constraints. I proposed a layer-wise orthogonal training
+    method (LOT) that effectively trains 1-Lipschitz convolution layers, achieving
+    state-of-the-art certified robustness across various architectures. I am passionate
+    about bridging theoretical advancements with practical applications, and I strive
+    to contribute to the responsible and effective deployment of AI technologies.'
+  type: BaseAgent
+- agent_id: agent3
+  profile: 'I am a researcher with a diverse background in applied mathematics, physics,
+    and machine learning, focusing on the intersection of these fields to address
+    complex problems. My recent work has explored the nuances of semiconductor/metal
+    Schottky contact resistivity, demonstrating the critical importance of self-consistent
+    modeling in transport and electrostatics. I have also contributed to advancements
+    in natural language processing through BERTSUM, a variant of the BERT model that
+    excels in extractive summarization, achieving state-of-the-art results on benchmark
+    datasets.
+
+
+    In the realm of mathematical physics, I have investigated the global well-posedness
+    of half-wave maps and the spectral geometry of noncommutative tori, providing
+    insights into heat trace asymptotics and rearrangement operators. My research
+    extends to cosmological models in double field theory, where I analyze the implications
+    of dilatons and dark energy candidates.
+
+
+    Additionally, I have delved into the properties of Hawking radiation within the
+    framework of double field theory, exploring its implications for black hole thermodynamics.
+    My work also addresses the evolving landscape of machine learning, particularly
+    the role of human-labeled data in the age of large language models, emphasizing
+    the continued relevance of traditional data practices.
+
+
+    Through my interdisciplinary approach, I aim to bridge theoretical insights with
+    practical applications, contributing to the advancement of knowledge across multiple
+    domains.'
+  type: BaseAgent
+coordinate_mode: graph
+engine_planner:
+  initial_progress: Starting the collaborative research idea generation based on the
+    provided Introduction.
+environment:
+  max_iterations: 5
+  name: Research Collaboration Environment
+  type: Research
+llm: gpt-4o-mini
+memory:
+  type: SharedMemory
+metrics:
+  diversity_of_perspectives: true
+  engagement_level: true
+  evaluate_llm: gpt-4o-mini
+  relevance: true
+output:
+  file_path: result/discussion_output_4o_mini.jsonl
+  format: jsonl
+relationships:
+- - agent1
+  - agent2
+  - collaborate with
+- - agent1
+  - agent3
+  - collaborate with
+- - agent2
+  - agent3
+  - collaborate with
+task:
+  content: "\n            Dear Research Team,\n\n            You are collaborating\
+    \ to generate a new research idea based on the following Introduction:\n\n   \
+    \         **Introduction**\n\n               1 Introduction  Making sure large\
+    \ language models (LLMs) generate safe outputs that align with human values and\
+    \ policy regulation is currently a major task for LLM practitioners. The common\
+    \ tasks include the following:   1.  Removing Harmful Responses: Since LLMs are\
+    \ trained on the Internet data which contain countless harmful text, they are\
+    \ easy to learn problematic responses. For example, (Zhuo et al., 2023; Bai et al.,\
+    \ 2022; Liu et al., 2023) have shown that LLMs can memorize harmful concepts;\
+    \ such responses can cause great harm to users.    2.  Erasing Copyrighted Contents:\
+    \ The tension between data owners (e.g., authors) and LLM service providers is\
+    \ escalating, leading to legislation such as legal disputes involving OpenAI,\
+    \ Meta, and New York Times (Small, 2023; Grynbaum and Mac, 2023; Copilot, 2023).\
+    \ We have also seen a large number of recent works that show LLMs can memorize\
+    \ and leak copyright-protected information (Carlini et al., 2021; Wahle et al.,\
+    \ 2022; Lee et al., 2023; Liu et al., 2023). Removing such behaviors learned by\
+    \ the LLMs as requested by the authors is important but is prohibitively expensive\
+    \ if we need to retrain LLMs from scratch.    3.  Reducing Hallucinations: LLMs\
+    \ often give factually wrong responses that mislead users. Reducing hallucinations,\
+    \ especially in high-stakes applications, is the key to earning user trust.  \
+    \  4.  Protecting User Privacy: Users might stop giving consent to the LLM service\
+    \ providers for using their data. When it happens, LLM practitioners need a way\
+    \ of removing the old user data from the trained LLMs.    5.  Enforcing Policy\
+    \ Compliance: Local community compliance policy can iterate frequently (TikTok,\
+    \ 2023; Twitter, 2023; Facebook, 2023). Practitioners need techniques to quickly\
+    \ remove historical training data that leads to outputs that are no longer policy-compliant.\
+    \      Though those tasks seem different, the central technical question is identical:\
+    \ How to quickly remove the impact of training samples on LLMs? To this end, we\
+    \ study how to perform large language model unlearning. If an LLM learns unwanted\
+    \ misbehaviors in its pretraining stage, our goal is to unlearn them with samples\
+    \ that represent those problematic behaviors, i.e. with only negative samples.\
+    \   Figure 1: Harmful content warning. Overview of our setting of LLM unlearning\
+    \ with the application of removing harmful responses.   We summarize the benefits\
+    \ of LLM unlearning. (1) It only requires negative examples that we want the LLM\
+    \ to forget, which are cheaper and easier to collect through user reporting or\
+    \ red teaming than positive examples, which are required in the standard RLHF.\
+    \ In addition, discovering negative examples is highly automatable given the pretrained\
+    \ (i.e. unaligned) LLM. (2) It is computationally efficient; the cost is similar\
+    \ to finetuning LLMs. (3) Unlearning is particularly effective in removing unwanted\
+    \ behaviors if practitioners already know which training samples cause them. Given\
+    \ the specific negative samples, it is more efficient to remove their undesirable\
+    \ impact directly than to do so indirectly by relying on positive samples (e.g.\
+    \ in RLHF) – if the goal is to stop generating undesirable outputs, e.g. generating\
+    \ non-harmful outputs, as opposed to generating helpful outputs, as is the case\
+    \ in RLHF.   We elaborate on the last benefit, which relates to our scenario.\
+    \ We argue that if practitioners only have limited resources, meaning (1) they\
+    \ do not have the budget to hire\n\n            **Your Task**\n\n            1.\
+    \ **Literature Review**: Analyze the Introduction provided and conduct a brief\
+    \ literature review to understand the current state of research in this area.\n\
+    \n            2. **Brainstorming**: Collaboratively brainstorm potential research\
+    \ ideas that build upon or address gaps in the Introduction.\n\n            3.\
+    \ **Summarization**: Summarize your collective ideas.\n\n            4. **Formulate\
+    \ a New Research Idea**: Develop a new research proposal in the format of the\
+    \ '5q', defined below:\n\n               **Here is a high-level summarized insight\
+    \ of a research field Machine Learning.**\n\n               **Here are the five\
+    \ core questions:**\n\n               **[Question 1] - What is the problem?**\n\
+    \n               Formulate the specific research question you aim to address.\
+    \ Only output one question and do not include any more information.\n\n      \
+    \         **[Question 2] - Why is it interesting and important?**\n\n        \
+    \       Explain the broader implications of solving this problem for the research\
+    \ community.\n               Discuss how such a paper will affect future research.\n\
+    \               Discuss how addressing this question could advance knowledge or\
+    \ lead to practical applications.\n\n               **[Question 3] - Why is it\
+    \ hard?**\n\n               Discuss the challenges and complexities involved in\
+    \ solving this problem.\n               Explain why naive or straightforward approaches\
+    \ may fail.\n               Identify any technical, theoretical, or practical\
+    \ obstacles that need to be overcome. MAKE IT CLEAR.\n\n               **[Question\
+    \ 4] - Why hasn't it been solved before?**\n\n               Identify gaps or\
+    \ limitations in previous research or existing solutions.\n               Discuss\
+    \ any barriers that have prevented this problem from being solved until now.\n\
+    \               Explain how your approach differs from or improves upon prior\
+    \ work. MAKE IT CLEAR.\n\n               **[Question 5] - What are the key components\
+    \ of my approach and results?**\n\n               Outline your proposed methodology\
+    \ in detail, including the method, dataset, and metrics that you plan to use.\n\
+    \               Describe the expected outcomes. MAKE IT CLEAR.\n\n           \
+    \ Please work together to produce the '5q' for your proposed research idea.\n\n\
+    \            Good luck!\n            "
+  output_format: "You should answer the task in the following format:\n          \
+    \      **[Question 1] - What is the problem?**\n\n                Formulate the\
+    \ specific research question you aim to address. Only output one question and\
+    \ do not include any more information.\n\n                **[Question 2] - Why\
+    \ is it interesting and important?**\n\n                Explain the broader implications\
+    \ of solving this problem for the research community.\n                Discuss\
+    \ how such a paper will affect future research.\n                Discuss how addressing\
+    \ this question could advance knowledge or lead to practical applications.\n\n\
+    \                **[Question 3] - Why is it hard?**\n\n                Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \        Explain why naive or straightforward approaches may fail.\n         \
+    \       Identify any technical, theoretical, or practical obstacles that need\
+    \ to be overcome. MAKE IT CLEAR.\n\n                **[Question 4] - Why hasn't\
+    \ it been solved before?**\n\n                Identify gaps or limitations in\
+    \ previous research or existing solutions.\n                Discuss any barriers\
+    \ that have prevented this problem from being solved until now.\n            \
+    \    Explain how your approach differs from or improves upon prior work. MAKE\
+    \ IT CLEAR.\n\n                **[Question 5] - What are the key components of\
+    \ my approach and results?**\n\n                Outline your proposed methodology\
+    \ in detail, including the method, dataset, and metrics that you plan to use.\n\
+    \                Describe the expected outcomes. MAKE IT CLEAR."

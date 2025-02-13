@@ -1,0 +1,253 @@
+agents:
+- agent_id: agent1
+  profile: 'I am a researcher specializing in automatic speech recognition (ASR) and
+    temporal action detection (TAD), with a focus on developing innovative models
+    that address the unique challenges of these fields. My recent work has explored
+    lexicon-free modeling units for Korean ASR, where I introduced various units such
+    as syllable-based and Jamo characters, achieving significant performance improvements
+    in both Korean and Korean-English code-switching tasks.
+
+
+    In the realm of TAD, I have tackled critical issues such as attention collapse
+    in DETR-based models. My proposed frameworks, including Self-DETR and Long-Term
+    Pre-training (LTP), have demonstrated substantial advancements in model performance
+    by enhancing self-attention mechanisms and addressing data scarcity challenges.
+    Additionally, I developed the Boundary-Recovering Network (BRN) to mitigate the
+    vanishing boundary problem, which has proven effective in localizing actions of
+    varying lengths.
+
+
+    My interdisciplinary approach combines insights from machine learning, video analysis,
+    and even theoretical physics, as seen in my work on generalized van der Waals
+    equations. I am passionate about pushing the boundaries of what is possible in
+    ASR and TAD, and I strive to create models that not only perform well but also
+    contribute to a deeper understanding of the underlying processes in these complex
+    domains.'
+  type: BaseAgent
+- agent_id: agent2
+  profile: 'I am a researcher dedicated to advancing the field of image generation
+    and visual recognition through innovative methodologies. My recent work includes
+    the development of the Observation-Guided Diffusion Probabilistic Model (OGDM),
+    a novel approach that effectively balances quality control with fast sampling
+    in image generation. By integrating the observation process with a Markov chain,
+    I have introduced a training objective that enhances the accuracy of denoising
+    networks without incurring additional computational costs. This work not only
+    improves the performance of existing diffusion models but also provides a flexible
+    framework compatible with various inference strategies.
+
+
+    In addition to my work in image generation, I am passionate about tackling the
+    challenges of visual recognition, particularly in identifying novel concepts within
+    datasets. I have proposed a combinatorial learning approach that leverages both
+    labeled and unlabeled examples to extend recognition capabilities to unseen classes.
+    By clustering examples and enhancing representation robustness through unsupervised
+    learning, my approach has demonstrated significant performance improvements in
+    image retrieval and categorization tasks.
+
+
+    Through my research, I aim to push the boundaries of what is possible in image
+    understanding and generation, contributing to the development of more intelligent
+    and adaptable visual recognition systems.'
+  type: BaseAgent
+- agent_id: agent3
+  profile: 'I am a researcher dedicated to advancing the fields of generative models,
+    image processing, and reinforcement learning. My recent work has focused on developing
+    innovative frameworks that enhance the performance and robustness of machine learning
+    systems. For instance, I introduced a generative adversarial network (GAN) framework
+    with multiple discriminators, which effectively mitigates mode collapse and improves
+    data representation. Additionally, I proposed the Observation-Guided Diffusion
+    Probabilistic Model (OGDM), which balances quality control and fast sampling in
+    image generation.
+
+
+    My research also extends to deep image compression, where I developed a versatile
+    network that adapts to various compression rates using quality maps tailored for
+    specific tasks. I have explored the vulnerabilities of learned image compression
+    models against adversarial attacks, proposing a training-free defense technique
+    that preserves original performance.
+
+
+    In the realm of reinforcement learning, I created the Multi-focus Attention Network
+    (MANet), which mimics human perception by abstracting sensory inputs into multiple
+    entities, significantly improving learning efficiency. My work on PECI-Net addresses
+    challenges in bolus segmentation for swallowing disorders, showcasing my commitment
+    to applying machine learning to real-world health issues.
+
+
+    I am passionate about pushing the boundaries of what machine learning can achieve,
+    particularly in enhancing model robustness and efficiency across diverse applications.
+    My goal is to continue developing innovative solutions that bridge the gap between
+    theoretical advancements and practical implementations.'
+  type: BaseAgent
+- agent_id: agent4
+  profile: 'I am a researcher dedicated to advancing the fields of computer vision
+    and machine learning, with a particular focus on visual tracking, generative models,
+    and representation learning. My recent work has explored innovative algorithms
+    that leverage deep learning architectures, such as Convolutional Neural Networks
+    (CNNs), to enhance visual tracking performance through discriminative saliency
+    maps and domain generalization techniques.
+
+
+    I have developed frameworks that utilize generative adversarial networks (GANs)
+    with multiple discriminators to effectively mitigate mode collapse and improve
+    data representation. My research also delves into semi-supervised learning, where
+    I propose novel architectures that decouple classification and segmentation tasks,
+    allowing for more efficient learning from heterogeneous annotations.
+
+
+    In addition, I have made significant contributions to visual question answering
+    and temporal action localization, employing attention mechanisms and contextual
+    information to improve model performance. My work on weakly supervised instance
+    segmentation and debiasing techniques demonstrates my commitment to addressing
+    real-world challenges in machine learning, such as dataset bias and the need for
+    robust generalization.
+
+
+    I am passionate about pushing the boundaries of what is possible in visual understanding
+    and representation, and I strive to create models that not only perform well on
+    benchmarks but also have practical applications in diverse domains. My goal is
+    to continue exploring the intersection of vision and language, enhancing the capabilities
+    of AI systems to understand and interact with the world more effectively.'
+  type: BaseAgent
+coordinate_mode: graph
+engine_planner:
+  initial_progress: Starting the collaborative research idea generation based on the
+    provided Introduction.
+environment:
+  max_iterations: 5
+  name: Research Collaboration Environment
+  type: Research
+llm: together_ai/meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo
+memory:
+  type: SharedMemory
+metrics:
+  diversity_of_perspectives: true
+  engagement_level: true
+  evaluate_llm: gpt-4o-mini
+  relevance: true
+output:
+  file_path: result/discussion_output_llama3.1_70b.jsonl
+  format: jsonl
+relationships:
+- - agent1
+  - agent2
+  - collaborate with
+- - agent1
+  - agent3
+  - collaborate with
+- - agent1
+  - agent4
+  - collaborate with
+- - agent2
+  - agent3
+  - collaborate with
+- - agent2
+  - agent4
+  - collaborate with
+- - agent3
+  - agent4
+  - collaborate with
+task:
+  content: "\n            Dear Research Team,\n\n            You are collaborating\
+    \ to generate a new research idea based on the following Introduction:\n\n   \
+    \         **Introduction**\n\n               1 Introduction  Diffusion probabilistic\
+    \ models have achieved significant success in generating images (Ho et al., 2020;\
+    \ Song et al., 2021b; Dhariwal & Nichol, 2021; Rombach et al., 2022). On top of\
+    \ the success in the image domain, there has been rapid progress in the generation\
+    \ of videos (Ho et al., 2022; Singer et al., 2022; Zhou et al., 2022; Wang et al.,\
+    \ 2023b).   Despite the progress, long video generation still lags behind compared\
+    \ to image generation. One reason is that video diffusion models (VDMs) often\
+    \ consider a video as a single 4D tensor with an additional axis corresponding\
+    \ to time, which prevents the models from generating videos at scale. An intuitive\
+    \ approach to generating a long video is autoregressive generation, which iteratively\
+    \ predicts a future frame given the previous ones. However, in contrast to the\
+    \ transformer-based models (Hong et al., 2023; Villegas et al., 2023), diffusion-based\
+    \ models cannot directly adopt the autoregressive generation strategy due to the\
+    \ heavy computational costs incurred by iterative denoising steps for a single\
+    \ frame generation. Instead, many recent works (Ho et al., 2022; He et al., 2022;\
+    \ Voleti et al., 2022; Luo et al., 2023; Chen et al., 2023b; Blattmann et al.,\
+    \ 2023) adopt a chunked autoregressive generation strategy, which predicts several\
+    \ frames in parallel conditioned on few preceding ones, consequently reducing\
+    \ computational burden. While these approaches are computationally tractable,\
+    \ they often leads to temporal inconsistency and discontinuous motion, especially\
+    \ between the chunks predicted separately, since the model captures a limited\
+    \ temporal context available in the last few—only one or two in practice—frames.\
+    \   The proposed inference technique, FIFO-Diffusion, realizes the long video\
+    \ generation even without training. It facilitates generating videos with arbitrary\
+    \ lengths, based on a diffusion model for video generation pretrained on short\
+    \ clips. Moreover, it effectively alleviates the limitations of the chunked autoregressive\
+    \ method by enabling every frame to refer to a sufficient number of preceding\
+    \ frames.   Our approach generates frames through diagonal denoising (Section 4.1)\
+    \ in a first-in-first-out manner using a queue, which maintains a sequence of\
+    \ frames with different—monotonically increasing—noise levels over time. At each\
+    \ step, a completely denoised frame at the head is popped out from the queue while\
+    \ a new random noise image is pushed back at the tail. Diagonal denoising offers\
+    \ both advantage and disadvantage; noisier frames benefit from referring to cleaner\
+    \ ones at preceding diffusion steps while the model may suffer from training-inference\
+    \ gap in terms of the noise levels of concurrently processed frames. To overcome\
+    \ this limitation and embrace the advantage of diagonal denoising, we propose\
+    \ latent partitioning (Section 4.2) and lookahead denoising (Section 4.3). Latent\
+    \ partitioning constrains the range of noise levels in the noisy input images\
+    \ and enhances video quality by finer discretization of diffusion process. Additionally,\
+    \ lookahead denoising enhances the capacity of the baseline model, providing even\
+    \ more accurate noise prediction. Furthermore, both latent partitioning and lookahead\
+    \ denoising offer parallelizability on multiple GPUs.   Our main contributions\
+    \ are summarized below.   •  We propose FIFO-Diffusion through diagonal denoising,\
+    \ which is a training-free video generation technique for VDMs trained on short\
+    \ clips. Our approach allows each frame to refer to a sufficient number of preceding\
+    \ frames and facilitates the generation of arbitrarily long videos.    •  We introduce\
+    \ latent partitioning and lookahead denoising, which enhances generation quality\
+    \ and demonstrate the effectiveness of those two techniques theoretically and\
+    \ empirically.    •  FIFO-Diffusion utilizes a constant amount of memory regardless\
+    \ of the generating\n\n            **Your Task**\n\n            1. **Literature\
+    \ Review**: Analyze the Introduction provided and conduct a brief literature review\
+    \ to understand the current state of research in this area.\n\n            2.\
+    \ **Brainstorming**: Collaboratively brainstorm potential research ideas that\
+    \ build upon or address gaps in the Introduction.\n\n            3. **Summarization**:\
+    \ Summarize your collective ideas.\n\n            4. **Formulate a New Research\
+    \ Idea**: Develop a new research proposal in the format of the '5q', defined below:\n\
+    \n               **Here is a high-level summarized insight of a research field\
+    \ Machine Learning.**\n\n               **Here are the five core questions:**\n\
+    \n               **[Question 1] - What is the problem?**\n\n               Formulate\
+    \ the specific research question you aim to address. Only output one question\
+    \ and do not include any more information.\n\n               **[Question 2] -\
+    \ Why is it interesting and important?**\n\n               Explain the broader\
+    \ implications of solving this problem for the research community.\n         \
+    \      Discuss how such a paper will affect future research.\n               Discuss\
+    \ how addressing this question could advance knowledge or lead to practical applications.\n\
+    \n               **[Question 3] - Why is it hard?**\n\n               Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \       Explain why naive or straightforward approaches may fail.\n          \
+    \     Identify any technical, theoretical, or practical obstacles that need to\
+    \ be overcome. MAKE IT CLEAR.\n\n               **[Question 4] - Why hasn't it\
+    \ been solved before?**\n\n               Identify gaps or limitations in previous\
+    \ research or existing solutions.\n               Discuss any barriers that have\
+    \ prevented this problem from being solved until now.\n               Explain\
+    \ how your approach differs from or improves upon prior work. MAKE IT CLEAR.\n\
+    \n               **[Question 5] - What are the key components of my approach and\
+    \ results?**\n\n               Outline your proposed methodology in detail, including\
+    \ the method, dataset, and metrics that you plan to use.\n               Describe\
+    \ the expected outcomes. MAKE IT CLEAR.\n\n            Please work together to\
+    \ produce the '5q' for your proposed research idea.\n\n            Good luck!\n\
+    \            "
+  output_format: "You should answer the task in the following format:\n          \
+    \      **[Question 1] - What is the problem?**\n\n                Formulate the\
+    \ specific research question you aim to address. Only output one question and\
+    \ do not include any more information.\n\n                **[Question 2] - Why\
+    \ is it interesting and important?**\n\n                Explain the broader implications\
+    \ of solving this problem for the research community.\n                Discuss\
+    \ how such a paper will affect future research.\n                Discuss how addressing\
+    \ this question could advance knowledge or lead to practical applications.\n\n\
+    \                **[Question 3] - Why is it hard?**\n\n                Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \        Explain why naive or straightforward approaches may fail.\n         \
+    \       Identify any technical, theoretical, or practical obstacles that need\
+    \ to be overcome. MAKE IT CLEAR.\n\n                **[Question 4] - Why hasn't\
+    \ it been solved before?**\n\n                Identify gaps or limitations in\
+    \ previous research or existing solutions.\n                Discuss any barriers\
+    \ that have prevented this problem from being solved until now.\n            \
+    \    Explain how your approach differs from or improves upon prior work. MAKE\
+    \ IT CLEAR.\n\n                **[Question 5] - What are the key components of\
+    \ my approach and results?**\n\n                Outline your proposed methodology\
+    \ in detail, including the method, dataset, and metrics that you plan to use.\n\
+    \                Describe the expected outcomes. MAKE IT CLEAR."

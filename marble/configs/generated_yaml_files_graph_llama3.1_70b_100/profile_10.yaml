@@ -1,0 +1,300 @@
+agents:
+- agent_id: agent1
+  profile: 'I am a researcher dedicated to understanding complex systems through the
+    lens of spatiotemporal information processing, automated theorem generation, and
+    multiscale molecular modeling. My work explores how neural networks can mimic
+    brain functions, particularly in recognizing intricate spatiotemporal patterns.
+    I developed a canonic neural network model that integrates a reservoir subnetwork
+    for pattern projection and a decision-making subnetwork for temporal information
+    integration, demonstrating its effectiveness in recognizing looming patterns and
+    gait with minimal training data.
+
+
+    In the realm of automated theorem proving, I identified a gap in the ability of
+    generative language models to create new theorems. To address this, I proposed
+    the Automated Theorem Generation (ATG) benchmark, which evaluates the capacity
+    of these models to generate reusable theorems that enhance theorem proving capabilities.
+    My findings indicate that high-quality ATG data significantly improves model performance,
+    while also highlighting the need for further advancements in theorem generation.
+
+
+    Additionally, I have tackled challenges in multiscale molecular modeling by developing
+    Cycle Coarse Graining (CCG), a methodology that unifies the processes of constructing
+    coarse-grained models and restoring fine molecular details. CCG employs a deep
+    generative model to facilitate the exchange of information between different scales,
+    ultimately enhancing the accuracy and efficiency of molecular simulations.
+
+
+    Through my research, I aim to bridge theoretical insights with practical applications,
+    contributing to advancements in brain-inspired algorithms, mathematical reasoning,
+    and molecular science.'
+  type: BaseAgent
+- agent_id: agent2
+  profile: 'I am a researcher dedicated to advancing the fields of visual question
+    answering (VQA), automated theorem proving, and machine learning. My work focuses
+    on developing interpretable models that enhance reasoning capabilities and improve
+    the trustworthiness of AI systems. I have introduced the HVQR benchmark to evaluate
+    high-order visual question reasoning, emphasizing the importance of explainability
+    and multi-step reasoning in VQA tasks. My innovative knowledge-routed modular
+    network (KM-net) integrates commonsense knowledge into visual reasoning, demonstrating
+    superior accuracy and explanation capabilities.
+
+
+    In the realm of medical imaging, I have created a computational framework to assist
+    clinicians in diagnosing focal liver lesions using contrast-enhancement ultrasound,
+    achieving promising results on the largest dataset available. My research also
+    extends to face hallucination, where I developed an attention-aware framework
+    that leverages deep reinforcement learning to enhance facial features from low-resolution
+    images, significantly outperforming existing methods.
+
+
+    I am particularly passionate about exploring the intersection of language models
+    and theorem proving. My work on the MUSTARD framework synthesizes high-quality
+    theorem and proof data, facilitating advancements in automated theorem proving.
+    Additionally, I introduced the TRIGO benchmark to challenge generative language
+    models in trigonometric reasoning, and the LEGO-Prover, which enhances theorem
+    proving by utilizing a growing library of verified lemmas.
+
+
+    Through my research, I aim to bridge the gap between complex reasoning tasks and
+    practical applications, ensuring that AI systems are not only effective but also
+    interpretable and trustworthy.'
+  type: BaseAgent
+- agent_id: agent3
+  profile: 'I am a researcher dedicated to advancing the field of logical reasoning
+    and automated theorem proving, particularly through the innovative application
+    of large language models (LLMs). My recent work has focused on developing novel
+    frameworks and benchmarks that enhance the reasoning capabilities of LLMs in complex
+    scenarios, such as question answering and theorem generation.
+
+
+    One of my key contributions is the Discourse-aware Graph Network (DAGN), which
+    leverages discourse structures to improve logical reasoning in question answering
+    tasks. I have also introduced the Recursive Erasure Memory Network (REM-Net),
+    which refines evidence quality for commonsense reasoning by generating tailored
+    evidence rather than relying solely on existing knowledge bases. My exploration
+    of logical structures in question answering led to the development of logic structural-constraint
+    modeling, which effectively captures passage-level logical relations.
+
+
+    In addition to these frameworks, I have created benchmarks like the Automated
+    Theorem Generation (ATG) benchmark and the OptiBench for evaluating LLMs'' theorem
+    proving capabilities. My work on autoformalization, particularly with the FormalAlign
+    framework, aims to bridge the gap between natural and formal languages, enhancing
+    the scalability of mathematical reasoning.
+
+
+    I am passionate about pushing the boundaries of what LLMs can achieve in reasoning
+    tasks, and I strive to create tools and methodologies that not only improve performance
+    but also provide insights into the underlying processes of logical reasoning.
+    My research is driven by the belief that enhancing the reasoning capabilities
+    of AI can lead to significant advancements in various domains, including mathematics
+    and natural language understanding.'
+  type: BaseAgent
+- agent_id: agent4
+  profile: 'I am a researcher specializing in advanced wireless communication technologies,
+    particularly focusing on the emerging field of terahertz (THz) communication for
+    sixth-generation (6G) systems. My work primarily revolves around developing innovative
+    channel models that capture the complexities of THz environments, including a
+    three-dimensional space-time-frequency non-stationary geometry-based stochastic
+    model. This model not only addresses the unique characteristics of THz channels
+    but also adapts to various application scenarios such as indoor communications
+    and ultra-massive MIMO systems.
+
+
+    In addition to my work on channel modeling, I have explored the intersection of
+    wireless networks and artificial intelligence, particularly through Over-the-Air
+    Federated Learning. My research in this area has led to the development of the
+    MOP-LOFPC algorithm, which optimizes power control and beamforming in cell-free
+    MIMO systems, demonstrating significant improvements in training efficiency.
+
+
+    I am also committed to addressing privacy concerns associated with trajectory
+    data. By integrating differential privacy with Markov chain models, I have developed
+    the PrivTrace algorithm, which effectively generates synthetic trajectories while
+    preserving individual privacy.
+
+
+    Through my research, I aim to contribute to the foundational understanding and
+    practical implementation of 6G technologies, paving the way for future advancements
+    in wireless communication systems.'
+  type: BaseAgent
+- agent_id: agent5
+  profile: 'I am a researcher dedicated to advancing the fields of online matching
+    algorithms, autoformalization, and large language models (LLMs). My recent work
+    has focused on innovative approaches to improve algorithmic performance and enhance
+    the capabilities of LLMs. For instance, I developed a potential function analysis
+    framework that demonstrates the competitive advantages of sampling without replacement
+    in online matching, achieving significant breakthroughs in both online bipartite
+    and stochastic matching scenarios.
+
+
+    In the realm of autoformalization, I introduced FormalAlign, an automated framework
+    that evaluates the alignment between natural and formal languages, significantly
+    reducing the need for manual verification. This work is complemented by my contributions
+    to enhancing LLMs through frameworks like Latent Synthesis (LaSyn) and SELF, which
+    leverage textual data and self-reflection for improved performance in speech processing
+    and reasoning tasks.
+
+
+    Additionally, I have explored the teacher-student progressive learning framework,
+    YODA, which mimics human learning processes to refine model training. My research
+    also includes the development of benchmarks for evaluating autoformalization capabilities
+    in rapidly evolving languages like Lean 4, showcasing my commitment to bridging
+    gaps in mathematical reasoning.
+
+
+    Through these diverse projects, I aim to push the boundaries of what is possible
+    in algorithm design and machine learning, contributing to a deeper understanding
+    of both theoretical and practical applications in these fields.'
+  type: BaseAgent
+coordinate_mode: graph
+engine_planner:
+  initial_progress: Starting the collaborative research idea generation based on the
+    provided Introduction.
+environment:
+  max_iterations: 5
+  name: Research Collaboration Environment
+  type: Research
+llm: together_ai/meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo
+memory:
+  type: SharedMemory
+metrics:
+  diversity_of_perspectives: true
+  engagement_level: true
+  evaluate_llm: gpt-4o-mini
+  relevance: true
+output:
+  file_path: result/discussion_output_llama3.1_70b.jsonl
+  format: jsonl
+relationships:
+- - agent1
+  - agent2
+  - collaborate with
+- - agent1
+  - agent3
+  - collaborate with
+- - agent1
+  - agent4
+  - collaborate with
+- - agent1
+  - agent5
+  - collaborate with
+- - agent2
+  - agent3
+  - collaborate with
+- - agent2
+  - agent4
+  - collaborate with
+- - agent2
+  - agent5
+  - collaborate with
+- - agent3
+  - agent4
+  - collaborate with
+- - agent3
+  - agent5
+  - collaborate with
+- - agent4
+  - agent5
+  - collaborate with
+task:
+  content: "\n            Dear Research Team,\n\n            You are collaborating\
+    \ to generate a new research idea based on the following Introduction:\n\n   \
+    \         **Introduction**\n\n               1 Introduction  Formal verification\
+    \ (FV), or automated program verification [35, 2] checks if a code meets a specific\
+    \ demand and is correct to implement. As the code synthesis ability of current\
+    \ models [28, 25, 9] evolves rapidly, there is a growing demand for automated\
+    \ verification of diverse and abundant synthesis programs. However, current formal\
+    \ verification mainly resorts to symbolic verifiers [11, 6, 22] or hand-craft\
+    \ rules [39]. However, symbolic verification can not leverage the advanced reasoning\
+    \ ability of current large language models (LLMs), while hand-craft rules with\
+    \ limited execution on specific code cases have restricted abilities to general\
+    \ verification.   On the other hand, automated theorem proving (ATP) [42, 1, 14]\
+    \ is a line of work on rigorous verification with formal languages (e.g., Isabelle\
+    \ [30], Lean [5]) and interactive proof environments (e.g., PISA [16], LeanDojo\
+    \ [40]). Such formal languages and toolkits maintain corresponding libraries with\
+    \ a large number of human-written and checked theorems and rules, which are provided\
+    \ as pre-training materials for many large language models [28, 36, 15]. The ATP\
+    \ formulation and rules have strong expressiveness and, therefore have a great\
+    \ potential for describing formal verification problems and requests. As a result,\
+    \ the verification can be implemented under a rigorous, step-wise, and interactive\
+    \ ATP environment. Moreover, the pre-trained formal reasoning capabilities within\
+    \ LLMs and their potential to solve formal verification problems are underexplored.\
+    \   To take one step towards this goal, this paper proposes FVEL, a new formal\
+    \ verification environment interacting with LLMs via automated theorem proving\
+    \ processes. Figure 1 demonstrates an overview of FVEL. Specifically, the FVEL environment\
+    \ takes as input a code to be verified, converts the code into Isabelle formulation,\
+    \ and generates a lemma in Isabelle followed by a whole proof to the lemma. FVEL then\
+    \ outputs the proof result (succeed or failed being proved) as an indication of\
+    \ the code verification result. FVEL interacts with an LLM by initially providing\
+    \ the converted Isabelle formulation to the LLM and then receiving the derived\
+    \ lemma on the code specification. The interaction is then continued by the LLM\
+    \ generating proof states and the FVEL environment providing feedback via prover\
+    \ information in the PISA environment [16], such as cheating keywords sorry or\
+    \ opps and other error messages. As a result, a user provides her code to be verified\
+    \ to FVEL, and then she will receive the verification result and intermediate\
+    \ proving information. Note that we follow previous works [6, 39] to investigate\
+    \ FVEL on C code verification in this paper. We remain the extension of FVEL to\
+    \ support more program languages as a near future work.   To implement the FVEL environment,\
+    \ we extract and cleanse a large-scale FVELer dataset with deep dependencies,\
+    \ which can be applied as both a fine-tuning resource and evaluation benchmark.\
+    \ The FVELer dataset has two main components: C code dependencies formulated by\
+    \ Isabelle theories, and Isabelle lemmas with their step-wise proof states. FVELer then\
+    \ includes 758 theories with 29,125 lemmas and 200,646 proof steps. The dataset\
+    \ is then randomly split according to lemmas, resulting in training/validation/test/test-hard\
+    \ sets. The test-hard set data have dependencies that are challenging to find.\
+    \ Statistical analysis shows that FVELer data comprehensively covers diverse dependency\
+    \ depths and has a remarkable number of data with very deep dependencies. For\
+    \ example, over 50% of lemmas have a depth greater than 78,\n\n            **Your\
+    \ Task**\n\n            1. **Literature Review**: Analyze the Introduction provided\
+    \ and conduct a brief literature review to understand the current state of research\
+    \ in this area.\n\n            2. **Brainstorming**: Collaboratively brainstorm\
+    \ potential research ideas that build upon or address gaps in the Introduction.\n\
+    \n            3. **Summarization**: Summarize your collective ideas.\n\n     \
+    \       4. **Formulate a New Research Idea**: Develop a new research proposal\
+    \ in the format of the '5q', defined below:\n\n               **Here is a high-level\
+    \ summarized insight of a research field Machine Learning.**\n\n             \
+    \  **Here are the five core questions:**\n\n               **[Question 1] - What\
+    \ is the problem?**\n\n               Formulate the specific research question\
+    \ you aim to address. Only output one question and do not include any more information.\n\
+    \n               **[Question 2] - Why is it interesting and important?**\n\n \
+    \              Explain the broader implications of solving this problem for the\
+    \ research community.\n               Discuss how such a paper will affect future\
+    \ research.\n               Discuss how addressing this question could advance\
+    \ knowledge or lead to practical applications.\n\n               **[Question 3]\
+    \ - Why is it hard?**\n\n               Discuss the challenges and complexities\
+    \ involved in solving this problem.\n               Explain why naive or straightforward\
+    \ approaches may fail.\n               Identify any technical, theoretical, or\
+    \ practical obstacles that need to be overcome. MAKE IT CLEAR.\n\n           \
+    \    **[Question 4] - Why hasn't it been solved before?**\n\n               Identify\
+    \ gaps or limitations in previous research or existing solutions.\n          \
+    \     Discuss any barriers that have prevented this problem from being solved\
+    \ until now.\n               Explain how your approach differs from or improves\
+    \ upon prior work. MAKE IT CLEAR.\n\n               **[Question 5] - What are\
+    \ the key components of my approach and results?**\n\n               Outline your\
+    \ proposed methodology in detail, including the method, dataset, and metrics that\
+    \ you plan to use.\n               Describe the expected outcomes. MAKE IT CLEAR.\n\
+    \n            Please work together to produce the '5q' for your proposed research\
+    \ idea.\n\n            Good luck!\n            "
+  output_format: "You should answer the task in the following format:\n          \
+    \      **[Question 1] - What is the problem?**\n\n                Formulate the\
+    \ specific research question you aim to address. Only output one question and\
+    \ do not include any more information.\n\n                **[Question 2] - Why\
+    \ is it interesting and important?**\n\n                Explain the broader implications\
+    \ of solving this problem for the research community.\n                Discuss\
+    \ how such a paper will affect future research.\n                Discuss how addressing\
+    \ this question could advance knowledge or lead to practical applications.\n\n\
+    \                **[Question 3] - Why is it hard?**\n\n                Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \        Explain why naive or straightforward approaches may fail.\n         \
+    \       Identify any technical, theoretical, or practical obstacles that need\
+    \ to be overcome. MAKE IT CLEAR.\n\n                **[Question 4] - Why hasn't\
+    \ it been solved before?**\n\n                Identify gaps or limitations in\
+    \ previous research or existing solutions.\n                Discuss any barriers\
+    \ that have prevented this problem from being solved until now.\n            \
+    \    Explain how your approach differs from or improves upon prior work. MAKE\
+    \ IT CLEAR.\n\n                **[Question 5] - What are the key components of\
+    \ my approach and results?**\n\n                Outline your proposed methodology\
+    \ in detail, including the method, dataset, and metrics that you plan to use.\n\
+    \                Describe the expected outcomes. MAKE IT CLEAR."

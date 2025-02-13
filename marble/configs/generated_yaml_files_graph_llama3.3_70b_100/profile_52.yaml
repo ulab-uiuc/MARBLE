@@ -1,0 +1,300 @@
+agents:
+- agent_id: agent1
+  profile: 'I am a researcher dedicated to advancing the fields of machine learning
+    and artificial intelligence, with a particular focus on contrastive learning,
+    optimization methods, and reinforcement learning from human feedback (RLHF). My
+    recent work explores the integration of contrastive learning with Graph Neural
+    Networks, where I demonstrated that column-wise postprocessing of embedding matrices
+    can significantly enhance both the quality of node embeddings and training efficiency,
+    achieving state-of-the-art results across multiple benchmarks.
+
+
+    In addition to my work on embeddings, I have developed an adaptive inexact Newton
+    method for solving equality-constrained nonlinear optimization problems, which
+    has shown superior performance in various applications, including constrained
+    deep learning and optimal control. My research also addresses the challenges of
+    human feedback in reinforcement learning, proposing a robust approach, $R^3M$,
+    that effectively identifies and mitigates the impact of corrupted preference labels.
+
+
+    Furthermore, I am actively engaged in addressing ethical concerns surrounding
+    AI-generated content. My recent project, Selective WatErmarking via Entropy Thresholding
+    (SWEET), enhances the detection of machine-generated code while preserving code
+    quality, showcasing my commitment to responsible AI development. Through my work,
+    I aim to contribute to the understanding and advancement of machine learning techniques
+    that are both effective and ethically sound.'
+  type: BaseAgent
+- agent_id: agent2
+  profile: 'I am a researcher with a strong focus on optimization methods, machine
+    learning, and their applications in complex systems. My work spans various domains,
+    including finance, robotics, and event sequence modeling. I have extensively studied
+    first-order methods (FOMs) and their applications to non-convex optimization problems,
+    developing novel approaches like the inexact augmented Lagrangian method (iALM)
+    that bridge the gap between theory and practice.
+
+
+    In recent years, I have shifted my attention to the intersection of deep learning
+    and reinforcement learning, particularly in multi-agent systems and human feedback.
+    My work on MARLadona has demonstrated the potential of decentralized multi-agent
+    reinforcement learning in robot soccer, achieving significant performance improvements
+    over traditional heuristic methods. Additionally, I have developed the Transformer
+    Hawkes Process (THP) model, which effectively captures complex temporal dependencies
+    in event data, and the SMURF-THP framework, which quantifies prediction uncertainty
+    in event sequences.
+
+
+    I am also passionate about addressing the challenges posed by noisy human feedback
+    in reinforcement learning. My robust RLHF approach, $R^3M$, models corrupted preference
+    labels as sparse outliers, providing a more reliable framework for aligning AI
+    systems with human preferences. Through my research, I aim to contribute to the
+    development of efficient algorithms that can tackle real-world problems while
+    enhancing the interpretability and robustness of machine learning models.'
+  type: BaseAgent
+- agent_id: agent3
+  profile: 'I am a researcher dedicated to enhancing the capabilities of large language
+    models (LLMs) and reinforcement learning (RL) systems through innovative methodologies
+    and frameworks. My recent work focuses on improving instruction-following performance
+    by developing the Quality-Diversity Instruction Tuning (QDIT) algorithm, which
+    balances dataset quality and diversity, leading to more robust models. I have
+    also introduced HERON, a hierarchical reward modeling framework that simplifies
+    reward design in RL, enhancing agent performance and sample efficiency.
+
+
+    In the realm of reinforcement learning from human feedback (RLHF), I proposed
+    the R^3M approach, which effectively handles corrupted preference labels, ensuring
+    robust reward learning. My research extends to machine learning force fields (MLFFs)
+    for molecular dynamics simulations, where I developed the ASTEROID framework to
+    reduce data costs while maintaining accuracy.
+
+
+    I am particularly interested in the intersection of AI and public health, having
+    created a spatio-temporal Bayesian framework for early detection of COVID-19 hotspots,
+    which integrates deep learning for enhanced interpretability. My work also addresses
+    the challenges of model size in transformer-based architectures through PLATON,
+    which captures uncertainty in weight importance scores to improve pruning methods.
+
+
+    Additionally, I have explored parameter-efficient fine-tuning techniques, such
+    as AdaLoRA, which allocates parameter budgets based on weight importance, yielding
+    significant performance improvements. My commitment to advancing AI is reflected
+    in my contributions to reward modeling, where I conducted a comprehensive comparison
+    of Bradley-Terry and Regression styles, leading to the development of a novel
+    hybrid approach that achieved top performance in reward alignment.
+
+
+    Through my research, I aim to push the boundaries of AI capabilities while ensuring
+    robustness and interpretability, ultimately contributing to safer and more effective
+    AI systems.'
+  type: BaseAgent
+- agent_id: agent4
+  profile: 'I am a researcher dedicated to advancing the fields of change-point detection,
+    distributed robotics, and reinforcement learning. My work in change-point detection
+    delves into the theoretical foundations and practical algorithms for identifying
+    abrupt changes in time-series data, aiming to enhance our understanding of this
+    critical area.
+
+
+    In the realm of robotics, I have significantly contributed to the development
+    of the StarL programming framework, which simplifies the creation of distributed
+    robotic applications. My redesign of StarL focuses on achieving portability across
+    heterogeneous robotic platforms, allowing developers to deploy the same application
+    seamlessly, regardless of the underlying hardware. This work has practical implications
+    for applications such as formation control and collaborative search.
+
+
+    Additionally, I have explored the complexities of reward design in reinforcement
+    learning through my hierarchical reward modeling framework, HERON. This framework
+    addresses the challenges of crafting effective reward functions by leveraging
+    the inherent structures in feedback signals. By applying HERON, I have demonstrated
+    improvements in agent performance, sample efficiency, and robustness across various
+    challenging tasks.
+
+
+    Overall, my research is driven by a passion for creating innovative solutions
+    that bridge theoretical insights with practical applications, ultimately enhancing
+    the capabilities of intelligent systems.'
+  type: BaseAgent
+- agent_id: agent5
+  profile: 'I am a researcher deeply engaged in the intersection of natural language
+    processing (NLP) and machine learning, with a focus on developing robust models
+    that can handle real-world challenges. My recent work has centered on enhancing
+    the resilience of NLP systems against noisy inputs, exemplified by my contextual
+    text denoising algorithm that integrates seamlessly into existing frameworks without
+    the need for retraining.
+
+
+    I have also explored multi-domain neural machine translation, proposing a novel
+    model that captures domain-specific knowledge while facilitating effective knowledge
+    transfer. My research extends to understanding the geometric structures of data,
+    where I have demonstrated the adaptability of deep ReLU networks in nonparametric
+    regression on low-dimensional manifolds.
+
+
+    In addition, I have developed ENIGMA, a framework for automatic evaluation of
+    dialogue systems that significantly correlates with human assessments, and NEEDLE,
+    a multi-stage approach for Named Entity Recognition that effectively mitigates
+    noise from weakly labeled data. My work on the Transformer Hawkes Process (THP)
+    model addresses the complexities of event sequence data, while SPOT offers a scalable
+    solution for optimal transport problems.
+
+
+    I am also passionate about advancing generative models, as seen in my work on
+    GANs, where I introduced a framework for flexible spectrum control to improve
+    training stability. My recent contributions to transfer learning emphasize robust
+    fine-tuning strategies for pre-trained language models, ensuring they retain their
+    learned knowledge while adapting to new tasks. Through these diverse projects,
+    I aim to push the boundaries of what is possible in NLP and machine learning,
+    making significant strides toward more reliable and efficient systems.'
+  type: BaseAgent
+coordinate_mode: graph
+engine_planner:
+  initial_progress: Starting the collaborative research idea generation based on the
+    provided Introduction.
+environment:
+  max_iterations: 5
+  name: Research Collaboration Environment
+  type: Research
+llm: together_ai/meta-llama/Llama-3.3-70B-Instruct-Turbo
+memory:
+  type: SharedMemory
+metrics:
+  diversity_of_perspectives: true
+  engagement_level: true
+  evaluate_llm: gpt-4o-mini
+  relevance: true
+output:
+  file_path: result/discussion_output_llama3.3_70b.jsonl
+  format: jsonl
+relationships:
+- - agent1
+  - agent2
+  - collaborate with
+- - agent1
+  - agent3
+  - collaborate with
+- - agent1
+  - agent4
+  - collaborate with
+- - agent1
+  - agent5
+  - collaborate with
+- - agent2
+  - agent3
+  - collaborate with
+- - agent2
+  - agent4
+  - collaborate with
+- - agent2
+  - agent5
+  - collaborate with
+- - agent3
+  - agent4
+  - collaborate with
+- - agent3
+  - agent5
+  - collaborate with
+- - agent4
+  - agent5
+  - collaborate with
+task:
+  content: "\n            Dear Research Team,\n\n            You are collaborating\
+    \ to generate a new research idea based on the following Introduction:\n\n   \
+    \         **Introduction**\n\n               1 Introduction  In the field of artificial\
+    \ intelligence, aligning AI systems with human preferences has become increasingly\
+    \ crucial, particularly for applications involving complex data and models like\
+    \ large language models (LLMs) in natural language processing (Stiennon et al.,\
+    \ 2020; Ouyang et al., 2022). Reinforcement learning from human feedback (RLHF)\
+    \ has gained popularity for customizing AI systems (Christiano et al., 2017; Bai\
+    \ et al., 2022; Zhao et al., 2023). RLHF involves learning a reward function from\
+    \ human preference data, then using a reinforcement learning algorithm to train\
+    \ a policy to optimize the learned reward model.   A key challenge in RLHF lies\
+    \ in the complexity of reward modeling, which primarily stems from the reliance\
+    \ on preference labels. Since preference labels only provide comparative rankings\
+    \ of trajectory segments without quantifying the scale of underlying preference\
+    \ strengths, previous methods have employed the Bradley-Terry (BT) model (Bradley\
+    \ & Terry, 1952) in conjunction with cross-entropy loss to learn the reward function\
+    \ from preference data (Christiano et al., 2017; Stiennon et al., 2020). This\
+    \ approach assumes that the logit of the preference distribution scales linearly\
+    \ with the reward difference across all sample pairs. However, such linear scaling\
+    \ is often insufficient to account for the variations in preference strength among\
+    \ different pairs, restricting the reward function’s ability to capture a broader\
+    \ range of reward differences. This restrictive approach to reward modeling limits\
+    \ the flexibility of the learned reward function, hindering its capacity to produce\
+    \ the versatile rewards essential for the downstream policy optimization.   To\
+    \ overcome this shortcoming, we introduce a novel adaptive preference loss function\
+    \ inspired by distributionally robust optimization (DRO, Duchi et al. (2021)).\
+    \ Our approach incorporates an instance-specific scaling factor to change the\
+    \ scaling between the preference distribution and the reward difference to be\
+    \ non-linear. These factors are learned during training and enable the model to\
+    \ accommodate varying uncertainties of preference strength, thereby enhancing\
+    \ the flexibility of the reward. For pairs showing strong preference (i.e., low\
+    \ preference uncertainty), our method learns a large scaling factor, which enables\
+    \ the model to learn a larger reward difference. In contrast, for pairs showing\
+    \ ambiguous preferences (i.e., high preference uncertainty), our method assigns\
+    \ a smaller scaling factor, enabling the model to learn a smaller reward difference.\
+    \ The additional computational overhead of involving this scaling factor into\
+    \ training is negligible, as the proposed loss function is strictly convex and\
+    \ univariate with respect to each scaling parameter. Therefore, it can be easily\
+    \ optimized by a simple second-order algorithm within a few iterations.   Our\
+    \ experiments on robotic control tasks (Todorov et al., 2012) demonstrate that\
+    \ our method can learn a more flexible reward function, resulting in an improved\
+    \ policy. Surprisingly, we also discover that our method better aligns the learned\
+    \ reward function with downstream policy optimization. Specifically, when tuning\
+    \ hyperparameters for reward modeling, the simplest approach is to select the\
+    \ reward model according to preference prediction accuracy. However, the selected\
+    \ reward function (with the highest accuracy) often yields a downstream policy\
+    \ with poor performance. To address this misalignment, we usually have to jointly\
+    \ tune the parameters across both stages according to downstream policy performance,\
+    \ resulting in significant computational burden and tuning effort. Our proposed\
+    \ method can mitigate\n\n            **Your Task**\n\n            1. **Literature\
+    \ Review**: Analyze the Introduction provided and conduct a brief literature review\
+    \ to understand the current state of research in this area.\n\n            2.\
+    \ **Brainstorming**: Collaboratively brainstorm potential research ideas that\
+    \ build upon or address gaps in the Introduction.\n\n            3. **Summarization**:\
+    \ Summarize your collective ideas.\n\n            4. **Formulate a New Research\
+    \ Idea**: Develop a new research proposal in the format of the '5q', defined below:\n\
+    \n               **Here is a high-level summarized insight of a research field\
+    \ Machine Learning.**\n\n               **Here are the five core questions:**\n\
+    \n               **[Question 1] - What is the problem?**\n\n               Formulate\
+    \ the specific research question you aim to address. Only output one question\
+    \ and do not include any more information.\n\n               **[Question 2] -\
+    \ Why is it interesting and important?**\n\n               Explain the broader\
+    \ implications of solving this problem for the research community.\n         \
+    \      Discuss how such a paper will affect future research.\n               Discuss\
+    \ how addressing this question could advance knowledge or lead to practical applications.\n\
+    \n               **[Question 3] - Why is it hard?**\n\n               Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \       Explain why naive or straightforward approaches may fail.\n          \
+    \     Identify any technical, theoretical, or practical obstacles that need to\
+    \ be overcome. MAKE IT CLEAR.\n\n               **[Question 4] - Why hasn't it\
+    \ been solved before?**\n\n               Identify gaps or limitations in previous\
+    \ research or existing solutions.\n               Discuss any barriers that have\
+    \ prevented this problem from being solved until now.\n               Explain\
+    \ how your approach differs from or improves upon prior work. MAKE IT CLEAR.\n\
+    \n               **[Question 5] - What are the key components of my approach and\
+    \ results?**\n\n               Outline your proposed methodology in detail, including\
+    \ the method, dataset, and metrics that you plan to use.\n               Describe\
+    \ the expected outcomes. MAKE IT CLEAR.\n\n            Please work together to\
+    \ produce the '5q' for your proposed research idea.\n\n            Good luck!\n\
+    \            "
+  output_format: "You should answer the task in the following format:\n          \
+    \      **[Question 1] - What is the problem?**\n\n                Formulate the\
+    \ specific research question you aim to address. Only output one question and\
+    \ do not include any more information.\n\n                **[Question 2] - Why\
+    \ is it interesting and important?**\n\n                Explain the broader implications\
+    \ of solving this problem for the research community.\n                Discuss\
+    \ how such a paper will affect future research.\n                Discuss how addressing\
+    \ this question could advance knowledge or lead to practical applications.\n\n\
+    \                **[Question 3] - Why is it hard?**\n\n                Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \        Explain why naive or straightforward approaches may fail.\n         \
+    \       Identify any technical, theoretical, or practical obstacles that need\
+    \ to be overcome. MAKE IT CLEAR.\n\n                **[Question 4] - Why hasn't\
+    \ it been solved before?**\n\n                Identify gaps or limitations in\
+    \ previous research or existing solutions.\n                Discuss any barriers\
+    \ that have prevented this problem from being solved until now.\n            \
+    \    Explain how your approach differs from or improves upon prior work. MAKE\
+    \ IT CLEAR.\n\n                **[Question 5] - What are the key components of\
+    \ my approach and results?**\n\n                Outline your proposed methodology\
+    \ in detail, including the method, dataset, and metrics that you plan to use.\n\
+    \                Describe the expected outcomes. MAKE IT CLEAR."

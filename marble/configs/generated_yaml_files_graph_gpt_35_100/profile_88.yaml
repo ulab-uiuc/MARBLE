@@ -1,0 +1,218 @@
+agents:
+- agent_id: agent1
+  profile: 'I am a researcher dedicated to the field of natural language processing
+    (NLP), with a particular focus on text generation. My work centers around the
+    challenge of enabling machines to express themselves in human language, a task
+    that has seen significant advancements since the introduction of neural encoder-decoder
+    models like Seq2Seq in 2014. However, I recognize that relying solely on input
+    text often limits the effectiveness of these models in generating high-quality
+    outputs.
+
+
+    To address this challenge, I have explored the promising area of knowledge-enhanced
+    text generation, which integrates various forms of knowledge beyond the input
+    text into generation models. My recent survey comprehensively reviews the advancements
+    in this field over the past five years, detailing general methods and architectures
+    for knowledge integration, as well as specific techniques and applications tailored
+    to different types of knowledge data.
+
+
+    I aim to bridge the gap between academic research and practical applications,
+    making my findings accessible to both researchers and practitioners in the industry.
+    My passion lies in pushing the boundaries of what machines can achieve in language
+    generation, ultimately striving for more nuanced and contextually aware outputs.'
+  type: BaseAgent
+- agent_id: agent2
+  profile: 'As a researcher deeply immersed in the field of graph neural networks
+    (GNNs) and their applications, my work focuses on enhancing the capabilities and
+    understanding of these powerful models. My recent publications reflect a commitment
+    to addressing the limitations of existing GNN architectures. For instance, I developed
+    Position-aware GNNs (P-GNNs) to better capture the positional context of nodes
+    within graphs, significantly improving performance in tasks like link prediction
+    and community detection.
+
+
+    I also introduced Identity-aware GNNs (ID-GNNs), which extend the expressive power
+    of traditional GNNs by incorporating node identities during message passing. This
+    innovation has led to substantial accuracy improvements across various prediction
+    tasks. My exploration of dynamic graphs culminated in the ROLAND framework, which
+    allows static GNNs to adapt to dynamic environments, showcasing the scalability
+    and efficiency of my approaches.
+
+
+    Beyond architectural advancements, I have delved into the design space of GNNs,
+    systematically studying over 315,000 designs to provide guidelines for optimal
+    model selection across different tasks. My work on AutoML, particularly with FALCON
+    and AutoTransfer, aims to streamline the search for effective neural architectures
+    by leveraging prior knowledge and enhancing search efficiency.
+
+
+    Overall, my research is driven by a passion for pushing the boundaries of GNNs
+    and making them more accessible and effective for real-world applications. I am
+    excited about the future of this field and the potential for my contributions
+    to inspire further innovations.'
+  type: BaseAgent
+- agent_id: agent3
+  profile: 'As a researcher deeply immersed in the field of graph neural networks
+    (GNNs) and their applications, my work focuses on enhancing the capabilities and
+    understanding of these powerful models. My recent publications reflect a commitment
+    to addressing the limitations of existing GNN architectures. For instance, I developed
+    Position-aware GNNs (P-GNNs) to better capture the positional context of nodes
+    within graphs, significantly improving performance in tasks like link prediction
+    and community detection.
+
+
+    I also introduced Identity-aware GNNs (ID-GNNs), which extend the expressive power
+    of traditional GNNs by incorporating node identities during message passing. This
+    innovation has led to substantial accuracy improvements across various prediction
+    tasks. My exploration of dynamic graphs culminated in the ROLAND framework, which
+    allows static GNNs to adapt to dynamic environments, showcasing the scalability
+    and efficiency of my approaches.
+
+
+    Beyond architectural advancements, I have delved into the design space of GNNs,
+    systematically studying over 315,000 designs to provide guidelines for optimal
+    model selection across different tasks. My work on AutoML, particularly with FALCON
+    and AutoTransfer, aims to streamline the search for effective neural architectures
+    by leveraging prior knowledge and enhancing search efficiency.
+
+
+    Through these contributions, I strive to push the boundaries of what GNNs can
+    achieve, fostering a deeper understanding of their structure and performance while
+    making them more accessible for real-world applications.'
+  type: BaseAgent
+coordinate_mode: graph
+engine_planner:
+  initial_progress: Starting the collaborative research idea generation based on the
+    provided Introduction.
+environment:
+  max_iterations: 5
+  name: Research Collaboration Environment
+  type: Research
+llm: gpt-3.5-turbo
+memory:
+  type: SharedMemory
+metrics:
+  diversity_of_perspectives: true
+  engagement_level: true
+  evaluate_llm: gpt-4o-mini
+  relevance: true
+output:
+  file_path: result/discussion_output_35.jsonl
+  format: jsonl
+relationships:
+- - agent1
+  - agent2
+  - collaborate with
+- - agent1
+  - agent3
+  - collaborate with
+- - agent2
+  - agent3
+  - collaborate with
+task:
+  content: "\n            Dear Research Team,\n\n            You are collaborating\
+    \ to generate a new research idea based on the following Introduction:\n\n   \
+    \         **Introduction**\n\n             Introduction Adversarial robustness\
+    \ is the study of model performance in the worst-case scenario, which is a key\
+    \ element in trust- worthy machine learning. Without further remediation, state-\
+    \ of-the-art machine learning models, especially neural net- works, are known\
+    \ to be overly sensitive to small human- imperceptible perturbations to data inputs\
+    \ [ 19]. Such a prop- erty of over-sensitivity could be exploited by bad actors\
+    \ to craft adversarial perturbations leading to prediction-evasive adversarial\
+    \ examples. Given a threat model specifying the knowledge of the target machine\
+    \ learning model (e.g., white-box or black-box model access) and the setting of\
+    \ plausible adversarial in- terventions (e.g., norm-bounded input perturbations),\
+    \ the methodology for adversarial robustness evaluation can be divided into two\
+    \ categories: attack-dependent andattack- independent . Attack-dependent approaches\
+    \ aim to devise the strongest possible attack and use it for performance assess-\
+    \ ment. A typical example is Auto-Attack [ 12], a state-of-the- art attack based\
+    \ on an ensemble of advanced white-box and black-box adversarial perturbation\
+    \ methods Table 7 shows the best ranking coefﬁcient we achieved on each calibration\
+    \ option for CIFAR-10. Among all these four calibration choices, we found that\
+    \ Sigmoid then Temperature Softmax achieves the best result. A.7. Approximation\
+    \ Error and Sample Complexity Figure 5 presents the sample complexity as analyzed\
+    \ in Theorem 2 with varying approximation error ( \x0F) and three conﬁdence parameters\
+    \ ( \x0E) for quantifying the difference be- tween the sample mean and the true\
+    \ mean for global robust- ness estimation. As expected, smaller \x0Eor smaller\x0F\
+    will lead to higher sample complexity. A.8. Complete Run-time Background and Related\
+    \ Works Adversarial Attack and Defense. In classiﬁcation tasks, adversarial attacks\
+    \ aim to generate adversarial examples that evade the correct prediction of a\
+    \ classiﬁer. In principle, ad- versarial examples can be crafted by small perturbations\
+    \ to a native data sample, where the level of perturbation is mea- sured by different\
+    \ Lpnorms [ 7,8,55]. The procedure of ﬁnding adversarial perturbation within a\
+    \ perturbation level is often formulated as a constrained optimization problem,\
+    \ which can be solved by algorithms such as projected gradient descent (PGD) [\
+    \ 37]. The state-of-the-art adversarial attack is the Auto-Attack [ 12], which\
+    \ uses an ensemble of white-box and black-box attacks. There are many Appendix\
+    \ A.1. Notations Notation Description d dimensionality of the input vector K number\
+    \ of output classes f:Rd!RKneural network classiﬁer x2Rddata sample y groundtruth\
+    \ class label \x0E2Rdinput perturbation k\x0EkpLpnorm of perturbation, p\x151\
+    \ \x01min minimum adversarial perturbation G (conditional) generative model z\x18\
+    \ N (0;I) latent vector sampled from Gaussian distribution g robustness score\
+    \ function deﬁned in (3)  (f)=b (f) true/estimated global robustness deﬁned in\
+    \ Section 3.1 Table 6: Main notations used in this paper A.2. More Motivations\
+    \ on using Generative Models for Robustness Evaluation We emphasize the necessity\
+    \ of generative models using the points below. 1.Global robustness assessment\
+    \ requires a GM . The ma- jor focus and novelty of our study are to evaluate the\
+    \ global robustness with respect to the underlying true data distribution, and\
+    \ we propose to use a GM as a proxy. We argue that such a proxy is necessary to\
+    \ eval- uate global robustness unless the true data distribution is known. 2.GAN\
+    \ can provably match data distribution. Recent works such as [ 50] and [ 33] have\
+    \ proved the conver- gence rate of approaching the true data distribution for\
+    \ a family of GANs under certain conditions. This will beneﬁt global robustness\
+    \ evaluation (see Figure 3 for ablations on GAN variants). 3.Privacy-sensitive\
+    \ remote model auditing. As shown in Sec 4.5, synthetic data from generative models\
+    \ can facilitate the robustness evaluation of privacy-sensitive models. A.3. Proof\
+    \ of Theorem 1 In this section, we will give detailed\n\n            **Your Task**\n\
+    \n            1. **Literature Review**: Analyze the Introduction provided and\
+    \ conduct a brief literature review to understand the current state of research\
+    \ in this area.\n\n            2. **Brainstorming**: Collaboratively brainstorm\
+    \ potential research ideas that build upon or address gaps in the Introduction.\n\
+    \n            3. **Summarization**: Summarize your collective ideas.\n\n     \
+    \       4. **Formulate a New Research Idea**: Develop a new research proposal\
+    \ in the format of the '5q', defined below:\n\n               **Here is a high-level\
+    \ summarized insight of a research field Machine Learning.**\n\n             \
+    \  **Here are the five core questions:**\n\n               **[Question 1] - What\
+    \ is the problem?**\n\n               Formulate the specific research question\
+    \ you aim to address. Only output one question and do not include any more information.\n\
+    \n               **[Question 2] - Why is it interesting and important?**\n\n \
+    \              Explain the broader implications of solving this problem for the\
+    \ research community.\n               Discuss how such a paper will affect future\
+    \ research.\n               Discuss how addressing this question could advance\
+    \ knowledge or lead to practical applications.\n\n               **[Question 3]\
+    \ - Why is it hard?**\n\n               Discuss the challenges and complexities\
+    \ involved in solving this problem.\n               Explain why naive or straightforward\
+    \ approaches may fail.\n               Identify any technical, theoretical, or\
+    \ practical obstacles that need to be overcome. MAKE IT CLEAR.\n\n           \
+    \    **[Question 4] - Why hasn't it been solved before?**\n\n               Identify\
+    \ gaps or limitations in previous research or existing solutions.\n          \
+    \     Discuss any barriers that have prevented this problem from being solved\
+    \ until now.\n               Explain how your approach differs from or improves\
+    \ upon prior work. MAKE IT CLEAR.\n\n               **[Question 5] - What are\
+    \ the key components of my approach and results?**\n\n               Outline your\
+    \ proposed methodology in detail, including the method, dataset, and metrics that\
+    \ you plan to use.\n               Describe the expected outcomes. MAKE IT CLEAR.\n\
+    \n            Please work together to produce the '5q' for your proposed research\
+    \ idea.\n\n            Good luck!\n            "
+  output_format: "You should answer the task in the following format:\n          \
+    \      **[Question 1] - What is the problem?**\n\n                Formulate the\
+    \ specific research question you aim to address. Only output one question and\
+    \ do not include any more information.\n\n                **[Question 2] - Why\
+    \ is it interesting and important?**\n\n                Explain the broader implications\
+    \ of solving this problem for the research community.\n                Discuss\
+    \ how such a paper will affect future research.\n                Discuss how addressing\
+    \ this question could advance knowledge or lead to practical applications.\n\n\
+    \                **[Question 3] - Why is it hard?**\n\n                Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \        Explain why naive or straightforward approaches may fail.\n         \
+    \       Identify any technical, theoretical, or practical obstacles that need\
+    \ to be overcome. MAKE IT CLEAR.\n\n                **[Question 4] - Why hasn't\
+    \ it been solved before?**\n\n                Identify gaps or limitations in\
+    \ previous research or existing solutions.\n                Discuss any barriers\
+    \ that have prevented this problem from being solved until now.\n            \
+    \    Explain how your approach differs from or improves upon prior work. MAKE\
+    \ IT CLEAR.\n\n                **[Question 5] - What are the key components of\
+    \ my approach and results?**\n\n                Outline your proposed methodology\
+    \ in detail, including the method, dataset, and metrics that you plan to use.\n\
+    \                Describe the expected outcomes. MAKE IT CLEAR."

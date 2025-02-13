@@ -1,0 +1,268 @@
+agents:
+- agent_id: agent1
+  profile: 'I am a researcher with a strong focus on the intersection of statistical
+    mechanics, computer vision, and optical engineering. My work primarily revolves
+    around the Jarzynski equality (JE), which I have leveraged to develop innovative
+    methods for calculating free energy differences (FED) in a more efficient manner.
+    By introducing integrable virtual systems, I have transformed the computation
+    of FED into an equilibrium equality, significantly reducing the computational
+    cost and enhancing the accuracy of numerical studies across various model systems.
+
+
+    In the realm of computer vision, I have explored the challenges of feature fusion
+    from diverse representations and modalities. My approach involves constructing
+    similarity graphs that capture structural relationships and deep feature interactions,
+    allowing for more effective fusion of multi-representational data. This relationship-centric
+    method has shown promising results, particularly in video anomaly detection, where
+    traditional fusion techniques often fall short.
+
+
+    Additionally, I have conducted experimental research at the Shanghai Astronomical
+    Observatory, focusing on the capabilities of pyramid wavefront sensors (WFS) in
+    measuring differential piston on sparse apertures. This work aims to advance the
+    phasing of primary mirrors in Fizeau imaging telescopes, contributing to the field
+    of optical engineering.
+
+
+    Overall, my research is characterized by a commitment to bridging theoretical
+    concepts with practical applications, driving advancements in both fundamental
+    science and technology.'
+  type: BaseAgent
+- agent_id: agent2
+  profile: "I am a researcher with a diverse background in mathematics, physics, and\
+    \ machine learning, focusing on the intersection of these fields to solve complex\
+    \ problems. My work spans various topics, including the characterization of edge-transitive\
+    \ Cayley graphs, the study of automorphism groups of Frobenius groups, and the\
+    \ exploration of regular simplex tensors in optimization models. \n\nIn recent\
+    \ years, I have delved into unsupervised learning techniques to identify phases\
+    \ and phase transitions in many-body systems, utilizing methods like principal\
+    \ component analysis and clustering. My research also extends to the application\
+    \ of Boltzmann machines in physics, where I investigate their potential to accelerate\
+    \ Monte Carlo simulations and discover new algorithms.\n\nI have a keen interest\
+    \ in human action recognition, leveraging depth sensors to improve performance\
+    \ in challenging scenarios. Additionally, I explore the synergy between artificial\
+    \ intelligence and software engineering, analyzing case studies like IBM Watson\
+    \ and Google AlphaGo to understand how AI can enhance software development.\n\n\
+    My recent work includes sentiment analysis of social media data using LSTM models,\
+    \ achieving high accuracy in understanding public opinion. I am also engaged in\
+    \ theoretical physics, addressing anomalies in top quark behavior within the context\
+    \ of the left-right twin Higgs model. Overall, my research aims to bridge theoretical\
+    \ concepts with practical applications, contributing to advancements in both academia\
+    \ and industry."
+  type: BaseAgent
+- agent_id: agent3
+  profile: 'I am a researcher dedicated to enhancing object tracking and computer-aided
+    diagnosis through advanced machine learning techniques. My recent work focuses
+    on improving the tracking of high-speed, small objects, such as tennis balls and
+    shuttlecocks, in challenging conditions like motion blur and occlusion. I developed
+    TrackNetV4, an innovative enhancement to the TrackNet family, which integrates
+    high-level visual features with learnable motion attention maps. This motion-aware
+    fusion mechanism significantly improves tracking performance by emphasizing the
+    moving object''s location, even in less-than-ideal visibility scenarios.
+
+
+    In addition to my work in object tracking, I am passionate about applying machine
+    learning to healthcare, particularly in the early detection of diabetic retinopathy.
+    I have designed a set of neural networks specifically for classifying fundus retinal
+    images, which, when combined with preprocessing and augmentation techniques, have
+    shown promising results in boosting classification accuracy. My goal is to create
+    scalable models that can facilitate faster and more accurate diagnoses, ultimately
+    contributing to better patient outcomes in the fight against blindness caused
+    by diabetic retinopathy. Through my research, I aim to bridge the gap between
+    advanced technology and practical applications in both sports analytics and medical
+    diagnostics.'
+  type: BaseAgent
+- agent_id: agent4
+  profile: 'I am a researcher deeply engaged in the fields of affective computing,
+    computer vision, and machine learning. My work spans a variety of topics, including
+    emotion recognition, transfer learning, and the development of innovative neural
+    network architectures. Recently, I have focused on enhancing emotion recognition
+    systems through crowd predictions, demonstrating how collective discernment can
+    significantly improve accuracy in detecting emotional veracity.
+
+
+    My research also delves into the intricacies of eye movement patterns during face
+    recognition, revealing how these patterns can indicate cognitive states such as
+    deception. I have developed novel methodologies, such as the informative class
+    activation map (infoCAM), which bridges information theory with image classification
+    to identify the most informative features for specific labels.
+
+
+    In addition to my contributions to emotion recognition and image classification,
+    I have explored the challenges of biased generative models, identifying the sources
+    of bias and proposing solutions to mitigate their effects. My work on synthesizing
+    large-scale datasets for micro-expression recognition has also been pivotal in
+    advancing the field, allowing for improved training of recognition models.
+
+
+    I am passionate about leveraging deep learning techniques to solve real-world
+    problems, and I continuously seek to bridge theoretical insights with practical
+    applications. My goal is to contribute to the development of fair, efficient,
+    and effective machine learning systems that can enhance human-computer interactions
+    and improve our understanding of emotional and cognitive processes.'
+  type: BaseAgent
+- agent_id: agent5
+  profile: "I am a researcher deeply engaged in the study of network theory, particularly\
+    \ focusing on the dynamics of preferential attachment in complex networks. My\
+    \ recent work has led to the development of a generalized preferential attachment\
+    \ model that transcends traditional frameworks by integrating both topological\
+    \ and weight aspects of networks. This innovative approach not only enhances our\
+    \ understanding of how vertices connect but also quantifies the significance of\
+    \ new edges in terms of their weight. \n\nThrough this research, I have established\
+    \ that my model can generate multiple power-law distributions, including those\
+    \ for vertex degrees, vertex strengths, and edge weights, as well as a novel distribution\
+    \ for subgraph degrees. This work not only contributes to theoretical advancements\
+    \ in network science but also has practical implications for analyzing real-world\
+    \ networks. I am passionate about exploring the intricate relationships within\
+    \ networks and how these dynamics can inform various applications across disciplines."
+  type: BaseAgent
+coordinate_mode: graph
+engine_planner:
+  initial_progress: Starting the collaborative research idea generation based on the
+    provided Introduction.
+environment:
+  max_iterations: 5
+  name: Research Collaboration Environment
+  type: Research
+llm: together_ai/meta-llama/Llama-3.3-70B-Instruct-Turbo
+memory:
+  type: SharedMemory
+metrics:
+  diversity_of_perspectives: true
+  engagement_level: true
+  evaluate_llm: gpt-4o-mini
+  relevance: true
+output:
+  file_path: result/discussion_output_llama3.3_70b.jsonl
+  format: jsonl
+relationships:
+- - agent1
+  - agent2
+  - collaborate with
+- - agent1
+  - agent3
+  - collaborate with
+- - agent1
+  - agent4
+  - collaborate with
+- - agent1
+  - agent5
+  - collaborate with
+- - agent2
+  - agent3
+  - collaborate with
+- - agent2
+  - agent4
+  - collaborate with
+- - agent2
+  - agent5
+  - collaborate with
+- - agent3
+  - agent4
+  - collaborate with
+- - agent3
+  - agent5
+  - collaborate with
+- - agent4
+  - agent5
+  - collaborate with
+task:
+  content: "\n            Dear Research Team,\n\n            You are collaborating\
+    \ to generate a new research idea based on the following Introduction:\n\n   \
+    \         **Introduction**\n\n               1 Introduction  Figure 1: A comparison\
+    \ of existing datasets such as UCSD Ped, CUHK Avenue, ShanghaiTech, UCF-Crime,\
+    \ UBnormal and CUVA vs. our Multi-Scenario Anomaly Detection (MSAD) dataset. \
+    \   Video Anomaly Detection (VAD) aims to automatically identify unusual occurrences\
+    \ in videos, enabling various applications in surveillance and monitoring [82].\
+    \ Detecting anomalies is a challenging and complex task due to several factors:\
+    \ (i) There is no unified and clear definition of anomalies of interest. For example,\
+    \ the distinction between normal activities like walking on a sidewalk and abnormal\
+    \ activities like walking on a highway is context-dependent. (ii) The sporadic\
+    \ and rare occurrences of anomalies make the collection of well-curated datasets\
+    \ a demanding task, limiting the ability to learn anomalous patterns. Existing\
+    \ methods often treat VAD as either a one-class classification problem or an out-of-distribution\
+    \ detection task  [4, 22, 36, 7, 24, 98, 20, 61, 27, 81, 50]. These approaches\
+    \ rely on training solely with normal samples and testing on both normal and abnormal\
+    \ samples, treating anomalies as outliers. Significant progress has been made\
+    \ in VAD during the past few years, thanks to benchmark datasets [35, 79, 37,\
+    \ 72, 14, 97], as well as synthetic data generation [2] that presents a range\
+    \ of anomalies. Fig. 1 shows some frames from different datasets.   Surveys. Advances\
+    \ in VAD have also led to some comprehensive surveys contributing significantly\
+    \ to the literature [71, 1, 69, 14, 28]. A survey on deep learning models for\
+    \ VAD can be found in [71]. A comprehensive study in [1] highlights challenging\
+    \ issues in VAD, such as varying environments, the complexity of human activities,\
+    \ the ambiguous nature of anomalies, and the absence of appropriate datasets.\
+    \ A systematic review in [69] discusses various potential challenges, opportunities,\
+    \ and provides guidance for future research. A recent work [14] offers a comprehensive\
+    \ benchmark for understanding VAD causation using Large Language Models (LLMs)\
+    \ for text annotations on human-related anomalies. While we focus on static cameras,\
+    \ a survey on VAD in dynamic scenes captured by moving cameras can be found in [28].\
+    \ Although these surveys are comprehensive, they are not portable and lightweight.\
+    \ Our lightweight review offers several benefits: (i) it provides a quick reference\
+    \ for researchers and practitioners, making it easier to get up to speed on VAD\
+    \ without sifting through extensive details; (ii) it enhances accessibility for\
+    \ a broader audience, including newcomers to the field, by allowing a quick grasp\
+    \ of essential concepts; and (iii) it offers focused guidance by distilling critical\
+    \ information into clear, actionable insights.   Challenges. Various studies [103,\
+    \ 75] indicate that existing methods are often restricted to detecting only a\
+    \ handful of specific anomalies due to (i) a limited amount of videos and (ii)\
+    \ limited camera viewpoints, scenarios and anomaly types per dataset. These methods\
+    \ also frequently suffer from poor generalizability, necessitating retraining\
+    \ for each unique target camera viewpoint or new scenario, which subsequently\
+    \ increases computational costs [11]. Most existing methods [59, 15, 10, 97] are\
+    \ particularly vulnerable to various factors such as reflection, illumination\
+    \ changes, and complex background environments, leading to frequent false positives\
+    \ and negatives, thereby affecting the precision and reliability of detection.\
+    \ These challenges highlight the need for a high-quality, multi-scenario, and\
+    \ comprehensive dataset. However, existing benchmarks mostly focus\n\n       \
+    \     **Your Task**\n\n            1. **Literature Review**: Analyze the Introduction\
+    \ provided and conduct a brief literature review to understand the current state\
+    \ of research in this area.\n\n            2. **Brainstorming**: Collaboratively\
+    \ brainstorm potential research ideas that build upon or address gaps in the Introduction.\n\
+    \n            3. **Summarization**: Summarize your collective ideas.\n\n     \
+    \       4. **Formulate a New Research Idea**: Develop a new research proposal\
+    \ in the format of the '5q', defined below:\n\n               **Here is a high-level\
+    \ summarized insight of a research field Machine Learning.**\n\n             \
+    \  **Here are the five core questions:**\n\n               **[Question 1] - What\
+    \ is the problem?**\n\n               Formulate the specific research question\
+    \ you aim to address. Only output one question and do not include any more information.\n\
+    \n               **[Question 2] - Why is it interesting and important?**\n\n \
+    \              Explain the broader implications of solving this problem for the\
+    \ research community.\n               Discuss how such a paper will affect future\
+    \ research.\n               Discuss how addressing this question could advance\
+    \ knowledge or lead to practical applications.\n\n               **[Question 3]\
+    \ - Why is it hard?**\n\n               Discuss the challenges and complexities\
+    \ involved in solving this problem.\n               Explain why naive or straightforward\
+    \ approaches may fail.\n               Identify any technical, theoretical, or\
+    \ practical obstacles that need to be overcome. MAKE IT CLEAR.\n\n           \
+    \    **[Question 4] - Why hasn't it been solved before?**\n\n               Identify\
+    \ gaps or limitations in previous research or existing solutions.\n          \
+    \     Discuss any barriers that have prevented this problem from being solved\
+    \ until now.\n               Explain how your approach differs from or improves\
+    \ upon prior work. MAKE IT CLEAR.\n\n               **[Question 5] - What are\
+    \ the key components of my approach and results?**\n\n               Outline your\
+    \ proposed methodology in detail, including the method, dataset, and metrics that\
+    \ you plan to use.\n               Describe the expected outcomes. MAKE IT CLEAR.\n\
+    \n            Please work together to produce the '5q' for your proposed research\
+    \ idea.\n\n            Good luck!\n            "
+  output_format: "You should answer the task in the following format:\n          \
+    \      **[Question 1] - What is the problem?**\n\n                Formulate the\
+    \ specific research question you aim to address. Only output one question and\
+    \ do not include any more information.\n\n                **[Question 2] - Why\
+    \ is it interesting and important?**\n\n                Explain the broader implications\
+    \ of solving this problem for the research community.\n                Discuss\
+    \ how such a paper will affect future research.\n                Discuss how addressing\
+    \ this question could advance knowledge or lead to practical applications.\n\n\
+    \                **[Question 3] - Why is it hard?**\n\n                Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \        Explain why naive or straightforward approaches may fail.\n         \
+    \       Identify any technical, theoretical, or practical obstacles that need\
+    \ to be overcome. MAKE IT CLEAR.\n\n                **[Question 4] - Why hasn't\
+    \ it been solved before?**\n\n                Identify gaps or limitations in\
+    \ previous research or existing solutions.\n                Discuss any barriers\
+    \ that have prevented this problem from being solved until now.\n            \
+    \    Explain how your approach differs from or improves upon prior work. MAKE\
+    \ IT CLEAR.\n\n                **[Question 5] - What are the key components of\
+    \ my approach and results?**\n\n                Outline your proposed methodology\
+    \ in detail, including the method, dataset, and metrics that you plan to use.\n\
+    \                Describe the expected outcomes. MAKE IT CLEAR."

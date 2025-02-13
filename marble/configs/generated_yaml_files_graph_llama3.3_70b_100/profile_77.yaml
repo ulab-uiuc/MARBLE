@@ -1,0 +1,304 @@
+agents:
+- agent_id: agent1
+  profile: 'I am a researcher specializing in computer vision and Bayesian deep learning,
+    with a particular focus on enhancing 3D object detection and uncertainty quantification
+    in neural networks. My recent work has led to the development of innovative methods
+    that leverage single RGB images for 3D detection, significantly improving accessibility
+    for devices lacking LiDAR sensors. By extending 2D object detectors with a 3D
+    detection head, I have achieved state-of-the-art performance on benchmark datasets,
+    demonstrating the potential of this approach in real-world applications.
+
+
+    In the realm of Bayesian deep learning, I have explored novel priors and variational
+    inference techniques to improve uncertainty quantification and robustness against
+    adversarial attacks. My research on the Laplace approximation has provided insights
+    into optimizing neural network hyperparameters, while my work on Minimal Random
+    Code Learning (MIRACLE) has enhanced the efficiency of variational Bayesian neural
+    networks.
+
+
+    Additionally, I have contributed to the field of AutoML by developing efficient
+    Gaussian process models for learning curve predictions, addressing the computational
+    challenges associated with hyperparameter optimization. My work emphasizes the
+    importance of kernel design and computational scalability, providing a framework
+    for applying Gaussian processes to complex datasets.
+
+
+    Overall, my research aims to bridge the gap between theoretical advancements and
+    practical applications, driving innovation in computer vision and machine learning.
+    I am passionate about developing methods that not only push the boundaries of
+    technology but also enhance the interpretability and reliability of machine learning
+    systems.'
+  type: BaseAgent
+- agent_id: agent2
+  profile: 'I am a researcher deeply engaged in the intersection of machine learning,
+    Bayesian inference, and generative modeling. My recent work has focused on developing
+    innovative frameworks that enhance uncertainty quantification and predictive performance
+    in neural networks. One of my notable contributions is the Controlled Monte Carlo
+    Diffusion (CMCD) sampler, which integrates optimal transport with variational
+    inference to improve Bayesian computation. This work not only clarifies the relationship
+    between the EM-algorithm and iterative proportional fitting but also demonstrates
+    the robustness of CMCD across various experimental settings.
+
+
+    I have also explored the challenges of out-of-distribution (OOD) detection, proposing
+    methods like the Relative Mahalanobis Distance (RMD) to enhance performance in
+    detecting near-OOD inputs. My research extends to scalable Bayesian inference
+    methods for large-scale linear models, where I introduced sample-based techniques
+    that significantly reduce computational costs while maintaining accuracy.
+
+
+    In addition, I have investigated the potential of generative models to capture
+    data symmetries, leading to improved generalization capabilities. My work on DEFT
+    (Doob''s h-transform Efficient FineTuning) exemplifies my commitment to unifying
+    complex methodologies into efficient frameworks that yield state-of-the-art results
+    across diverse applications.
+
+
+    Overall, my research aims to bridge theoretical insights with practical applications,
+    driving advancements in machine learning that are both innovative and impactful.'
+  type: BaseAgent
+- agent_id: agent3
+  profile: 'I am a researcher deeply engaged in the intersection of machine learning
+    and its applications across various domains, including generative modeling, hyperparameter
+    optimization, and molecular dynamics simulations. My recent work has focused on
+    developing efficient methods for optimizing hyperparameters, particularly in challenging
+    settings like federated learning, where traditional validation techniques are
+    often impractical. I have also explored the intricacies of diffusion models, proposing
+    an influence functions framework to enhance data attribution and interpretability,
+    which is crucial for understanding model behavior.
+
+
+    In addition to these contributions, I have pioneered Ensemble Distribution Distillation
+    (EnD²), a novel approach that retains the diversity of ensemble predictions while
+    distilling them into a single model, thus improving uncertainty estimation. My
+    research extends to large language models (LLMs), where I investigated implicit
+    meta-learning phenomena that enhance model performance based on indicators of
+    document usefulness.
+
+
+    Moreover, I have delved into Gaussian processes, proposing iterative methods for
+    hyperparameter optimization that significantly reduce computational costs. My
+    work on Denoising Diffusion Probabilistic Models (DDPMs) aims to provide clear
+    and accessible introductions to complex topics, making advanced methodologies
+    more approachable for researchers.
+
+
+    Lastly, I have developed Timewarp, an innovative enhanced sampling method for
+    molecular dynamics simulations, which leverages normalizing flows to accelerate
+    sampling across diverse molecular systems. My goal is to create scalable, interpretable,
+    and efficient machine learning solutions that can be applied to real-world challenges.'
+  type: BaseAgent
+- agent_id: agent4
+  profile: 'As a researcher deeply immersed in the field of graph neural networks
+    (GNNs) and their applications, my work primarily revolves around enhancing the
+    capabilities and understanding of these powerful models. My recent publications
+    reflect a commitment to addressing the limitations of existing GNN architectures.
+    For instance, I developed Position-aware GNNs (P-GNNs) to better capture the positional
+    context of nodes within graphs, significantly improving performance in tasks like
+    link prediction and community detection.
+
+
+    I also introduced Identity-aware GNNs (ID-GNNs), which extend the expressive power
+    of traditional GNNs by incorporating node identities during message passing. This
+    innovation has led to substantial accuracy improvements across various prediction
+    tasks. My exploration of dynamic graphs culminated in the ROLAND framework, which
+    allows static GNNs to adapt to dynamic environments, showcasing the scalability
+    and efficiency of my approaches.
+
+
+    Beyond architectural advancements, I have delved into the design space of GNNs,
+    systematically studying over 315,000 designs to provide guidelines for optimal
+    model selection across different tasks. My work on AutoML, particularly with FALCON
+    and AutoTransfer, aims to streamline the search for effective neural architectures
+    by leveraging prior knowledge and enhancing search efficiency.
+
+
+    Overall, my research is driven by a passion for pushing the boundaries of GNNs
+    and making them more accessible and effective for real-world applications. I am
+    excited about the future of this field and the potential for my contributions
+    to inspire further innovations.'
+  type: BaseAgent
+- agent_id: agent5
+  profile: 'As a researcher deeply immersed in the field of graph neural networks
+    (GNNs) and their applications, my work primarily revolves around enhancing the
+    capabilities and understanding of these powerful models. My recent publications
+    reflect a commitment to addressing the limitations of existing GNN architectures.
+    For instance, I developed Position-aware GNNs (P-GNNs) to better capture the positional
+    context of nodes within graphs, significantly improving performance in tasks like
+    link prediction and community detection.
+
+
+    I also introduced Identity-aware GNNs (ID-GNNs), which extend the expressive power
+    of traditional GNNs by incorporating node identities during message passing. This
+    innovation has led to substantial accuracy improvements across various prediction
+    tasks. My exploration of dynamic graphs culminated in the ROLAND framework, which
+    allows static GNNs to adapt to dynamic environments, showcasing the scalability
+    and efficiency of my approaches.
+
+
+    Beyond architectural advancements, I have delved into the design space of GNNs,
+    systematically studying over 315,000 designs to provide guidelines for optimal
+    model selection across different tasks. My work on AutoML, particularly with FALCON
+    and AutoTransfer, aims to streamline the search for effective neural architectures
+    by leveraging prior knowledge and enhancing search efficiency.
+
+
+    Overall, my research is driven by a passion for pushing the boundaries of GNNs
+    and making them more accessible and effective for real-world applications. I am
+    excited about the future of this field and the potential for my contributions
+    to inspire further innovations.'
+  type: BaseAgent
+coordinate_mode: graph
+engine_planner:
+  initial_progress: Starting the collaborative research idea generation based on the
+    provided Introduction.
+environment:
+  max_iterations: 5
+  name: Research Collaboration Environment
+  type: Research
+llm: together_ai/meta-llama/Llama-3.3-70B-Instruct-Turbo
+memory:
+  type: SharedMemory
+metrics:
+  diversity_of_perspectives: true
+  engagement_level: true
+  evaluate_llm: gpt-4o-mini
+  relevance: true
+output:
+  file_path: result/discussion_output_llama3.3_70b.jsonl
+  format: jsonl
+relationships:
+- - agent1
+  - agent2
+  - collaborate with
+- - agent1
+  - agent3
+  - collaborate with
+- - agent1
+  - agent4
+  - collaborate with
+- - agent1
+  - agent5
+  - collaborate with
+- - agent2
+  - agent3
+  - collaborate with
+- - agent2
+  - agent4
+  - collaborate with
+- - agent2
+  - agent5
+  - collaborate with
+- - agent3
+  - agent4
+  - collaborate with
+- - agent3
+  - agent5
+  - collaborate with
+- - agent4
+  - agent5
+  - collaborate with
+task:
+  content: "\n            Dear Research Team,\n\n            You are collaborating\
+    \ to generate a new research idea based on the following Introduction:\n\n   \
+    \         **Introduction**\n\n             Introduction to the non-asymptotic\
+    \ analysis of random matrices. In Compressed Sensing: Theory and Applications\
+    \ , 2012. Cited on page 16. [29] K. A. Wang, G. Pleiss, J. R. Gardner, S. Tyree,\
+    \ K. Q. Weinberger, and A. G. Wilson. Exact Gaussian Processes on a Million Data\
+    \ Points. In Advances in Neural Information Processing Systems , 2019. Cited on\
+    \ pages 1, 3, 4, 6, 19. [30] J. T. Wilson, V . Borovitskiy, A. Terenin, P. Mostowsky,\
+    \ and M. P. Deisenroth. Efficiently Sampling Functions from Gaussian Process Posteriors.\
+    \ In International Conference on Machine Learning , 2020. Cited on pages 2, 3,\
+    \ 5, 18. [31] J. T. Wilson, V . Borovitskiy, A. Terenin, P. Mostowsky, and M.\
+    \ P. Deisenroth. Pathwise Conditioning of Gaussian Processes. Journal of Machine\
+    \ Learning Research , 22, 1, 2021. Cited on pages 2, 3, 5, 18. [32] K. Wu, J.\
+    \ Wenger, H. Jones, G. Pleiss, and J. R. Gardner. Large-Scale Gaussian Processes\
+    \ via Alternating Projection. In International Conference on Artificial Intelligence\
+    \ and Statistics , 2024. Cited on pages 1, 3–6, 8, 20. 11A Mathematical Derivations\
+    \ In this Methods for Regularized Loss Minimization. Journal of Machine Learning\
+    \ Research , 14, 2012. Cited on pages 1, 3. [23] J. Snoek, H. Larochelle, and\
+    \ R. P. Adams. Practical Bayesian Optimization of Machine Learning Algorithms.\
+    \ In Advances in Neural Information Processing Systems , 2012. Cited on page 1.\
+    \ [24] D. J. Sutherland and J. Schneider. On the error of random Fourier features.\
+    \ In Uncertainty in Artificial Intelligence , 2015. Cited on pages 3, 18. [25]\
+    \ K. Tazi, J. A. Lin, R. Viljoen, A. Gardner, T. John, H. Ge, and R. E. Turner.\
+    \ Beyond Intuition, a Framework for Applying GPs to Real-World Data. In ICML Structured\
+    \ Probabilistic Inference & Generative Modeling Workshop , 2023. Cited on page\
+    \ 1. [26] M. K. Titsias. Variational learning of inducing variables in sparse\
+    \ Gaussian processes. In Artificial Intelligence and Statistics , 2009. Cited\
+    \ on page 1. [27] S. Tu, R. Roelofs, S. Venkataraman, and B. Recht. Large Scale\
+    \ Kernel Learning using Block Coordinate Descent. arXiv:1602.05310 , 2016. Cited\
+    \ on pages 1, 3. [28] R. Vershynin. results is in Appendix A.3 can be trivially\
+    \ extended for the pathwise estimator in (9)for any pairwise independent probe\
+    \ vectors ˆzj(with second moment H−1 θ) that upon rescaling by H1 2 θwill be zero-mean\
+    \ with independent coordinates. This is true for probe vectors ˆzjthat are either\
+    \ i.i.d. N(0,H−1 θ)-distributed or obtained by transforming Radamacher random\
+    \ variables by H−1 2 θ. First, we can restate a variant of Theorem 2, with the\
+    \ only change being to the definition of the approximate gradients ˜gk: Theorem\
+    \ 8. Letg=∇L, as in (5), and let ˜g: Θ→Rdθbe the pathwise approximation to gwiths\
+    \ samples, as in (9). Assume that the absolute value of the eigenvalues of H−1\
+    \ θ,∂Hθ ∂θkare upper-bounded on the domain of θkbyλmax H−1andλmax ∂Hsuch that\
+    \ the eigenvalues of their product are upper-bounded byλmax=λmax H−1λmax ∂H. Then,\
+    \ for any β, δ > 0we have P\x14\f\f\f\f˜gk(θ)−∂ ∂θkL(θ)\f\f\f\f> β\x15 < δ if\
+    \ s >\x12 1 +2 ϵ\x13nE\x02 z4\x03 +n−2 δβ2(1−ϵ)2nλmax, (76) i.e. the j-th component\
+    \ of the approximate gradient ˜g(θ)will be within distance βof the true gradient\
+    \ on the entire optimisation space Θwith probability at least (1−δ)for any ϵ >0,\
+    \ if the number of samples is sufficiently large. Proof. LetPn i=1qi(θ)λi(θ)pi(θ)Tbe\
+    \ the eigendecomposition of H−1 2 θ∂Hθ ∂θkH−1 2 θ, where {qi}n i=1 and{pi}n i=1are\
+    \ two sets of orthonormal vectors. Then, we can write the difference rewrite ˜gk(θ)−\
+    \ 17gk(θ)as ˜gk(θ)−gk(θ) =sX j=1ˆzT j∂Hθ ∂θkˆzj−tr\x12 H−1 θ∂Hθ ∂θk\x13 △Define\
+    \ zj=H1 2 θˆzj, (77) =sX j=1zT jH−1 2 θ∂Hθ ∂θkH−1 2 θzj−Ez\x14 zTH−1 2 θ∂Hθ ∂θkH−1\
+    \ 2 θz\x15 , (78) =sX j=1zT j nX i=1λiqipT i! zj−Ez\" zT nX i=1λiqipT i! z# .\
+    \ (79) The rest of the proof follows identically to\n\n            **Your Task**\n\
+    \n            1. **Literature Review**: Analyze the Introduction provided and\
+    \ conduct a brief literature review to understand the current state of research\
+    \ in this area.\n\n            2. **Brainstorming**: Collaboratively brainstorm\
+    \ potential research ideas that build upon or address gaps in the Introduction.\n\
+    \n            3. **Summarization**: Summarize your collective ideas.\n\n     \
+    \       4. **Formulate a New Research Idea**: Develop a new research proposal\
+    \ in the format of the '5q', defined below:\n\n               **Here is a high-level\
+    \ summarized insight of a research field Machine Learning.**\n\n             \
+    \  **Here are the five core questions:**\n\n               **[Question 1] - What\
+    \ is the problem?**\n\n               Formulate the specific research question\
+    \ you aim to address. Only output one question and do not include any more information.\n\
+    \n               **[Question 2] - Why is it interesting and important?**\n\n \
+    \              Explain the broader implications of solving this problem for the\
+    \ research community.\n               Discuss how such a paper will affect future\
+    \ research.\n               Discuss how addressing this question could advance\
+    \ knowledge or lead to practical applications.\n\n               **[Question 3]\
+    \ - Why is it hard?**\n\n               Discuss the challenges and complexities\
+    \ involved in solving this problem.\n               Explain why naive or straightforward\
+    \ approaches may fail.\n               Identify any technical, theoretical, or\
+    \ practical obstacles that need to be overcome. MAKE IT CLEAR.\n\n           \
+    \    **[Question 4] - Why hasn't it been solved before?**\n\n               Identify\
+    \ gaps or limitations in previous research or existing solutions.\n          \
+    \     Discuss any barriers that have prevented this problem from being solved\
+    \ until now.\n               Explain how your approach differs from or improves\
+    \ upon prior work. MAKE IT CLEAR.\n\n               **[Question 5] - What are\
+    \ the key components of my approach and results?**\n\n               Outline your\
+    \ proposed methodology in detail, including the method, dataset, and metrics that\
+    \ you plan to use.\n               Describe the expected outcomes. MAKE IT CLEAR.\n\
+    \n            Please work together to produce the '5q' for your proposed research\
+    \ idea.\n\n            Good luck!\n            "
+  output_format: "You should answer the task in the following format:\n          \
+    \      **[Question 1] - What is the problem?**\n\n                Formulate the\
+    \ specific research question you aim to address. Only output one question and\
+    \ do not include any more information.\n\n                **[Question 2] - Why\
+    \ is it interesting and important?**\n\n                Explain the broader implications\
+    \ of solving this problem for the research community.\n                Discuss\
+    \ how such a paper will affect future research.\n                Discuss how addressing\
+    \ this question could advance knowledge or lead to practical applications.\n\n\
+    \                **[Question 3] - Why is it hard?**\n\n                Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \        Explain why naive or straightforward approaches may fail.\n         \
+    \       Identify any technical, theoretical, or practical obstacles that need\
+    \ to be overcome. MAKE IT CLEAR.\n\n                **[Question 4] - Why hasn't\
+    \ it been solved before?**\n\n                Identify gaps or limitations in\
+    \ previous research or existing solutions.\n                Discuss any barriers\
+    \ that have prevented this problem from being solved until now.\n            \
+    \    Explain how your approach differs from or improves upon prior work. MAKE\
+    \ IT CLEAR.\n\n                **[Question 5] - What are the key components of\
+    \ my approach and results?**\n\n                Outline your proposed methodology\
+    \ in detail, including the method, dataset, and metrics that you plan to use.\n\
+    \                Describe the expected outcomes. MAKE IT CLEAR."

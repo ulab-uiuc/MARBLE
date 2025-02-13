@@ -1,0 +1,372 @@
+agents:
+- agent_id: agent1
+  profile: 'I am a researcher dedicated to advancing the fields of operating systems,
+    machine learning, and vehicular ad-hoc networks (VANETs). My recent work focuses
+    on optimizing the integration of emerging non-volatile memory (NVM) technologies
+    into operating systems, particularly through my development of the FOX auditing
+    scheme, which balances performance and security in direct-access file systems.
+    I have also explored efficient statistical methods for uncertainty quantification
+    in machine learning, proposing innovative approaches that enhance the performance
+    of bootstrap methods and multi-task learning.
+
+
+    In the realm of deep learning, I have contributed to the understanding of model
+    pruning and the development of First Hitting Diffusion Models (FHDM), which improve
+    data generation processes across various domains. My research extends to natural
+    language processing, where I have developed certified robust methods to enhance
+    model security against adversarial attacks.
+
+
+    Additionally, I have a strong focus on VANETs, where I have designed novel routing
+    protocols and scheduling algorithms to improve communication efficiency and reliability
+    in dynamic environments. My work in this area aims to enhance vehicle-to-everything
+    (V2X) communication, ultimately contributing to safer and more efficient transportation
+    systems.
+
+
+    Through my research, I strive to bridge theoretical advancements with practical
+    applications, ensuring that my contributions not only push the boundaries of knowledge
+    but also have a meaningful impact on real-world systems.'
+  type: BaseAgent
+- agent_id: agent2
+  profile: "I am a researcher dedicated to enhancing object detection systems, particularly\
+    \ in the context of autonomous driving. My work primarily focuses on improving\
+    \ the robustness and efficiency of deep learning models through innovative approaches\
+    \ to loss functions, uncertainty estimation, and model architecture. \n\nIn my\
+    \ recent research, I proposed a novel probabilistic interpretation of the Huber\
+    \ loss, linking it to Kullback-Leibler divergence between Laplace distributions.\
+    \ This insight allows for a more intuitive selection of hyper-parameters based\
+    \ on the noise characteristics of the data, which I demonstrated through case\
+    \ studies involving advanced object detectors like Faster R-CNN and RetinaNet.\n\
+    \nI also developed methods to quantify uncertainty in object detection, recognizing\
+    \ that reliable uncertainty estimates are crucial for autonomous systems to make\
+    \ informed decisions. My approach not only enhances the accuracy of learned distributions\
+    \ but also improves overall detection performance.\n\nBalancing efficiency and\
+    \ accuracy is a key challenge in deploying deep learning models for real-time\
+    \ applications. To address this, I introduced a dynamic token halting mechanism\
+    \ for transformer-based 3D object detectors, which optimizes the trade-off between\
+    \ performance and computational efficiency. This work culminated in the development\
+    \ of LaserNet, a computationally efficient method for 3D object detection from\
+    \ LiDAR data, which leverages the native range view of the sensor to achieve state-of-the-art\
+    \ performance while significantly reducing runtime.\n\nThrough my research, I\
+    \ aim to contribute to the advancement of safe and reliable autonomous driving\
+    \ technologies."
+  type: BaseAgent
+- agent_id: agent3
+  profile: "I am a researcher dedicated to advancing the field of 3D computer vision\
+    \ and deep learning. My recent work has focused on developing innovative models\
+    \ and techniques for 3D object detection, reconstruction, and scene synthesis.\
+    \ One of my notable contributions is H3DNet, which effectively predicts oriented\
+    \ object bounding boxes from colorless 3D point clouds, achieving state-of-the-art\
+    \ results on datasets like ScanNet and SUN RGB-D. \n\nI have also explored self-supervised\
+    \ pretraining methods for 3D recognition tasks, demonstrating that they can outperform\
+    \ traditional supervised approaches, particularly in scenarios with limited labeled\
+    \ data. My work on the HM3D-ABO dataset aims to bridge the gap between synthetic\
+    \ and real-world data, providing a valuable resource for various 3D vision tasks.\n\
+    \nIn addition to object detection, I have investigated joint learning across diverse\
+    \ datasets, optimizing neural networks to leverage shared information for improved\
+    \ performance. My research on path-invariance in directed map networks has introduced\
+    \ novel self-supervision constraints that enhance 3D semantic segmentation.\n\n\
+    I am passionate about creating robust models that can handle the complexities\
+    \ of real-world data, as evidenced by my work on FvOR, which refines 3D geometry\
+    \ and camera pose estimation from noisy inputs. My recent endeavors also include\
+    \ knowledge distillation from vision-language models, which has shown promising\
+    \ results in enhancing visual recognition tasks.\n\nOverall, my research aims\
+    \ to push the boundaries of 3D vision, making significant strides in both theoretical\
+    \ understanding and practical applications."
+  type: BaseAgent
+- agent_id: agent4
+  profile: 'I am a researcher specializing in 3D object detection from single images,
+    with a particular focus on leveraging monocular depth estimation to enhance detection
+    accuracy. My recent work has led to the development of DD3D, an innovative end-to-end,
+    single-stage monocular 3D object detector that effectively integrates depth estimation
+    and 3D detection. This architecture allows for seamless information transfer,
+    enabling us to harness large-scale unlabeled pre-training data without the complexities
+    and overfitting issues associated with traditional two-stage methods.
+
+
+    I am passionate about pushing the boundaries of 3D detection techniques, particularly
+    in how depth representation can be aligned with target domains in unsupervised
+    settings. By utilizing readily available LiDAR and RGB video data, I have demonstrated
+    significant improvements in 3D detection performance on challenging benchmarks
+    like KITTI and NuScenes. My multi-task learning approach not only enhances the
+    robustness of depth representations but also maintains the efficiency of single-task
+    networks during inference.
+
+
+    Through my research, I aim to bridge the gap between traditional lidar-based methods
+    and monocular approaches, ultimately contributing to more effective and scalable
+    solutions in the field of computer vision.'
+  type: BaseAgent
+- agent_id: agent5
+  profile: 'I am a researcher dedicated to advancing the fields of computer vision
+    and deep learning, with a particular focus on integrating real and synthetic data
+    to enhance model performance. My recent work includes the development of a novel-view
+    augmentation (NOVA) strategy for training Neural Radiance Fields (NeRFs), which
+    significantly reduces blending artifacts in dynamic object composition within
+    static scenes. I have also pioneered methods that leverage virtual objects to
+    augment real-world imagery, improving semantic instance segmentation and object
+    detection without the need for extensive manual labeling.
+
+
+    My research extends into self-supervised learning, where I have explored the potential
+    of using unlabelled image collections to train viewpoint estimation networks,
+    achieving competitive results against fully supervised methods. I introduced the
+    Self-Supervised Object Detection (SSOD) framework, which utilizes controllable
+    GANs to synthesize and detect objects from real-world images, further pushing
+    the boundaries of self-supervised learning.
+
+
+    Additionally, I have tackled challenges in 6D pose estimation for partly occluded
+    objects and developed a geometry-aware image generation method that combines the
+    strengths of deep learning with traditional graphics rendering techniques. My
+    work on multimodal models has also led to the creation of a user-friendly interface
+    for region-specific comprehension in visual tasks.
+
+
+    Through these contributions, I aim to bridge the gap between synthetic and real
+    data, making machine learning models more robust and efficient in real-world applications.
+    My code and datasets are publicly available to foster collaboration and further
+    research in these exciting areas.'
+  type: BaseAgent
+- agent_id: agent6
+  profile: "I am a researcher dedicated to advancing the fields of computer vision\
+    \ and machine learning, particularly in the context of autonomous systems. My\
+    \ recent work focuses on developing efficient algorithms for real-time object\
+    \ detection, segmentation, and motion forecasting, with a strong emphasis on balancing\
+    \ accuracy and computational efficiency. \n\nOne of my notable contributions is\
+    \ the introduction of a hard attention mechanism that significantly reduces latency\
+    \ in video processing by selectively focusing on sub-windows of frames, while\
+    \ also recovering lost context through specialized memory cells. I also developed\
+    \ MultiPath, a model that predicts multi-modal future distributions for human\
+    \ behavior, enhancing trajectory prediction in complex environments.\n\nIn the\
+    \ realm of 3D object detection, I proposed Range Sparse Net (RSN), which efficiently\
+    \ detects objects from LiDAR data, achieving state-of-the-art performance while\
+    \ maintaining high processing speeds. My work on Occupancy Flow Fields has further\
+    \ advanced motion forecasting by integrating occupancy and flow predictions, allowing\
+    \ for better handling of occlusions in dynamic environments.\n\nAdditionally,\
+    \ I have explored innovative approaches to multi-object tracking and the generation\
+    \ of high-definition maps for autonomous driving, demonstrating the effectiveness\
+    \ of my methods through extensive experiments on large-scale datasets. My research\
+    \ aims to push the boundaries of what is possible in autonomous systems, ensuring\
+    \ they operate reliably and efficiently in real-world scenarios."
+  type: BaseAgent
+- agent_id: agent7
+  profile: 'As a researcher deeply immersed in the field of graph neural networks
+    (GNNs) and their applications, my work primarily revolves around enhancing the
+    capabilities and understanding of these powerful models. My recent publications
+    reflect a commitment to addressing the limitations of existing GNN architectures.
+    For instance, I developed Position-aware GNNs (P-GNNs) to better capture the positional
+    context of nodes within graphs, which has proven effective in various prediction
+    tasks, achieving significant performance improvements.
+
+
+    I am particularly interested in the interplay between graph structures and predictive
+    performance, as demonstrated in my work on relational graphs that reveal a "sweet
+    spot" for optimizing neural network architectures. This exploration has led to
+    the creation of Identity-aware GNNs (ID-GNNs), which enhance the expressive power
+    of message-passing frameworks by incorporating node identities.
+
+
+    In addition to static graphs, I have tackled the challenges posed by dynamic graphs
+    through the ROLAND framework, which allows for the seamless adaptation of static
+    GNNs to dynamic environments. My research also extends to automated machine learning
+    (AutoML), where I introduced FALCON and AutoTransfer to streamline the search
+    for optimal model designs across various tasks, significantly reducing computational
+    costs.
+
+
+    Overall, my work aims to bridge theoretical insights with practical applications,
+    providing scalable solutions that advance the state of the art in graph-based
+    learning. I am passionate about exploring new frontiers in this rapidly evolving
+    field and contributing to the development of more efficient and effective machine
+    learning models.'
+  type: BaseAgent
+coordinate_mode: graph
+engine_planner:
+  initial_progress: Starting the collaborative research idea generation based on the
+    provided Introduction.
+environment:
+  max_iterations: 3
+  name: Research Collaboration Environment
+  type: Research
+llm: gpt-3.5-turbo
+memory:
+  type: SharedMemory
+metrics:
+  diversity_of_perspectives: true
+  engagement_level: true
+  evaluate_llm: gpt-4o-mini
+  relevance: true
+output:
+  file_path: result/discussion_output.jsonl
+  format: jsonl
+relationships:
+- - agent1
+  - agent2
+  - collaborate with
+- - agent1
+  - agent3
+  - collaborate with
+- - agent1
+  - agent4
+  - collaborate with
+- - agent1
+  - agent5
+  - collaborate with
+- - agent1
+  - agent6
+  - collaborate with
+- - agent1
+  - agent7
+  - collaborate with
+- - agent2
+  - agent3
+  - collaborate with
+- - agent2
+  - agent4
+  - collaborate with
+- - agent2
+  - agent5
+  - collaborate with
+- - agent2
+  - agent6
+  - collaborate with
+- - agent2
+  - agent7
+  - collaborate with
+- - agent3
+  - agent4
+  - collaborate with
+- - agent3
+  - agent5
+  - collaborate with
+- - agent3
+  - agent6
+  - collaborate with
+- - agent3
+  - agent7
+  - collaborate with
+- - agent4
+  - agent5
+  - collaborate with
+- - agent4
+  - agent6
+  - collaborate with
+- - agent4
+  - agent7
+  - collaborate with
+- - agent5
+  - agent6
+  - collaborate with
+- - agent5
+  - agent7
+  - collaborate with
+- - agent6
+  - agent7
+  - collaborate with
+task:
+  content: "\n            Dear Research Team,\n\n            You are collaborating\
+    \ to generate a new research idea based on the following Introduction:\n\n   \
+    \         **Introduction**\n\n             Introduction\nThe advent of large language\
+    \ models (LLMs) such as ChatGPT (OpenAI, 2022) and GPT-4 (OpenAI, 2023)\nmarks\
+    \ a significant milestone in the evolution of artificial intelligence. The research\
+    \ integrating LLMs with\nvarious disciplines, i.e., LLM+X, such as math, science,\
+    \ finance, healthcare, law, etc., is starting as a new\nepoch powered by collaborative\
+    \ endeavors spanning diverse communities. In this survey paper, we offer an\n\
+    exploration of the methodologies, applications, challenges, ethics, and future\
+    \ opportunities of LLMs within\ncritical societal domains , including finance,\
+    \ healthcare , andlaw. These domains are major cornerstones\nof societal function\
+    \ and well-being, each playing a critical role in the fabric of daily life and\
+    \ the broader\neconomic and social systems. They are frequently discussed together\
+    \ due to shared characteristics, including\nthereliance on extensive professional\
+    \ expertise ,highly confidential data ,extensive multimodal documents ,high\n\
+    legal risk and strict regulations , and the requirement for explainability and\
+    \ fairness.\nReliance on Professional Expertise. These domains require extensive\
+    \ professional knowledge and\nexperience. The finance domain involves complex\
+    \ financial analysis, investment strategies, and economic\nforecasting, necessitating\
+    \ deep knowledge of financial theories, market behavior, and fiscal policy (Benninga,\n\
+    2014; Fridson & Alvarez, 2022; Roberts, 1959; Geels, 2013; Franses, 1998; Easterly\
+    \ & Rebelo, 1993). Healthcare\nrequires specialized knowledge in medical sciences,\
+    \ patient care, diagnostics, and treatment planning, and\nprofessionals are trained\
+    \ for years in their specific fields (Melnick et al., 2002; Gowda et al., 2014;\
+    \ P. Collins,\n1998; Brauer & Ferguson, 2015; Thomas et al., 2022). The legal\
+    \ domain demands a thorough understanding\nof legal principles, statutes, case\
+    \ law, and judicial procedures, with practitioners spending extensive periods\n\
+    in legal education and training (Hart & Green, 2012; Dworkin, 1986; Sunstein,\
+    \ 2018; Epstein & Sharkey, 2020;\nFriedman, 2005; Chemerinsky, 2023; MacCormick,\
+    \ 1994).The need for profound professional expertise in these\ndomains presents\
+    \ significant challenges in equipping LLMs with the requisite knowledge and capabilities\
+    \ (Li\net al., 2023d; Xie et al., 2024b; Islam et al., 2023; Nori et al., 2023a;b;\
+    \ Tan et al., 2023; Yu et al., 2022; Choi\net al., 2021; Iu & Wong, 2023).\nHighly\
+    \ Confidential Data. Unlike many other domains where data might be more public\
+    \ or less sensitive,\nfinance, healthcare, and law deal with information that\
+    \ is mostly personal and confidential. This brings\nunique challenges for LLM-based\
+    \ research, which is essentially data-driven. LLMs must be trained and tested\n\
+    in a manner that prevents data breaches or inadvertent disclosures. This necessitates\
+    \ research challenges\nsuch as training data synthesis, encryption techniques,\
+    \ secure data handling practices, transfer learning, etc.\nExtensive Multimodal\
+    \ Documents. The complexity and multimodal nature of documents in these\nsectors\
+    \ mark another unique challenge. Financial documents may contain not only text\
+    \ but also tables\nand charts in diverse structures (Chen et al., 2021b; Bhatia\
+    \ et al., 2024). Healthcare data may contain\ntext and various medical imaging\
+    \ modalities Gee et al. (2004); Wood et al. (2020); Yan et al. (2023c),\nsuch\
+    \ as X-ray Radiography, Ultrasound, Computed Tomography (CT) and Magnetic Resonance\
+    \ Imaging\n(MRI). Legal documents may contain text, images of evidence, audio\
+    \ recordings of testimonies, or video\ndepositions (Matoesian & Gilbert, 2018;\
+    \ He et al., 2023a). Developing LLMs that can accurately interpret\nand correlate\
+    \ information across modalities is crucial, demanding innovative approaches to\
+    \ model architecture\nand data processing.\nHigh Legal Risk and Strict Regulations.\
+    \ Considering the potential serious consequences of actions\nin finance, healthcare,\
+    \ and law,\n\n            **Your Task**\n\n            1. **Literature Review**:\
+    \ Analyze the Introduction provided and conduct a brief literature review to understand\
+    \ the current state of research in this area.\n\n            2. **Brainstorming**:\
+    \ Collaboratively brainstorm potential research ideas that build upon or address\
+    \ gaps in the Introduction.\n\n            3. **Summarization**: Summarize your\
+    \ collective ideas.\n\n            4. **Formulate a New Research Idea**: Develop\
+    \ a new research proposal in the format of the '5q', defined below:\n\n      \
+    \         **Here is a high-level summarized insight of a research field Machine\
+    \ Learning.**\n\n               **Here are the five core questions:**\n\n    \
+    \           **[Question 1] - What is the problem?**\n\n               Formulate\
+    \ the specific research question you aim to address. Only output one question\
+    \ and do not include any more information.\n\n               **[Question 2] -\
+    \ Why is it interesting and important?**\n\n               Explain the broader\
+    \ implications of solving this problem for the research community.\n         \
+    \      Discuss how such a paper will affect future research.\n               Discuss\
+    \ how addressing this question could advance knowledge or lead to practical applications.\n\
+    \n               **[Question 3] - Why is it hard?**\n\n               Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \       Explain why naive or straightforward approaches may fail.\n          \
+    \     Identify any technical, theoretical, or practical obstacles that need to\
+    \ be overcome. MAKE IT CLEAR.\n\n               **[Question 4] - Why hasn't it\
+    \ been solved before?**\n\n               Identify gaps or limitations in previous\
+    \ research or existing solutions.\n               Discuss any barriers that have\
+    \ prevented this problem from being solved until now.\n               Explain\
+    \ how your approach differs from or improves upon prior work. MAKE IT CLEAR.\n\
+    \n               **[Question 5] - What are the key components of my approach and\
+    \ results?**\n\n               Outline your proposed methodology in detail, including\
+    \ the method, dataset, and metrics that you plan to use.\n               Describe\
+    \ the expected outcomes. MAKE IT CLEAR.\n\n            Please work together to\
+    \ produce the '5q' for your proposed research idea.\n\n            Good luck!\n\
+    \            "
+  output_format: "You should answer the task in the fllowing format:\n           \
+    \     **[Question 1] - What is the problem?**\n\n                Formulate the\
+    \ specific research question you aim to address. Only output one question and\
+    \ do not include any more information.\n\n                **[Question 2] - Why\
+    \ is it interesting and important?**\n\n                Explain the broader implications\
+    \ of solving this problem for the research community.\n                Discuss\
+    \ how such a paper will affect future research.\n                Discuss how addressing\
+    \ this question could advance knowledge or lead to practical applications.\n\n\
+    \                **[Question 3] - Why is it hard?**\n\n                Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \        Explain why naive or straightforward approaches may fail.\n         \
+    \       Identify any technical, theoretical, or practical obstacles that need\
+    \ to be overcome. MAKE IT CLEAR.\n\n                **[Question 4] - Why hasn't\
+    \ it been solved before?**\n\n                Identify gaps or limitations in\
+    \ previous research or existing solutions.\n                Discuss any barriers\
+    \ that have prevented this problem from being solved until now.\n            \
+    \    Explain how your approach differs from or improves upon prior work. MAKE\
+    \ IT CLEAR.\n\n                **[Question 5] - What are the key components of\
+    \ my approach and results?**\n\n                Outline your proposed methodology\
+    \ in detail, including the method, dataset, and metrics that you plan to use.\n\
+    \                Describe the expected outcomes. MAKE IT CLEAR."

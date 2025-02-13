@@ -1,0 +1,216 @@
+agents:
+- agent_id: agent1
+  profile: 'I am a researcher specializing in hybrid reinforcement learning (RL) and
+    its applications in sequential decision-making. My recent work focuses on the
+    integration of online and offline data to enhance exploration and learning efficiency
+    in RL algorithms. I have demonstrated that it is unnecessary to impose coverage
+    assumptions on offline datasets, proposing methods like DISC-GOLF that leverage
+    offline data to improve online exploration without requiring single-policy concentrability.
+
+
+    In addition to hybrid RL, I have explored automatic differentiation (AD) techniques
+    for partially observed nonlinear stochastic systems, developing new algorithms
+    that significantly improve likelihood maximization. My research also includes
+    learning mixtures of Markov chains and Markov decision processes (MDPs) from short
+    unlabeled trajectories, where I achieved impressive accuracy through a novel multi-step
+    process.
+
+
+    I am particularly interested in the intersection of matrix sketching and distributed
+    learning, where I have introduced methods that minimize bias in least squares
+    estimators, leading to more efficient distributed algorithms. Furthermore, I have
+    contributed to the latent bandit framework, establishing its generality and developing
+    methods like SOLD, LOCAL-UCB, and ProBALL-UCB to effectively learn from offline
+    data and optimize decision-making in real-world applications.
+
+
+    Through my work, I aim to bridge theoretical advancements with practical applications,
+    enhancing the capabilities of machine learning in complex decision-making environments.'
+  type: BaseAgent
+- agent_id: agent2
+  profile: 'I am a researcher deeply engaged in the study of superconductivity, quantum
+    field theory, and statistical mechanics. My recent work has focused on the intricate
+    relationships between electron-phonon interactions and superconducting transition
+    temperatures (Tc), where I have developed comprehensive Tc maps in parameter space
+    that classify known superconductors and predict new materials with enhanced properties.
+    Utilizing strong-coupling Eliashberg theory, I have explored complex crossover
+    behaviors in superconductors, shedding light on phenomena such as the pseudo-gap
+    in cuprates.
+
+
+    In addition to my work on superconductivity, I have delved into the realms of
+    celestial conformal field theory, where I reformulated the Riemann zeta function
+    and investigated the connections between scattering amplitudes and topological
+    properties. My research also extends to Kondo resonance phenomena, where I employed
+    self-consistent calculations to understand the nuances of tunneling spectra.
+
+
+    I am particularly interested in the implications of my findings for both theoretical
+    frameworks and practical applications, such as the design of new superconductors
+    and the exploration of quantum states in various materials. My work aims to bridge
+    the gap between theoretical predictions and experimental observations, contributing
+    to a deeper understanding of complex physical systems. Through my research, I
+    strive to uncover new insights that can lead to innovative applications in materials
+    science and condensed matter physics.'
+  type: BaseAgent
+- agent_id: agent3
+  profile: 'I am a researcher deeply engaged in the intersection of high-dimensional
+    statistics, machine learning, and theoretical analysis. My work primarily focuses
+    on developing robust statistical methodologies that address the challenges posed
+    by high-dimensional data, particularly through the lens of Approximate Message
+    Passing (AMP) algorithms. I have made significant strides in establishing non-asymptotic
+    distributional characterizations for AMP, enhancing our understanding of its dynamics
+    in both sparse and robust regression contexts.
+
+
+    My recent research has explored the intriguing behavior of interpolating estimators,
+    particularly the minimum \(\ell_1\)-norm interpolator, revealing a multi-descent
+    phenomenon that challenges conventional wisdom about over-parameterization. I
+    have also contributed to the understanding of reinforcement learning, demonstrating
+    minimax-optimal sample complexity in Markov decision processes, and have investigated
+    the dynamics of vaccination behavior on evolving social networks, highlighting
+    the importance of network structure in epidemic control.
+
+
+    Additionally, I have developed innovative testing procedures for high-dimensional
+    regression models, leveraging random projection techniques to achieve efficient
+    and powerful model-agnostic tests. My work on Model-X knockoffs has introduced
+    a derandomization method that enhances variable selection stability while maintaining
+    statistical rigor.
+
+
+    Through these contributions, I aim to bridge theoretical insights with practical
+    applications, providing tools and frameworks that advance our understanding of
+    complex statistical phenomena in high-dimensional settings.'
+  type: BaseAgent
+coordinate_mode: graph
+engine_planner:
+  initial_progress: Starting the collaborative research idea generation based on the
+    provided Introduction.
+environment:
+  max_iterations: 5
+  name: Research Collaboration Environment
+  type: Research
+llm: together_ai/meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo
+memory:
+  type: SharedMemory
+metrics:
+  diversity_of_perspectives: true
+  engagement_level: true
+  evaluate_llm: gpt-4o-mini
+  relevance: true
+output:
+  file_path: result/discussion_output_llama3.1_8b.jsonl
+  format: jsonl
+relationships:
+- - agent1
+  - agent2
+  - collaborate with
+- - agent1
+  - agent3
+  - collaborate with
+- - agent2
+  - agent3
+  - collaborate with
+task:
+  content: "\n            Dear Research Team,\n\n            You are collaborating\
+    \ to generate a new research idea based on the following Introduction:\n\n   \
+    \         **Introduction**\n\n               1 Introduction  Reinforcement learning\
+    \ (RL) holds great promise in attaining reliable decision-making in adaptive environments\
+    \ for a broad range of modern applications. In these applications, typical RL\
+    \ algorithms often require an enormous number of training samples in order to\
+    \ reach the desired level of accuracy. This has motivated a line of recent efforts\
+    \ to study the sample efficiency of RL algorithms. There are two mainstream paradigms\
+    \ of RL, distinguished by how samples are collected: online RL and offline RL.\
+    \ In the setting of online RL, an agent learns in a real-time manner, exploring\
+    \ the environment to maximize her cumulative rewards by executing a sequence of\
+    \ adaptively chosen policies (e.g. Azar et al., (2017); Kearns and Singh, (2002);\
+    \ Jin et al., (2018); Sutton and Barto, (2018); Zhang et al., (2023)). These online\
+    \ RL algorithms often suffer from insufficient use of data samples due to a lack\
+    \ of a reference policy at the initial stage of the learning process. Whereas,\
+    \ in offline RL, an agent has only access to a pre-collected dataset, and tries\
+    \ to figure out how to perform well in a different environment without ever experiencing\
+    \ it (e.g. Levine et al., (2020); Lange et al., (2012); Jin et al., 2021b ; Xie\
+    \ et al., 2022b ; Li et al., (2024)). Offline methods therefore often impose stringent\
+    \ requirements on the quality of the pre-collected data.   To address limitations\
+    \ from both cases, the setting of hybrid RL (Xie et al., 2022b, ; Song et al.,,\
+    \ 2023) has recently received considerable attention from both theoretical and\
+    \ practical perspectives (see, e.g. Vecerik et al., (2017); Nair et al., (2020);\
+    \ Song et al., (2023); Nakamoto et al., (2023); Wagenmaker and Pacchiano, (2023);\
+    \ Li et al., 2023b ; Ball et al., (2023); Zhou et al., (2023); Amortila et al.,\
+    \ (2024); Tan and Xu, (2024); Kausik et al., (2024) and references therein). In\
+    \ hybrid RL, an agent learns from a combination of both offline and online data,\
+    \ extracting information from offline data to enhance online exploration. The\
+    \ theoretical guarantees of hybrid RL algorithms can be categorized based on the\
+    \ following criteria: (1) the degree of function approximation considered, (2)\
+    \ the level of coverage required by the behavior policy, (3) whether it achieves\
+    \ an improvement over the minimax lower bounds for online-only and offline-only\
+    \ learning, and (4) whether they attempt to perform regret minimization or to\
+    \ learn an ϵitalic-ϵ\\epsilonitalic_ϵ-optimal policy (often referred to as PAC\
+    \ learning). We elaborate below, and summarize the prior art in Table 1.     \
+    \  Paper Function Type Concentrability? Improvement? Regret or PAC?     Song et al.,\
+    \ (2023) General Required No Regret   Nakamoto et al., (2023)       Tan and Xu,\
+    \ (2024) General Not Required No Regret   Amortila et al., (2024)       Wagenmaker\
+    \ and Pacchiano, (2023) Linear Not Required No PAC   Li et al., 2023b  Tabular\
+    \ Not Required Yes PAC   This work Linear Not Required Yes Regret, PAC     Table\
+    \ 1: Comparison of our contributions to previous work in hybrid RL.   While most\
+    \ of the prior literature (Song et al.,, 2023; Nakamoto et al.,, 2023; Zhou et al.,,\
+    \ 2023; Tan and Xu,, 2024; Amortila et al.,, 2024) have explored general function\
+    \ approximation in hybrid RL, they either require stringent concentrability assumptions\
+    \ on the quality of the behavior policy, or fail to obtain tight theoretical guarantees.\
+    \ Under such single-policy concentrability assumptions (explained below), it has\
+    \ been shown in Xie et al., 2022b  that the optimal policy learning algorithm\
+    \ is either a purely offline reduction or a purely online RL algorithm if the\
+    \ agent can choose the ratio of offline to online samples, rendering the benefits\
+    \ of hybrid RL questionable. In scenarios where this assumption is not\n\n   \
+    \         **Your Task**\n\n            1. **Literature Review**: Analyze the Introduction\
+    \ provided and conduct a brief literature review to understand the current state\
+    \ of research in this area.\n\n            2. **Brainstorming**: Collaboratively\
+    \ brainstorm potential research ideas that build upon or address gaps in the Introduction.\n\
+    \n            3. **Summarization**: Summarize your collective ideas.\n\n     \
+    \       4. **Formulate a New Research Idea**: Develop a new research proposal\
+    \ in the format of the '5q', defined below:\n\n               **Here is a high-level\
+    \ summarized insight of a research field Machine Learning.**\n\n             \
+    \  **Here are the five core questions:**\n\n               **[Question 1] - What\
+    \ is the problem?**\n\n               Formulate the specific research question\
+    \ you aim to address. Only output one question and do not include any more information.\n\
+    \n               **[Question 2] - Why is it interesting and important?**\n\n \
+    \              Explain the broader implications of solving this problem for the\
+    \ research community.\n               Discuss how such a paper will affect future\
+    \ research.\n               Discuss how addressing this question could advance\
+    \ knowledge or lead to practical applications.\n\n               **[Question 3]\
+    \ - Why is it hard?**\n\n               Discuss the challenges and complexities\
+    \ involved in solving this problem.\n               Explain why naive or straightforward\
+    \ approaches may fail.\n               Identify any technical, theoretical, or\
+    \ practical obstacles that need to be overcome. MAKE IT CLEAR.\n\n           \
+    \    **[Question 4] - Why hasn't it been solved before?**\n\n               Identify\
+    \ gaps or limitations in previous research or existing solutions.\n          \
+    \     Discuss any barriers that have prevented this problem from being solved\
+    \ until now.\n               Explain how your approach differs from or improves\
+    \ upon prior work. MAKE IT CLEAR.\n\n               **[Question 5] - What are\
+    \ the key components of my approach and results?**\n\n               Outline your\
+    \ proposed methodology in detail, including the method, dataset, and metrics that\
+    \ you plan to use.\n               Describe the expected outcomes. MAKE IT CLEAR.\n\
+    \n            Please work together to produce the '5q' for your proposed research\
+    \ idea.\n\n            Good luck!\n            "
+  output_format: "You should answer the task in the following format:\n          \
+    \      **[Question 1] - What is the problem?**\n\n                Formulate the\
+    \ specific research question you aim to address. Only output one question and\
+    \ do not include any more information.\n\n                **[Question 2] - Why\
+    \ is it interesting and important?**\n\n                Explain the broader implications\
+    \ of solving this problem for the research community.\n                Discuss\
+    \ how such a paper will affect future research.\n                Discuss how addressing\
+    \ this question could advance knowledge or lead to practical applications.\n\n\
+    \                **[Question 3] - Why is it hard?**\n\n                Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \        Explain why naive or straightforward approaches may fail.\n         \
+    \       Identify any technical, theoretical, or practical obstacles that need\
+    \ to be overcome. MAKE IT CLEAR.\n\n                **[Question 4] - Why hasn't\
+    \ it been solved before?**\n\n                Identify gaps or limitations in\
+    \ previous research or existing solutions.\n                Discuss any barriers\
+    \ that have prevented this problem from being solved until now.\n            \
+    \    Explain how your approach differs from or improves upon prior work. MAKE\
+    \ IT CLEAR.\n\n                **[Question 5] - What are the key components of\
+    \ my approach and results?**\n\n                Outline your proposed methodology\
+    \ in detail, including the method, dataset, and metrics that you plan to use.\n\
+    \                Describe the expected outcomes. MAKE IT CLEAR."

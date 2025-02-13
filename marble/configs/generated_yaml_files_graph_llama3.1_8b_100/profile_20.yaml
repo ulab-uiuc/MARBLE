@@ -1,0 +1,253 @@
+agents:
+- agent_id: agent1
+  profile: 'I am a researcher specializing in video instance segmentation (VIS) and
+    panoptic segmentation, with a focus on developing efficient and effective algorithms
+    that push the boundaries of current methodologies. My recent work includes the
+    development of SPINet, a single-shot panoptic segmentation model that integrates
+    execution flows to generate a unified feature map, achieving high accuracy on
+    benchmarks like COCO and Cityscapes.
+
+
+    I have also pioneered the Inter-frame Communication Transformers (IFC), which
+    enhance video instance segmentation by efficiently encoding context across frames,
+    resulting in state-of-the-art performance while maintaining a fast runtime. My
+    contributions extend to long-tailed object tracking, where I introduced a set
+    classifier that aggregates information from multiple viewpoints, significantly
+    improving tracking accuracy.
+
+
+    In my pursuit of advancing VIS, I proposed VITA, a novel paradigm that leverages
+    object-oriented information to enhance video-level understanding without relying
+    on complex spatio-temporal features. My work on GenVIS further addresses the challenges
+    of long videos by introducing a generalized framework that bridges the gap between
+    training and inference, achieving remarkable results on popular benchmarks.
+
+
+    I am passionate about creating practical solutions that not only achieve high
+    accuracy but also maintain efficiency for real-time applications. My research
+    is driven by the desire to tackle the complexities of video data and improve the
+    capabilities of machine learning models in understanding dynamic visual content.'
+  type: BaseAgent
+- agent_id: agent2
+  profile: 'I am a researcher specializing in optimization methods and their applications
+    in machine learning, particularly focusing on the efficiency and performance of
+    algorithms in high-dimensional settings. My recent work has led to the development
+    of the Sharpened Lazy Incremental Quasi-Newton Method (SLIQN), which combines
+    the strengths of existing incremental Quasi-Newton methods while achieving explicit
+    superlinear convergence at a competitive computational cost. This innovation addresses
+    the limitations of traditional methods, providing a more effective solution for
+    large-scale optimization problems.
+
+
+    In addition to optimization, I have explored the statistical advantages of convolutional
+    neural networks (CNNs) in vision tasks, particularly their inductive biases of
+    locality and translation invariance. Through the introduction of the Dynamic Signal
+    Distribution (DSD) classification task, I have demonstrated the significant sample
+    efficiency of CNNs compared to locally connected and fully connected networks.
+    My research not only highlights the practical benefits of these architectures
+    but also contributes to the theoretical understanding of their performance through
+    rigorous analysis.
+
+
+    Overall, my work aims to bridge the gap between theoretical advancements and practical
+    applications in machine learning, providing insights that can enhance algorithm
+    design and improve performance across various tasks.'
+  type: BaseAgent
+- agent_id: agent3
+  profile: 'I am a researcher dedicated to pushing the boundaries of deep learning,
+    particularly in the realm of Transformers and kernel methods. My recent work has
+    focused on optimizing attention mechanisms to handle longer sequences efficiently,
+    culminating in the development of FlashAttention-2 and FlashAttention-3. These
+    innovations significantly enhance performance by improving memory usage and computational
+    speed on modern GPUs, achieving up to 1.2 PFLOPs/s with minimal numerical error.
+
+
+    I have also explored the theoretical connections between state-space models and
+    attention mechanisms, leading to the creation of Mamba, a new architecture that
+    excels in various modalities, including language and audio. My research emphasizes
+    the importance of content-based reasoning in models, which has resulted in architectures
+    that outperform traditional Transformers while maintaining fast inference speeds.
+
+
+    In addition to my work on attention, I have investigated kernel approximation
+    methods, proposing deterministic feature maps that achieve competitive performance
+    with reduced memory requirements. My contributions extend to model compression
+    techniques, where I have enhanced knowledge distillation processes to improve
+    student model accuracy.
+
+
+    Overall, my research aims to bridge the gap between theoretical advancements and
+    practical applications, ensuring that our models are not only efficient but also
+    effective across diverse tasks. I am passionate about developing scalable solutions
+    that can be applied to real-world challenges in machine learning and artificial
+    intelligence.'
+  type: BaseAgent
+- agent_id: agent4
+  profile: "I am a researcher deeply engaged in the intersection of state-space models\
+    \ (SSMs) and deep learning, particularly focusing on their application to sequence\
+    \ modeling across various modalities. My recent work has explored the theoretical\
+    \ connections between SSMs and attention mechanisms, leading to the development\
+    \ of innovative architectures like Mamba and its refined version, Mamba-2, which\
+    \ achieve remarkable efficiency and performance in language modeling tasks. \n\
+    \nI have also contributed to the understanding of long-range dependencies in sequential\
+    \ data through the Structured State Space (S4) model, demonstrating its effectiveness\
+    \ in handling extensive sequences while maintaining computational efficiency.\
+    \ My research extends to hyperbolic dimensionality reduction with HoroPCA, which\
+    \ significantly enhances distance preservation in data, and I have developed frameworks\
+    \ like HiPPO for online compression of continuous signals, yielding state-of-the-art\
+    \ results in various benchmarks.\n\nAdditionally, I have tackled challenges in\
+    \ audio waveform modeling with SaShiMi, a multi-scale architecture that outperforms\
+    \ existing models in generating coherent audio. My work emphasizes the importance\
+    \ of robust gating mechanisms in recurrent models, leading to improved learnability\
+    \ and performance across diverse applications. Overall, my research aims to create\
+    \ principled, efficient models that push the boundaries of what is possible in\
+    \ sequence modeling and machine learning."
+  type: BaseAgent
+coordinate_mode: graph
+engine_planner:
+  initial_progress: Starting the collaborative research idea generation based on the
+    provided Introduction.
+environment:
+  max_iterations: 5
+  name: Research Collaboration Environment
+  type: Research
+llm: together_ai/meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo
+memory:
+  type: SharedMemory
+metrics:
+  diversity_of_perspectives: true
+  engagement_level: true
+  evaluate_llm: gpt-4o-mini
+  relevance: true
+output:
+  file_path: result/discussion_output_llama3.1_8b.jsonl
+  format: jsonl
+relationships:
+- - agent1
+  - agent2
+  - collaborate with
+- - agent1
+  - agent3
+  - collaborate with
+- - agent1
+  - agent4
+  - collaborate with
+- - agent2
+  - agent3
+  - collaborate with
+- - agent2
+  - agent4
+  - collaborate with
+- - agent3
+  - agent4
+  - collaborate with
+task:
+  content: "\n            Dear Research Team,\n\n            You are collaborating\
+    \ to generate a new research idea based on the following Introduction:\n\n   \
+    \         **Introduction**\n\n             Introduction of sequence alignment.\
+    \ Within this framework, we define sequence alignment as a novel attribute, which\
+    \ induces sequence models with essential features of data-dependence andextendability\
+    \ . We introduce Sequence Aligned Matrices (SAM) that exhibit these properties,\
+    \ demonstrating their superior performance in downstream tasks compared to non-aligned\
+    \ counterparts (Section 2.2). (iii)Exploration of structured matrix parameterizations.\
+    \ Through the matrix mixer framework, we systematically explore and categorize\
+    \ a broad spectrum of existing sequence models (Section 2.3). Motivated by sequence\
+    \ alignment, we also present new sequence models with underexplored structured\
+    \ matrix configurations, such as Vandermonde and Cauchy matrices (Section 2.4).\
+    \ Building on our matrix mixer framework, we introduce a novel sequence model\
+    \ Hydra , which employs a quasiseparable matrix mixer (Section 3). Quasiseparable\
+    \ matrices are a fundamental matrix structure with several important properties,\
+    \ making them ideal for sequence modeling. For example, they generalize both the\
+    \ low-rank matrix mixers found in linear attention models and the semiseparable\
+    \ matrices utilized in state space models. In fact, quasiseparable matrix mixers\
+    \ can be seen as a natural bidirectional extension of semiseparable matrices,\
+    \ addressing a major limitation in state space models by making their use in non-causal\
+    \ settings possible. Additionally, Hydra maintains the strong performance and\
+    \ linear-time computational efficiency of SSMs, thanks to structured matrix multiplication\
+    \ algorithms. Unlike prior attempts to make SSMs bidirectional by ad-hoc methods,\
+    \ we provide PyTorch codes in Figure 6, Figure 7, Fig- ure 8, Figure 9, Figure\
+    \ 10, and Figure 11. Our primary focus on this ablation is the comparison of expressivity\
+    \ between different Matrix Mixers. Therefore, our implementations do not necessarily\
+    \ adopt algorithms with efficient computational complexities for simplicity. The\
+    \ abbreviation distands for data-independent and ddrepresents data-dependent,\
+    \ in which ddvariants are equipped with the SAM property. As the Quasiseparable\
+    \ variant is equivalent to the Hydra blocks, its implementation can be found in\
+    \ the Python file provided in the supplementary. Further specific details are\
+    \ described below. Dense. While extending Dense matrices to incorporate the SAM\
+    \ attribute is not straightforward, implementing the vanilla Dense mixers ( i.e.without\
+    \ SAM) is extremely simple: they are equivalent to MLP-Mixer [39], employing a\
+    \ mixer matrix of R\U0001D43F×\U0001D43F. Toeplitz. Toeplitz matrix mixers without\
+    \ SAM properties are equivalent to convolution operations [18, 17], formulated\
+    \ withR2\U0001D43F−1parameters. We also present a Toeplitz matrix mixer with SAM\
+    \ properties, thus data-dependent and can handle sequences of arbitrary lengths.\
+    \ The core idea is fairly similar to the quasiseparable matrix mixer – Hydra –\
+    \ that the Toeplitz matrix mixer integrates outputs from two separate forward\
+    \ and reverse sequence convolutions. Specifically, for \U0001D456∈0,...\U0001D43F\
+    −1, each token \U0001D465\U0001D456generates two convolution parameters \U0001D45A\
+    −\U0001D456and\U0001D45A\U0001D456. Using all\U0001D45Aparameters, a data-dependent\
+    \ dynamic convolutional weight is generated as {\U0001D45A−\U0001D43F+1,\U0001D45A\
+    −\U0001D43F+2,...,\U0001D45A−1,\U0001D45A0,\U0001D45A1,...\U0001D45A\U0001D43F\
+    −2,\U0001D45A\U0001D43F−1}. Vandermonde. In Section 2.4, we introduced the single-headed\
+    \ sequence aligned Vandermonde matrix mixer. Leveraging the definition, we present\
+    \ multi-headed implementation by a seamless extension. Cauchy. The constant for\
+    \ preventing the denominator approaching zero is initialized to 0.0and0.5for the\
+    \ diand the dd variants, respectively. Definition E.1 (Cauchy Matrix) .Given q,k∈R\U0001D43F\
+    , a matrix Mis Cauchy if each(\U0001D456,\U0001D457)-entry\U0001D45A\U0001D456\
+    \U0001D457satisfies\U0001D45A\U0001D456\U0001D457=1 \U0001D45E\U0001D456−\U0001D458\
+    \U0001D457;\U0001D45E\U0001D456− \U0001D458\U0001D457≠0. 19class Dense (nn. Module\
+    \ ): def __init__ ( self , d_model , max_seq_len , # max_seq_len is necessary\
+    \ for Dense . expand =2, headdim =128 , device =None , dtype =None , ): factory_kwargs\
+    \ = {\" device \": device , \" dtype \": dtype } super (). __init__ () self .\
+    \ d_model = d_model self . max_seq_len = max_seq_len self . expand = expand self\
+    \ . d_inner = self . expand * self .\n\n            **Your Task**\n\n        \
+    \    1. **Literature Review**: Analyze the Introduction provided and conduct a\
+    \ brief literature review to understand the current state of research in this\
+    \ area.\n\n            2. **Brainstorming**: Collaboratively brainstorm potential\
+    \ research ideas that build upon or address gaps in the Introduction.\n\n    \
+    \        3. **Summarization**: Summarize your collective ideas.\n\n          \
+    \  4. **Formulate a New Research Idea**: Develop a new research proposal in the\
+    \ format of the '5q', defined below:\n\n               **Here is a high-level\
+    \ summarized insight of a research field Machine Learning.**\n\n             \
+    \  **Here are the five core questions:**\n\n               **[Question 1] - What\
+    \ is the problem?**\n\n               Formulate the specific research question\
+    \ you aim to address. Only output one question and do not include any more information.\n\
+    \n               **[Question 2] - Why is it interesting and important?**\n\n \
+    \              Explain the broader implications of solving this problem for the\
+    \ research community.\n               Discuss how such a paper will affect future\
+    \ research.\n               Discuss how addressing this question could advance\
+    \ knowledge or lead to practical applications.\n\n               **[Question 3]\
+    \ - Why is it hard?**\n\n               Discuss the challenges and complexities\
+    \ involved in solving this problem.\n               Explain why naive or straightforward\
+    \ approaches may fail.\n               Identify any technical, theoretical, or\
+    \ practical obstacles that need to be overcome. MAKE IT CLEAR.\n\n           \
+    \    **[Question 4] - Why hasn't it been solved before?**\n\n               Identify\
+    \ gaps or limitations in previous research or existing solutions.\n          \
+    \     Discuss any barriers that have prevented this problem from being solved\
+    \ until now.\n               Explain how your approach differs from or improves\
+    \ upon prior work. MAKE IT CLEAR.\n\n               **[Question 5] - What are\
+    \ the key components of my approach and results?**\n\n               Outline your\
+    \ proposed methodology in detail, including the method, dataset, and metrics that\
+    \ you plan to use.\n               Describe the expected outcomes. MAKE IT CLEAR.\n\
+    \n            Please work together to produce the '5q' for your proposed research\
+    \ idea.\n\n            Good luck!\n            "
+  output_format: "You should answer the task in the following format:\n          \
+    \      **[Question 1] - What is the problem?**\n\n                Formulate the\
+    \ specific research question you aim to address. Only output one question and\
+    \ do not include any more information.\n\n                **[Question 2] - Why\
+    \ is it interesting and important?**\n\n                Explain the broader implications\
+    \ of solving this problem for the research community.\n                Discuss\
+    \ how such a paper will affect future research.\n                Discuss how addressing\
+    \ this question could advance knowledge or lead to practical applications.\n\n\
+    \                **[Question 3] - Why is it hard?**\n\n                Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \        Explain why naive or straightforward approaches may fail.\n         \
+    \       Identify any technical, theoretical, or practical obstacles that need\
+    \ to be overcome. MAKE IT CLEAR.\n\n                **[Question 4] - Why hasn't\
+    \ it been solved before?**\n\n                Identify gaps or limitations in\
+    \ previous research or existing solutions.\n                Discuss any barriers\
+    \ that have prevented this problem from being solved until now.\n            \
+    \    Explain how your approach differs from or improves upon prior work. MAKE\
+    \ IT CLEAR.\n\n                **[Question 5] - What are the key components of\
+    \ my approach and results?**\n\n                Outline your proposed methodology\
+    \ in detail, including the method, dataset, and metrics that you plan to use.\n\
+    \                Describe the expected outcomes. MAKE IT CLEAR."

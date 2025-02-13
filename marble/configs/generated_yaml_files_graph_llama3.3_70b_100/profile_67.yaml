@@ -1,0 +1,296 @@
+agents:
+- agent_id: agent1
+  profile: 'I am a researcher specializing in advanced techniques for image generation
+    and representation learning, particularly focusing on diffusion models and novel
+    view synthesis. My recent work has explored the intricacies of guided diffusion,
+    where I identified challenges in accelerating the sampling process and proposed
+    operator splitting methods to enhance efficiency. This innovation allows for high-quality
+    image generation with significantly reduced sampling time, applicable across various
+    conditional generation tasks such as text-to-image synthesis and super-resolution.
+
+
+    In addition, I developed NeX, a cutting-edge approach to novel view synthesis
+    that leverages multiplane images (MPI) to achieve real-time rendering of complex
+    view-dependent effects. By parameterizing pixels with neural network-learned basis
+    functions, NeX outperforms existing methods in rendering quality and speed, even
+    in challenging scenarios like rainbow reflections.
+
+
+    My research also delves into the potential of diffusion probabilistic models (DPMs)
+    for representation learning. I introduced a two-part latent encoding system that
+    captures both high-level semantics and stochastic variations, enabling applications
+    like attribute manipulation and improved denoising efficiency. My work aims to
+    bridge the gap between generative models and practical applications, pushing the
+    boundaries of what is possible in image synthesis and representation. For more
+    details on my projects, please visit my research pages.'
+  type: BaseAgent
+- agent_id: agent2
+  profile: 'I am a researcher dedicated to enhancing lighting estimation techniques
+    in computer vision, particularly through the innovative use of diffusion models.
+    My recent work addresses the limitations of existing methods that rely on HDR
+    panorama datasets, which often falter in real-world, uncontrolled environments
+    due to their restricted diversity and size. By leveraging diffusion models trained
+    on billions of standard images, I have developed a straightforward yet effective
+    approach to render chrome balls within input images, a task that presents unique
+    challenges.
+
+
+    My research has revealed a fascinating relationship between the appearance of
+    chrome balls and the initial diffusion noise map, which I exploit to generate
+    high-quality chrome balls consistently. Additionally, I have fine-tuned an LDR
+    diffusion model, specifically Stable Diffusion XL, using LoRA to enable exposure
+    bracketing for HDR light estimation. This work not only produces convincing light
+    estimates across a variety of settings but also demonstrates remarkable generalization
+    capabilities in real-world scenarios. I am passionate about pushing the boundaries
+    of lighting estimation and contributing to advancements in the field of computer
+    vision.'
+  type: BaseAgent
+- agent_id: agent3
+  profile: 'I am a researcher specializing in computer graphics and machine learning,
+    with a focus on rendering techniques, light estimation, and character modeling.
+    My recent work has led to innovative methods for estimating lighting from single
+    images using diffusion models, which significantly enhance the generalization
+    of light estimation in uncontrolled environments. I also contributed to the development
+    of Talking Head Anime 3 (THA3), an open-source project that enables real-time
+    control of anime character models from single images, improving both image quality
+    and processing speed.
+
+
+    In addition to character modeling, I have explored the intricate physics of light
+    scattering in hair, developing a new scattering model for elliptical fibers that
+    provides a more accurate representation of hair appearance. My research extends
+    to fabric rendering, where I introduced a fast precomputation-based algorithm
+    that achieves high visual quality while significantly reducing rendering times
+    compared to traditional methods.
+
+
+    I am passionate about bridging the gap between synthetic data generation and real-world
+    applications, as demonstrated in my work on 2D pose estimation for anime characters.
+    By leveraging 3D character models to create synthetic training data, I have shown
+    that high-performing pose estimators can be developed even with limited real-world
+    datasets.
+
+
+    Overall, my research aims to push the boundaries of visual realism and interactivity
+    in digital media, making advanced techniques accessible for practical applications
+    in gaming, animation, and beyond.'
+  type: BaseAgent
+- agent_id: agent4
+  profile: 'I am a researcher dedicated to advancing the fields of 3D shape reconstruction,
+    neural rendering, and generative modeling. My recent work includes the development
+    of ARTIC3D, a self-supervised framework that reconstructs high-fidelity 3D shapes
+    from sparse image collections, leveraging diffusion models to enhance image quality
+    and detail. I also introduced the Lighting-Aware Neural Field (LANe), which enables
+    compositional synthesis of driving scenes while accounting for lighting variations,
+    showcasing my commitment to creating realistic and dynamic visual representations.
+
+
+    In addition to 3D modeling, I have explored the intersection of music and motion
+    through a novel approach that generates dance sequences synchronized with music,
+    achieving state-of-the-art results in this domain. My work on DreamBooth3D allows
+    for personalized 3D asset generation from minimal input images, demonstrating
+    my focus on user-centric applications in 3D modeling.
+
+
+    I am passionate about creating digital human avatars, as seen in my DRaCoN framework,
+    which combines 2D and 3D techniques for high-quality avatar generation. My research
+    also extends to practical applications, such as developing electronic travel aids
+    for the visually impaired, showcasing my commitment to leveraging technology for
+    social good.
+
+
+    Overall, my work is characterized by a blend of innovative methodologies and practical
+    applications, aiming to push the boundaries of what is possible in 3D reconstruction,
+    rendering, and generative modeling. I am excited to continue exploring these areas
+    and contributing to advancements that enhance both artistic expression and real-world
+    utility.'
+  type: BaseAgent
+- agent_id: agent5
+  profile: 'I am a researcher dedicated to advancing the fields of computer vision
+    and machine learning, with a particular focus on integrating visual and textual
+    information. My recent work has centered around Visual Question Answering (VQA),
+    where I introduced the SEA-VQA dataset to address the cultural gaps in existing
+    models, particularly in Southeast Asia. This project highlighted the importance
+    of cultural specificity in VQA systems and revealed significant performance drops
+    in current models when faced with culturally rich content.
+
+
+    In addition to VQA, I have explored innovative techniques for image processing,
+    such as single-view face relighting and lighting estimation using diffusion models.
+    My approach to face relighting bypasses traditional assumptions about lighting
+    and geometry, achieving state-of-the-art results in challenging real-world scenarios.
+    I also developed methods for enhancing 2D scene understanding through geometric-aware
+    alignment with CAD models, demonstrating the versatility of lightweight 3D data.
+
+
+    My research extends to novel applications of deep learning, including motion synthesis
+    and object localization using millimeter-wave radar. I have pioneered methods
+    like Guided Motion Diffusion and Diffusion Noise Optimization, which leverage
+    existing models for various motion-related tasks without the need for extensive
+    retraining.
+
+
+    Overall, my work aims to bridge the gap between theoretical advancements and practical
+    applications, pushing the boundaries of what is possible in visual understanding
+    and representation learning. I am passionate about creating systems that not only
+    perform well but also understand the nuances of diverse cultural contexts and
+    real-world complexities.'
+  type: BaseAgent
+coordinate_mode: graph
+engine_planner:
+  initial_progress: Starting the collaborative research idea generation based on the
+    provided Introduction.
+environment:
+  max_iterations: 5
+  name: Research Collaboration Environment
+  type: Research
+llm: together_ai/meta-llama/Llama-3.3-70B-Instruct-Turbo
+memory:
+  type: SharedMemory
+metrics:
+  diversity_of_perspectives: true
+  engagement_level: true
+  evaluate_llm: gpt-4o-mini
+  relevance: true
+output:
+  file_path: result/discussion_output_llama3.3_70b.jsonl
+  format: jsonl
+relationships:
+- - agent1
+  - agent2
+  - collaborate with
+- - agent1
+  - agent3
+  - collaborate with
+- - agent1
+  - agent4
+  - collaborate with
+- - agent1
+  - agent5
+  - collaborate with
+- - agent2
+  - agent3
+  - collaborate with
+- - agent2
+  - agent4
+  - collaborate with
+- - agent2
+  - agent5
+  - collaborate with
+- - agent3
+  - agent4
+  - collaborate with
+- - agent3
+  - agent5
+  - collaborate with
+- - agent4
+  - agent5
+  - collaborate with
+task:
+  content: "\n            Dear Research Team,\n\n            You are collaborating\
+    \ to generate a new research idea based on the following Introduction:\n\n   \
+    \         **Introduction**\n\n             Introduction to optimization. optimization\
+    \ software. Inc., Publications Division, New York , 1:32. [22] Realistic vision\
+    \ v2.0. https://huggingface.co/SG161222/Realistic_Vision_V2.0 , 2023. [23] Anything\
+    \ diffusion v4.0. https://huggingface.co/andite/anything-v4.0 , 2023. [24] Deliberate\
+    \ diffuson. https://huggingface.co/XpucT/Deliberate , 2023. [25] Zhao, W., L.\
+    \ Bai, Y . Rao, et al. (2023), UniPC : A unified predictor-corrector framework\
+    \ for fast sampling of diffusion models. arXiv preprint arXiv:2302.04867 . [26]\
+    \ Wizadwongsa, S., S. Suwajanakorn. (2023), Accelerating guided diffusion sampling\
+    \ with splitting numerical experiments conducted in Section 5.1 and Section 4.2.\
+    \ These reports provide detailed information, including mean values and their\
+    \ corresponding 95% confidence intervals, to offer a thorough understanding of\
+    \ the experimental background\" Figure 31: Comparison between two variations of\
+    \ momentum: (a) Polyak’s Heavy Ball (HB) and (b) Nesterov (NT). These momentum\
+    \ variations are applied to PLMS4 [ 20] on a fine-tuned Stable Diffusion model\
+    \ called Anything V4 [ 23] with 15 sampling steps and a guidance scale of 15.\
+    \ Both variations effectively reduce artifacts. However, the choice of the effectiveness\
+    \ parameter βmight differ due to the distinct shapes of their respective stability\
+    \ regions. 37Threshold τ= 0 τ= 1.5 τ= 3.0 τ= 10.0 kernel size k= 1 10 20 30 40\
+    \ 50 60 Number of Steps1.61.71.81.92.02.12.2Magnitude scorePLMS4 PLMS4 w/ HB 0.9\
+    \ PLMS4 w/ HB 0.8 DPM-Solver++ DPM-Solver++ w/ HB 0.9 DPM-Solver++ w/ HB 0.8 10\
+    \ 20 30 40 50 60 Number of Steps1.21.41.61.8Magnitude scorePLMS4 PLMS4 w/ HB 0.9\
+    \ PLMS4 w/ HB 0.8 DPM-Solver++ DPM-Solver++ w/ HB 0.9 DPM-Solver++ w/ HB 0.8 10\
+    \ 20 30 40 50 60 Number of Steps0.10.20.30.40.50.60.7Magnitude scorePLMS4 PLMS4\
+    \ w/ HB 0.9 PLMS4 w/ HB 0.8 DPM-Solver++ DPM-Solver++ w/ HB 0.9 DPM-Solver++ w/\
+    \ HB 0.8 10 20 30 40 50 60 Number of Steps0.250.500.751.001.251.501.752.00Magnitude\
+    \ score1e3 PLMS4 PLMS4 w/ HB 0.9 PLMS4 w/ HB 0.8 DPM-Solver++ DPM-Solver++ w/\
+    \ HB 0.9 DPM-Solver++ w/ HB 0.8 kernel size k= 4 10 20 30 40 50 60 Number of Steps2.62.83.03.23.43.63.8Magnitude\
+    \ scorePLMS4 PLMS4 w/ HB 0.9 PLMS4 w/ HB 0.8 DPM-Solver++ DPM-Solver++ w/ HB 0.9\
+    \ DPM-Solver++ w/ HB 0.8 10 20 30 40 50 60 Number of Steps2.42.62.83.03.23.43.63.8Magnitude\
+    \ scorePLMS4 PLMS4 w/ HB 0.9 PLMS4 w/ HB 0.8 DPM-Solver++ DPM-Solver++ w/ HB 0.9\
+    \ DPM-Solver++ w/ HB 0.8 10 20 30 40 50 60 Number of Steps1.01.52.02.53.0Magnitude\
+    \ scorePLMS4 PLMS4 w/ HB 0.9 PLMS4 w/ HB 0.8 DPM-Solver++ DPM-Solver++ w/ HB 0.9\
+    \ DPM-Solver++ w/ HB 0.8 10 20 30 40 50 60 Number of Steps0.500.751.001.251.501.752.002.25Magnitude\
+    \ score1e2 PLMS4 PLMS4 w/ HB 0.9 PLMS4 w/ HB 0.8 DPM-Solver++ DPM-Solver++ w/\
+    \ HB 0.9 DPM-Solver++ w/ HB 0.8 kernel size k= 64 10 20 30 40 50 60 Number of\
+    \ Steps6.06.57.07.58.08.59.09.5Magnitude scorePLMS4 PLMS4 w/ HB 0.9 PLMS4 w/ HB\
+    \ 0.8 DPM-Solver++ DPM-Solver++ w/ HB 0.9 DPM-Solver++ w/ HB 0.8 10 20 30 40 50\
+    \ 60 Number of Steps6.06.57.07.58.08.59.09.5Magnitude scorePLMS4 PLMS4 w/ HB 0.9\
+    \ PLMS4 w/ HB 0.8 DPM-Solver++ DPM-Solver++ w/ HB 0.9 DPM-Solver++ w/ HB 0.8 10\
+    \ 20 30 40 50 60 Number of Steps6.06.57.07.58.08.59.09.5Magnitude scorePLMS4 PLMS4\
+    \ w/ HB 0.9 PLMS4 w/ HB 0.8 DPM-Solver++ DPM-Solver++ w/ HB 0.9 DPM-Solver++ w/\
+    \ HB 0.8 10 20 30 40 50 60 Number of Steps1.01.52.02.53.03.54.0Magnitude scorePLMS4\
+    \ PLMS4 w/ HB 0.9 PLMS4 w/ HB 0.8 DPM-Solver++ DPM-Solver++ w/ HB 0.9 DPM-Solver++\
+    \ w/ HB 0.8 Figure 32: Comparison of magnitude scores on Anything V4 on different\
+    \ combinations of threshold τand kernel size kused in max-pooling. #samples =\
+    \ 160 Stable Diffusion 1.5 Waifu Diffusion V1.4 Dreamlike Photoreal 2.0 10 20\
+    \ 30 40 50 60 Number of Steps0.60.81.01.21.41.61.82.02.2Magnitude scorePLMS4 w/\
+    \ HB 0.9 PLMS4 w/ HB 0.8 PLMS4 DPM-Solver++ DPM-Solver++ w/ HB 0.9 DPM-Solver++\
+    \ w/ HB 0.8 10 20 30 40 50 60 Number of Steps0.60.81.01.21.41.61.82.0Magnitude\
+    \ scorePLMS4 w/ HB 0.9 PLMS4 w/ HB 0.8 PLMS4 DPM-Solver++ DPM-Solver++ w/ HB 0.9\
+    \ DPM-Solver++ w/ HB 0.8 10 20 30 40 50 60 Number of Steps1.001.251.501.752.002.252.502.75Magnitude\
+    \ scorePLMS4 w/ HB 0.9 PLMS4 w/ HB 0.8 PLMS4 DPM-Solver++ DPM-Solver++ w/ HB 0.9\
+    \ DPM-Solver++ w/ HB 0.8 10 20 30 40 50 60 Number of Steps0.500.751.001.251.501.752.002.25Magnitude\
+    \ scorePLMS4 GHVB3.7 GHVB3.3 GHVB2.7 GHVB2.3 DDIM GHVB0.7 10 20 30\n\n       \
+    \     **Your Task**\n\n            1. **Literature Review**: Analyze the Introduction\
+    \ provided and conduct a brief literature review to understand the current state\
+    \ of research in this area.\n\n            2. **Brainstorming**: Collaboratively\
+    \ brainstorm potential research ideas that build upon or address gaps in the Introduction.\n\
+    \n            3. **Summarization**: Summarize your collective ideas.\n\n     \
+    \       4. **Formulate a New Research Idea**: Develop a new research proposal\
+    \ in the format of the '5q', defined below:\n\n               **Here is a high-level\
+    \ summarized insight of a research field Machine Learning.**\n\n             \
+    \  **Here are the five core questions:**\n\n               **[Question 1] - What\
+    \ is the problem?**\n\n               Formulate the specific research question\
+    \ you aim to address. Only output one question and do not include any more information.\n\
+    \n               **[Question 2] - Why is it interesting and important?**\n\n \
+    \              Explain the broader implications of solving this problem for the\
+    \ research community.\n               Discuss how such a paper will affect future\
+    \ research.\n               Discuss how addressing this question could advance\
+    \ knowledge or lead to practical applications.\n\n               **[Question 3]\
+    \ - Why is it hard?**\n\n               Discuss the challenges and complexities\
+    \ involved in solving this problem.\n               Explain why naive or straightforward\
+    \ approaches may fail.\n               Identify any technical, theoretical, or\
+    \ practical obstacles that need to be overcome. MAKE IT CLEAR.\n\n           \
+    \    **[Question 4] - Why hasn't it been solved before?**\n\n               Identify\
+    \ gaps or limitations in previous research or existing solutions.\n          \
+    \     Discuss any barriers that have prevented this problem from being solved\
+    \ until now.\n               Explain how your approach differs from or improves\
+    \ upon prior work. MAKE IT CLEAR.\n\n               **[Question 5] - What are\
+    \ the key components of my approach and results?**\n\n               Outline your\
+    \ proposed methodology in detail, including the method, dataset, and metrics that\
+    \ you plan to use.\n               Describe the expected outcomes. MAKE IT CLEAR.\n\
+    \n            Please work together to produce the '5q' for your proposed research\
+    \ idea.\n\n            Good luck!\n            "
+  output_format: "You should answer the task in the following format:\n          \
+    \      **[Question 1] - What is the problem?**\n\n                Formulate the\
+    \ specific research question you aim to address. Only output one question and\
+    \ do not include any more information.\n\n                **[Question 2] - Why\
+    \ is it interesting and important?**\n\n                Explain the broader implications\
+    \ of solving this problem for the research community.\n                Discuss\
+    \ how such a paper will affect future research.\n                Discuss how addressing\
+    \ this question could advance knowledge or lead to practical applications.\n\n\
+    \                **[Question 3] - Why is it hard?**\n\n                Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \        Explain why naive or straightforward approaches may fail.\n         \
+    \       Identify any technical, theoretical, or practical obstacles that need\
+    \ to be overcome. MAKE IT CLEAR.\n\n                **[Question 4] - Why hasn't\
+    \ it been solved before?**\n\n                Identify gaps or limitations in\
+    \ previous research or existing solutions.\n                Discuss any barriers\
+    \ that have prevented this problem from being solved until now.\n            \
+    \    Explain how your approach differs from or improves upon prior work. MAKE\
+    \ IT CLEAR.\n\n                **[Question 5] - What are the key components of\
+    \ my approach and results?**\n\n                Outline your proposed methodology\
+    \ in detail, including the method, dataset, and metrics that you plan to use.\n\
+    \                Describe the expected outcomes. MAKE IT CLEAR."

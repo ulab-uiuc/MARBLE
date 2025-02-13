@@ -1,0 +1,323 @@
+agents:
+- agent_id: agent1
+  profile: 'I am a researcher dedicated to advancing the field of cognitive robotics
+    and artificial intelligence, with a particular focus on enhancing human-robot
+    collaboration through explainability and intelligent decision-making. My recent
+    work has centered around the development of hybrid learning architectures that
+    integrate large language models (LLMs) with knowledge-based systems, enabling
+    intelligent agents to automatically expand their semantic lexicons and improve
+    communication capabilities.
+
+
+    One of my key contributions is the HARMONIC framework, which transforms general-purpose
+    robots into trusted teammates capable of complex decision-making and natural communication.
+    This framework facilitates interoperability between cognitive and tactical layers,
+    allowing robots to effectively collaborate in multi-robot tasks. I have also explored
+    innovative approaches to multi-robot planning that incorporate metacognition and
+    natural language communication, ensuring that robots can explain their actions
+    and decisions to human operators.
+
+
+    In addition, I have investigated decentralized knowledge dissemination in multi-agent
+    systems, drawing inspiration from eavesdropping mechanisms in nature. My work
+    has demonstrated significant improvements in mission performance and knowledge
+    sharing among agents, reducing reliance on direct communication.
+
+
+    Overall, my research aims to create cognitive agents that not only perform tasks
+    efficiently but also provide transparent explanations, fostering trust and collaboration
+    in high-stakes environments. I am passionate about bridging the gap between advanced
+    AI technologies and their practical applications in real-world scenarios.'
+  type: BaseAgent
+- agent_id: agent2
+  profile: "I am a researcher dedicated to the development of intelligent agents that\
+    \ leverage knowledge engineering and cognitive architectures to enhance their\
+    \ functionality across various domains. My work emphasizes the integration of\
+    \ dialog act modeling within a holistic framework, allowing agents to expand their\
+    \ ontological and lexical knowledge through lifelong learning. I have explored\
+    \ the discovery and representation of lexical rules, demonstrating their critical\
+    \ role in large-scale semi-automatic lexicon acquisition, particularly in business\
+    \ and finance contexts.\n\nMy recent projects include the application of large\
+    \ language model (LLM) technology to facilitate the automatic learning of new\
+    \ semantic entries, showcasing a hybrid learning architecture that combines knowledge-based\
+    \ methods with data analytics. I am also passionate about metacognition in artificial\
+    \ intelligence, proposing a framework\u2014TRAP\u2014that addresses transparency,\
+    \ reasoning, adaptation, and perception in AI systems.\n\nOne of my significant\
+    \ contributions is the HARMONIC framework, which transforms general-purpose robots\
+    \ into trusted teammates capable of complex decision-making and natural communication.\
+    \ I believe that explanation is crucial for user confidence in AI systems, and\
+    \ I advocate for a hybrid approach that combines knowledge-based infrastructures\
+    \ with machine learning to create cognitive agents that can provide meaningful\
+    \ explanations.\n\nThrough my work, I aim to advance the field of human-robot\
+    \ collaboration, focusing on multi-robot planning and communication strategies\
+    \ that incorporate metacognition and explainability, ultimately enhancing the\
+    \ effectiveness of human-robot teams in real-world scenarios."
+  type: BaseAgent
+- agent_id: agent3
+  profile: 'I am a researcher dedicated to advancing the field of natural language
+    generation (NLG) and cognitive robotics, particularly within the OntoAgent cognitive
+    architecture. My work focuses on developing language-endowed intelligent agents
+    (LEIAs) that can effectively communicate and collaborate across various domains.
+    I emphasize the integration of knowledge engineering principles to create holistic
+    agents capable of lifelong learning and dialog act modeling, which enhances their
+    ability to understand and generate natural language.
+
+
+    One of my recent projects involved leveraging large language model (LLM) technology
+    to automate the expansion of an intelligent agent''s semantic lexicon. This hybrid
+    learning architecture combines knowledge-based methods with LLMs, demonstrating
+    significant improvements in the agent''s ability to learn and generate multiword
+    expressions.
+
+
+    I am also deeply invested in the explainable AI (XAI) movement, advocating for
+    a human-centered approach that prioritizes user needs in high-stakes environments.
+    My work explores the development of cognitive agents that provide clear explanations
+    for their actions, fostering trust and collaboration in human-robot teams. Through
+    the HARMONIC framework, I aim to transform general-purpose robots into trusted
+    teammates capable of complex decision-making and natural communication.
+
+
+    Ultimately, my research seeks to bridge the gap between cognitive capabilities
+    and practical applications, ensuring that intelligent agents can effectively support
+    human decision-making in real-world scenarios.'
+  type: BaseAgent
+- agent_id: agent4
+  profile: 'I am a researcher dedicated to the development of intelligent agents that
+    leverage holistic language capabilities across various domains. My work emphasizes
+    the principles of knowledge engineering, particularly in the context of dialog
+    act modeling, where I advocate for an integrative approach grounded in the OntoAgent
+    cognitive architecture. I believe that isolating dialog from other agent functionalities
+    limits the potential of intelligent systems, and I strive to create agents that
+    can expand their ontological and lexical knowledge through lifelong learning.
+
+
+    Recently, I have focused on harnessing large language model (LLM) technology to
+    enhance the semantic lexicon of intelligent agents. My innovative learning method,
+    which combines existing lexicons with natural language generation, allows agents
+    to automatically learn new multiword expressions and enrich their understanding
+    of language. This hybrid architecture not only integrates knowledge-based methods
+    with traditional data analytics but also ensures quality control throughout the
+    learning process. My research aims to push the boundaries of what intelligent
+    agents can achieve, making them more adaptable and capable of understanding complex
+    language constructs in real-world applications.'
+  type: BaseAgent
+- agent_id: agent5
+  profile: 'As a researcher deeply immersed in the field of graph neural networks
+    (GNNs) and their applications, my work primarily revolves around enhancing the
+    capabilities and understanding of these powerful models. My recent publications
+    reflect a commitment to addressing the limitations of existing GNN architectures.
+    For instance, I developed Position-aware GNNs (P-GNNs) to better capture the positional
+    context of nodes within graphs, which has proven effective in various prediction
+    tasks, achieving significant performance improvements.
+
+
+    I am particularly interested in the interplay between graph structures and predictive
+    performance, as demonstrated in my work on relational graphs that reveal a "sweet
+    spot" for optimizing neural network architectures. This exploration has led to
+    the creation of Identity-aware GNNs (ID-GNNs), which enhance the expressive power
+    of message-passing frameworks by incorporating node identities.
+
+
+    Additionally, I have tackled the challenges posed by dynamic graphs through the
+    ROLAND framework, which allows for the seamless adaptation of static GNNs to dynamic
+    environments. My research also extends to automated machine learning (AutoML),
+    where I introduced FALCON and AutoTransfer to streamline the design process and
+    improve efficiency in model selection.
+
+
+    Overall, my goal is to push the boundaries of GNN research, providing innovative
+    solutions that not only advance theoretical understanding but also yield practical
+    applications across various domains. I am passionate about creating frameworks
+    that facilitate the exploration of GNN design spaces, ultimately contributing
+    to the broader field of machine learning.'
+  type: BaseAgent
+- agent_id: agent6
+  profile: 'I am a researcher dedicated to the intersection of robotics, cognitive
+    systems, and materials science. My recent work centers around the HARMONIC framework,
+    which transforms general-purpose robots into trusted teammates capable of complex
+    decision-making and natural communication. This framework integrates cognitive
+    and tactical layers, enabling robots to collaborate effectively in human-robot
+    teams. Through simulation experiments, I have demonstrated how metacognition and
+    explainability enhance the robots'' ability to coordinate actions and communicate
+    naturally with humans, making them more effective in real-world scenarios.
+
+
+    In addition to my work in robotics, I have explored innovative materials for non-volatile
+    memory applications. My research on carbon allotropes, including carbon nanotubes
+    and graphene, has revealed their potential as resistive memory materials, showcasing
+    their capabilities for high-speed switching and multi-level programming. This
+    dual focus on cognitive robotics and advanced materials reflects my commitment
+    to pushing the boundaries of technology and enhancing the capabilities of intelligent
+    systems.'
+  type: BaseAgent
+coordinate_mode: graph
+engine_planner:
+  initial_progress: Starting the collaborative research idea generation based on the
+    provided Introduction.
+environment:
+  max_iterations: 3
+  name: Research Collaboration Environment
+  type: Research
+llm: gpt-3.5-turbo
+memory:
+  type: SharedMemory
+metrics:
+  diversity_of_perspectives: true
+  engagement_level: true
+  evaluate_llm: gpt-4o-mini
+  relevance: true
+output:
+  file_path: result/discussion_output.jsonl
+  format: jsonl
+relationships:
+- - agent1
+  - agent2
+  - collaborate with
+- - agent1
+  - agent3
+  - collaborate with
+- - agent1
+  - agent4
+  - collaborate with
+- - agent1
+  - agent5
+  - collaborate with
+- - agent1
+  - agent6
+  - collaborate with
+- - agent2
+  - agent3
+  - collaborate with
+- - agent2
+  - agent4
+  - collaborate with
+- - agent2
+  - agent5
+  - collaborate with
+- - agent2
+  - agent6
+  - collaborate with
+- - agent3
+  - agent4
+  - collaborate with
+- - agent3
+  - agent5
+  - collaborate with
+- - agent3
+  - agent6
+  - collaborate with
+- - agent4
+  - agent5
+  - collaborate with
+- - agent4
+  - agent6
+  - collaborate with
+- - agent5
+  - agent6
+  - collaborate with
+task:
+  content: "\n            Dear Research Team,\n\n            You are collaborating\
+    \ to generate a new research idea based on the following Introduction:\n\n   \
+    \         **Introduction**\n\n             Introduction, their uncanny\nability\
+    \ to generate ideas/potential candidate solutions\u2013albeit\nwith no guarantees\
+    \ about those guesses\u2013can be valuable in\n5LLM-Modulo Framework for Robust\
+    \ Planning\nthe generate-test-critique setups in conjunction with either\nmodel-based\
+    \ verifiers or expert humans in the loop. Accord-\ningly, we propose a general\
+    \ \u201CLLM-Modulo\u201D framework7.\nWhile we believe that versions of such an\
+    \ architecture can be\nof use in a wide variety of planning or reasoning tasks,\
+    \ for\nthe sake of concreteness, we will focus on planning tasks,\nespecially\
+    \ of the type studied in the automated planning\ncommunity (Ghallab et al., 2004).\n\
+    Figure 3 gives a schematic of the LLM-Modulo Frame-\nwork , as we envision it.\
+    \ As can be seen readily, the un-\nderlying architecture is a Generate-Test-Critique\
+    \ loop, with\nthe LLM generating candidate plans and a bank of critics\ncritiquing\
+    \ the candidate. The loop starts with the LLM get-\nting the problem specification\
+    \ and generating its first plan\ncandidate.8Note that the plans an LLM helps generate\
+    \ in\nthis architecture have soundness guarantees because of the\nexternal sound\
+    \ critics. This means that plans coming out\nof such an compound system will constitute\
+    \ a better corpus\nof synthetic data for any fine tuning phase carried out to\n\
+    improve/customize the LLM\u2019s generation capability. The\ncompleteness of the\
+    \ system depends on the LLM\u2019s ability\nto generate all potentially relevant\
+    \ candidates.\nDesign Choices: Before going into the details about the\nframework\
+    \ and its various modules, it is worth noting\nsome design decisions underlying\
+    \ the proposed architecture.\nWe start by noting that the LLM-Modulo architecture\
+    \ is a\n\u201CGenerate-Test\u201D one that involves LLMs interacting with the\n\
+    external critics/verifiers rather than a LLMs being just front-\nends to external\
+    \ solvers. This is a deliberate decision\u2013as this\nallows the LLM to guess/generate\
+    \ candidates to satisfy the\ncritics, as against dealing with the expressiveness\
+    \ and search\ncomplexity issues of the solvers. The critics/verifiers also\nare\
+    \ also more naturally composable than solvers/planners.\nAs we shall see, we do\
+    \ allow for constructive critics which\ncan be based on solvers, and provide suggestions\
+    \ on specific\nways of extending/modifying the candidate plans.\nSecondly, the\
+    \ framework explicitly recognizes that the\nLLMs can generate approximate ideas\
+    \ not just about plan\ncandidates, but domain models, problem reduction strate-\n\
+    gies, and refinements to the problem specification. The\nframework also recognizes\
+    \ that LLMs are good at for-\nmat/syntax changes. Accordingly, the framework lever-\n\
+    ages all these abilities of LLMs, letting them play multiple\nroles in planning.\
+    \ Finally, the architecture carefully circum-\nscribes the human\u2019s role\u2013\
+    domain experts interact with the\nLLM to tease out the models used by (some of)\
+    \ the critics,\nwhile end users take part in refining any incomplete prob-\n7The\
+    \ name LLM-Modulo is inspired by the SAT-Modulo theo-\nries (Nieuwenhuis & Oliveras,\
+    \ 2006).\n8Although we focus on planning from scratch, it is easy to\naccommodate\
+    \ replanning scenarios, where the loop starts with an\nexternally supplied candidate\
+    \ plan.lem specification in concert with the LLM. A notable, and\ndeliberate,\
+    \ absence is human\u2019s involvement in the inner loop\nof planning\u2013e.g.\
+    \ with iterative prompting. In addition to\nposing an infeasible burden on the\
+    \ human\u2019s time for com-\nplex planning problems, such iterative prompting\
+    \ strategies\nare notorious for their Clever Hans effect (cle).\n3.1. Critics/Verifers\n\
+    In the LLM-Modulo framework, critics can evaluate LLM-\ngenerated candidates for\
+    \ a planning/reasoning problem over\nboth hard and soft (style) constraints. Hard\
+    \ constraints refer\nto correctness verification which can include causal correct-\n\
+    ness, timeline correctness, resource constraint correctness\nas well as unit tests.\
+    \ For PDDL planning problems, the\nhard critic can be based\n\n            **Your\
+    \ Task**\n\n            1. **Literature Review**: Analyze the Introduction provided\
+    \ and conduct a brief literature review to understand the current state of research\
+    \ in this area.\n\n            2. **Brainstorming**: Collaboratively brainstorm\
+    \ potential research ideas that build upon or address gaps in the Introduction.\n\
+    \n            3. **Summarization**: Summarize your collective ideas.\n\n     \
+    \       4. **Formulate a New Research Idea**: Develop a new research proposal\
+    \ in the format of the '5q', defined below:\n\n               **Here is a high-level\
+    \ summarized insight of a research field Machine Learning.**\n\n             \
+    \  **Here are the five core questions:**\n\n               **[Question 1] - What\
+    \ is the problem?**\n\n               Formulate the specific research question\
+    \ you aim to address. Only output one question and do not include any more information.\n\
+    \n               **[Question 2] - Why is it interesting and important?**\n\n \
+    \              Explain the broader implications of solving this problem for the\
+    \ research community.\n               Discuss how such a paper will affect future\
+    \ research.\n               Discuss how addressing this question could advance\
+    \ knowledge or lead to practical applications.\n\n               **[Question 3]\
+    \ - Why is it hard?**\n\n               Discuss the challenges and complexities\
+    \ involved in solving this problem.\n               Explain why naive or straightforward\
+    \ approaches may fail.\n               Identify any technical, theoretical, or\
+    \ practical obstacles that need to be overcome. MAKE IT CLEAR.\n\n           \
+    \    **[Question 4] - Why hasn't it been solved before?**\n\n               Identify\
+    \ gaps or limitations in previous research or existing solutions.\n          \
+    \     Discuss any barriers that have prevented this problem from being solved\
+    \ until now.\n               Explain how your approach differs from or improves\
+    \ upon prior work. MAKE IT CLEAR.\n\n               **[Question 5] - What are\
+    \ the key components of my approach and results?**\n\n               Outline your\
+    \ proposed methodology in detail, including the method, dataset, and metrics that\
+    \ you plan to use.\n               Describe the expected outcomes. MAKE IT CLEAR.\n\
+    \n            Please work together to produce the '5q' for your proposed research\
+    \ idea.\n\n            Good luck!\n            "
+  output_format: "You should answer the task in the fllowing format:\n           \
+    \     **[Question 1] - What is the problem?**\n\n                Formulate the\
+    \ specific research question you aim to address. Only output one question and\
+    \ do not include any more information.\n\n                **[Question 2] - Why\
+    \ is it interesting and important?**\n\n                Explain the broader implications\
+    \ of solving this problem for the research community.\n                Discuss\
+    \ how such a paper will affect future research.\n                Discuss how addressing\
+    \ this question could advance knowledge or lead to practical applications.\n\n\
+    \                **[Question 3] - Why is it hard?**\n\n                Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \        Explain why naive or straightforward approaches may fail.\n         \
+    \       Identify any technical, theoretical, or practical obstacles that need\
+    \ to be overcome. MAKE IT CLEAR.\n\n                **[Question 4] - Why hasn't\
+    \ it been solved before?**\n\n                Identify gaps or limitations in\
+    \ previous research or existing solutions.\n                Discuss any barriers\
+    \ that have prevented this problem from being solved until now.\n            \
+    \    Explain how your approach differs from or improves upon prior work. MAKE\
+    \ IT CLEAR.\n\n                **[Question 5] - What are the key components of\
+    \ my approach and results?**\n\n                Outline your proposed methodology\
+    \ in detail, including the method, dataset, and metrics that you plan to use.\n\
+    \                Describe the expected outcomes. MAKE IT CLEAR."

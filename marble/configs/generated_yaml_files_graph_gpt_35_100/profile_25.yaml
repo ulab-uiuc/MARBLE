@@ -1,0 +1,300 @@
+agents:
+- agent_id: agent1
+  profile: 'I am a researcher dedicated to enhancing computer vision through innovative
+    methodologies and robust datasets. My recent work focuses on creating a pipeline
+    for parametrically sampling and rendering static multi-task vision datasets from
+    real-world 3D scans. This initiative not only facilitates exciting research avenues
+    but also demonstrates that familiar architectures can achieve state-of-the-art
+    performance on various vision tasks, even when trained solely on generated data.
+    Notably, my depth estimation network has surpassed existing benchmarks, and my
+    surface normal estimation network has reached human-level performance on the OASIS
+    benchmark.
+
+
+    In addition to dataset generation, I have explored the limitations of traditional
+    autoencoders in anomaly detection, particularly their tendency to overfit on complex
+    datasets. By leveraging U-Net architectures and integrating puzzle-solving as
+    a self-supervised learning pretext task, I have developed a framework that effectively
+    mitigates overfitting and enhances feature learning. My approach employs adversarial
+    robust training to automatically remove shortcuts, resulting in a stable, fast,
+    and data-efficient solution that competes with the best in the field.
+
+
+    Through my work, I aim to push the boundaries of what is possible in computer
+    vision, providing tools and methodologies that empower researchers and practitioners
+    alike.'
+  type: BaseAgent
+- agent_id: agent2
+  profile: 'I am a researcher deeply engaged in the field of Embodied AI, focusing
+    on how agents can learn to navigate and interact with dynamic environments through
+    visual perception and action. My recent work emphasizes the importance of adaptive
+    action modeling, as demonstrated in my development of the Action Adaptive Policy
+    (AAP), which utilizes latent embeddings to dynamically adjust the impact of actions
+    based on real-time environmental feedback. This approach has shown significant
+    improvements in visual navigation tasks, particularly in challenging scenarios
+    where traditional assumptions about action stability fail.
+
+
+    I also introduced the Neural Interaction Engine (NIE), which allows agents to
+    predict and manipulate their environments to enhance navigation efficiency. This
+    work highlights my commitment to advancing interactive navigation capabilities,
+    enabling agents to push obstacles and adapt their strategies in real-time.
+
+
+    In addition to my contributions to navigation, I have developed AllenAct, a modular
+    framework designed to unify the fragmented landscape of Embodied AI research.
+    This framework facilitates the sharing of models and environments, making it easier
+    for researchers to collaborate and innovate.
+
+
+    My research extends into visual forecasting and semantic highlight retrieval,
+    where I explore how agents can anticipate changes in dynamic environments and
+    efficiently retrieve relevant video highlights based on textual queries. Through
+    these diverse projects, I aim to push the boundaries of how embodied agents perceive
+    and interact with the world, ultimately contributing to the development of more
+    intelligent and adaptable AI systems.'
+  type: BaseAgent
+- agent_id: agent3
+  profile: 'I am a researcher dedicated to advancing the field of embodied AI and
+    robotic manipulation. My work focuses on enhancing the quality and diversity of
+    robot demonstration data, as exemplified by my development of Manipulate-Anything,
+    a scalable method for generating real-world robotic manipulation data without
+    the need for privileged state information or hand-designed skills. This innovation
+    allows robots to learn from a broader range of interactions, significantly outperforming
+    existing methods.
+
+
+    I also introduced RoboPoint, a vision-language model that predicts keypoint affordances
+    from language instructions, enabling robots to navigate and manipulate objects
+    effectively. My research extends to integrating tactile perception with language
+    through the Octopi system, which leverages tactile representation learning to
+    improve physical reasoning in robots.
+
+
+    Recognizing the challenges of evaluating robotic performance in varied environments,
+    I created THE COLOSSEUM, a benchmark for assessing manipulation models under diverse
+    perturbations. This work highlights the importance of ecological validity in robotic
+    evaluations.
+
+
+    Additionally, I have explored human-robot interaction, developing frameworks that
+    allow robots to actively request help in navigation tasks, and I have investigated
+    user comfort levels when interacting with intent-predicting AI systems. My commitment
+    to understanding and improving human-robot collaboration is evident in my work
+    on datasets for intent prediction and physical reasoning.
+
+
+    Through my research, I aim to bridge the gap between AI and human-like reasoning,
+    ultimately contributing to the development of more intuitive and capable robotic
+    systems. My projects, including the SPACE simulator and the NEWTON benchmark,
+    reflect my dedication to creating tools that facilitate the advancement of embodied
+    AI and its applications in real-world scenarios.'
+  type: BaseAgent
+- agent_id: agent4
+  profile: 'I am a researcher dedicated to advancing the field of multimodal models
+    and their applications across various domains, including natural language processing,
+    computer vision, and robotics. My recent work has focused on developing open-weight
+    models that rival proprietary systems, such as the Molmo family of vision-language
+    models (VLMs), which leverage human-annotated datasets to achieve state-of-the-art
+    performance. I am particularly passionate about creating accessible tools and
+    datasets, as evidenced by my contributions to the OLMoE model and the Task-Me-Anything
+    benchmark generation engine.
+
+
+    In addition to model development, I have explored innovative techniques like Superposed
+    Decoding to enhance the efficiency of language model inference, allowing for faster
+    and more coherent draft generation. My research also includes the ActionAtlas
+    benchmark, which rigorously evaluates multimodal models in recognizing complex
+    actions across various sports, highlighting the importance of high frame sampling
+    rates.
+
+
+    I am committed to open science, releasing all model weights, datasets, and code
+    to foster collaboration and innovation within the research community. My work
+    on adaptive inference methods, such as SHARCS, and the MatFormer architecture
+    demonstrates my focus on optimizing model performance across diverse deployment
+    scenarios. Ultimately, I aim to bridge the gap between cutting-edge research and
+    practical applications, ensuring that advanced AI technologies are accessible
+    and beneficial to all.'
+  type: BaseAgent
+- agent_id: agent5
+  profile: 'I am a researcher deeply engaged in the intersection of computer vision,
+    natural language processing, and robotics, with a focus on enhancing multimodal
+    understanding and interaction. My recent work has centered on addressing the challenges
+    of compositionality in vision-language models, leading to the development of innovative
+    training algorithms that draw inspiration from cognitive science. This approach
+    has significantly improved model performance on benchmarks like SugarCrepe.
+
+
+    I am also the architect behind Molmo, a family of open-weight vision-language
+    models that leverage human-annotated datasets for superior performance, outperforming
+    proprietary systems in both academic and practical evaluations. My exploration
+    of embodied AI has led to the creation of PoliFormer, a state-of-the-art indoor
+    navigation agent that excels in real-world applications without requiring adaptation.
+
+
+    In addition, I have pioneered techniques like Neural Priming to adapt large pretrained
+    models to new tasks with minimal labeled data, and I have developed the EXCALIBUR
+    benchmark to foster exploratory learning in agents. My work on the Scene Graph
+    Contrastive loss has further advanced representation learning in robotics, enabling
+    agents to better understand their environments.
+
+
+    Through my research, I aim to push the boundaries of what is possible in AI, creating
+    systems that not only understand but also interact with the world in a meaningful
+    way. I am committed to sharing my findings and tools with the community to inspire
+    further innovation in these fields.'
+  type: BaseAgent
+coordinate_mode: graph
+engine_planner:
+  initial_progress: Starting the collaborative research idea generation based on the
+    provided Introduction.
+environment:
+  max_iterations: 5
+  name: Research Collaboration Environment
+  type: Research
+llm: gpt-3.5-turbo
+memory:
+  type: SharedMemory
+metrics:
+  diversity_of_perspectives: true
+  engagement_level: true
+  evaluate_llm: gpt-4o-mini
+  relevance: true
+output:
+  file_path: result/discussion_output_35.jsonl
+  format: jsonl
+relationships:
+- - agent1
+  - agent2
+  - collaborate with
+- - agent1
+  - agent3
+  - collaborate with
+- - agent1
+  - agent4
+  - collaborate with
+- - agent1
+  - agent5
+  - collaborate with
+- - agent2
+  - agent3
+  - collaborate with
+- - agent2
+  - agent4
+  - collaborate with
+- - agent2
+  - agent5
+  - collaborate with
+- - agent3
+  - agent4
+  - collaborate with
+- - agent3
+  - agent5
+  - collaborate with
+- - agent4
+  - agent5
+  - collaborate with
+task:
+  content: "\n            Dear Research Team,\n\n            You are collaborating\
+    \ to generate a new research idea based on the following Introduction:\n\n   \
+    \         **Introduction**\n\n               1 Introduction  Human visual perception\
+    \ is far from a passive reception of all available visual stimuli; it is an actively\
+    \ tuned mechanism that operates selectively, allocating attention and processing\
+    \ stimuli that are deemed relevant to the current task (Bugelski & Alampay, 1961).\
+    \ An illustrative example of this phenomenon is the common experience of misplacing\
+    \ one’s keys; we become subsequently oblivious to most visual cues in our environment,\
+    \ except for those directly related to the search for the lost keys. In this case,\
+    \ we become particularly attentive to surfaces where we usually place our keys\
+    \ and navigate our environment by similarly processing the walkable areas around\
+    \ us (Figure 1).   The subfield of embodied artificial intelligence (AI) studies\
+    \ AI agents tasked with very analogous situations (Duan et al., 2022). Embodied\
+    \ AI tasks such as navigation (Batra et al., 2020b; Krantz et al., 2023), instruction\
+    \ following (Anderson et al., 2018; Krantz et al., 2020; Shridhar et al., 2020),\
+    \ manipulation (Ehsani et al., 2021; Xiang et al., 2020), and rearrangement (Batra\
+    \ et al., 2020a; Weihs et al., 2021a), necessitate goal-directed behaviors, such\
+    \ as navigating to a specific goal or relocating target objects. Conventional\
+    \ frameworks usually employ general-purpose visual backbones (Khandelwal et al.,\
+    \ 2022; Yadav et al., 2023b) to extract representations from visual input. These\
+    \ representations are then fused with goal embeddings (e.g., object type, images,\
+    \ or natural language instructions) to construct a goal-conditioned representation\
+    \ E∈ℛD\U0001D438superscriptℛ\U0001D437E\\in\\mathcal{R}^{D}italic_E ∈ caligraphic_R\
+    \ start_POSTSUPERSCRIPT italic_D end_POSTSUPERSCRIPT, where D\U0001D437Ditalic_D\
+    \ often has dimensions as large as a 1568156815681568-dimensional Hilbert space.\
+    \ E\U0001D438Eitalic_E captures an abundance of details from the visual input,\
+    \ of which a policy determines which action to take next. Given E\U0001D438Eitalic_E’s\
+    \ general-purpose nature, it often contains a significant amount of task-irrelevant\
+    \ information. For example to find a specific object in a house, the agent doesn’t\
+    \ need to know about other distractor objects in the agent’s view, about their\
+    \ colors, materials, attributes, etc. These distractions introduce unnecessary\
+    \ noise into the learning process, distracting the agent’s focus away from more\
+    \ pertinent visual cues.   Figure 1: Selective Attention. Imagine an agent is\
+    \ tasked to locate a key in an environment. Standard visual encoders such as CLIP\
+    \ encoder capture general purpose scene information which include details not\
+    \ relevant to the task, such as the color of the sofa or texture of the floor.\
+    \ This mirrors the concept of bottom-up processing, where perception is influenced\
+    \ by external stimuli in the environment. To address this, we equip the encoder\
+    \ with a codebook bottleneck that only retains the most task-relevant information\
+    \ such as identifying flat surfaces likely to hold the key and the walkable paths\
+    \ to these surfaces. This represents top-down selective processing where the perception\
+    \ is guided by internal goals and expectations.   In this paper, we draw from\
+    \ the substantial body of research in cognitive psychology and neuroscience to\
+    \ induce selective task-specific representations that filter irrelevant sensory\
+    \ input and only retain the necessary stimuli. In Psychology, inattentional blindness\
+    \ posits that people become “blind” to objects and details irrelevant to the task\
+    \ at hand (as depicted by the famous invisible gorilla video on YouTube111Link\
+    \ to invisible gorilla video depicting selective attention) (Simons & Chabris,\
+    \ 1999). Similar studies in human visual search (Wolfe, 1994; Treisman & Gelade,\
+    \ 1980) find that people become oblivious to the distracting items when searching\
+    \ through a cluttered environment. The principle\n\n            **Your Task**\n\
+    \n            1. **Literature Review**: Analyze the Introduction provided and\
+    \ conduct a brief literature review to understand the current state of research\
+    \ in this area.\n\n            2. **Brainstorming**: Collaboratively brainstorm\
+    \ potential research ideas that build upon or address gaps in the Introduction.\n\
+    \n            3. **Summarization**: Summarize your collective ideas.\n\n     \
+    \       4. **Formulate a New Research Idea**: Develop a new research proposal\
+    \ in the format of the '5q', defined below:\n\n               **Here is a high-level\
+    \ summarized insight of a research field Machine Learning.**\n\n             \
+    \  **Here are the five core questions:**\n\n               **[Question 1] - What\
+    \ is the problem?**\n\n               Formulate the specific research question\
+    \ you aim to address. Only output one question and do not include any more information.\n\
+    \n               **[Question 2] - Why is it interesting and important?**\n\n \
+    \              Explain the broader implications of solving this problem for the\
+    \ research community.\n               Discuss how such a paper will affect future\
+    \ research.\n               Discuss how addressing this question could advance\
+    \ knowledge or lead to practical applications.\n\n               **[Question 3]\
+    \ - Why is it hard?**\n\n               Discuss the challenges and complexities\
+    \ involved in solving this problem.\n               Explain why naive or straightforward\
+    \ approaches may fail.\n               Identify any technical, theoretical, or\
+    \ practical obstacles that need to be overcome. MAKE IT CLEAR.\n\n           \
+    \    **[Question 4] - Why hasn't it been solved before?**\n\n               Identify\
+    \ gaps or limitations in previous research or existing solutions.\n          \
+    \     Discuss any barriers that have prevented this problem from being solved\
+    \ until now.\n               Explain how your approach differs from or improves\
+    \ upon prior work. MAKE IT CLEAR.\n\n               **[Question 5] - What are\
+    \ the key components of my approach and results?**\n\n               Outline your\
+    \ proposed methodology in detail, including the method, dataset, and metrics that\
+    \ you plan to use.\n               Describe the expected outcomes. MAKE IT CLEAR.\n\
+    \n            Please work together to produce the '5q' for your proposed research\
+    \ idea.\n\n            Good luck!\n            "
+  output_format: "You should answer the task in the following format:\n          \
+    \      **[Question 1] - What is the problem?**\n\n                Formulate the\
+    \ specific research question you aim to address. Only output one question and\
+    \ do not include any more information.\n\n                **[Question 2] - Why\
+    \ is it interesting and important?**\n\n                Explain the broader implications\
+    \ of solving this problem for the research community.\n                Discuss\
+    \ how such a paper will affect future research.\n                Discuss how addressing\
+    \ this question could advance knowledge or lead to practical applications.\n\n\
+    \                **[Question 3] - Why is it hard?**\n\n                Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \        Explain why naive or straightforward approaches may fail.\n         \
+    \       Identify any technical, theoretical, or practical obstacles that need\
+    \ to be overcome. MAKE IT CLEAR.\n\n                **[Question 4] - Why hasn't\
+    \ it been solved before?**\n\n                Identify gaps or limitations in\
+    \ previous research or existing solutions.\n                Discuss any barriers\
+    \ that have prevented this problem from being solved until now.\n            \
+    \    Explain how your approach differs from or improves upon prior work. MAKE\
+    \ IT CLEAR.\n\n                **[Question 5] - What are the key components of\
+    \ my approach and results?**\n\n                Outline your proposed methodology\
+    \ in detail, including the method, dataset, and metrics that you plan to use.\n\
+    \                Describe the expected outcomes. MAKE IT CLEAR."

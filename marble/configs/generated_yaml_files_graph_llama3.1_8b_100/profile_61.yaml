@@ -1,0 +1,276 @@
+agents:
+- agent_id: agent1
+  profile: 'I am a researcher deeply engaged in the intersection of theoretical physics
+    and statistical learning, with a particular focus on representation theory, robust
+    regression models, and quantum entanglement. My recent work explores the intriguing
+    connections between exceptional series representations of \(SL(2,\mathbb{C})\)
+    and scalar tachyon theories in three-dimensional de Sitter space, emphasizing
+    the representation-theoretical aspects of these frameworks.
+
+
+    In the realm of robust linear regression, I have investigated the limitations
+    of consistent parameter recovery in the presence of adversarial noise, revealing
+    scenarios where traditional assumptions about design matrices fail. My findings
+    highlight the critical role of well-spreadness in ensuring reliable recovery,
+    and I have developed efficient methods for certifying this property in random
+    matrices, contributing to our understanding of the computational challenges involved.
+
+
+    Additionally, I delve into the fascinating world of reflected entropy in Lifshitz
+    field theory, deriving explicit formulas for R\''enyi reflected entropies and
+    uncovering non-monotonic behavior that contrasts with free relativistic fields.
+    My work not only advances theoretical insights into entanglement but also provides
+    analytical results for related quantities, enriching our understanding of quantum
+    systems.
+
+
+    Through my research, I aim to bridge gaps between abstract theoretical constructs
+    and practical applications, fostering a deeper comprehension of the underlying
+    principles that govern complex systems.'
+  type: BaseAgent
+- agent_id: agent2
+  profile: 'I am a researcher specializing in statistical learning theory, robust
+    algorithms, and tensor decomposition. My work primarily focuses on understanding
+    the interplay between computational and statistical challenges in various models,
+    particularly in the context of sparse linear regression, community detection,
+    and tensor analysis.
+
+
+    In my recent publications, I have made significant strides in robust community
+    detection, developing the first polynomial-time algorithm that achieves weak recovery
+    in the presence of adversarial node corruption. This work not only addresses a
+    critical gap in the literature but also extends to the Z_2 synchronization problem,
+    showcasing the versatility of my techniques.
+
+
+    I have also explored the statistical query (SQ) lower bounds in the context of
+    recovering planted vectors in high-dimensional spaces, demonstrating that lattice-based
+    algorithms can surpass previous limitations imposed by low-degree polynomial methods.
+    My research on symmetric spiked matrix models has led to the development of an
+    estimator that performs optimally even under heavy-tailed noise, a significant
+    advancement over existing methods.
+
+
+    Additionally, I have contributed to the understanding of computational-statistical
+    gaps in improper learning for sparse linear regression, providing evidence that
+    efficient algorithms require a substantial number of samples. My work culminates
+    in the development of fast spectral algorithms for tensor decomposition, achieving
+    results previously thought to be attainable only through more complex methods.
+
+
+    Overall, my research aims to bridge theoretical insights with practical algorithmic
+    solutions, pushing the boundaries of what is achievable in statistical learning
+    and robust optimization.'
+  type: BaseAgent
+- agent_id: agent3
+  profile: 'I am a researcher deeply engaged in the intersection of theoretical computer
+    science, machine learning, and blockchain technology. My recent work has focused
+    on robust algorithms for community detection in adversarial settings, where I
+    developed the first polynomial-time algorithm capable of achieving weak recovery
+    at the Kesten-Stigum threshold, even amidst node corruption. This work extends
+    to the Z_2 synchronization problem, where my techniques reach optimal recovery
+    thresholds under similar adversarial conditions.
+
+
+    In addition to my contributions to community detection, I have explored the realm
+    of decentralized systems, proposing Collachain—a Byzantine fault-tolerant blockchain
+    that enhances transaction validation through participant collaboration. This innovation
+    not only improves throughput but also allows secure peer-to-peer interactions
+    without the need for extensive blockchain downloads.
+
+
+    My research also delves into the theoretical aspects of statistical queries and
+    expander decompositions in dynamic graphs. I have established lower bounds for
+    statistical queries in the context of planted Rademacher vectors and developed
+    efficient algorithms for maintaining expander decompositions in graphs undergoing
+    edge deletions. Furthermore, I have pioneered node-differentially-private algorithms
+    for learning stochastic block models, achieving polynomial running times while
+    matching the statistical utility of previous exponential-time methods.
+
+
+    Overall, my work aims to bridge theoretical insights with practical applications,
+    addressing challenges in robust learning, decentralized systems, and privacy-preserving
+    algorithms. I am passionate about advancing our understanding of these complex
+    systems and their implications for real-world applications.'
+  type: BaseAgent
+- agent_id: agent4
+  profile: 'I am a researcher deeply engaged in the intersection of theoretical computer
+    science and optimization, with a particular focus on the Unique Games Conjecture
+    (UGC) and the Sum-of-Squares (SOS) method. My work has significantly contributed
+    to understanding the hardness of approximation problems, particularly through
+    the Small-Set Expansion Hypothesis, which I have shown to be equivalent to a variant
+    of the UGC. This foundational result not only unifies various hardness assumptions
+    but also provides strong approximation results for problems like Balanced Separator
+    and Minimum Linear Arrangement.
+
+
+    In addition to my theoretical contributions, I have developed efficient algorithms
+    for tensor decomposition and community detection, addressing challenges in machine
+    learning and robust statistics. My algorithms leverage the SOS framework to achieve
+    polynomial-time solutions for problems previously thought to require quasipolynomial
+    time. I am particularly proud of my work on robust community detection in the
+    presence of adversarial node corruption, where I established the first polynomial-time
+    algorithm that meets the Kesten-Stigum threshold.
+
+
+    My research is driven by a desire to uncover connections between seemingly disparate
+    problems and to develop general frameworks that can yield efficient solutions
+    across various domains. I believe that the insights gained from studying the UGC
+    and SOS methods can lead to breakthroughs in understanding the complexity of numerous
+    computational problems, and I am excited to continue exploring these avenues in
+    my future work.'
+  type: BaseAgent
+coordinate_mode: graph
+engine_planner:
+  initial_progress: Starting the collaborative research idea generation based on the
+    provided Introduction.
+environment:
+  max_iterations: 5
+  name: Research Collaboration Environment
+  type: Research
+llm: together_ai/meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo
+memory:
+  type: SharedMemory
+metrics:
+  diversity_of_perspectives: true
+  engagement_level: true
+  evaluate_llm: gpt-4o-mini
+  relevance: true
+output:
+  file_path: result/discussion_output_llama3.1_8b.jsonl
+  format: jsonl
+relationships:
+- - agent1
+  - agent2
+  - collaborate with
+- - agent1
+  - agent3
+  - collaborate with
+- - agent1
+  - agent4
+  - collaborate with
+- - agent2
+  - agent3
+  - collaborate with
+- - agent2
+  - agent4
+  - collaborate with
+- - agent3
+  - agent4
+  - collaborate with
+task:
+  content: "\n            Dear Research Team,\n\n            You are collaborating\
+    \ to generate a new research idea based on the following Introduction:\n\n   \
+    \         **Introduction**\n\n               1 Introduction  Privacy has nowadays\
+    \ become a major concern in large-scale data processing. Releasing seemingly harmless\
+    \ statistics of a dataset could unexpectedly leak sensitive information of individuals\
+    \ (see e.g. [NS09, DSSU17] for privacy attacks). Differential privacy (DP) [DMNS06]\
+    \ has emerged as a by-now standard technique for protecting the privacy of individuals\
+    \ with rigorous guarantees. An algorithm is said to be differentially private\
+    \ if the distribution of its output remains largely unchanged under the change\
+    \ of a single data point in the dataset.   For datasets represented by graphs\
+    \ (e.g. social networks), two notions of differential privacy have been investigated\
+    \ in the literature: edge differential privacy [NRS07, KRSY11], where each edge\
+    \ is regarded as a data point; and node differential privacy [BBDS13, KNRS13],\
+    \ where each node along with its incident edges is regarded as a data point. Node\
+    \ differential privacy is an arguably more desirable notion than edge differential\
+    \ privacy. On the other hand, node differential privacy is also in general more\
+    \ difficult to achieve without compromising on utility, as many graph statistics\
+    \ usually have high sensitivity in the worst case. It turns out that many graph\
+    \ statistics can have significantly smaller sensitivity on typical graphs under\
+    \ natural distributional assumptions. Several recent works could thus manage to\
+    \ achieve optimal or nearly-optimal utility guarantees in a number of random graph\
+    \ parameter estimation problems [BCS15, BCSZ18, SU19, CDd+24].   In this paper,\
+    \ we continue this line of work and study perhaps the most elementary statistical\
+    \ task in graph data analysis: Given an n\U0001D45Bnitalic_n-node Erdős-Rényi\
+    \ random graph of which each edge is present with probability p∘superscript\U0001D45D\
+    p^{\\circ}italic_p start_POSTSUPERSCRIPT ∘ end_POSTSUPERSCRIPT independently,\
+    \ output an estimate phathat\U0001D45D\\hat{p}overhat start_ARG italic_p end_ARG\
+    \ of the edge density parameter p∘superscript\U0001D45Dp^{\\circ}italic_p start_POSTSUPERSCRIPT\
+    \ ∘ end_POSTSUPERSCRIPT, subject to node differential privacy. We consider the\
+    \ error metric \\lvert⁢phat/p∘−1⁢\\rvert\\lverthat\U0001D45Dsuperscript\U0001D45D\
+    1\\rvert\\lvert\\hat{p}/p^{\\circ}-1\\rvertoverhat start_ARG italic_p end_ARG\
+    \ / italic_p start_POSTSUPERSCRIPT ∘ end_POSTSUPERSCRIPT - 1 which can reflect\
+    \ the fact that, the task is more difficult for smaller p∘superscript\U0001D45D\
+    p^{\\circ}italic_p start_POSTSUPERSCRIPT ∘ end_POSTSUPERSCRIPT.   Without privacy\
+    \ requirement, the empirical edge density phathat\U0001D45D\\hat{p}overhat start_ARG\
+    \ italic_p end_ARG achieves the information theoretically optimal error rate \\\
+    lvert⁢phat/p∘−1⁢\\rvert⁢Otilde⁢(1/(n⁢p∘))\\lverthat\U0001D45Dsuperscript\U0001D45D\
+    1\\rverttilde\U0001D4421\U0001D45Bsuperscript\U0001D45D\\lvert\\hat{p}/p^{\\circ}-1\\\
+    rvert\\leqslant\\tilde{O}(1/(n\\sqrt{p^{\\circ}}))overhat start_ARG italic_p end_ARG\
+    \ / italic_p start_POSTSUPERSCRIPT ∘ end_POSTSUPERSCRIPT - 1 overtilde start_ARG\
+    \ italic_O end_ARG ( 1 / ( italic_n square-root start_ARG italic_p start_POSTSUPERSCRIPT\
+    \ ∘ end_POSTSUPERSCRIPT end_ARG ) ). The standard way to achieve ε\U0001D700\\\
+    varepsilonitalic_ε-differential node privacy is to add Laplace noise with standard\
+    \ deviation (1/(ε⁢n))1\U0001D700\U0001D45B\\Theta(1/(\\varepsilon n))( 1 / ( italic_ε\
+    \ italic_n ) ) to the empirical edge density phathat\U0001D45D\\hat{p}overhat\
+    \ start_ARG italic_p end_ARG. This will incur an additional privacy cost of (1/(ε⁢n⁢p∘))1\U0001D700\
+    \U0001D45Bsuperscript\U0001D45D\\Theta(1/(\\varepsilon np^{\\circ}))( 1 / ( italic_ε\
+    \ italic_n italic_p start_POSTSUPERSCRIPT ∘ end_POSTSUPERSCRIPT ) ) which dominates\
+    \ the non-private error Otilde⁢(1/(n⁢p∘))tilde\U0001D4421\U0001D45Bsuperscript\U0001D45D\
+    \\tilde{O}(1/(n\\sqrt{p^{\\circ}}))overtilde start_ARG italic_O end_ARG ( 1 /\
+    \ ( italic_n square-root start_ARG italic_p start_POSTSUPERSCRIPT ∘ end_POSTSUPERSCRIPT\
+    \ end_ARG ) ). Surprisingly, Borgs et al. [BCSZ18] gave an algorithm with privacy\
+    \ cost only Otilde⁢(1/(ε⁢n⁢n⁢p∘))tilde\U0001D4421\U0001D700\U0001D45B\U0001D45B\
+    superscript\U0001D45D\\tilde{O}(1/(\\varepsilon n\\sqrt{np^{\\circ}}))overtilde\
+    \ start_ARG italic_O end_ARG ( 1 / ( italic_ε italic_n square-root start_ARG italic_n\
+    \ italic_p start_POSTSUPERSCRIPT ∘ end_POSTSUPERSCRIPT end_ARG ) ) which is negligible\
+    \ to the non-private error for any ε≫1/nmuch-greater-than\U0001D7001\U0001D45B\
+    \\varepsilon\\gg 1/\\sqrt{n}italic_ε ≫ 1 / square-root start_ARG italic_n end_ARG.\
+    \ However, their algorithm is based on a general Lipschitz extension technique\
+    \ that has exponential running time. Later, Sealfon and Ullman [SU19] provided\
+    \ a polynomial-time algorithm based on smooth sensitivity with privacy cost Otilde⁢(1/(ε⁢n⁢n⁢p∘)+1/(ε2⁢n2⁢p∘))tilde\U0001D442\
+    +1\U0001D700\U0001D45B\U0001D45Bsuperscript\U0001D45D1superscript\U0001D7002superscript\U0001D45B\
+    2superscript\U0001D45D\\tilde{O}(1/(\\varepsilon n\\sqrt{np^{\\circ}})+1/(\\varepsilon^{2}n^{2}p^{\\\
+    circ}))overtilde start_ARG italic_O end_ARG (\n\n            **Your Task**\n\n\
+    \            1. **Literature Review**: Analyze the Introduction provided and conduct\
+    \ a brief literature review to understand the current state of research in this\
+    \ area.\n\n            2. **Brainstorming**: Collaboratively brainstorm potential\
+    \ research ideas that build upon or address gaps in the Introduction.\n\n    \
+    \        3. **Summarization**: Summarize your collective ideas.\n\n          \
+    \  4. **Formulate a New Research Idea**: Develop a new research proposal in the\
+    \ format of the '5q', defined below:\n\n               **Here is a high-level\
+    \ summarized insight of a research field Machine Learning.**\n\n             \
+    \  **Here are the five core questions:**\n\n               **[Question 1] - What\
+    \ is the problem?**\n\n               Formulate the specific research question\
+    \ you aim to address. Only output one question and do not include any more information.\n\
+    \n               **[Question 2] - Why is it interesting and important?**\n\n \
+    \              Explain the broader implications of solving this problem for the\
+    \ research community.\n               Discuss how such a paper will affect future\
+    \ research.\n               Discuss how addressing this question could advance\
+    \ knowledge or lead to practical applications.\n\n               **[Question 3]\
+    \ - Why is it hard?**\n\n               Discuss the challenges and complexities\
+    \ involved in solving this problem.\n               Explain why naive or straightforward\
+    \ approaches may fail.\n               Identify any technical, theoretical, or\
+    \ practical obstacles that need to be overcome. MAKE IT CLEAR.\n\n           \
+    \    **[Question 4] - Why hasn't it been solved before?**\n\n               Identify\
+    \ gaps or limitations in previous research or existing solutions.\n          \
+    \     Discuss any barriers that have prevented this problem from being solved\
+    \ until now.\n               Explain how your approach differs from or improves\
+    \ upon prior work. MAKE IT CLEAR.\n\n               **[Question 5] - What are\
+    \ the key components of my approach and results?**\n\n               Outline your\
+    \ proposed methodology in detail, including the method, dataset, and metrics that\
+    \ you plan to use.\n               Describe the expected outcomes. MAKE IT CLEAR.\n\
+    \n            Please work together to produce the '5q' for your proposed research\
+    \ idea.\n\n            Good luck!\n            "
+  output_format: "You should answer the task in the following format:\n          \
+    \      **[Question 1] - What is the problem?**\n\n                Formulate the\
+    \ specific research question you aim to address. Only output one question and\
+    \ do not include any more information.\n\n                **[Question 2] - Why\
+    \ is it interesting and important?**\n\n                Explain the broader implications\
+    \ of solving this problem for the research community.\n                Discuss\
+    \ how such a paper will affect future research.\n                Discuss how addressing\
+    \ this question could advance knowledge or lead to practical applications.\n\n\
+    \                **[Question 3] - Why is it hard?**\n\n                Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \        Explain why naive or straightforward approaches may fail.\n         \
+    \       Identify any technical, theoretical, or practical obstacles that need\
+    \ to be overcome. MAKE IT CLEAR.\n\n                **[Question 4] - Why hasn't\
+    \ it been solved before?**\n\n                Identify gaps or limitations in\
+    \ previous research or existing solutions.\n                Discuss any barriers\
+    \ that have prevented this problem from being solved until now.\n            \
+    \    Explain how your approach differs from or improves upon prior work. MAKE\
+    \ IT CLEAR.\n\n                **[Question 5] - What are the key components of\
+    \ my approach and results?**\n\n                Outline your proposed methodology\
+    \ in detail, including the method, dataset, and metrics that you plan to use.\n\
+    \                Describe the expected outcomes. MAKE IT CLEAR."

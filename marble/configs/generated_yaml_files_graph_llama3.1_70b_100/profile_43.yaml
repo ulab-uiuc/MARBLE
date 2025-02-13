@@ -1,0 +1,213 @@
+agents:
+- agent_id: agent1
+  profile: "I am a researcher deeply engaged in the study of stochastic processes\
+    \ and their implications in biological systems. My work focuses on understanding\
+    \ how stochasticity influences variability and information processing, particularly\
+    \ through the lens of noise power spectral density (PSD). I have developed analytical\
+    \ methods for computing the PSD of stochastic linear time-invariant (LTI) systems\
+    \ driven by Gaussian white noise, providing compact solutions for auto- and cross-spectrum\
+    \ coefficients in dimensions up to four. \n\nMy recent contributions include a\
+    \ recursive Leverrier-Faddeev-type algorithm that allows for the exact computation\
+    \ of these coefficients without the need for matrix inverses, which is a significant\
+    \ advancement in the field. I have applied these methodologies to various neural\
+    \ system models, such as the Fitzhugh-Nagumo and Hindmarsh-Rose models, as well\
+    \ as to evolutionary game-theoretic models. Additionally, I have extended my research\
+    \ to derive methods for calculating coefficients in the integrated covariance\
+    \ matrix for interacting spiking neurons modeled as Hawkes processes on directed\
+    \ graphs. \n\nThrough my work, I aim to bridge the gap between theoretical frameworks\
+    \ and practical applications in understanding the dynamics of complex biological\
+    \ systems, contributing to a deeper comprehension of how stochasticity shapes\
+    \ life processes."
+  type: BaseAgent
+- agent_id: agent2
+  profile: 'I am a researcher deeply engaged in understanding the complexities of
+    working memory and sensory processing through the lens of computational neuroscience.
+    My recent work has introduced the ORGaNICs framework, which leverages oscillatory
+    recurrent gated neural integrator circuits to explain the intricate dynamics of
+    delay-period activity in the prefrontal cortex. This innovative approach not only
+    enhances our understanding of working memory but also extends to sensory processing
+    and motor control.
+
+
+    I have also explored adaptive whitening in neural circuits, proposing a model
+    that modulates neuron gains to achieve efficient sensory adaptation. This work
+    highlights the rapid and reversible nature of gain modulation, contrasting with
+    traditional models that rely on slower synaptic changes. My research on optic
+    acceleration has challenged existing beliefs about heading perception, revealing
+    the limitations of instantaneous optic flow and emphasizing the need for time-varying
+    inputs.
+
+
+    In addition to these theoretical advancements, I have developed the Epistemic
+    AI platform, which utilizes knowledge mapping to accelerate biomedical discovery
+    by uncovering hidden connections within vast networks of biomedical knowledge.
+    My work on nonparametric models for time series with missing data has provided
+    new insights into infant sleep patterns, demonstrating the potential of low-rank
+    matrix factorization for interpreting complex datasets.
+
+
+    Overall, my research aims to bridge the gap between computational models and biological
+    processes, offering new perspectives on how the brain processes information and
+    adapts to changing environments.'
+  type: BaseAgent
+- agent_id: agent3
+  profile: 'I am a researcher deeply engaged in the intersection of statistical mechanics,
+    complex systems, and computational methods. My work primarily focuses on understanding
+    non-equilibrium phenomena and the intricate behaviors of disordered materials,
+    active matter, and biological systems. I have developed innovative Monte Carlo
+    algorithms that enhance sampling efficiency in multimodal parameter spaces, addressing
+    challenges posed by broken ergodicity. My research also explores the use of Computable
+    Information Density (CID) as a powerful tool for quantifying order and correlation
+    in both equilibrium and non-equilibrium systems, revealing critical insights into
+    phase transitions and critical exponents without prior knowledge of order parameters.
+
+
+    I have made significant strides in the numerical estimation of entropy and density
+    of states in athermal systems, providing a framework for understanding the configurational
+    entropy of jammed packings. My recent work on gyromorphs introduces a new class
+    of materials that combine liquid-like disorder with quasi-long-range order, showcasing
+    their potential in photonic applications. Additionally, I have investigated the
+    dynamics of active particles, elucidating the mechanisms behind their collective
+    behavior and rectification processes.
+
+
+    Through my interdisciplinary approach, I aim to bridge theoretical concepts with
+    practical applications, leveraging machine learning techniques to analyze complex
+    landscapes in physical systems. My research not only contributes to fundamental
+    physics but also has implications for materials science, biology, and beyond,
+    as I strive to uncover the underlying principles governing collective behavior
+    and information processing in diverse systems.'
+  type: BaseAgent
+coordinate_mode: graph
+engine_planner:
+  initial_progress: Starting the collaborative research idea generation based on the
+    provided Introduction.
+environment:
+  max_iterations: 5
+  name: Research Collaboration Environment
+  type: Research
+llm: together_ai/meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo
+memory:
+  type: SharedMemory
+metrics:
+  diversity_of_perspectives: true
+  engagement_level: true
+  evaluate_llm: gpt-4o-mini
+  relevance: true
+output:
+  file_path: result/discussion_output_llama3.1_70b.jsonl
+  format: jsonl
+relationships:
+- - agent1
+  - agent2
+  - collaborate with
+- - agent1
+  - agent3
+  - collaborate with
+- - agent2
+  - agent3
+  - collaborate with
+task:
+  content: "\n            Dear Research Team,\n\n            You are collaborating\
+    \ to generate a new research idea based on the following Introduction:\n\n   \
+    \         **Introduction**\n\n             Introduction Deep neural networks (DNNs)\
+    \ have found widespread use in modeling tasks from experimental systems neuroscience.\
+    \ The allure of DNN-based models lies in their ease of training and the flexibility\
+    \ they offer in architecting systems with desired properties [1 –3]. In contrast,\
+    \ neurodynamical models like the Wilson-Cowan [4] or the Stabilized Supralinear\
+    \ Network (SSN) [5] are more biologically plausible than DNNs, but these models\
+    \ confront considerable training challenges due to the lack of stability guarantees\
+    \ for high-dimensional problems. The primary reason training RNNs is more straightforward\
+    \ is because of specialized ad hoc implementation of regularization techniques\
+    \ like batch and layer normalization, and gradient clipping/scaling. These methods\
+    \ (Batch, Layer, Group) in tasks such as image recognition with convolutional\
+    \ neural networks (CNNs) [40] and language modeling with recurrent neural networks\
+    \ (RNNs) [39, 41]. Despite the foundational role of these techniques in deep learning\
+    \ algorithms, their implementation is ad-hoc, limiting their conceptual relevance.\
+    \ They serve as practical solutions addressing the limitations of current machine\
+    \ learning frameworks rather than offering principled insights derived from understanding\
+    \ cortical circuits. It has been proposed that DN is achieved via a recurrent\
+    \ circuit [11,13,42 –46]. Oscillatory Recurrent Gated Neural Integrator Circuits\
+    \ (ORGaNICs) are rate-based recurrent neural circuit models that implement DN\
+    \ dynamically via recurrent amplification [46, 47]. Since ORGaNICs’ response follows\
+    \ the DN equation at steady-state, it incorporates this wide variety of neural\
+    \ phenomena. ORGaNICs have been shown to simulate key neurophysiological and cognitive/perceptual\
+    \ phenomena under realistic biophysical constraints [46, 47]. Additional phenomena\
+    \ not explained by DN [48] can in principle be integrated into the model. In this\
+    \ paper, however, we focus on the effects of DN on the dynamical stability of\
+    \ ORGaNICs. Despite some empirical evidence that ORGaNICs are highly robust, the\
+    \ question of whether the model is stable for arbitrary parameter choices, and\
+    \ thus whether it can be robustly trained on ML tasks by backpropagation-through-time\
+    \ (BPTT), remains open. Here, we establish the unconditional stability — applicable\
+    \ across all parameters and inputs — of a multidimensional two-neuron-type ORGaNICs\
+    \ circuit model when the recurrent weight matrix is the identity. We prove this\
+    \ result, detailed in Section 4, by performing linear stability analysis around\
+    \ the model’s analytically-known normalization fixed point and by reducing the\
+    \ stability problem to that of a high-dimensional mechanical system, whose stability\
+    \ is defined in terms of a quadratic eigenvalue problem. We then address the stability\
+    \ of the model for arbitrary recurrent weight matrix in Section 5. While the indirect\
+    \ method of Lyapunov becomes intractable for such a system, we provide proof of\
+    \ unconditional stability for a two-dimensional circuit with an arbitrary recurrent\
+    \ weight matrix and offer empirical evidence supporting the claim of stability\
+    \ for high-dimensional systems. ORGaNICs are a biophysically plausible extensions\
+    \ of Long Short Term Memory units (LSTMs) and Gated Recurrent Units (GRUs), RNN\
+    \ architectures that have been widely used in machine learning applications [3,\
+    \ 49 –52], the main differences being that ORGaNICs are continuous time and have\
+    \ built-in normalization and built-in attention. Thus, ORGaNICs should be able\
+    \ to solve relatively sophisticated tasks [46]. Here, we demonstrate (Section\
+    \ 6) that by virtue of their intrinsic stability, ORGaNICs can be trained on sequence\
+    \ modeling tasks by BPTT, in the same manner as traditional RNNs (unlike SSN that\
+    \ instead requires costly specialized training strategies [53]), despite implementing\
+    \ power-law activations [5]. Moreover, we show that ORGaNICs achieves performance\
+    \ 2comparable\n\n            **Your Task**\n\n            1. **Literature Review**:\
+    \ Analyze the Introduction provided and conduct a brief literature review to understand\
+    \ the current state of research in this area.\n\n            2. **Brainstorming**:\
+    \ Collaboratively brainstorm potential research ideas that build upon or address\
+    \ gaps in the Introduction.\n\n            3. **Summarization**: Summarize your\
+    \ collective ideas.\n\n            4. **Formulate a New Research Idea**: Develop\
+    \ a new research proposal in the format of the '5q', defined below:\n\n      \
+    \         **Here is a high-level summarized insight of a research field Machine\
+    \ Learning.**\n\n               **Here are the five core questions:**\n\n    \
+    \           **[Question 1] - What is the problem?**\n\n               Formulate\
+    \ the specific research question you aim to address. Only output one question\
+    \ and do not include any more information.\n\n               **[Question 2] -\
+    \ Why is it interesting and important?**\n\n               Explain the broader\
+    \ implications of solving this problem for the research community.\n         \
+    \      Discuss how such a paper will affect future research.\n               Discuss\
+    \ how addressing this question could advance knowledge or lead to practical applications.\n\
+    \n               **[Question 3] - Why is it hard?**\n\n               Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \       Explain why naive or straightforward approaches may fail.\n          \
+    \     Identify any technical, theoretical, or practical obstacles that need to\
+    \ be overcome. MAKE IT CLEAR.\n\n               **[Question 4] - Why hasn't it\
+    \ been solved before?**\n\n               Identify gaps or limitations in previous\
+    \ research or existing solutions.\n               Discuss any barriers that have\
+    \ prevented this problem from being solved until now.\n               Explain\
+    \ how your approach differs from or improves upon prior work. MAKE IT CLEAR.\n\
+    \n               **[Question 5] - What are the key components of my approach and\
+    \ results?**\n\n               Outline your proposed methodology in detail, including\
+    \ the method, dataset, and metrics that you plan to use.\n               Describe\
+    \ the expected outcomes. MAKE IT CLEAR.\n\n            Please work together to\
+    \ produce the '5q' for your proposed research idea.\n\n            Good luck!\n\
+    \            "
+  output_format: "You should answer the task in the following format:\n          \
+    \      **[Question 1] - What is the problem?**\n\n                Formulate the\
+    \ specific research question you aim to address. Only output one question and\
+    \ do not include any more information.\n\n                **[Question 2] - Why\
+    \ is it interesting and important?**\n\n                Explain the broader implications\
+    \ of solving this problem for the research community.\n                Discuss\
+    \ how such a paper will affect future research.\n                Discuss how addressing\
+    \ this question could advance knowledge or lead to practical applications.\n\n\
+    \                **[Question 3] - Why is it hard?**\n\n                Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \        Explain why naive or straightforward approaches may fail.\n         \
+    \       Identify any technical, theoretical, or practical obstacles that need\
+    \ to be overcome. MAKE IT CLEAR.\n\n                **[Question 4] - Why hasn't\
+    \ it been solved before?**\n\n                Identify gaps or limitations in\
+    \ previous research or existing solutions.\n                Discuss any barriers\
+    \ that have prevented this problem from being solved until now.\n            \
+    \    Explain how your approach differs from or improves upon prior work. MAKE\
+    \ IT CLEAR.\n\n                **[Question 5] - What are the key components of\
+    \ my approach and results?**\n\n                Outline your proposed methodology\
+    \ in detail, including the method, dataset, and metrics that you plan to use.\n\
+    \                Describe the expected outcomes. MAKE IT CLEAR."

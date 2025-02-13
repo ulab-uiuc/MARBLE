@@ -1,0 +1,199 @@
+agents:
+- agent_id: agent1
+  profile: 'I am a researcher deeply engaged in the exploration of attention mechanisms
+    within deep learning, particularly in the context of transformers. My recent work
+    focuses on deriving self-attention from kernel principal component analysis (kernel
+    PCA), which has allowed me to uncover the theoretical foundations of how self-attention
+    operates. By projecting query vectors onto the principal component axes of the
+    key matrix, I have formulated a precise representation of the value matrix in
+    self-attention, revealing its connection to the eigenvectors of the Gram matrix
+    of key vectors.
+
+
+    Building on this framework, I introduced Attention with Robust Principal Components
+    (RPC-Attention), a novel approach designed to enhance the resilience of attention
+    mechanisms against data contamination. Through empirical evaluations across various
+    tasks, including object classification, language modeling, and image segmentation,
+    I have demonstrated the superior performance of RPC-Attention compared to traditional
+    softmax attention. My research aims to bridge theoretical insights with practical
+    applications, contributing to the ongoing evolution of robust and efficient deep
+    learning models.'
+  type: BaseAgent
+- agent_id: agent2
+  profile: 'I am a researcher dedicated to enhancing the capabilities of transformer
+    architectures and graph neural networks (GNNs) through innovative regularization
+    techniques and robust modeling frameworks. My recent work has focused on addressing
+    critical challenges such as over-smoothing and input corruption in these models.
+    For instance, I introduced the $p$-Laplacian Transformer (p-LaT), which utilizes
+    $p$-Laplacian regularization to better capture heterophilic features in self-attention
+    layers, allowing for more nuanced attention mechanisms.
+
+
+    Additionally, I developed Attention with Robust Principal Components (RPC-Attention),
+    which derives self-attention from kernel principal component analysis, enhancing
+    resilience to data contamination. My research also led to the creation of the
+    Neural Transformer with a Regularized Nonlocal Functional (NeuTRENO), which effectively
+    mitigates the over-smoothing issue by preserving the fidelity of token representations.
+
+
+    In the realm of GNNs, I proposed the Kuramoto Graph Neural Network (KuramotoGNN),
+    leveraging the Kuramoto model to prevent node feature convergence while maintaining
+    stability. Furthermore, I explored the integration of a Proportional-Integral-Derivative
+    (PID) control system into transformer architectures, resulting in the PID-controlled
+    Transformer (PIDformer), which enhances robustness and representation capacity.
+
+
+    Through these contributions, I aim to push the boundaries of deep learning models,
+    making them more interpretable, robust, and effective across various applications
+    in natural language processing and computer vision.'
+  type: BaseAgent
+coordinate_mode: graph
+engine_planner:
+  initial_progress: Starting the collaborative research idea generation based on the
+    provided Introduction.
+environment:
+  max_iterations: 5
+  name: Research Collaboration Environment
+  type: Research
+llm: gpt-4o-mini
+memory:
+  type: SharedMemory
+metrics:
+  diversity_of_perspectives: true
+  engagement_level: true
+  evaluate_llm: gpt-4o-mini
+  relevance: true
+output:
+  file_path: result/discussion_output_4o_mini.jsonl
+  format: jsonl
+relationships:
+- - agent1
+  - agent2
+  - collaborate with
+task:
+  content: "\n            Dear Research Team,\n\n            You are collaborating\
+    \ to generate a new research idea based on the following Introduction:\n\n   \
+    \         **Introduction**\n\n               1 Introduction  Scaling up deep models\
+    \ has demonstrated significant potential for enhancing the model’s performance\
+    \ on a wide range of cognitive and machine learning tasks, ranging from large\
+    \ language model pre-training [13, 58, 59, 30, 5, 51, 70] and vision understanding [15,\
+    \ 2, 3, 39, 1, 40] to reinforcement learning [6, 28] and scientific applications [66,\
+    \ 74]. However, increasing the model’s size requires a higher computational budget,\
+    \ which can be often challenging to meet. As a result, Sparse Mixture of Experts\
+    \ (SMoE) has been recently studied as an efficient approach to effectively scale\
+    \ up deep models. By modularizing the network and activating only subsets of experts\
+    \ for each input, SMoE maintains constant computational costs while increasing\
+    \ model complexity. This approach enables the development of billion-parameter\
+    \ models and achieves significant success in various applications, including machine\
+    \ translation [35], image classification [61], and speech recognition [34].††Please\
+    \ correspond to: rachel.tsy@u.nus.edu    1.1 Sparse Mixture of Experts  A MoE\
+    \ replaces a component in the layer of the model, for example, a feed-forward\
+    \ or convolutional layer, by a set of networks termed experts. This approach largely\
+    \ scales up the model but increases the computational cost. A SMoE inherits the\
+    \ extended model capacity from MoE but preserves the computational overhead by\
+    \ taking advantage of conditional computation. In particular, a SMoE consists\
+    \ of a router and E\U0001D438Eitalic_E expert networks, uisubscript\U0001D462\U0001D456\
+    u_{i}italic_u start_POSTSUBSCRIPT italic_i end_POSTSUBSCRIPT, i=1,2,…,E\U0001D456\
+    12…\U0001D438i=1,2,\\dots,Eitalic_i = 1 , 2 , … , italic_E. For each input token\
+    \ \U0001D499t∈ℝDsubscript\U0001D499\U0001D461superscriptℝ\U0001D437{\\bm{x}}_{t}\\\
+    in{\\mathbb{R}}^{D}bold_italic_x start_POSTSUBSCRIPT italic_t end_POSTSUBSCRIPT\
+    \ ∈ blackboard_R start_POSTSUPERSCRIPT italic_D end_POSTSUPERSCRIPT at layer t\U0001D461\
+    titalic_t, the SMoE’s router computes the affinity scores between \U0001D499tsubscript\U0001D499\
+    \U0001D461{\\bm{x}}_{t}bold_italic_x start_POSTSUBSCRIPT italic_t end_POSTSUBSCRIPT\
+    \ and each expert as gi⁢(\U0001D499t)subscript\U0001D454\U0001D456subscript\U0001D499\
+    \U0001D461g_{i}({\\bm{x}}_{t})italic_g start_POSTSUBSCRIPT italic_i end_POSTSUBSCRIPT\
+    \ ( bold_italic_x start_POSTSUBSCRIPT italic_t end_POSTSUBSCRIPT ), i=1,2,…,E\U0001D456\
+    12…\U0001D438i=1,2,\\dots,Eitalic_i = 1 , 2 , … , italic_E. In practice, we often\
+    \ choose the router g⁢(\U0001D499t)=[g1⁢(\U0001D499t),g2⁢(\U0001D499t),…,gE⁢(\U0001D499\
+    t)]⊤=\U0001D47E⁢\U0001D499+\U0001D483\U0001D454subscript\U0001D499\U0001D461superscriptsubscript\U0001D454\
+    1subscript\U0001D499\U0001D461subscript\U0001D4542subscript\U0001D499\U0001D461\
+    …subscript\U0001D454\U0001D438subscript\U0001D499\U0001D461top\U0001D47E\U0001D499\
+    \U0001D483g({\\bm{x}}_{t})=[g_{1}({\\bm{x}}_{t}),g_{2}({\\bm{x}}_{t}),\\dots,g_{E}({\\\
+    bm{x}}_% {t})]^{\\top}={\\bm{W}}{\\bm{x}}+{\\bm{b}}italic_g ( bold_italic_x start_POSTSUBSCRIPT\
+    \ italic_t end_POSTSUBSCRIPT ) = [ italic_g start_POSTSUBSCRIPT 1 end_POSTSUBSCRIPT\
+    \ ( bold_italic_x start_POSTSUBSCRIPT italic_t end_POSTSUBSCRIPT ) , italic_g\
+    \ start_POSTSUBSCRIPT 2 end_POSTSUBSCRIPT ( bold_italic_x start_POSTSUBSCRIPT\
+    \ italic_t end_POSTSUBSCRIPT ) , … , italic_g start_POSTSUBSCRIPT italic_E end_POSTSUBSCRIPT\
+    \ ( bold_italic_x start_POSTSUBSCRIPT italic_t end_POSTSUBSCRIPT ) ] start_POSTSUPERSCRIPT\
+    \ ⊤ end_POSTSUPERSCRIPT = bold_italic_W bold_italic_x + bold_italic_b, where \U0001D47E\
+    ∈ℝE×D\U0001D47Esuperscriptℝ\U0001D438\U0001D437{\\bm{W}}\\in{\\mathbb{R}}^{E\\\
+    times D}bold_italic_W ∈ blackboard_R start_POSTSUPERSCRIPT italic_E × italic_D\
+    \ end_POSTSUPERSCRIPT and \U0001D483∈ℝE\U0001D483superscriptℝ\U0001D438{\\bm{b}}\\\
+    in{\\mathbb{R}}^{E}bold_italic_b ∈ blackboard_R start_POSTSUPERSCRIPT italic_E\
+    \ end_POSTSUPERSCRIPT. Then, a sparse gating function TopKTopK\\mathrm{TopK}roman_TopK\
+    \ is applied to select only K\U0001D43EKitalic_K experts with the greatest affinity\
+    \ scores. Here, we define the TopKTopK\\mathrm{TopK}roman_TopK function as:  \
+    \  TopK⁢(gi):={gi,if ⁢gi⁢ is in the ⁢K⁢ largest elements of ⁢g−∞,otherwise.assignTopKsubscript\U0001D454\
+    \U0001D456casessubscript\U0001D454\U0001D456if subscript\U0001D454\U0001D456 is\
+    \ in the \U0001D43E largest elements of \U0001D454otherwiseotherwiseotherwise\\\
+    displaystyle\\mathrm{TopK}(g_{i}):=\\begin{cases}\\leavevmode\\nobreak\\ g_{i},%\
+    \ \\hskip 9.10509pt\\text{if }g_{i}\\text{ is in the }K\\text{ largest elements\
+    \ of }% g\\\\ -\\infty,\\hskip 4.26773pt\\text{otherwise}.\\end{cases}roman_TopK\
+    \ ( italic_g start_POSTSUBSCRIPT italic_i end_POSTSUBSCRIPT ) := { start_ROW start_CELL\
+    \ italic_g start_POSTSUBSCRIPT italic_i end_POSTSUBSCRIPT , if italic_g start_POSTSUBSCRIPT\
+    \ italic_i end_POSTSUBSCRIPT is in the italic_K largest elements of italic_g end_CELL\
+    \ start_CELL end_CELL end_ROW start_ROW start_CELL - ∞ , otherwise . end_CELL\
+    \ start_CELL end_CELL end_ROW  (1)   The outputs from K\U0001D43EKitalic_K expert\
+    \ networks chosen by the router are then linearly combined as    \U0001D499t+1=\U0001D499\
+    t+∑i=1Esoftmax(TopK(gi(\U0001D499t))ui(\U0001D499t)=\U0001D499t+u(\U0001D499t),\\\
+    displaystyle{\\bm{x}}_{t+1}={\\bm{x}}_{t}+\\sum_{i=1}^{E}\\text{softmax}(\\mathrm{%\
+    \ TopK}(g_{i}({\\bm{x}}_{t}))u_{i}({\\bm{x}}_{t})={\\bm{x}}_{t}+u({\\bm{x}}_{t}),bold_italic_x\
+    \ start_POSTSUBSCRIPT italic_t + 1 end_POSTSUBSCRIPT = bold_italic_x start_POSTSUBSCRIPT\
+    \ italic_t end_POSTSUBSCRIPT + ∑ start_POSTSUBSCRIPT italic_i = 1 end_POSTSUBSCRIPT\
+    \ start_POSTSUPERSCRIPT italic_E end_POSTSUPERSCRIPT softmax ( roman_TopK ( italic_g\
+    \ start_POSTSUBSCRIPT italic_i end_POSTSUBSCRIPT ( bold_italic_x start_POSTSUBSCRIPT\
+    \ italic_t end_POSTSUBSCRIPT ) ) italic_u start_POSTSUBSCRIPT italic_i end_POSTSUBSCRIPT\
+    \ ( bold_italic_x start_POSTSUBSCRIPT italic_t end_POSTSUBSCRIPT ) = bold_italic_x\
+    \ start_POSTSUBSCRIPT italic_t end_POSTSUBSCRIPT + italic_u ( bold_italic_x start_POSTSUBSCRIPT\
+    \ italic_t end_POSTSUBSCRIPT )\n\n            **Your Task**\n\n            1.\
+    \ **Literature Review**: Analyze the Introduction provided and conduct a brief\
+    \ literature review to understand the current state of research in this area.\n\
+    \n            2. **Brainstorming**: Collaboratively brainstorm potential research\
+    \ ideas that build upon or address gaps in the Introduction.\n\n            3.\
+    \ **Summarization**: Summarize your collective ideas.\n\n            4. **Formulate\
+    \ a New Research Idea**: Develop a new research proposal in the format of the\
+    \ '5q', defined below:\n\n               **Here is a high-level summarized insight\
+    \ of a research field Machine Learning.**\n\n               **Here are the five\
+    \ core questions:**\n\n               **[Question 1] - What is the problem?**\n\
+    \n               Formulate the specific research question you aim to address.\
+    \ Only output one question and do not include any more information.\n\n      \
+    \         **[Question 2] - Why is it interesting and important?**\n\n        \
+    \       Explain the broader implications of solving this problem for the research\
+    \ community.\n               Discuss how such a paper will affect future research.\n\
+    \               Discuss how addressing this question could advance knowledge or\
+    \ lead to practical applications.\n\n               **[Question 3] - Why is it\
+    \ hard?**\n\n               Discuss the challenges and complexities involved in\
+    \ solving this problem.\n               Explain why naive or straightforward approaches\
+    \ may fail.\n               Identify any technical, theoretical, or practical\
+    \ obstacles that need to be overcome. MAKE IT CLEAR.\n\n               **[Question\
+    \ 4] - Why hasn't it been solved before?**\n\n               Identify gaps or\
+    \ limitations in previous research or existing solutions.\n               Discuss\
+    \ any barriers that have prevented this problem from being solved until now.\n\
+    \               Explain how your approach differs from or improves upon prior\
+    \ work. MAKE IT CLEAR.\n\n               **[Question 5] - What are the key components\
+    \ of my approach and results?**\n\n               Outline your proposed methodology\
+    \ in detail, including the method, dataset, and metrics that you plan to use.\n\
+    \               Describe the expected outcomes. MAKE IT CLEAR.\n\n           \
+    \ Please work together to produce the '5q' for your proposed research idea.\n\n\
+    \            Good luck!\n            "
+  output_format: "You should answer the task in the following format:\n          \
+    \      **[Question 1] - What is the problem?**\n\n                Formulate the\
+    \ specific research question you aim to address. Only output one question and\
+    \ do not include any more information.\n\n                **[Question 2] - Why\
+    \ is it interesting and important?**\n\n                Explain the broader implications\
+    \ of solving this problem for the research community.\n                Discuss\
+    \ how such a paper will affect future research.\n                Discuss how addressing\
+    \ this question could advance knowledge or lead to practical applications.\n\n\
+    \                **[Question 3] - Why is it hard?**\n\n                Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \        Explain why naive or straightforward approaches may fail.\n         \
+    \       Identify any technical, theoretical, or practical obstacles that need\
+    \ to be overcome. MAKE IT CLEAR.\n\n                **[Question 4] - Why hasn't\
+    \ it been solved before?**\n\n                Identify gaps or limitations in\
+    \ previous research or existing solutions.\n                Discuss any barriers\
+    \ that have prevented this problem from being solved until now.\n            \
+    \    Explain how your approach differs from or improves upon prior work. MAKE\
+    \ IT CLEAR.\n\n                **[Question 5] - What are the key components of\
+    \ my approach and results?**\n\n                Outline your proposed methodology\
+    \ in detail, including the method, dataset, and metrics that you plan to use.\n\
+    \                Describe the expected outcomes. MAKE IT CLEAR."

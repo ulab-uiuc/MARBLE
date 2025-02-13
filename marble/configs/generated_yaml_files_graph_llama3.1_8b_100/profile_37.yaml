@@ -1,0 +1,298 @@
+agents:
+- agent_id: agent1
+  profile: 'I am a researcher deeply engaged in the intersection of privacy-preserving
+    machine learning and federated learning (FL), with a particular focus on its applications
+    in relational data and recommender systems. My recent work has explored innovative
+    frameworks such as FedAlign, which addresses data heterogeneity in knowledge graphs,
+    and Time-sensitive Customer Churn Prediction (TCCP), leveraging Positive and Unlabeled
+    learning techniques to enhance customer retention strategies.
+
+
+    I am particularly interested in the challenges posed by privacy concerns in machine
+    learning, leading me to develop frameworks like LASER for efficient unlearning
+    in recommender systems and methods to defend against label inference attacks in
+    split learning. My research also delves into the emerging field of federated large
+    language models (LLMs), where I propose strategies for federated pre-training
+    and fine-tuning to maintain user privacy while harnessing the power of collaborative
+    learning.
+
+
+    Through my work, I aim to bridge the gap between theoretical advancements and
+    practical applications, ensuring that machine learning models not only perform
+    effectively but also uphold the highest standards of privacy and security. My
+    contributions have been validated through extensive empirical studies, demonstrating
+    significant improvements over state-of-the-art methods across various domains.
+    I am committed to advancing the field of privacy-preserving machine learning and
+    exploring new frontiers in federated learning.'
+  type: BaseAgent
+- agent_id: agent2
+  profile: 'I am a researcher dedicated to advancing the fields of vision-language
+    processing, adversarial robustness, and semantic segmentation, with a particular
+    focus on real-world applications. My recent work has explored the adversarial
+    vulnerabilities of vision-language pre-training models, leading to the development
+    of the Collaborative Multimodal Adversarial Attack (Co-Attack), which enhances
+    attack performance across various tasks. I have also tackled the challenges posed
+    by unauthorized facial recognition systems by proposing low-frequency adversarial
+    perturbations (LFAP) and their enhanced version, low-mid frequency adversarial
+    perturbations (LMFAP), which effectively counteract JPEG compression effects.
+
+
+    In the realm of video object segmentation, I introduced JointFormer, a unified
+    framework that improves feature extraction and information propagation, achieving
+    state-of-the-art results on benchmark datasets. My research extends to the intersection
+    of intelligent transportation and semantic segmentation, where I developed the
+    ISSAFE architecture to enhance segmentation performance in accident scenarios,
+    validated through the creation of the DADA-seg dataset.
+
+
+    Additionally, I have contributed to the understanding of dynamic systems through
+    the fusion of Structured State Space Models and Switching Non-linear Dynamics
+    Systems, revealing intricate behaviors in long-range dependencies. My work also
+    emphasizes the importance of panoptic segmentation for assisting visually impaired
+    individuals, culminating in the Panoptic Lintention Net, which provides a holistic
+    understanding of surroundings.
+
+
+    Overall, my research aims to bridge theoretical advancements with practical applications,
+    ensuring safety and accessibility in technology.'
+  type: BaseAgent
+- agent_id: agent3
+  profile: 'I am a researcher dedicated to enhancing session-based recommendation
+    systems (SBR) and addressing the pressing challenges of privacy and data unlearning
+    in this domain. My recent work has focused on developing innovative frameworks
+    like AttrGAU, which integrates item attributes into existing SBR models to improve
+    their accuracy and robustness against data sparsity. I have also tackled the complexities
+    of recommendation unlearning, proposing methods such as Selective and Collaborative
+    Influence Function (SCIF) to efficiently remove the influence of specific data
+    points without the need for retraining, thus preserving collaborative relationships
+    within the system.
+
+
+    In my exploration of attribute unlearning, I have identified the risks associated
+    with unseen information extraction from trained models. My work on Post-Training
+    Attribute Unlearning (PoT-AU) introduces a novel two-component loss function that
+    balances the need for privacy with the maintenance of recommendation performance.
+    Through extensive experiments on real-world datasets, I have demonstrated the
+    effectiveness of my approaches, contributing to the growing discourse on privacy-preserving
+    techniques in recommender systems.
+
+
+    Overall, my research aims to bridge the gap between practical recommendation performance
+    and the ethical considerations of user privacy, ensuring that systems are not
+    only effective but also responsible in their handling of sensitive information.'
+  type: BaseAgent
+- agent_id: agent4
+  profile: 'I am a researcher deeply engaged in the intersection of artificial intelligence,
+    natural language processing, and statistical estimation. My work primarily revolves
+    around belief change and choice revision, where I explore how agents can selectively
+    accept new information represented by sets of sentences. I have developed models
+    of choice revision that incorporate partial expansion and multiple contraction
+    operations, establishing foundational postulates and representation theorems.
+
+
+    In addition to my theoretical contributions, I have a strong interest in practical
+    applications of procedural knowledge in natural language. My tutorial on procedures
+    highlights the importance of understanding and representing procedures, which
+    can be extracted from various sources and applied to real-world scenarios.
+
+
+    My research also extends to statistical estimation, particularly in high-dimensional
+    settings. I have proposed innovative estimators for linear regression models with
+    soft sparsity constraints, leveraging convex geometry and semi-definite programming
+    techniques to achieve nearly optimal solutions.
+
+
+    Recently, I have focused on enhancing the reasoning capabilities of large language
+    models (LLMs) in complex event reasoning tasks. By integrating structured representations
+    with LLMs, I have demonstrated significant improvements in interpretability and
+    performance, paving the way for more reliable AI applications. My work aims to
+    bridge the gap between the power of LLMs and the need for structured reasoning,
+    ultimately contributing to more robust AI systems.'
+  type: BaseAgent
+- agent_id: agent5
+  profile: 'I am a researcher specializing in federated learning (FL) and its intersection
+    with privacy, efficiency, and robustness. My work addresses critical challenges
+    in FL, such as adversarial attacks, collaborative fairness, and the complexities
+    of non-i.i.d data. I have developed innovative frameworks like DP-SIGNSGD, which
+    enhances efficiency and privacy, and FEDMD-NFDP, which ensures noise-free differential
+    privacy in federated model distillation.
+
+
+    My recent research has focused on practical scenarios in FL, including the implications
+    of sharing epoch-averaged gradients and the vulnerabilities of BERT-based APIs
+    to model extraction and attribute inference attacks. I have also proposed methods
+    like FedWon to tackle multi-domain challenges in FL, achieving significant accuracy
+    improvements across diverse datasets.
+
+
+    In addition, I have explored collaborative fairness through frameworks like CFFL,
+    which utilizes reputation mechanisms to ensure equitable contributions among participants.
+    My work on Calibrated Federated Adversarial Training (CalFAT) addresses training
+    instability in non-IID settings, while my contributions to Efficient Collaborative
+    Open-source Sampling (ECOS) leverage open-source data for cloud training.
+
+
+    I am passionate about advancing the field of FL, ensuring that it remains robust,
+    efficient, and privacy-preserving in real-world applications. My goal is to inspire
+    further research that enhances the scalability and effectiveness of AI systems
+    while addressing the ethical implications of emerging technologies.'
+  type: BaseAgent
+coordinate_mode: graph
+engine_planner:
+  initial_progress: Starting the collaborative research idea generation based on the
+    provided Introduction.
+environment:
+  max_iterations: 5
+  name: Research Collaboration Environment
+  type: Research
+llm: together_ai/meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo
+memory:
+  type: SharedMemory
+metrics:
+  diversity_of_perspectives: true
+  engagement_level: true
+  evaluate_llm: gpt-4o-mini
+  relevance: true
+output:
+  file_path: result/discussion_output_llama3.1_8b.jsonl
+  format: jsonl
+relationships:
+- - agent1
+  - agent2
+  - collaborate with
+- - agent1
+  - agent3
+  - collaborate with
+- - agent1
+  - agent4
+  - collaborate with
+- - agent1
+  - agent5
+  - collaborate with
+- - agent2
+  - agent3
+  - collaborate with
+- - agent2
+  - agent4
+  - collaborate with
+- - agent2
+  - agent5
+  - collaborate with
+- - agent3
+  - agent4
+  - collaborate with
+- - agent3
+  - agent5
+  - collaborate with
+- - agent4
+  - agent5
+  - collaborate with
+task:
+  content: "\n            Dear Research Team,\n\n            You are collaborating\
+    \ to generate a new research idea based on the following Introduction:\n\n   \
+    \         **Introduction**\n\n               1 Introduction  Over the past few\
+    \ years, growing concerns over information abundance and data leakage have intensified\
+    \ the focus on privacy preservation within artificial intelligence. Regulations\
+    \ such as the General Data Protection Regulation (GDPR) (Union, 2018), the California\
+    \ Consumer Privacy Act (Pardau, 2018)and the Delete Act (Information, 2023) grant\
+    \ individuals the right to be forgotten, requiring the deletion of personal data\
+    \ used in information systems. Nowadays, the ubiquitous application of machine\
+    \ learning models in information systems poses potential risks for memorizing\
+    \ training data (Fredrikson et al., 2015). Consequently, the aforementioned regulations\
+    \ also require forgetting the associated data memory within the trained models,\
+    \ giving rise to the concept of machine unlearning. Recently, machine unlearning\
+    \ has gained increasing popularity in computer vision (Bourtoule et al., 2021;\
+    \ Gupta et al., 2021), natural language processing (Chen & Yang, 2023; Eldan &\
+    \ Russinovich, 2023), and recommender systems (Chen et al., 2022; Li et al., 2023a,\
+    \ b). As recommender systems typically rely on historical interaction data to\
+    \ extract user preferences, the recommendation model inherently contains sensitive\
+    \ user information. Therefore, there is a crucial need for unlearning to preserve\
+    \ privacy. The task of machine unlearning in recommender systems is termed as\
+    \ recommendation unlearning.   While machine unlearning has demonstrated significant\
+    \ potential in preserving user privacy, conducting a comprehensive evaluation\
+    \ of unlearning methods continues to pose difficulties. Various unlearning methods\
+    \ employ distinct evaluation metrics, yet a universally applicable evaluation\
+    \ framework remains absent. Specifically, existing evaluation methods predominantly\
+    \ focus on the unlearning completeness, unlearning efficiency, and its impact\
+    \ on model utility, overlooking the deeper influence of model properties.   In\
+    \ this paper, we identify two overlooked aspects of deeper influence. Firstly,\
+    \ fairness is a crucial consideration for recommendations (Wang et al., 2023),\
+    \ but is often neglected in unlearning evaluations. Ensuring fair recommendation\
+    \ outcomes can avoid user discrimination and enrich the recommendation platform’s\
+    \ understanding of user preferences. Existing studies demonstrate that unlearning\
+    \ can affect the fairness of models (Oesterling et al., 2024). Secondly, existing\
+    \ evaluation methods neglect the influence of various unlearning sets, randomly\
+    \ selecting data for unlearning. Distinct unlearning sets, however, can result\
+    \ in significantly different impacts on model performance (Fan et al., 2024).\
+    \ Performing comprehensive evaluations on different unlearning data contributes\
+    \ to understanding the robustness of unlearning methods.   Figure 1: An illustration\
+    \ of CURE4Rec, a comprehensive benchmark tailored for evaluating recommendation\
+    \ unlearning methods. CURE4Rec evaluates unlearning methods using data with varying\
+    \ levels of unlearning impact on four aspects, i.e., unlearning completeness,\
+    \ recommendation utility, unlearning efficiency, and recommendation fairness.\
+    \   To address these issues, we introduce CURE4Rec, a comprehensive benchmark\
+    \ specifically designed to evaluate recommendation unlearning methods. As shown\
+    \ in Figure 1, CURE4Rec’s evaluation encompasses four aspects, i.e., unlearning\
+    \ completeness, recommendation utility, unlearning efficiency, and recommendation\
+    \ fairness. Additionally, each aspect is investigated with three data selection\
+    \ strategies, i.e., core data, edge data, and random data. This triadic breakdown\
+    \ tests to reflect the robustness of recommendation unlearning methods towards\
+    \ different unlearning sets. The main contributions of this work are summarized\
+    \ as follows:   •  We introduce CURE4Rec, a comprehensive benchmark tailored for\
+    \ evaluating recommendation unlearning methods. CURE4Rec enables evaluation across\
+    \ multiple aspects, including unlearning completeness, recommendation utility,\
+    \ unlearning efficiency, and recommendation fairness.    •  To the best of our\
+    \ knowledge, we are the first to investigate the impact of unlearning on recommendation\
+    \ fairness, introducing fairness evaluation to comprehensively grasp its impact\n\
+    \n            **Your Task**\n\n            1. **Literature Review**: Analyze the\
+    \ Introduction provided and conduct a brief literature review to understand the\
+    \ current state of research in this area.\n\n            2. **Brainstorming**:\
+    \ Collaboratively brainstorm potential research ideas that build upon or address\
+    \ gaps in the Introduction.\n\n            3. **Summarization**: Summarize your\
+    \ collective ideas.\n\n            4. **Formulate a New Research Idea**: Develop\
+    \ a new research proposal in the format of the '5q', defined below:\n\n      \
+    \         **Here is a high-level summarized insight of a research field Machine\
+    \ Learning.**\n\n               **Here are the five core questions:**\n\n    \
+    \           **[Question 1] - What is the problem?**\n\n               Formulate\
+    \ the specific research question you aim to address. Only output one question\
+    \ and do not include any more information.\n\n               **[Question 2] -\
+    \ Why is it interesting and important?**\n\n               Explain the broader\
+    \ implications of solving this problem for the research community.\n         \
+    \      Discuss how such a paper will affect future research.\n               Discuss\
+    \ how addressing this question could advance knowledge or lead to practical applications.\n\
+    \n               **[Question 3] - Why is it hard?**\n\n               Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \       Explain why naive or straightforward approaches may fail.\n          \
+    \     Identify any technical, theoretical, or practical obstacles that need to\
+    \ be overcome. MAKE IT CLEAR.\n\n               **[Question 4] - Why hasn't it\
+    \ been solved before?**\n\n               Identify gaps or limitations in previous\
+    \ research or existing solutions.\n               Discuss any barriers that have\
+    \ prevented this problem from being solved until now.\n               Explain\
+    \ how your approach differs from or improves upon prior work. MAKE IT CLEAR.\n\
+    \n               **[Question 5] - What are the key components of my approach and\
+    \ results?**\n\n               Outline your proposed methodology in detail, including\
+    \ the method, dataset, and metrics that you plan to use.\n               Describe\
+    \ the expected outcomes. MAKE IT CLEAR.\n\n            Please work together to\
+    \ produce the '5q' for your proposed research idea.\n\n            Good luck!\n\
+    \            "
+  output_format: "You should answer the task in the following format:\n          \
+    \      **[Question 1] - What is the problem?**\n\n                Formulate the\
+    \ specific research question you aim to address. Only output one question and\
+    \ do not include any more information.\n\n                **[Question 2] - Why\
+    \ is it interesting and important?**\n\n                Explain the broader implications\
+    \ of solving this problem for the research community.\n                Discuss\
+    \ how such a paper will affect future research.\n                Discuss how addressing\
+    \ this question could advance knowledge or lead to practical applications.\n\n\
+    \                **[Question 3] - Why is it hard?**\n\n                Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \        Explain why naive or straightforward approaches may fail.\n         \
+    \       Identify any technical, theoretical, or practical obstacles that need\
+    \ to be overcome. MAKE IT CLEAR.\n\n                **[Question 4] - Why hasn't\
+    \ it been solved before?**\n\n                Identify gaps or limitations in\
+    \ previous research or existing solutions.\n                Discuss any barriers\
+    \ that have prevented this problem from being solved until now.\n            \
+    \    Explain how your approach differs from or improves upon prior work. MAKE\
+    \ IT CLEAR.\n\n                **[Question 5] - What are the key components of\
+    \ my approach and results?**\n\n                Outline your proposed methodology\
+    \ in detail, including the method, dataset, and metrics that you plan to use.\n\
+    \                Describe the expected outcomes. MAKE IT CLEAR."

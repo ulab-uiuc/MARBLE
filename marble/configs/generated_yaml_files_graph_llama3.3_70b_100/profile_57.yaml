@@ -1,0 +1,211 @@
+agents:
+- agent_id: agent1
+  profile: 'I am a researcher dedicated to understanding and improving the performance
+    of large language models, particularly in the context of instruction tuning and
+    out-of-distribution (OOD) performance estimation. My recent work has uncovered
+    a phenomenon I term "context-parametric inversion," where models initially adapt
+    to user-provided contexts during instruction tuning but later struggle to maintain
+    this reliance, despite improving performance on standard benchmarks. This insight
+    highlights a critical gap in how models process conflicting information between
+    user context and their pre-trained knowledge.
+
+
+    Additionally, I have explored the "agreement-on-the-line" phenomenon in ensembles
+    of foundation models, revealing that the randomness in training choices significantly
+    impacts ensemble diversity and OOD performance predictions. My findings suggest
+    that careful construction of diverse ensembles can enhance the reliability of
+    OOD performance estimates, which is crucial for the safe deployment of foundation
+    models. Through my research, I aim to bridge the gap between theoretical understanding
+    and practical applications, providing valuable insights that can inform future
+    advancements in the field of machine learning.'
+  type: BaseAgent
+- agent_id: agent2
+  profile: 'I am a researcher deeply engaged in the intersection of machine learning,
+    optimization, and AI safety. My recent work has focused on enhancing the robustness
+    and efficiency of deep learning models, particularly in the context of adversarial
+    attacks and distribution shifts. I have developed innovative methods such as SmoothInv
+    for backdoor inversion, which allows for the recovery of backdoor triggers with
+    minimal data, and circuit-breaking techniques that prevent harmful outputs in
+    AI systems.
+
+
+    My exploration of optimization dynamics has led to the introduction of central
+    flows, which provide insights into the behavior of optimizers in deep learning,
+    revealing mechanisms that enhance their performance. Additionally, I have contributed
+    to the understanding of test-time adaptation (TTA) methods, demonstrating how
+    the agreement-on-the-line phenomenon can improve the reliability of models under
+    distribution shifts.
+
+
+    I am also passionate about representation engineering, a novel approach that enhances
+    the transparency of AI systems by focusing on population-level representations.
+    My work in this area aims to improve the safety and interpretability of large
+    language models, addressing critical issues such as honesty and harmful behavior.
+
+
+    Through my research, I strive to bridge theoretical insights with practical applications,
+    ensuring that AI technologies are not only powerful but also safe and reliable.
+    I am committed to advancing the field by developing robust methodologies that
+    can withstand adversarial challenges while maintaining high performance across
+    diverse tasks.'
+  type: BaseAgent
+- agent_id: agent3
+  profile: 'I am a researcher dedicated to enhancing the robustness and adaptability
+    of machine learning models, particularly in the context of distribution shifts.
+    My recent work has focused on developing innovative methods for fine-tuning foundation
+    models, such as AutoFT, which employs bi-level optimization to improve out-of-distribution
+    (OOD) generalization. I have also explored the phenomenon of context-parametric
+    inversion during instruction tuning, revealing how models can struggle to balance
+    user context with pre-existing knowledge.
+
+
+    My research delves into the intricacies of test-time adaptation (TTA), where I
+    have identified the agreement-on-the-line phenomenon, which allows for reliable
+    OOD performance estimation without labeled data. Additionally, I have contributed
+    to the understanding of ensemble methods, demonstrating how ID-calibrated ensembles
+    can achieve superior performance across both in-distribution and OOD scenarios.
+
+
+    I am particularly interested in the implications of fine-tuning strategies, as
+    evidenced by my work on contrastive fine-tuning for image-text models, which has
+    set new benchmarks in various tasks. My approach emphasizes the importance of
+    understanding the trade-offs between in-distribution and OOD performance, leading
+    to the development of practical algorithms like Bitrate-Constrained DRO and JTT,
+    which enhance model reliability without requiring extensive group annotations.
+
+
+    Through my research, I aim to bridge the gap between theoretical insights and
+    practical applications, ensuring that machine learning systems are not only accurate
+    but also robust and adaptable in real-world settings.'
+  type: BaseAgent
+coordinate_mode: graph
+engine_planner:
+  initial_progress: Starting the collaborative research idea generation based on the
+    provided Introduction.
+environment:
+  max_iterations: 5
+  name: Research Collaboration Environment
+  type: Research
+llm: together_ai/meta-llama/Llama-3.3-70B-Instruct-Turbo
+memory:
+  type: SharedMemory
+metrics:
+  diversity_of_perspectives: true
+  engagement_level: true
+  evaluate_llm: gpt-4o-mini
+  relevance: true
+output:
+  file_path: result/discussion_output_llama3.3_70b.jsonl
+  format: jsonl
+relationships:
+- - agent1
+  - agent2
+  - collaborate with
+- - agent1
+  - agent3
+  - collaborate with
+- - agent2
+  - agent3
+  - collaborate with
+task:
+  content: "\n            Dear Research Team,\n\n            You are collaborating\
+    \ to generate a new research idea based on the following Introduction:\n\n   \
+    \         **Introduction**\n\n               1 Introduction  In recent years,\
+    \ there has been growing excitement about improving the generalization of deep\
+    \ networks by regularizing the sharpness of the loss landscape. Among optimizers\
+    \ that explicitly minimize sharpness, Sharpness Aware Minimization (SAM) (Foret\
+    \ et al., 2020) garnered popularity for achieving state-of-the-art performance\
+    \ on various natural image and language benchmarks. Compared to stochastic gradient\
+    \ descent (SGD), SAM provides consistent improvements of several percentage points.\
+    \ Interestingly, a less widely known finding from Foret et al. (2020) is that\
+    \ SAM’s most prominent gains lie elsewhere, in the presence of random label noise.\
+    \ In fact, SAM is more robust to label noise than SGD by tens of percentage points,\
+    \ rivaling the current best label noise techniques (Jiang et al., 2017; Zhang\
+    \ et al., 2017; Arazo et al., 2019). In Figure 1, we demonstrate this finding\
+    \ in CIFAR10 with 30%percent\\%% label noise, where SAM’s best test accuracy is\
+    \ 17%percent1717\\%17 % higher. In particular, we find that the robustness gains\
+    \ are most prominent in a particular version of SAM called 1-SAM which applies\
+    \ the perturbation step to each sample in the minibatch separately.   An important\
+    \ caveat about the random label noise setting is that the test accuracy does not\
+    \ improve with further training, but instead peaks in the middle. Consequently,\
+    \ we argue understanding SAM in this regime requires a departure from reducing\
+    \ SAM to the sharpness of its solution at convergence, but instead reasoning about\
+    \ SAM’s “early learning” behavior. In fact, even in settings with a unique minimum,\
+    \ the best test accuracy may change based on the optimization trajectory. Indeed,\
+    \ the performance achieved by SAM does not diminish with underparametrization,\
+    \ with the gains above SGD sometimes increasing with more data (Appendix F). \
+    \  In this work, we investigate why 1-SAM is more robust to label noise than SGD\
+    \ at a more mechanistic level. Decomposing the gradient of each example (“sample-wise”\
+    \ gradient) by chain rule into ∇wℓ⁢(f⁢(w,x),y)=∂ℓ/∂f⋅∇wfsubscript∇\U0001D464ℓ\U0001D453\
+    \U0001D464\U0001D465\U0001D466ℓ⋅\U0001D453subscript∇\U0001D464\U0001D453\\nabla_{w}\\\
+    ell(f(w,x),y)=\\partial\\ell/\\partial f\\cdot\\nabla_{w}f∇ start_POSTSUBSCRIPT\
+    \ italic_w end_POSTSUBSCRIPT roman_ℓ ( italic_f ( italic_w , italic_x ) , italic_y\
+    \ ) = ∂ roman_ℓ / ∂ italic_f ⋅ ∇ start_POSTSUBSCRIPT italic_w end_POSTSUBSCRIPT\
+    \ italic_f, we analyze the effect of SAM’s perturbation on the terms ∂ℓ/∂fℓ\U0001D453\
+    \\partial\\ell/\\partial f∂ roman_ℓ / ∂ italic_f (“logit scale”) and ∇wfsubscript∇\U0001D464\
+    \U0001D453\\nabla_{w}f∇ start_POSTSUBSCRIPT italic_w end_POSTSUBSCRIPT italic_f\
+    \ (“network Jacobian”), separately. We make the following key conclusions about\
+    \ how these components improve early-stopping test accuracy.   Figure 1:  CIFAR10\
+    \ training accuracy and loss in clean versus noisy data. SAM achives a higher\
+    \ clean training accuracy before fitting the noisy data, i.e., when accuracy of\
+    \ noisy training data surpasses random chance. This corresponds with a higher\
+    \ peak in test accuracy.   We begin our study in linear models, where the only\
+    \ difference between SAM and SGD is the logit scale term. Here, we show that SAM\
+    \ reduces to a reweighting scheme that explicitly up-weights the gradient contribution\
+    \ of low loss points. This effect is particularly useful in the presence of mislabeled\
+    \ examples. When training with gradient descent, correctly labeled or clean examples\
+    \ initially dominate the direction of the update and as a result, their corresponding\
+    \ loss decreases first before that of mislabeled or noisy examples (Liu et al.,\
+    \ 2020; 2023). Similar to many existing label-noise techniques (Liu et al., 2020),\
+    \ SAM’s explicit up-weighting keeps the gradient contribution of\n\n         \
+    \   **Your Task**\n\n            1. **Literature Review**: Analyze the Introduction\
+    \ provided and conduct a brief literature review to understand the current state\
+    \ of research in this area.\n\n            2. **Brainstorming**: Collaboratively\
+    \ brainstorm potential research ideas that build upon or address gaps in the Introduction.\n\
+    \n            3. **Summarization**: Summarize your collective ideas.\n\n     \
+    \       4. **Formulate a New Research Idea**: Develop a new research proposal\
+    \ in the format of the '5q', defined below:\n\n               **Here is a high-level\
+    \ summarized insight of a research field Machine Learning.**\n\n             \
+    \  **Here are the five core questions:**\n\n               **[Question 1] - What\
+    \ is the problem?**\n\n               Formulate the specific research question\
+    \ you aim to address. Only output one question and do not include any more information.\n\
+    \n               **[Question 2] - Why is it interesting and important?**\n\n \
+    \              Explain the broader implications of solving this problem for the\
+    \ research community.\n               Discuss how such a paper will affect future\
+    \ research.\n               Discuss how addressing this question could advance\
+    \ knowledge or lead to practical applications.\n\n               **[Question 3]\
+    \ - Why is it hard?**\n\n               Discuss the challenges and complexities\
+    \ involved in solving this problem.\n               Explain why naive or straightforward\
+    \ approaches may fail.\n               Identify any technical, theoretical, or\
+    \ practical obstacles that need to be overcome. MAKE IT CLEAR.\n\n           \
+    \    **[Question 4] - Why hasn't it been solved before?**\n\n               Identify\
+    \ gaps or limitations in previous research or existing solutions.\n          \
+    \     Discuss any barriers that have prevented this problem from being solved\
+    \ until now.\n               Explain how your approach differs from or improves\
+    \ upon prior work. MAKE IT CLEAR.\n\n               **[Question 5] - What are\
+    \ the key components of my approach and results?**\n\n               Outline your\
+    \ proposed methodology in detail, including the method, dataset, and metrics that\
+    \ you plan to use.\n               Describe the expected outcomes. MAKE IT CLEAR.\n\
+    \n            Please work together to produce the '5q' for your proposed research\
+    \ idea.\n\n            Good luck!\n            "
+  output_format: "You should answer the task in the following format:\n          \
+    \      **[Question 1] - What is the problem?**\n\n                Formulate the\
+    \ specific research question you aim to address. Only output one question and\
+    \ do not include any more information.\n\n                **[Question 2] - Why\
+    \ is it interesting and important?**\n\n                Explain the broader implications\
+    \ of solving this problem for the research community.\n                Discuss\
+    \ how such a paper will affect future research.\n                Discuss how addressing\
+    \ this question could advance knowledge or lead to practical applications.\n\n\
+    \                **[Question 3] - Why is it hard?**\n\n                Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \        Explain why naive or straightforward approaches may fail.\n         \
+    \       Identify any technical, theoretical, or practical obstacles that need\
+    \ to be overcome. MAKE IT CLEAR.\n\n                **[Question 4] - Why hasn't\
+    \ it been solved before?**\n\n                Identify gaps or limitations in\
+    \ previous research or existing solutions.\n                Discuss any barriers\
+    \ that have prevented this problem from being solved until now.\n            \
+    \    Explain how your approach differs from or improves upon prior work. MAKE\
+    \ IT CLEAR.\n\n                **[Question 5] - What are the key components of\
+    \ my approach and results?**\n\n                Outline your proposed methodology\
+    \ in detail, including the method, dataset, and metrics that you plan to use.\n\
+    \                Describe the expected outcomes. MAKE IT CLEAR."

@@ -1,0 +1,239 @@
+agents:
+- agent_id: agent1
+  profile: 'I am a researcher deeply engaged in the intersection of machine learning,
+    decision-making, and fairness in data analysis. My recent work has focused on
+    multi-agent multi-armed bandit problems, where I explore collaborative strategies
+    to minimize group regret while addressing arm heterogeneity and communication
+    costs. I have developed innovative protocols, such as Flooding with Absorption
+    (FwA), which significantly reduce communication overhead in complex networks.
+
+
+    In addition to bandits, I have delved into episodic Block MDPs, where I derived
+    efficient algorithms for model estimation and reward-free learning, demonstrating
+    how exploiting block structures can enhance sample complexity. My research also
+    extends to Fair Principal Component Analysis (PCA), where I introduced a new framework
+    that balances fairness and statistical learnability, culminating in a memory-efficient
+    algorithm for real-world applications.
+
+
+    I am particularly interested in the dynamics of gradient descent with momentum,
+    where I empirically and theoretically analyze its effects on training trajectories.
+    My work in quantum computing has led to advancements in quantum state tomography,
+    optimizing measurement strategies for large-scale qubit systems.
+
+
+    Through my diverse research endeavors, I aim to contribute to the development
+    of robust, efficient, and fair machine learning methodologies that can be applied
+    across various domains, from online recommendation systems to medical imaging.
+    I am passionate about pushing the boundaries of what is possible in machine learning
+    and ensuring that these advancements are accessible and equitable.'
+  type: BaseAgent
+- agent_id: agent2
+  profile: 'As a researcher deeply immersed in the field of graph neural networks
+    (GNNs) and their applications, my work focuses on enhancing the capabilities and
+    understanding of these powerful models. My recent publications reflect a commitment
+    to addressing the limitations of existing GNN architectures. For instance, I developed
+    Position-aware GNNs (P-GNNs) to better capture the positional context of nodes
+    within graphs, significantly improving performance on tasks like link prediction
+    and community detection.
+
+
+    I also introduced Identity-aware GNNs (ID-GNNs), which extend the expressive power
+    of traditional GNNs by incorporating node identities during message passing. This
+    innovation has led to substantial accuracy improvements across various prediction
+    tasks. My exploration of dynamic graphs culminated in the ROLAND framework, which
+    allows static GNNs to adapt to dynamic environments, showcasing the scalability
+    and efficiency of my approaches.
+
+
+    In addition to architectural advancements, I have delved into the design space
+    of GNNs, systematically studying over 315,000 designs to provide guidelines for
+    optimizing performance across different tasks. My work on AutoML, particularly
+    with FALCON and AutoTransfer, aims to streamline the search for optimal model
+    designs, making it more efficient and insightful.
+
+
+    Overall, my research is driven by a passion for pushing the boundaries of GNNs
+    and machine learning, with the goal of making these technologies more effective
+    and accessible for real-world applications.'
+  type: BaseAgent
+- agent_id: agent3
+  profile: 'As a researcher deeply immersed in the field of graph neural networks
+    (GNNs) and their applications, my work primarily revolves around enhancing the
+    capabilities and understanding of these powerful models. My recent publications
+    reflect a commitment to addressing the limitations of existing GNN architectures.
+    For instance, I developed Position-aware GNNs (P-GNNs) to better capture the positional
+    context of nodes within graphs, which has proven effective in various prediction
+    tasks, achieving significant performance improvements.
+
+
+    I am also passionate about exploring the structural dynamics of neural networks.
+    My work on relational graphs has unveiled critical insights into how the architecture
+    of neural networks influences their predictive performance, leading to the identification
+    of a "sweet spot" for optimal design.
+
+
+    In addition, I have pioneered Identity-aware GNNs (ID-GNNs), which enhance the
+    expressive power of message-passing frameworks by incorporating node identities.
+    This innovation has resulted in substantial accuracy gains across multiple prediction
+    tasks.
+
+
+    My research extends to dynamic graphs, where I introduced the ROLAND framework,
+    enabling static GNNs to adapt to evolving data. This framework not only improves
+    scalability but also aligns evaluation settings with real-world applications.
+
+
+    Overall, my goal is to bridge theoretical advancements with practical applications,
+    providing scalable solutions and insights that drive the future of graph-based
+    learning. I am excited about the potential of my work to influence both academic
+    research and industry practices in machine learning.'
+  type: BaseAgent
+coordinate_mode: graph
+engine_planner:
+  initial_progress: Starting the collaborative research idea generation based on the
+    provided Introduction.
+environment:
+  max_iterations: 5
+  name: Research Collaboration Environment
+  type: Research
+llm: together_ai/meta-llama/Llama-3.3-70B-Instruct-Turbo
+memory:
+  type: SharedMemory
+metrics:
+  diversity_of_perspectives: true
+  engagement_level: true
+  evaluate_llm: gpt-4o-mini
+  relevance: true
+output:
+  file_path: result/discussion_output_llama3.3_70b.jsonl
+  format: jsonl
+relationships:
+- - agent1
+  - agent2
+  - collaborate with
+- - agent1
+  - agent3
+  - collaborate with
+- - agent2
+  - agent3
+  - collaborate with
+task:
+  content: "\n            Dear Research Team,\n\n            You are collaborating\
+    \ to generate a new research idea based on the following Introduction:\n\n   \
+    \         **Introduction**\n\n               1 Introduction  One paramount task\
+    \ in statistics and machine learning is to estimate the uncertainty of the underlying\
+    \ model from (possibly noisy) observations. For example, in interactive machine\
+    \ learning scenarios such as bandits (Thompson, 1933; Robbins, 1952; Lattimore\
+    \ and Szepesvári, 2020) and recently reinforcement learning with human feedback\
+    \ (RLHF; Ouyang et al. (2022); Christiano et al. (2017)), at each time step t\U0001D461\
+    titalic_t, the learner chooses an action \U0001D499tsubscript\U0001D499\U0001D461\
+    {\\bm{x}}_{t}bold_italic_x start_POSTSUBSCRIPT italic_t end_POSTSUBSCRIPT from\
+    \ an available set of actions \U0001D4B3tsubscript\U0001D4B3\U0001D461\\mathcal{X}_{t}caligraphic_X\
+    \ start_POSTSUBSCRIPT italic_t end_POSTSUBSCRIPT and observes reward or outcome\
+    \ rtsubscript\U0001D45F\U0001D461r_{t}italic_r start_POSTSUBSCRIPT italic_t end_POSTSUBSCRIPT\
+    \ that is modeled as a distribution whose mean is an unknown function f∗superscript\U0001D453\
+    f^{*}italic_f start_POSTSUPERSCRIPT ∗ end_POSTSUPERSCRIPT of \U0001D499tsubscript\U0001D499\
+    \U0001D461{\\bm{x}}_{t}bold_italic_x start_POSTSUBSCRIPT italic_t end_POSTSUBSCRIPT;\
+    \ i.e., rt∼p(⋅|\U0001D499t;f∗)r_{t}\\sim p(\\cdot|{\\bm{x}}_{t};f^{*})italic_r\
+    \ start_POSTSUBSCRIPT italic_t end_POSTSUBSCRIPT ∼ italic_p ( ⋅ | bold_italic_x\
+    \ start_POSTSUBSCRIPT italic_t end_POSTSUBSCRIPT ; italic_f start_POSTSUPERSCRIPT\
+    \ ∗ end_POSTSUPERSCRIPT ). One popular choice of such a model is generalized linear\
+    \ model (GLM; McCullagh and Nelder (1989)) that extends exponential family distributions\
+    \ to have linear structure in its natural parameter, i.e., ⟨\U0001D499,\U0001D73D\
+    ⋆⟩\U0001D499subscript\U0001D73D⋆\\langle{\\bm{x}},\\bm{\\theta}_{\\star}\\rangle⟨\
+    \ bold_italic_x , bold_italic_θ start_POSTSUBSCRIPT ⋆ end_POSTSUBSCRIPT ⟩ where\
+    \ \U0001D73D⋆subscript\U0001D73D⋆\\bm{\\theta}_{\\star}bold_italic_θ start_POSTSUBSCRIPT\
+    \ ⋆ end_POSTSUBSCRIPT is an unknown parameter, which means that the mean function\
+    \ is f∗⁢(\U0001D499)=μ⁢(⟨\U0001D499,\U0001D73D⋆⟩)superscript\U0001D453\U0001D499\
+    \U0001D707\U0001D499subscript\U0001D73D⋆f^{*}({\\bm{x}})=\\mu(\\langle{\\bm{x}},\\\
+    bm{\\theta}_{\\star}\\rangle)italic_f start_POSTSUPERSCRIPT ∗ end_POSTSUPERSCRIPT\
+    \ ( bold_italic_x ) = italic_μ ( ⟨ bold_italic_x , bold_italic_θ start_POSTSUBSCRIPT\
+    \ ⋆ end_POSTSUBSCRIPT ⟩ ) for some inverse link function μ\U0001D707\\muitalic_μ.\
+    \ This encompasses a wide range of distributions, which in turn makes it ubiquitous\
+    \ in various real-world applications, such as news recommendations (Bernoulli;\
+    \ Li et al. (2010, 2012)), social network influence maximization (Poisson; Lage\
+    \ et al. (2013); Gisselbrecht et al. (2015)), and more. In such tasks, the learner\
+    \ must estimate the uncertainty about \U0001D73D⋆subscript\U0001D73D⋆\\bm{\\theta}_{\\\
+    star}bold_italic_θ start_POSTSUBSCRIPT ⋆ end_POSTSUBSCRIPT at each time step t≥1\U0001D461\
+    1t\\geq 1italic_t ≥ 1, given observations {(\U0001D499s,rs)}s=1t−1superscriptsubscriptsubscript\U0001D499\
+    \U0001D460subscript\U0001D45F\U0001D460\U0001D4601\U0001D4611\\{({\\bm{x}}_{s},r_{s})\\\
+    }_{s=1}^{t-1}{ ( bold_italic_x start_POSTSUBSCRIPT italic_s end_POSTSUBSCRIPT\
+    \ , italic_r start_POSTSUBSCRIPT italic_s end_POSTSUBSCRIPT ) } start_POSTSUBSCRIPT\
+    \ italic_s = 1 end_POSTSUBSCRIPT start_POSTSUPERSCRIPT italic_t - 1 end_POSTSUPERSCRIPT,\
+    \ to make wise decisions. One popular and useful way to capture the uncertainty\
+    \ is via a time-uniform confidence sequence (CS) {\U0001D49Et⁢(δ)}t=1∞superscriptsubscriptsubscript\U0001D49E\
+    \U0001D461\U0001D6FF\U0001D4611\\{\\mathcal{C}_{t}(\\delta)\\}_{t=1}^{\\infty}{\
+    \ caligraphic_C start_POSTSUBSCRIPT italic_t end_POSTSUBSCRIPT ( italic_δ ) }\
+    \ start_POSTSUBSCRIPT italic_t = 1 end_POSTSUBSCRIPT start_POSTSUPERSCRIPT ∞ end_POSTSUPERSCRIPT,\
+    \ which takes the form of ℙ[∃t≥1:\U0001D73D⋆∉\U0001D49Et(δ)]≤δ{\\mathbb{P}}[\\\
+    exists t\\geq 1:\\bm{\\theta}_{\\star}\\not\\in{\\mathcal{C}}_{t}(% \\delta)]\\\
+    leq\\deltablackboard_P [ ∃ italic_t ≥ 1 : bold_italic_θ start_POSTSUBSCRIPT ⋆\
+    \ end_POSTSUBSCRIPT ∉ caligraphic_C start_POSTSUBSCRIPT italic_t end_POSTSUBSCRIPT\
+    \ ( italic_δ ) ] ≤ italic_δ. Recently, CS has been described as one of the key\
+    \ components for safe anytime-valid inference (SAVI) that can ensure the validity/safeness\
+    \ of sequentially adaptive statistical inference (Ramdas et al., 2023).   There\
+    \ has been much work on deriving CS for specific families of distributions. Many\
+    \ common distributions are in a smaller family, called generalized linear models\
+    \ (GLMs). Existing CSs for GLM, however, are far from ideal. Much of the prior\
+    \ works focus on obtaining CS for specific instantiations of GLMs, such as Gaussian (Abbasi-Yadkori\
+    \ et al., 2011; Flynn et al., 2023) and Bernoulli (Faury et al., 2020; Abeille\
+    \ et al., 2021; Faury et al., 2022; Lee et al., 2024). Especially for Bernoulli,\
+    \ all the existing CSs suffer from poly⁡(S)poly\U0001D446\\operatorname{poly}(S)roman_poly\
+    \ ( italic_S ) factor in the radius, where S\U0001D446Sitalic_S is the norm of\
+    \ the unknown parameter \U0001D73D⋆subscript\U0001D73D⋆\\bm{\\theta}_{\\star}bold_italic_θ\
+    \ start_POSTSUBSCRIPT ⋆ end_POSTSUBSCRIPT. Jun et al. (2017); Li et al. (2017);\
+    \ Emmenegger et al. (2023) proposed generic CSs that work for any convex GLMs,\
+    \ but their radii all suffer from a globally worst-case curvature of μ\U0001D707\
+    \\muitalic_μ, which is detrimental in many cases\n\n            **Your Task**\n\
+    \n            1. **Literature Review**: Analyze the Introduction provided and\
+    \ conduct a brief literature review to understand the current state of research\
+    \ in this area.\n\n            2. **Brainstorming**: Collaboratively brainstorm\
+    \ potential research ideas that build upon or address gaps in the Introduction.\n\
+    \n            3. **Summarization**: Summarize your collective ideas.\n\n     \
+    \       4. **Formulate a New Research Idea**: Develop a new research proposal\
+    \ in the format of the '5q', defined below:\n\n               **Here is a high-level\
+    \ summarized insight of a research field Machine Learning.**\n\n             \
+    \  **Here are the five core questions:**\n\n               **[Question 1] - What\
+    \ is the problem?**\n\n               Formulate the specific research question\
+    \ you aim to address. Only output one question and do not include any more information.\n\
+    \n               **[Question 2] - Why is it interesting and important?**\n\n \
+    \              Explain the broader implications of solving this problem for the\
+    \ research community.\n               Discuss how such a paper will affect future\
+    \ research.\n               Discuss how addressing this question could advance\
+    \ knowledge or lead to practical applications.\n\n               **[Question 3]\
+    \ - Why is it hard?**\n\n               Discuss the challenges and complexities\
+    \ involved in solving this problem.\n               Explain why naive or straightforward\
+    \ approaches may fail.\n               Identify any technical, theoretical, or\
+    \ practical obstacles that need to be overcome. MAKE IT CLEAR.\n\n           \
+    \    **[Question 4] - Why hasn't it been solved before?**\n\n               Identify\
+    \ gaps or limitations in previous research or existing solutions.\n          \
+    \     Discuss any barriers that have prevented this problem from being solved\
+    \ until now.\n               Explain how your approach differs from or improves\
+    \ upon prior work. MAKE IT CLEAR.\n\n               **[Question 5] - What are\
+    \ the key components of my approach and results?**\n\n               Outline your\
+    \ proposed methodology in detail, including the method, dataset, and metrics that\
+    \ you plan to use.\n               Describe the expected outcomes. MAKE IT CLEAR.\n\
+    \n            Please work together to produce the '5q' for your proposed research\
+    \ idea.\n\n            Good luck!\n            "
+  output_format: "You should answer the task in the following format:\n          \
+    \      **[Question 1] - What is the problem?**\n\n                Formulate the\
+    \ specific research question you aim to address. Only output one question and\
+    \ do not include any more information.\n\n                **[Question 2] - Why\
+    \ is it interesting and important?**\n\n                Explain the broader implications\
+    \ of solving this problem for the research community.\n                Discuss\
+    \ how such a paper will affect future research.\n                Discuss how addressing\
+    \ this question could advance knowledge or lead to practical applications.\n\n\
+    \                **[Question 3] - Why is it hard?**\n\n                Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \        Explain why naive or straightforward approaches may fail.\n         \
+    \       Identify any technical, theoretical, or practical obstacles that need\
+    \ to be overcome. MAKE IT CLEAR.\n\n                **[Question 4] - Why hasn't\
+    \ it been solved before?**\n\n                Identify gaps or limitations in\
+    \ previous research or existing solutions.\n                Discuss any barriers\
+    \ that have prevented this problem from being solved until now.\n            \
+    \    Explain how your approach differs from or improves upon prior work. MAKE\
+    \ IT CLEAR.\n\n                **[Question 5] - What are the key components of\
+    \ my approach and results?**\n\n                Outline your proposed methodology\
+    \ in detail, including the method, dataset, and metrics that you plan to use.\n\
+    \                Describe the expected outcomes. MAKE IT CLEAR."

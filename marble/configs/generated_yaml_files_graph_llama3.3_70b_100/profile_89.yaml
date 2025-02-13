@@ -1,0 +1,244 @@
+agents:
+- agent_id: agent1
+  profile: 'I am a researcher dedicated to exploring the intersections of graph data
+    and language models, with a focus on developing innovative frameworks and methodologies.
+    My recent work includes the Higher-Order Network Embeddings (HONE) framework,
+    which allows for the effective learning of network representations by capturing
+    higher-order structures through network motifs. This framework has demonstrated
+    significant improvements over existing embedding methods, achieving up to a 75%
+    gain in AUC across various networks.
+
+
+    In addition to my work in graph embeddings, I have also delved into the realm
+    of large language models (LLMs). I developed a principled abstention procedure
+    that enables LLMs to confidently refrain from generating potentially erroneous
+    responses. By leveraging self-consistency and conformal prediction techniques,
+    my approach provides rigorous theoretical guarantees on the hallucination rate,
+    ensuring that the model can effectively manage uncertainty while maintaining performance.
+
+
+    Through my research, I aim to enhance the reliability and expressiveness of both
+    graph-based and language-based models, contributing to the broader understanding
+    of how these systems can be improved for real-world applications. I am passionate
+    about pushing the boundaries of what is possible in machine learning and look
+    forward to continuing this journey of discovery.'
+  type: BaseAgent
+- agent_id: agent2
+  profile: 'I am a researcher specializing in online learning, nonparametric regression,
+    and the theoretical foundations of machine learning algorithms. My work focuses
+    on developing efficient algorithms that adapt to complex data environments, particularly
+    in nonparametric settings. I have explored the intricacies of learning with auxiliary
+    hypotheses, establishing generalization bounds that significantly improve upon
+    traditional rates. My research also delves into the dynamics of overparameterized
+    neural networks, where I investigate their ability to learn Lipschitz functions
+    and the implications of early stopping in gradient descent training.
+
+
+    I am particularly interested in the intersection of algorithmic stability and
+    generalization, having established new bounds that reveal the influence of initialization
+    and local curvature on learning outcomes. My contributions extend to the realm
+    of transfer learning, where I propose methods for effectively combining heterogeneous
+    data sources to enhance performance on target tasks. Additionally, I have made
+    strides in understanding the double descent phenomenon in deep learning, providing
+    insights into how model size impacts generalization.
+
+
+    My recent work also includes advancements in PAC-Bayes theory, where I refine
+    concentration inequalities to yield tighter guarantees for learning algorithms.
+    I am committed to bridging theoretical insights with practical applications, ensuring
+    that my research not only advances the field but also provides robust tools for
+    real-world machine learning challenges.'
+  type: BaseAgent
+- agent_id: agent3
+  profile: 'As a researcher deeply immersed in the field of graph neural networks
+    (GNNs) and their applications, my work focuses on enhancing the capabilities and
+    understanding of these powerful models. My recent publications reflect a commitment
+    to addressing the limitations of existing GNN architectures and exploring innovative
+    solutions. For instance, I developed Position-aware GNNs (P-GNNs) to better capture
+    the positional context of nodes within graphs, significantly improving performance
+    in tasks like link prediction and community detection.
+
+
+    I also introduced Identity-aware GNNs (ID-GNNs), which extend the expressive power
+    of traditional GNNs by incorporating node identity during message passing. This
+    advancement has led to substantial accuracy improvements across various prediction
+    tasks. My research doesn''t stop at static graphs; I have proposed the ROLAND
+    framework, which enables the effective application of GNNs to dynamic graphs,
+    addressing scalability and real-world evaluation challenges.
+
+
+    In addition to architectural innovations, I am passionate about understanding
+    the broader design space of GNNs. My work on AutoTransfer and FALCON aims to streamline
+    the process of finding optimal GNN architectures for new tasks, leveraging prior
+    knowledge to enhance efficiency. Through these efforts, I strive to contribute
+    to the growing body of knowledge in machine learning, making GNNs more accessible
+    and effective for diverse applications.'
+  type: BaseAgent
+- agent_id: agent4
+  profile: 'As a researcher deeply immersed in the field of graph neural networks
+    (GNNs) and their applications, my work primarily revolves around enhancing the
+    capabilities and understanding of these powerful models. My recent publications
+    reflect a commitment to addressing the limitations of existing GNN architectures
+    and exploring innovative solutions.
+
+
+    One of my notable contributions is the development of Position-aware GNNs (P-GNNs),
+    which effectively capture the positional context of nodes within a graph, significantly
+    improving performance in tasks like link prediction and community detection. I
+    also introduced Identity-aware GNNs (ID-GNNs), which enhance the expressive power
+    of message-passing frameworks by incorporating node identities, leading to substantial
+    accuracy improvements across various prediction tasks.
+
+
+    Recognizing the challenges posed by dynamic graphs, I proposed the ROLAND framework,
+    which allows for the seamless adaptation of static GNNs to dynamic environments,
+    ensuring scalability and efficiency. My research also delves into the architectural
+    design space of GNNs, where I systematically analyze over 315,000 designs to provide
+    guidelines for optimizing performance across different tasks.
+
+
+    In addition to my work on GNNs, I have explored automated machine learning (AutoML)
+    techniques, developing methods like FALCON and AutoTransfer to enhance model design
+    efficiency and knowledge transfer across tasks. My goal is to bridge the gap between
+    theoretical advancements and practical applications, ultimately contributing to
+    the evolution of intelligent systems that leverage relational data effectively.'
+  type: BaseAgent
+coordinate_mode: graph
+engine_planner:
+  initial_progress: Starting the collaborative research idea generation based on the
+    provided Introduction.
+environment:
+  max_iterations: 5
+  name: Research Collaboration Environment
+  type: Research
+llm: together_ai/meta-llama/Llama-3.3-70B-Instruct-Turbo
+memory:
+  type: SharedMemory
+metrics:
+  diversity_of_perspectives: true
+  engagement_level: true
+  evaluate_llm: gpt-4o-mini
+  relevance: true
+output:
+  file_path: result/discussion_output_llama3.3_70b.jsonl
+  format: jsonl
+relationships:
+- - agent1
+  - agent2
+  - collaborate with
+- - agent1
+  - agent3
+  - collaborate with
+- - agent1
+  - agent4
+  - collaborate with
+- - agent2
+  - agent3
+  - collaborate with
+- - agent2
+  - agent4
+  - collaborate with
+- - agent3
+  - agent4
+  - collaborate with
+task:
+  content: "\n            Dear Research Team,\n\n            You are collaborating\
+    \ to generate a new research idea based on the following Introduction:\n\n   \
+    \         **Introduction**\n\n               1 Introduction  {adjustwidth} 1cm1cm\
+    \  Who’s talking? I asked, peering behind the mirror. Many dead spiders and a\
+    \ lot of dust were there. Then I pressed my left eye with my index finger. This\
+    \ was an old formula for detecting hallucinations, which I had read in To Believe\
+    \ or Not to Believe?, the gripping book by B. B. Bittner. It is sufficient to\
+    \ press on the eyeball, and all the real objects, in contradistinction to the\
+    \ hallucinated, will double. The mirror promptly divided into two and my worried\
+    \ and sleep-dulled face appeared in it.  —\"Monday Starts on Saturday\" by A. and\
+    \ B. Strugatsky   Like the protagonist of the novel, language models too occasionally\
+    \ suffer from hallucinations, or responses with low truthfulness, that do not\
+    \ match our own common or textbook knowledge (Bubeck et al., 2023, Gemini Team,\
+    \ Google, 2023). At the same time, since LLMs work by modeling a probability distribution\
+    \ over texts, it is natural to view the problem of truthfulness through the lens\
+    \ of statistical uncertainty. In this paper we explore uncertainty quantification\
+    \ in LLMs. We distinguish between two sources of uncertainty: epistemic and aleatoric\
+    \ (Wen et al., 2022, Osband et al., 2023, Johnson et al., 2024). Epistemic uncertainty\
+    \ arises from the lack of knowledge about the ground truth (e.g., facts or grammar\
+    \ in the language), stemming from various reasons such as insufficient amount\
+    \ of training data or model capacity. Aleatoric uncertainty comes from irreducible\
+    \ randomness in the prediction problem, such as multiple valid answers to the\
+    \ same query. Hence, truthfulness can be directly analyzed via looking at the\
+    \ epistemic uncertainty of a model in the sense that when the epistemic uncertainty\
+    \ is low, the model predictions must be close to the ground truth.   Rigorously\
+    \ identifying when (either) uncertainty is small111For instance, by saying that\
+    \ predictions live in a confidence set with high probability. is notoriously hard,\
+    \ especially in deep neural networks (Blundell et al., 2015, Antorán et al., 2020).\
+    \ This is because we generally lack guarantees about learning the ground truth\
+    \ (consistency), or even a weaker guarantee about how large the variance of a\
+    \ learning algorithm is. At the same time, there exist many heuristic approaches\
+    \ for uncertainty quantification based on simply looking at the log-likelihood\
+    \ of responses (Kadavath et al., 2022), estimating entropy (Kuhn et al., 2023),\
+    \ ensembling (Lakshminarayanan et al., 2017b, Dwaracherla et al., 2023, Osband\
+    \ et al., 2023), or sometimes even more principled formulations, such as conformal\
+    \ prediction (Angelopoulos et al., 2023, Ravfogel et al., 2023, Yadkori et al.,\
+    \ 2024) (which however come with strong assumptions).   To the best of our knowledge,\
+    \ a common limitation of these approaches is that they are only meaningful in\
+    \ problems where there exists a single correct response (e.g. label) as they aim\
+    \ for detecting if one response is dominant (or multiple responses with the same\
+    \ meaning), that is, if there is only little uncertainty in the prediction. On\
+    \ the other hand, when multiple responses are correct, that is, there is aleatoric\
+    \ uncertainty in the ground truth, simply estimating the amount of uncertainty\
+    \ in the LLM’s output is insufficient, as the perfect (ground-truth) predictor\
+    \ may have large aleatoric uncertainty and no epistemic uncertainty, while a completely\
+    \ useless predictor may have large epistemic uncertainty only, but the total amount\
+    \ of uncertainty of the two predictors might be the same.   Contributions.  In\
+    \ this paper we address the above problem directly, and design methods to decouple\
+    \ epistemic and aleatoric uncertainty,\n\n            **Your Task**\n\n      \
+    \      1. **Literature Review**: Analyze the Introduction provided and conduct\
+    \ a brief literature review to understand the current state of research in this\
+    \ area.\n\n            2. **Brainstorming**: Collaboratively brainstorm potential\
+    \ research ideas that build upon or address gaps in the Introduction.\n\n    \
+    \        3. **Summarization**: Summarize your collective ideas.\n\n          \
+    \  4. **Formulate a New Research Idea**: Develop a new research proposal in the\
+    \ format of the '5q', defined below:\n\n               **Here is a high-level\
+    \ summarized insight of a research field Machine Learning.**\n\n             \
+    \  **Here are the five core questions:**\n\n               **[Question 1] - What\
+    \ is the problem?**\n\n               Formulate the specific research question\
+    \ you aim to address. Only output one question and do not include any more information.\n\
+    \n               **[Question 2] - Why is it interesting and important?**\n\n \
+    \              Explain the broader implications of solving this problem for the\
+    \ research community.\n               Discuss how such a paper will affect future\
+    \ research.\n               Discuss how addressing this question could advance\
+    \ knowledge or lead to practical applications.\n\n               **[Question 3]\
+    \ - Why is it hard?**\n\n               Discuss the challenges and complexities\
+    \ involved in solving this problem.\n               Explain why naive or straightforward\
+    \ approaches may fail.\n               Identify any technical, theoretical, or\
+    \ practical obstacles that need to be overcome. MAKE IT CLEAR.\n\n           \
+    \    **[Question 4] - Why hasn't it been solved before?**\n\n               Identify\
+    \ gaps or limitations in previous research or existing solutions.\n          \
+    \     Discuss any barriers that have prevented this problem from being solved\
+    \ until now.\n               Explain how your approach differs from or improves\
+    \ upon prior work. MAKE IT CLEAR.\n\n               **[Question 5] - What are\
+    \ the key components of my approach and results?**\n\n               Outline your\
+    \ proposed methodology in detail, including the method, dataset, and metrics that\
+    \ you plan to use.\n               Describe the expected outcomes. MAKE IT CLEAR.\n\
+    \n            Please work together to produce the '5q' for your proposed research\
+    \ idea.\n\n            Good luck!\n            "
+  output_format: "You should answer the task in the following format:\n          \
+    \      **[Question 1] - What is the problem?**\n\n                Formulate the\
+    \ specific research question you aim to address. Only output one question and\
+    \ do not include any more information.\n\n                **[Question 2] - Why\
+    \ is it interesting and important?**\n\n                Explain the broader implications\
+    \ of solving this problem for the research community.\n                Discuss\
+    \ how such a paper will affect future research.\n                Discuss how addressing\
+    \ this question could advance knowledge or lead to practical applications.\n\n\
+    \                **[Question 3] - Why is it hard?**\n\n                Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \        Explain why naive or straightforward approaches may fail.\n         \
+    \       Identify any technical, theoretical, or practical obstacles that need\
+    \ to be overcome. MAKE IT CLEAR.\n\n                **[Question 4] - Why hasn't\
+    \ it been solved before?**\n\n                Identify gaps or limitations in\
+    \ previous research or existing solutions.\n                Discuss any barriers\
+    \ that have prevented this problem from being solved until now.\n            \
+    \    Explain how your approach differs from or improves upon prior work. MAKE\
+    \ IT CLEAR.\n\n                **[Question 5] - What are the key components of\
+    \ my approach and results?**\n\n                Outline your proposed methodology\
+    \ in detail, including the method, dataset, and metrics that you plan to use.\n\
+    \                Describe the expected outcomes. MAKE IT CLEAR."

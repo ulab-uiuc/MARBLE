@@ -1,0 +1,190 @@
+agents:
+- agent_id: agent1
+  profile: 'I am a researcher deeply engaged in the intersection of optimal transport
+    theory, machine learning, and computer vision. My recent work has focused on developing
+    innovative frameworks and methodologies that enhance the performance and robustness
+    of various machine learning tasks. For instance, I introduced the mini-batch Learning-to-Match
+    (m-LTM) framework, which effectively addresses scalability issues in audio-text
+    retrieval by leveraging mini-batch subsampling and partial optimal transport techniques.
+    This work not only achieved state-of-the-art performance but also demonstrated
+    significant noise tolerance in training data.
+
+
+    I have also explored the theoretical underpinnings of mixture models, particularly
+    in the context of Gaussian mixtures, where I developed novel Voronoi-based loss
+    functions to improve parameter estimation rates. My research extends to the realm
+    of sliced Wasserstein distances, where I proposed new slicing operators to handle
+    heterogeneous joint distributions, significantly enhancing their applicability
+    in real-world scenarios.
+
+
+    In the domain of computer vision, I have integrated spectral methods with deep
+    learning to improve shape matching and mesh deformation tasks. My work on the
+    energy-based sliced Wasserstein distance and convolution sliced Wasserstein has
+    provided new metrics for comparing probability measures over images, leading to
+    improved performance in generative modeling.
+
+
+    Overall, my research aims to bridge theoretical advancements with practical applications,
+    ensuring that the methodologies I develop are not only innovative but also scalable
+    and robust in diverse settings. I am passionate about pushing the boundaries of
+    what is possible in machine learning and contributing to the development of more
+    effective and efficient algorithms.'
+  type: BaseAgent
+- agent_id: agent2
+  profile: 'I am a researcher deeply engaged in the intersection of machine learning,
+    statistics, and computational efficiency, with a particular focus on transformers
+    and Wasserstein distances. My recent work has centered on enhancing the efficiency
+    and effectiveness of attention mechanisms in transformers, leading to the development
+    of novel frameworks such as the Finite Admixture of Keys (FiAK) and the Finite
+    Admixture of Shared Heads (FiSHformers). These innovations not only reduce computational
+    costs but also improve model performance across various applications, including
+    language modeling and image classification.
+
+
+    I have also explored the theoretical underpinnings of the Sliced Wasserstein distance,
+    proposing new metrics like the Markovian Sliced Wasserstein distance and the Energy-based
+    Sliced Wasserstein distance, which address limitations in existing methods. My
+    research extends to federated learning, where I introduced a unified framework
+    for self-supervised learning across heterogeneous clients, enabling effective
+    collaboration without the need for labeled data.
+
+
+    Additionally, I have investigated the phenomenon of Neural Collapse in deep networks,
+    providing insights into the geometric properties of last-layer features and classifiers.
+    My work aims to bridge the gap between theoretical advancements and practical
+    applications, particularly in medical imaging, where I developed LVM-Med, a deep
+    learning framework trained on large-scale medical datasets.
+
+
+    Through my research, I strive to contribute to the understanding and development
+    of efficient machine learning models that can adapt to diverse data environments
+    while maintaining high performance.'
+  type: BaseAgent
+coordinate_mode: graph
+engine_planner:
+  initial_progress: Starting the collaborative research idea generation based on the
+    provided Introduction.
+environment:
+  max_iterations: 5
+  name: Research Collaboration Environment
+  type: Research
+llm: gpt-3.5-turbo
+memory:
+  type: SharedMemory
+metrics:
+  diversity_of_perspectives: true
+  engagement_level: true
+  evaluate_llm: gpt-4o-mini
+  relevance: true
+output:
+  file_path: result/discussion_output_35.jsonl
+  format: jsonl
+relationships:
+- - agent1
+  - agent2
+  - collaborate with
+task:
+  content: "\n            Dear Research Team,\n\n            You are collaborating\
+    \ to generate a new research idea based on the following Introduction:\n\n   \
+    \         **Introduction**\n\n            ABSTRACT The sliced Wasserstein (SW)\
+    \ distances between two probability measures are defined as the expectation of\
+    \ the Wasserstein distance between two one-dimensional projections of the two\
+    \ measures. The randomness comes from a projecting direction that is used to project\
+    \ the two input measures to one dimension. Due to the intractability of the expectation,\
+    \ Monte Carlo integration is performed to estimate the value of the SW distance.\
+    \ Despite having various variants, there has been no prior work that improves\
+    \ the Monte Carlo estimation scheme for the SW distance in terms of controlling\
+    \ its variance. To bridge the literature on variance reduction and the literature\
+    \ on the SW distance, we propose computationally efficient control variates to\
+    \ reduce the variance of the empirical estimation of the SW distance. The key\
+    \ idea is to first find Gaussian approximations of projected one-dimensional measures,\
+    \ then we utilize the closed-form of the Wasserstein-2 distance between two Gaussian\
+    \ distributions to design the control variates. In particular, we propose using\
+    \ a lower bound and an upper bound of the Wasserstein-2 distance between two fitted\
+    \ Gaussians as two computationally efficient control variates. We empirically\
+    \ show that the proposed control variate estimators can help to reduce the variance\
+    \ considerably when comparing measures over images and point-clouds. Finally,\
+    \ we demonstrate the favorable performance of the proposed control variate estimators\
+    \ in gradient flows to interpolate between two point-clouds and in deep generative\
+    \ modeling on standard image datasets, such as CIFAR10 and CelebA1. 1 I NTRODUCTION\
+    \ Recent machine learning applications have recognized the Wasserstein distance\
+    \ (Villani, 2008b; Peyré & Cuturi, 2019), as a universal effective tool. In particular,\
+    \ there are various applications that achieve notable performance by using the\
+    \ Wasserstein distance as a component, for example, (hierarchical) clustering\
+    \ (Ho et al., 2017), domain adaptation (Courty et al., 2016; Damodaran et al.,\
+    \ 2018), generative modeling (Arjovsky et al., 2017; Tolstikhin et al., 2018),\
+    \ and so on. Despite its appealing performance, the Wasserstein distance has two\
+    \ major weaknesses. The first weakness is that it has high computational complexities.\
+    \ As discussed in (Peyré & Cuturi, 2019), the time complexity of computing the\
+    \ Wasserstein distance between two discrete measures that have at most n supports\
+    \ is O(n3logn). Additionally, the space complexity required for the pair-wise\
+    \ transportation cost matrix is O(n2). As a result, computing the Wasserstein\
+    \ distance on a large-scale discrete distribution is expensive. The second weakness\
+    \ is that the Wasserstein distance suffers from the curse of dimensionality. More\
+    \ specifically, the sample complexity of the Wasserstein distance is O(n−1/d).\
+    \ Therefore, using the Wasserstein distance in high-dimensional statistical inference\
+    \ may not be stable. The Wasserstein distance has a famous alternative called\
+    \ the sliced Wasserstein (SW) distance, which is derived from the one-dimensional\
+    \ Wasserstein distance as its base metric. The one-dimensional Wasserstein distance\
+    \ has a closed-form solution, which can be computed in O(nlogn)time complex- ity\
+    \ and O(n)space complexity in the discrete case. Here, “supports\" refers to the\
+    \ discrete probability measures being compared. To apply this closed-form solution\
+    \ in a high-dimension setting, random 1Code for the paper is published at https://github.com/khainb/CV-SW\
+    \ . 1arXiv:2305.00402v2  [stat.ML]  19 Feb 2024Published as a conference paper\
+    \ at ICLR 2024 projections are employed, transforming two measures into infinite\
+    \ pairs of one-dimensional measures using a projecting function with infinite\
+    \ projecting directions that belong to the unit-hypersphere. The closed-form of\
+    \ the one-dimensional Wasserstein distance is then applied to pairs of one-dimensional\
+    \ measures to obtain\n\n            **Your Task**\n\n            1. **Literature\
+    \ Review**: Analyze the Introduction provided and conduct a brief literature review\
+    \ to understand the current state of research in this area.\n\n            2.\
+    \ **Brainstorming**: Collaboratively brainstorm potential research ideas that\
+    \ build upon or address gaps in the Introduction.\n\n            3. **Summarization**:\
+    \ Summarize your collective ideas.\n\n            4. **Formulate a New Research\
+    \ Idea**: Develop a new research proposal in the format of the '5q', defined below:\n\
+    \n               **Here is a high-level summarized insight of a research field\
+    \ Machine Learning.**\n\n               **Here are the five core questions:**\n\
+    \n               **[Question 1] - What is the problem?**\n\n               Formulate\
+    \ the specific research question you aim to address. Only output one question\
+    \ and do not include any more information.\n\n               **[Question 2] -\
+    \ Why is it interesting and important?**\n\n               Explain the broader\
+    \ implications of solving this problem for the research community.\n         \
+    \      Discuss how such a paper will affect future research.\n               Discuss\
+    \ how addressing this question could advance knowledge or lead to practical applications.\n\
+    \n               **[Question 3] - Why is it hard?**\n\n               Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \       Explain why naive or straightforward approaches may fail.\n          \
+    \     Identify any technical, theoretical, or practical obstacles that need to\
+    \ be overcome. MAKE IT CLEAR.\n\n               **[Question 4] - Why hasn't it\
+    \ been solved before?**\n\n               Identify gaps or limitations in previous\
+    \ research or existing solutions.\n               Discuss any barriers that have\
+    \ prevented this problem from being solved until now.\n               Explain\
+    \ how your approach differs from or improves upon prior work. MAKE IT CLEAR.\n\
+    \n               **[Question 5] - What are the key components of my approach and\
+    \ results?**\n\n               Outline your proposed methodology in detail, including\
+    \ the method, dataset, and metrics that you plan to use.\n               Describe\
+    \ the expected outcomes. MAKE IT CLEAR.\n\n            Please work together to\
+    \ produce the '5q' for your proposed research idea.\n\n            Good luck!\n\
+    \            "
+  output_format: "You should answer the task in the following format:\n          \
+    \      **[Question 1] - What is the problem?**\n\n                Formulate the\
+    \ specific research question you aim to address. Only output one question and\
+    \ do not include any more information.\n\n                **[Question 2] - Why\
+    \ is it interesting and important?**\n\n                Explain the broader implications\
+    \ of solving this problem for the research community.\n                Discuss\
+    \ how such a paper will affect future research.\n                Discuss how addressing\
+    \ this question could advance knowledge or lead to practical applications.\n\n\
+    \                **[Question 3] - Why is it hard?**\n\n                Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \        Explain why naive or straightforward approaches may fail.\n         \
+    \       Identify any technical, theoretical, or practical obstacles that need\
+    \ to be overcome. MAKE IT CLEAR.\n\n                **[Question 4] - Why hasn't\
+    \ it been solved before?**\n\n                Identify gaps or limitations in\
+    \ previous research or existing solutions.\n                Discuss any barriers\
+    \ that have prevented this problem from being solved until now.\n            \
+    \    Explain how your approach differs from or improves upon prior work. MAKE\
+    \ IT CLEAR.\n\n                **[Question 5] - What are the key components of\
+    \ my approach and results?**\n\n                Outline your proposed methodology\
+    \ in detail, including the method, dataset, and metrics that you plan to use.\n\
+    \                Describe the expected outcomes. MAKE IT CLEAR."

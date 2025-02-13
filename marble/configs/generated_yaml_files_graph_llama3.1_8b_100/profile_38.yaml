@@ -1,0 +1,184 @@
+agents:
+- agent_id: agent1
+  profile: 'As a researcher deeply immersed in the field of graph neural networks
+    (GNNs) and their applications, my work focuses on enhancing the capabilities and
+    understanding of these powerful models. My recent publications reflect a commitment
+    to addressing the limitations of existing GNN architectures. For instance, I developed
+    Position-aware GNNs (P-GNNs) to better capture the positional context of nodes
+    within graphs, significantly improving performance in tasks like link prediction
+    and community detection.
+
+
+    I also introduced Identity-aware GNNs (ID-GNNs), which extend the expressive power
+    of traditional GNNs by incorporating node identities during message passing. This
+    innovation has led to substantial accuracy improvements across various prediction
+    tasks. My exploration of dynamic graphs culminated in the ROLAND framework, which
+    allows static GNNs to adapt to dynamic environments, showcasing the scalability
+    and efficiency of my approaches.
+
+
+    Beyond architectural advancements, I have delved into the design space of GNNs,
+    systematically studying over 315,000 designs to provide guidelines for optimal
+    model selection across different tasks. My work on AutoML, particularly with FALCON
+    and AutoTransfer, aims to streamline the search for effective neural architectures
+    by leveraging prior knowledge and enhancing search efficiency.
+
+
+    Overall, my research is driven by a passion for pushing the boundaries of GNNs
+    and making them more accessible and effective for real-world applications. I am
+    excited about the future of this field and the potential for my contributions
+    to inspire further innovations.'
+  type: BaseAgent
+- agent_id: agent2
+  profile: 'I am a researcher dedicated to exploring the intersection of artificial
+    intelligence, programming education, and privacy in data sharing. My recent work
+    focuses on leveraging generative AI and large language models to enhance computing
+    education, particularly in visual programming environments. I have investigated
+    the capabilities of models like ChatGPT and GPT-4 in visual programming contexts,
+    revealing significant challenges in their performance compared to text-based programming.
+
+
+    In addition to educational applications, I have developed novel mechanisms for
+    community sensing that balance privacy concerns with the need for data access,
+    introducing the SeqTGreedy mechanism for budgeted participant recruitment. My
+    research also delves into reinforcement learning, where I unify ensemble methods
+    with social choice theory to create more effective algorithms.
+
+
+    I am particularly interested in curriculum design for reinforcement learning,
+    where I propose innovative strategies that adapt to the learner''s needs, enhancing
+    their learning experience. My work on stochastic privacy introduces a new framework
+    for managing user data sharing, allowing for personalized services while respecting
+    privacy preferences.
+
+
+    Through my research, I aim to bridge the gap between advanced AI techniques and
+    practical applications in education and data privacy, ultimately contributing
+    to more effective learning environments and responsible data practices. I am committed
+    to releasing my findings and tools to foster further research and development
+    in these critical areas.'
+  type: BaseAgent
+coordinate_mode: graph
+engine_planner:
+  initial_progress: Starting the collaborative research idea generation based on the
+    provided Introduction.
+environment:
+  max_iterations: 5
+  name: Research Collaboration Environment
+  type: Research
+llm: together_ai/meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo
+memory:
+  type: SharedMemory
+metrics:
+  diversity_of_perspectives: true
+  engagement_level: true
+  evaluate_llm: gpt-4o-mini
+  relevance: true
+output:
+  file_path: result/discussion_output_llama3.1_8b.jsonl
+  format: jsonl
+relationships:
+- - agent1
+  - agent2
+  - collaborate with
+task:
+  content: "\n            Dear Research Team,\n\n            You are collaborating\
+    \ to generate a new research idea based on the following Introduction:\n\n   \
+    \         **Introduction**\n\n               1 Introduction  The recent advances\
+    \ in generative models and large language models (LLMs) have the potential to\
+    \ positively impact a wide variety of domains, such as medicine [1, 2, 3], arts\
+    \ [4, 5], and education [6, 7, 8, 9]. This potential is reflected by their success\
+    \ on a wide range of popular competitive benchmarks assessing their knowledge\
+    \ of natural sciences and day-to-day facts [10, 11, 12, 13, 14] and their skills\
+    \ in programming. For example, GPT-4o [10] is capable of obtaining a high accuracy\
+    \ on two popular programming benchmarks: 90.2%percent90.290.2\\%90.2 % on HumanEval\
+    \ [15] and 87.5%percent87.587.5\\%87.5 % on MBPP [16]. Previous studies also showed\
+    \ that GPT-4 [17] is capable of passing assessments in higher education programming\
+    \ courses, achieving course totals greater than 79%percent7979\\%79 % [18]   Despite\
+    \ these promising results, state-of-the-art models struggle with seemingly simple\
+    \ tasks. These models often underperform in tasks requiring mathematical reasoning,\
+    \ planning, and problem-solving [19, 20, 21, 22]. For example, they fail to solve\
+    \ planning tasks involving stacking of colored blocks [23]. Moreover, generative\
+    \ models often face problems with basic algebra and counting [19], or coming up\
+    \ with correct codes in visual programming domains [24], tasks which can successfully\
+    \ be carried out by elementary-level school students. These weaknesses seem to\
+    \ contradict the generative models’ impressive performance in programming, known\
+    \ to leverage important problem-solving skills. Based on these observations, we\
+    \ pose our main research question: How do state-of-the-art models perform on standardized\
+    \ tests designed to assess computational thinking and problem-solving skills at\
+    \ schools?   In this paper, we introduce a novel benchmark for assessing generative\
+    \ models’ computational thinking and problem-solving capabilities. We conduct\
+    \ extensive experiments with various models and our results show that state-of-the-art\
+    \ models struggle with the computational thinking tests in our benchmark. Figure 1(a)\
+    \ illustrates how GPT-4o barely matches the performance of an average school student,\
+    \ with Llama3 [11] performing even worse.   We make the following contributions\
+    \ towards improving the models’ performance on computational thinking tests: \
+    \  (1) We introduce a novel data generation methodology based on symbolic methods.\
+    \ An important aspect of the generated dataset is that it captures different skill\
+    \ levels, ranging from recognition of visual elements to multi-choice questions\
+    \ to synthesis-style tasks.  (2) We fine-tune Llama3-8B and obtain the LlamaCT\
+    \ family of models, the best of which achieves an accuracy on par with GPT-4o\
+    \ (see Figure 1(a)). We further analyze how various aspects of symbolic information\
+    \ in our synthetic dataset help improve the fine-tuned models’ performance.  (3)\
+    \ We will release the data and implementation to promote further research on enhancing\
+    \ computational thinking in generative models.        (a) Performance on computational\
+    \ thinking tests.      (b) A problem-solving task from HoC.       (c) A multi-choice\
+    \ question task from ACE.      (d) A multi-choice question task from CT-Test.\
+    \    Figure 1: (a) shows the performance of school students compared to various\
+    \ models on a scale of 00 to 100100100100. We break down the ACE [25] test into\
+    \ its constituent parts: Analyzing (ACE[01-07]), Evaluating (ACE[08-14]), and\
+    \ Creating (ACE[15-21]). (b) shows Maze16 from Hour of Code:Maze Challenge (HoC) [26,\
+    \ 27], an example of a solution synthesis task. (c) shows a Creating multi-choice\
+    \ question task from the ACE test. (d) shows a multi-choice question task from\
+    \ the CT-Test [28, 29].     2 Related\n\n            **Your Task**\n\n       \
+    \     1. **Literature Review**: Analyze the Introduction provided and conduct\
+    \ a brief literature review to understand the current state of research in this\
+    \ area.\n\n            2. **Brainstorming**: Collaboratively brainstorm potential\
+    \ research ideas that build upon or address gaps in the Introduction.\n\n    \
+    \        3. **Summarization**: Summarize your collective ideas.\n\n          \
+    \  4. **Formulate a New Research Idea**: Develop a new research proposal in the\
+    \ format of the '5q', defined below:\n\n               **Here is a high-level\
+    \ summarized insight of a research field Machine Learning.**\n\n             \
+    \  **Here are the five core questions:**\n\n               **[Question 1] - What\
+    \ is the problem?**\n\n               Formulate the specific research question\
+    \ you aim to address. Only output one question and do not include any more information.\n\
+    \n               **[Question 2] - Why is it interesting and important?**\n\n \
+    \              Explain the broader implications of solving this problem for the\
+    \ research community.\n               Discuss how such a paper will affect future\
+    \ research.\n               Discuss how addressing this question could advance\
+    \ knowledge or lead to practical applications.\n\n               **[Question 3]\
+    \ - Why is it hard?**\n\n               Discuss the challenges and complexities\
+    \ involved in solving this problem.\n               Explain why naive or straightforward\
+    \ approaches may fail.\n               Identify any technical, theoretical, or\
+    \ practical obstacles that need to be overcome. MAKE IT CLEAR.\n\n           \
+    \    **[Question 4] - Why hasn't it been solved before?**\n\n               Identify\
+    \ gaps or limitations in previous research or existing solutions.\n          \
+    \     Discuss any barriers that have prevented this problem from being solved\
+    \ until now.\n               Explain how your approach differs from or improves\
+    \ upon prior work. MAKE IT CLEAR.\n\n               **[Question 5] - What are\
+    \ the key components of my approach and results?**\n\n               Outline your\
+    \ proposed methodology in detail, including the method, dataset, and metrics that\
+    \ you plan to use.\n               Describe the expected outcomes. MAKE IT CLEAR.\n\
+    \n            Please work together to produce the '5q' for your proposed research\
+    \ idea.\n\n            Good luck!\n            "
+  output_format: "You should answer the task in the following format:\n          \
+    \      **[Question 1] - What is the problem?**\n\n                Formulate the\
+    \ specific research question you aim to address. Only output one question and\
+    \ do not include any more information.\n\n                **[Question 2] - Why\
+    \ is it interesting and important?**\n\n                Explain the broader implications\
+    \ of solving this problem for the research community.\n                Discuss\
+    \ how such a paper will affect future research.\n                Discuss how addressing\
+    \ this question could advance knowledge or lead to practical applications.\n\n\
+    \                **[Question 3] - Why is it hard?**\n\n                Discuss\
+    \ the challenges and complexities involved in solving this problem.\n        \
+    \        Explain why naive or straightforward approaches may fail.\n         \
+    \       Identify any technical, theoretical, or practical obstacles that need\
+    \ to be overcome. MAKE IT CLEAR.\n\n                **[Question 4] - Why hasn't\
+    \ it been solved before?**\n\n                Identify gaps or limitations in\
+    \ previous research or existing solutions.\n                Discuss any barriers\
+    \ that have prevented this problem from being solved until now.\n            \
+    \    Explain how your approach differs from or improves upon prior work. MAKE\
+    \ IT CLEAR.\n\n                **[Question 5] - What are the key components of\
+    \ my approach and results?**\n\n                Outline your proposed methodology\
+    \ in detail, including the method, dataset, and metrics that you plan to use.\n\
+    \                Describe the expected outcomes. MAKE IT CLEAR."
