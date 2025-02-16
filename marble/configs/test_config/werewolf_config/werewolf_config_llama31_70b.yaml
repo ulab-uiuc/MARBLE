@@ -1,0 +1,28 @@
+openai_api_key: "your api key"
+system_prompt_path: marble\\agent\\werewolf_prompts\\system_prompt.yaml
+roles:
+  - wolf
+  - wolf
+  - wolf
+  - villager
+  - villager
+  - villager
+  - seer
+  - witch
+  - guard
+randomize_roles: True
+use_random_names: True
+villager_config:
+  base_url: "https://api.together.xyz/v1"
+  api_key: "94b7b09d463d1b4af08f084676c271973ef63e06ad1c1baab0d3a009850892af"
+  model_name: "meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo"
+werewolf_config:
+  base_url: "https://api.openai.com/v1"
+  api_key: "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"
+  model_name: "gpt-4o"
+cooperation_mode: "cooperative"
+use_daily_tasks: True
+eval_config:
+  base_url: "https://api.openai.com/v1"
+  api_key: "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"
+  model_name: "gpt-4o"

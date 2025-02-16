@@ -166,3 +166,10 @@ data/research-data/benchmark_0930.json
 data/research-data/intro_logging.jsonl
 # Werewolf log folder
 werewolf_log/
+werewolf_eval/
+werewolf_result/
+human_eval/
+llm_eval_result/
+werewolf_result1/
+werewolf_data/
+backup/

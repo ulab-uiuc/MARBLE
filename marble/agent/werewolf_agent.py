@@ -12,15 +12,17 @@ import logging
 from typing import Any, Dict
 from marble.utils.eventbus import EventBus # 假设 BaseAgent 在 base_agent_module 中
 from openai import OpenAI
+
+
 class WerewolfAgent:
     """
     WerewolfAgent class without calling BaseAgent's __init__.
     """
 
-    def __init__(self, config: Dict[str, Any], role: str, log_path: str, event_bus: EventBus, shared_memory: Dict[str, Any], env: any, number: int):
+    def __init__(self, config: Dict[str, Any], role: str, log_path: str, event_bus: EventBus, 
+                shared_memory: Dict[str, Any], env: any, number: int, is_villager: bool, strategy="independent",):
         """
         Custom initialization for WerewolfAgent without calling BaseAgent's __init__.
-
 
         Args:
             config (dict): Configuration for the agent.
@@ -29,18 +31,32 @@ class WerewolfAgent:
             event_bus (EventBus): The event bus for subscribing and publishing events.
             shared_memory: Reference to the shared memory dict.
             env (WerewolfEnv): The environment instance associated with the agent.
+            number (int): Agent's unique number in the game.
+            is_villager (bool): Whether the agent is a villager or not. Determines which configuration to use.
         """
-        # 自定义初始化逻辑
+        # 根据 `is_villager` 加载不同的配置
+        config_key = "villager_config" if is_villager else "werewolf_config"
+        model_config = config.get(config_key, {})
+        self.config = config
+        # 获取并保存 API 配置信息为属性
+        self.base_url = model_config.get("base_url", "https://api.openai.com/v1")  # 默认为 OpenAI API
+        self.api_key = model_config.get("api_key", config.get("openai_api_key"))  # 默认使用通用 OpenAI API key
+        self.model_name = model_config.get("model_name", "gpt-4o")  # 默认使用 GPT-4
+        self.strategy = strategy
+        # 初始化 API 客户端
         self.client = OpenAI(
-            api_key=config["openai_api_key"]
+            base_url=self.base_url,
+            api_key=self.api_key,
         )
+        
         self.agent_id = config.get("agent_id")
         self.id = self.agent_id
         assert isinstance(self.agent_id, str), "agent_id must be a string"
 
-
         self.role = role  # 设置角色
         self.agent_number = number
+        self.is_villager = is_villager  # 保存是否为村民的标记
+        
         # 保存环境实例
         self.env = env
         # 共享内存文件路径
@@ -49,13 +65,15 @@ class WerewolfAgent:
         # 创建一个独立的 logger
         self.logger = self._create_logger(self.agent_id)
 
-
         # 设置日志文件的路径
         self.log_file_path = os.path.join(log_path, f"{self.agent_number}-{self.role}-{self.agent_id}_log.txt")
         self._initialize_log_file()
 
         # 在终端输出并写入日志文件
-        init_message = f"{self.role} agent '{self.agent_id}' initialized with role '{self.role}'"
+        init_message = (
+            f"{self.role} agent '{self.agent_id}' initialized with role '{self.role}', "
+            f"using model '{self.model_name}', base URL '{self.base_url}'"
+        )
         self._log_and_save(init_message)
 
         # 订阅事件
@@ -64,6 +82,51 @@ class WerewolfAgent:
         # 保存 event_bus 引用，方便发布事件
         self.event_bus = event_bus
 
+    def to_dict(self) -> Dict[str, Any]:
+        """
+        将 Agent 的关键信息序列化为一个可 JSON 序列化的字典。
+        不包含 event_bus、shared_memory、env 等外部引用。
+        """
+        return {
+            "role": self.role,
+            "is_villager": self.is_villager,
+            "number": self.agent_number,
+            "config": self.config,
+        }
+    
+    @classmethod
+    def from_dict(
+        cls, 
+        agent_data: Dict[str, Any],
+        log_path: str,
+        event_bus: EventBus,
+        shared_memory: Dict[str, Any],
+        env: Any,
+        strategy="independent"
+    ) -> "WerewolfAgent":
+        """
+        传入序列化的数据 (agent_data)，搭配新的 event_bus / shared_memory / env，
+        创建出一个等价的 WerewolfAgent。
+        """
+        role = agent_data["role"]
+        is_villager = agent_data["is_villager"]
+        number = agent_data["number"]
+        # 直接取出原先的 config
+        config = agent_data["config"]
+        
+        new_agent = cls(
+            config=config,
+            role=role,
+            log_path=log_path,
+            event_bus=event_bus,
+            shared_memory=shared_memory,
+            env=env,
+            number=number,
+            is_villager=is_villager,
+            strategy=strategy
+        )
+        return new_agent
+    
     def _create_logger(self, agent_id: str):
         """
         创建并返回每个实例独立的 logger。
@@ -243,16 +306,26 @@ class WerewolfAgent:
         self.event_bus.publish(action)
 
     def gpt_tool_call(self, messages, tools):
+        """
+        Calls the GPT model using the specified messages and tools.
+        
+        Args:
+            messages (list): A list of message dictionaries to send to the model.
+            tools (list): A list of tool definitions to provide to the model.
+            
+        Returns:
+            list: Tool calls generated by the model.
+        """
         rounds = 0
         while True:
             rounds += 1
             try:
                 response = self.client.chat.completions.create(
-                    model="gpt-4o",  # 使用 gpt-4o-mini 模型
+                    model=self.model_name,  # 使用 self.model_name 替代硬编码的模型名称
                     messages=messages,
                     tools=tools,
                     tool_choice="required",
-                    temperature=1.0,  # 设置温度为1以增加生成的多样性
+                    temperature=0.7,  # 设置温度为1以增加生成的多样性
                     n=1,
                 )
                 tool_calls = response.choices[0].message.tool_calls
@@ -576,8 +649,58 @@ class WerewolfAgent:
 
             filled_prompt = prompt_template.replace("<<public_chat>>", public_chat)
             filled_prompt = filled_prompt.replace("<<game_state>>", json.dumps(game_state, indent=2))
-            
+
+        if self.env.config.get("use_daily_tasks", False):
+            if self.env.daily_tasks:
+                tasks_from_env = self.env.daily_tasks.get("public", [])
+                if self.role == "witch":
+                    # use all tasks that appear in tasks_from_env
+                    tasks_considered = [t for t in ["protect_seer", "rescue_villager", "run_for_sheriff", "exile_werewolf", "poison_werewolf"]
+                                        if t in tasks_from_env]
+                else:
+                    # not witch => only 3 tasks
+                    tasks_considered = [t for t in ["protect_seer", "run_for_sheriff", "exile_werewolf"]
+                                        if t in tasks_from_env]
+                if tasks_considered:
+                    # A dictionary mapping task name -> brief description
+                    task_descriptions = {
+                        "protect_seer": "Keep the seer alive by focusing on their safety.",
+                        "rescue_villager": "Use antidote or supportive actions to save a villager.",
+                        "run_for_sheriff": "Attempt to become the elected sheriff for additional influence.",
+                        "exile_werewolf": "Coordinate with others to vote out a suspected werewolf.",
+                        "poison_werewolf": "Use poison to eliminate a werewolf during the night phase."
+                    }
+
+                    # Build a multi-line string, one line per task
+                    tasks_info_lines = []
+                    for t in tasks_considered:
+                        desc = task_descriptions.get(t, "No description available.")
+                        # For example: "protect_seer: Keep the seer alive by focusing on their safety."
+                        tasks_info_lines.append(f"{t}: {desc}")
+
+                    # Join them with newline
+                    tasks_info_str = "\n".join(tasks_info_lines)
+
+                    # Insert into a new block at the end of the prompt
+                    new_block = (
+                        "\n\n=============================[Optional Daily Tasks]=============================\n"
+                        "Here are the tasks relevant to you:\n"
+                        f"{tasks_info_str}\n"
+                        "You may incorporate them if appropriate."
+                    )
+                    filled_prompt += new_block
         # Step 6: Create messages to pass to the tool
+        if self.is_villager:
+            if self.strategy == "cooperative":
+                # Append text or instructions that emphasize cooperation
+                filled_prompt += "\n\nRemember, you are using a cooperative strategy. " \
+                                "In your decisions, prioritize teamwork and collaboration " \
+                                "with other villagers to increase your chances of success."
+            else:
+                # The default or "independent" approach
+                filled_prompt += "\n\nRemember, you are using an independent strategy. " \
+                                "Make decisions based on your own judgment, with less reliance " \
+                                "on others' input."
         messages = [
             {'role': 'system', 'content': action_template.get('system', '')},
             {'role': 'user', 'content': filled_prompt}

@@ -1,11 +1,12 @@
 import json
 import os
+import re
 import sys
 import random
 import time
 import names
 import yaml
-from typing import Any, Dict
+from typing import Any, Dict, List
 from threading import Condition, Lock
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../../")))
 from marble.agent.werewolf_agent import WerewolfAgent
@@ -17,7 +18,7 @@ from colorama import Fore, Style, init  # 引入 colorama 库
 
 
 class WerewolfEnv:
-    def __init__(self, name: str, config_path: str):
+    def __init__(self, name: str, config_path: str, log_dir = "werewolf_log"):
         """
         Initialize the Werewolf environment.
 
@@ -43,12 +44,11 @@ class WerewolfEnv:
         with open(system_prompt_path, 'r', encoding='utf-8') as f:
             system_prompt = yaml.safe_load(f)
 
-
         game_introduction = system_prompt.get("game_introduction", "")
         self.condition = Condition(Lock())
         self.current_event = None
         self.event_completed = False
-
+        self.daily_tasks = {}
         # 所有角色介绍
         role_introductions = {
             "wolf": system_prompt.get("werewolf_introduction", ""),
@@ -67,7 +67,7 @@ class WerewolfEnv:
         self.event_bus.subscribe(self, self.receive_action)
 
         # 创建 werewolf_log 文件夹（如果不存在）
-        base_log_dir = "werewolf_log"
+        base_log_dir = log_dir
         if not os.path.exists(base_log_dir):
             os.makedirs(base_log_dir)
 
@@ -113,6 +113,7 @@ class WerewolfEnv:
             "public_event_log": game_introduction,
             "private_event_log": game_introduction
         }
+
         used_names = set()  # 用于记录已经使用过的名字
         for i in range(num_players):
             # 确保生成的名字唯一
@@ -123,9 +124,14 @@ class WerewolfEnv:
                     break 
             role = roles[i]
 
+            # 判断是否为村民配置
+            is_villager = role in ["villager", "seer", "witch", "guard"]
+
+            # 从配置中获取对应角色的模型配置
             agent_config = {
                 "agent_id": agent_id,
-                "openai_api_key": self.config.get("openai_key")
+                "villager_config": self.config.get("villager_config", {}),
+                "werewolf_config": self.config.get("werewolf_config", {})
             }
 
             agent = WerewolfAgent(
@@ -135,7 +141,8 @@ class WerewolfEnv:
                 event_bus=self.event_bus,
                 shared_memory=self.shared_memory,
                 env=self,
-                number=i+1
+                number=i + 1,
+                is_villager=is_villager
             )
             self.agents.append(agent)
             self.shared_memory["public_state"]["alive_players"].append(agent_id)
@@ -177,6 +184,124 @@ class WerewolfEnv:
         self._log_system(f"Werewolf environment '{self.name}' initialized with {num_players} agents and shared memory.")
         self._log_system(f"Game data stored in: {game_log_dir}")
 
+    def to_dict(self, day_night_info: str = "") -> Dict[str, Any]:
+        """
+        序列化 WerewolfEnv 的主要状态，以 JSON 兼容形式返回。
+        不包含当前线程锁、Condition 等无法序列化的对象，
+        以及不需要保存的临时流程变量。
+
+        Args:
+            day_night_info (str): 用于说明这是第几天/第几夜的存档，比如 "Day2" 或 "Night3"。
+                                会拼接到 env_name 后面。
+        """
+        # 如果 day_night_info 为空，就直接用原来的 name
+        # 否则把它拼在后面
+        combined_name = self.name if not day_night_info else f"{self.name}_{day_night_info}"
+
+        env_dict = {
+            "config": self.config,          # 游戏初始化配置
+            "shared_memory": self.shared_memory,   # 主要的游戏状态
+            "scores": self.scores,          # 好人/狼人当前分数
+            "env_name": combined_name,       # 在原有 name 的基础上加上 "DayX"/"NightY" 等后缀
+            "agents": [agent.to_dict() for agent in self.agents],
+            "shared_memory_path": self.shared_memory_path,
+            # 如果有额外字段，比如日志目录等，可以继续往下加
+            "some_log_dir": getattr(self, "some_log_dir", None),
+        }
+
+        return env_dict
+    
+    @classmethod
+    def load_from_file(cls, file_path: str, log_dir="werewolf_log", override_config_path=None) -> "WerewolfEnv":
+        """
+        从已有快照（JSON）加载 WerewolfEnv。如果提供 override_config_path，
+        则对 env.config 和每个 agent_data 的 villager_config / werewolf_config 进行覆盖或合并。
+        """
+        if not os.path.exists(file_path):
+            raise FileNotFoundError(f"Env snapshot file not found: {file_path}")
+
+        # 1. 从快照 JSON 读取 env_data
+        with open(file_path, "r", encoding="utf-8") as f:
+            env_data = json.load(f)
+        # 2. 创建一个新的 WerewolfEnv 实例（不调用 __init__）
+        env = cls.__new__(cls)
+        env.original_data = env_data
+
+        # 3. 恢复基本信息
+        original_env_name = env_data.get("env_name", "RecoveredEnv")
+        env.name = f"continued_{original_env_name}"
+        env.config = env_data.get("config", {})
+        env.shared_memory = env_data.get("shared_memory", {})
+        env.scores = env_data.get("scores", {})
+
+        # 4. 如果外部传了 override_config_path，则读取新的 YAML
+        agent_overrides = {}
+        if override_config_path and os.path.isfile(override_config_path):
+            with open(override_config_path, "r", encoding="utf-8") as f:
+                new_conf = yaml.safe_load(f)
+            # 你想把 new_conf 合并进 env.config（可选）
+            env.config.update(new_conf)
+            # 假设把 new_conf 中的 "agent_overrides" 取出来
+            # 只要 "agent_overrides" 存在就拿来用
+            villager_overrides = new_conf.get("villager_config", {})
+            werewolf_overrides = new_conf.get("werewolf_config", {})
+
+        # 5. 恢复 agents_data
+        agents_data = env_data.get("agents", [])
+
+        # 6. 创建新日志文件夹
+        snapshot_filename = os.path.splitext(os.path.basename(file_path))[0]
+        timestamp = time.strftime("%Y%m%d_%H%M%S")
+        game_log_dir_name = f"load_from_{snapshot_filename}_{timestamp}"
+        game_log_dir = os.path.join(log_dir, game_log_dir_name)
+        os.makedirs(game_log_dir, exist_ok=True)
+
+        # 更新 shared_memory_path
+        env.shared_memory_path = os.path.join(game_log_dir, "shared_memory.json")
+
+        # 初始化一些属性
+        env.event_bus = EventBus()
+        env.event_bus.subscribe(env, env.receive_action)
+        env.daily_tasks = {}
+        env.agents = []
+
+        # 7. cooperation_mode (举例)
+        cooperation_mode = env.config.get("cooperation_mode", "independent")
+
+        # ========== 核心：对每个 agent_data 的 config 做部分合并 ==========
+        for agent_data in agents_data:
+
+            agent_config = agent_data.get("config", {})
+            # 1) 原地保留其他字段（例如 agent_id、别的 key），
+            #    只对 "villager_config"/"werewolf_config" 进行覆盖或合并
+
+            # - 如果 YAML 里有 "agent_overrides.villager_config" 就与 agent_config["villager_config"] 进行合并
+            if villager_overrides:
+                agent_config["villager_config"].update(villager_overrides)
+
+            # - 如果 YAML 里有 "agent_overrides.werewolf_config" 就与 agent_config["werewolf_config"] 进行合并
+            if werewolf_overrides:
+                agent_config["werewolf_config"].update(werewolf_overrides)
+
+            # 最终把合并后的 agent_config 写回 agent_data
+            agent_data["config"] = agent_config
+            # 2) 生成 WerewolfAgent
+            new_agent = WerewolfAgent.from_dict(
+                agent_data=agent_data,
+                log_path=game_log_dir,
+                event_bus=env.event_bus,
+                shared_memory=env.shared_memory,
+                env=env,
+                strategy=cooperation_mode
+            )
+            env.agents.append(new_agent)
+
+        # 8. 完成实例化
+        env.id = "SYSTEM"
+        env._log_system(f"Successfully loaded WerewolfEnv from '{file_path}'.")
+        env._log_system(f"Logs for this recovered game will be stored in: {game_log_dir}")
+        return env
+        
     def _log_system(self, message: str):
         """
         使用黄色文本输出系统消息。
@@ -231,6 +356,13 @@ class WerewolfEnv:
                 f"Attempted to mark event '{event_type}' as complete, "
                 f"but current event is '{self.current_event}'. No action taken."
             )
+            
+    def save_checkpoint(self, snapshot: Dict[str, Any], filename: str) -> None:
+        # Decide a directory to save these checkpoint JSONs, maybe in the same game_log_dir
+        checkpoint_path = os.path.join(os.path.dirname(self.shared_memory_path), filename)
+        with open(checkpoint_path, "w", encoding="utf-8") as f:
+            json.dump(snapshot, f, indent=4, ensure_ascii=False)
+        self._log_system(f"Checkpoint saved to {checkpoint_path}")
 
     def start(self) -> dict:
         """
@@ -254,6 +386,9 @@ class WerewolfEnv:
                 self.log_event(is_private=False, agent_id="system", content=night_start_message)
                 self.night()
 
+                night_info_str = f"Night{current_day}"
+                snapshot_night = self.to_dict(day_night_info=night_info_str)
+                self.save_checkpoint(snapshot_night, f"checkpoint_{night_info_str}.json")
 
                 # Check termination condition after night phase
                 if self.should_terminate()["terminated"]:
@@ -270,8 +405,26 @@ class WerewolfEnv:
                 day_start_message = f"SYSTEM: Day {current_day} begins. Players discuss and vote on potential suspects."
                 self._log_event(day_start_message)
                 self.log_event(is_private=False, agent_id="system", content=day_start_message)
+                if self.config.get("use_daily_tasks", False):
+                    private_tasks, public_tasks = self.generate_daily_tasks()
+                    self.daily_tasks = {
+                        "private": private_tasks,
+                        "public": public_tasks
+                    }
+                    # Optionally, log a private system message indicating tasks have been generated
+                    self.log_event(
+                        is_private=True,
+                        agent_id="system",
+                        content=(
+                            f"[start] Daily tasks for Day {current_day}: "
+                            f"private={private_tasks}, public={public_tasks}"
+                        )
+                    )
                 self.day()
 
+                day_info_str = f"Day{current_day}"
+                snapshot_day = self.to_dict(day_night_info=day_info_str)
+                self.save_checkpoint(snapshot_day, f"checkpoint_{day_info_str}.json")
 
                 # Check termination condition after day phase
                 game_result = self.should_terminate()
@@ -410,7 +563,7 @@ class WerewolfEnv:
                 if seer_id in self.shared_memory["public_state"]["alive_players"]:
                     self.scores["villager"]["total"] += 1
                     self.scores["villager"]["details"].append(
-                        f"Day {current_day}: Seer {seer_id} survived. Villagers +1 point."
+                        f"Day {current_day}: Seer {seer_id} survived. +1 point."
                     )
                 if self.shared_memory["public_state"]["sheriff"]:
                     self._log_event("Sheriff is deciding the speech order.")
@@ -469,16 +622,17 @@ class WerewolfEnv:
         """
         self._log_system("Checking if the game should terminate.")
 
-
         # 获取存活玩家和狼人数量
         alive_players = self.shared_memory["public_state"]["alive_players"]
+        surviving_players = [
+            {"player_id": player_id, "role": self.get_player_role(player_id)}
+            for player_id in alive_players
+        ]
         werewolves = [
-            agent_id for agent_id in alive_players
-            if self.shared_memory["private_state"]["players"][agent_id]["role"] == "wolf"
+            player for player in surviving_players if player["role"] == "wolf"
         ]
         non_werewolves = [
-            agent_id for agent_id in alive_players
-            if self.shared_memory["private_state"]["players"][agent_id]["role"] != "wolf"
+            player for player in surviving_players if player["role"] != "wolf"
         ]
 
         werewolf_count = len(werewolves)
@@ -523,16 +677,34 @@ class WerewolfEnv:
 
         # 游戏结束时处理逻辑
         if result["terminated"]:
-            # 写入分数到 JSON 文件
-            scores_path = self.shared_memory_path.replace("shared_memory.json", "scores.json")
-            with open(scores_path, "w", encoding="utf-8") as score_file:
-                json.dump(self.scores, score_file, indent=4)
-            self._log_system(f"Scores saved to {scores_path}")
+            # 计算结果得分
+            surviving_good = len(non_werewolves)
+            surviving_wolves = len(werewolves)
+            result_score = surviving_good - surviving_wolves
+            result["scores"] = {
+                "process_scores": self.scores,  # 过程得分
+                "result_score": result_score,   # 结果得分                
+            }
+            # 更新最终结果 JSON 文件内容
+            final_result = {
+                "config": self.config,  # 游戏初始化配置
+                "process_scores": self.scores,  # 过程得分
+                "result_score": result_score,   # 结果得分
+                "surviving_players": surviving_players,  # 存活玩家名单
+                "game_result": result["result"],  # 游戏结果（好人胜利或狼人胜利）
+            }
+
+            # 写入结果到 JSON 文件
+            result_path = self.shared_memory_path.replace("shared_memory.json", "result.json")
+            with open(result_path, "w", encoding="utf-8") as result_file:
+                json.dump(final_result, result_file, indent=4)
+
+            self._log_system(f"Final result saved to {result_path}")
 
             # 构造游戏结束信息
             survivor_info = "\n".join([
-                f"{player_id} ({self.get_player_role(player_id)})"
-                for player_id in alive_players
+                f"{player['player_id']} ({player['role']})"
+                for player in surviving_players
             ])
             final_message = (
                 f"\n======================================================\n"
@@ -540,6 +712,7 @@ class WerewolfEnv:
                 f"Remaining players:\n{survivor_info}\n\n"
                 f"Scores:\nVillagers: {self.scores['villager']['total']}\n"
                 f"Werewolves: {self.scores['werewolf']['total']}\n"
+                f"Result Score: {result_score}\n"
                 f"======================================================\n"
             )
             # 打印红色字体的游戏结束信息
@@ -555,6 +728,179 @@ class WerewolfEnv:
                 self._log_system(f"Error renaming log folder: {e}")
 
         return result
+    
+    def continue_game(self, simulate_one_cycle: bool = False) -> dict:
+        """
+        Continue the game after loading from an external save.
+        This method supports a full "day->night" or "night->day" cycle.
+
+        If 'simulate_one_cycle' is True, the environment will only execute 
+        one full cycle (which involves running both day and night) and then stop.
+        Otherwise, it will keep alternating day/night until the game ends.
+
+        Returns:
+            dict: A combined result containing the final game state plus 
+                  the daily stage task analysis result.
+        """
+
+        # Step 0: Check if the game has already terminated
+        game_result = self.should_terminate()
+        if game_result["terminated"]:
+            termination_message = (
+                "[continue_game] Warning: The loaded save indicates the game "
+                f"has already ended. Result: {game_result['result']}"
+            )
+            self._log_system(termination_message)
+            self.log_event(is_private=False, agent_id="system", content=termination_message)
+            return game_result
+
+        # Step 1: Retrieve the current day and phase
+        current_day = self.shared_memory["public_state"]["days"]
+        current_phase = self.shared_memory["public_state"]["day/night"]
+
+
+        self._log_system(
+            f"[continue_game] Resuming from save. The environment was at Day {current_day}, "
+            f"in the {current_phase} phase (already completed)."
+        )
+        self.log_event(
+            is_private=False,
+            agent_id="system",
+            content=(
+                f"[continue_game] Resuming from save at Day {current_day}, after finishing {current_phase}."
+                " Proceeding to the next phase..."
+            ),
+        )
+        
+        while True:
+            # Check termination before starting a new phase
+            game_result = self.should_terminate()
+            if game_result["terminated"]:
+                break
+
+            if current_phase == "day":
+                # 1) Night of the current day
+                self.shared_memory["public_state"]["days"] += 1
+                self.shared_memory["public_state"]["day/night"] = "night"
+                self.log_event(
+                    is_private=False,
+                    agent_id="system",
+                    content=f"[continue_game] Entering Night of Day {current_day}."
+                )
+                if self.config.get("use_daily_tasks", True):
+                    # If use_daily_tasks = True, generate tasks via generate_daily_tasks()
+                    private_tasks, public_tasks = self.generate_daily_tasks()
+                    self.daily_tasks = {
+                        "private": private_tasks,
+                        "public": public_tasks
+                    }
+                    # For final evaluation, we might use public tasks
+                    tasks_for_evaluation = private_tasks
+                self.night()
+
+                # Save checkpoint after night
+                night_info_str = f"Night{current_day}"
+                snapshot_night = self.to_dict(day_night_info=night_info_str)
+                self.save_checkpoint(snapshot_night, f"checkpoint_{night_info_str}.json")
+
+                if self.should_terminate()["terminated"]:
+                    break
+
+                # 2) Day of the next day
+                current_day = self.shared_memory["public_state"]["days"]
+                current_phase = "day"
+                self.shared_memory["public_state"]["day/night"] = current_phase
+
+                self.log_event(
+                    is_private=False,
+                    agent_id="system",
+                    content=f"[continue_game] Entering Day {current_day}."
+                )
+                self.day()
+
+                # Save checkpoint after day
+                day_info_str = f"Day{current_day}"
+                snapshot_day = self.to_dict(day_night_info=day_info_str)
+                self.save_checkpoint(snapshot_day, f"checkpoint_{day_info_str}.json")
+
+                current_phase = "day"
+                if simulate_one_cycle:
+                    self._log_system("[continue_game] Finished one 'night->day' cycle. Stopping as requested.")
+                    break
+
+            else:
+                # If night was the last completed, do "day -> night"
+                current_day = self.shared_memory["public_state"]["days"]
+                current_phase = "day"
+                self.shared_memory["public_state"]["day/night"] = current_phase
+                if self.config.get("use_daily_tasks", True):
+                    # If use_daily_tasks = True, generate tasks via generate_daily_tasks()
+                    private_tasks, public_tasks = self.generate_daily_tasks()
+                    self.daily_tasks = {
+                        "private": private_tasks,
+                        "public": public_tasks
+                    }
+                    # For final evaluation, we might use public tasks
+                    tasks_for_evaluation = private_tasks
+                self.log_event(
+                    is_private=False,
+                    agent_id="system",
+                    content=f"[continue_game] Entering Day {current_day}."
+                )
+                self.day()
+
+                day_info_str = f"Day{current_day}"
+                snapshot_day = self.to_dict(day_night_info=day_info_str)
+                self.save_checkpoint(snapshot_day, f"checkpoint_{day_info_str}.json")
+
+                game_result = self.should_terminate()
+                if game_result["terminated"]:
+                    break
+
+                self.shared_memory["public_state"]["day/night"] = "night"
+                self.log_event(
+                    is_private=False,
+                    agent_id="system",
+                    content=f"[continue_game] Entering Night of Day {current_day}."
+                )
+                self.shared_memory["public_state"]["days"] += 1
+                if self.config.get("use_daily_tasks", True):
+                    # If use_daily_tasks = True, generate tasks via generate_daily_tasks()
+                    private_tasks, public_tasks = self.generate_daily_tasks()
+                    self.daily_tasks = {
+                        "private": private_tasks,
+                        "public": public_tasks
+                    }
+                    # For final evaluation, we might use public tasks
+                    tasks_for_evaluation = private_tasks
+                self.night()
+
+                night_info_str = f"Night{current_day}"
+                snapshot_night = self.to_dict(day_night_info=night_info_str)
+                self.save_checkpoint(snapshot_night, f"checkpoint_{night_info_str}.json")
+
+                current_phase = "night"
+
+                if simulate_one_cycle:
+                    self._log_system("[continue_game] Finished one 'day->night' cycle. Stopping as requested.")
+                    break
+
+
+        # Now call the daily stage tasks function, e.g. for Day <current_day>
+        # You can customize the tasks or day_label as needed
+        day_label_str = f"Day{current_day}"
+        if self.config.get("use_daily_tasks", True):
+            stage_result = self.evaluate_daily_stage_tasks(day_label=day_label_str, tasks=tasks_for_evaluation)
+
+        # Return both results
+        if self.config.get("use_daily_tasks", True):
+            combined_result = {
+                "game_result": game_result,
+                "stage_result": stage_result
+            }
+        else:
+            combined_result = game_result
+        return combined_result
 
     def log_event(self, is_private: bool, agent_id: str, content: str, log_to_system: bool = True, print_to_system: bool = True) -> None:
         """
@@ -628,7 +974,305 @@ class WerewolfEnv:
                     write_to_agent_log(agent, content)  # Sync to agent's file
                 if print_to_system:
                     self._log_event(f"SYSTEM: {content}")
+                    
+    def evaluate_daily_stage_tasks(self, day_label: str, tasks: List[str]) -> Dict[str, Any]:
+        """
+        Evaluate daily stage tasks after a single day-night cycle, then print the final
+        results in a multi-line style. This includes the outcome of each task in the tasks list.
 
+        Args:
+            day_label (str): For example "Day3".
+            tasks (List[str]): e.g. ["protect_seer", "rescue_villager", "run_for_sheriff",
+                                    "exile_werewolf", "poison_werewolf"].
+
+        Returns:
+            dict: Summarized daily result, with final multi-line console printout.
+        """
+
+
+        # 1) Retrieve original and current scores
+        original_scores = self.original_data.get("scores", {})
+        current_scores = self.scores
+
+        # 2) Identify newly added lines for villager
+        villager_original_details = original_scores.get("villager", {}).get("details", [])
+        villager_current_details = current_scores.get("villager", {}).get("details", [])
+        old_len_v = len(villager_original_details)
+        new_villager_entries = villager_current_details[old_len_v:]
+
+        # 3) Compute daily decimal score for villager and werewolf
+        villager_original_total = original_scores.get("villager", {}).get("total", 0.0)
+        villager_current_total  = current_scores.get("villager", {}).get("total", 0.0)
+        daily_score_villager = villager_current_total - villager_original_total
+
+        werewolf_original_total = original_scores.get("werewolf", {}).get("total", 0.0)
+        werewolf_current_total  = current_scores.get("werewolf", {}).get("total", 0.0)
+        daily_score_werewolf = werewolf_current_total - werewolf_original_total
+
+        # 4) Use regex to detect major-scoring lines (≥1 point)
+        pattern = re.compile(r'.*([\+\-]\d+(?:\.\d+)?)\s*points?\.$')
+        major_score_events = []
+        for entry in new_villager_entries:
+            match = pattern.match(entry.strip())
+            if match:
+                try:
+                    pts_val = float(match.group(1))
+                    if abs(pts_val) >= 1.0:
+                        major_score_events.append(entry)
+                except ValueError:
+                    pass
+
+        # 5) completed_tasks dictionary
+        completed_tasks = {
+            "protect_seer": False,
+            "rescue_villager": False,
+            "run_for_sheriff": False,
+            "exile_werewolf": False,
+            "poison_werewolf": False
+        }
+
+        # Example logic for protect_seer if seer is alive
+        if "protect_seer" in tasks:
+            seer_ids = self.get_player_id("seer")
+            if seer_ids:
+                seer_id = seer_ids[0]
+                alive_players = self.shared_memory["public_state"].get("alive_players", [])
+                if seer_id in alive_players:
+                    completed_tasks["protect_seer"] = True
+
+        # Additional pattern-based logic for rescue_villager, run_for_sheriff,
+        # exile_werewolf, poison_werewolf
+        rescue_pattern = re.compile(r'Witch\s+saved\s+(.+)\s+from\s+werewolf\s+attack\.\s*\+2\s+points?\.')
+        sheriff_pattern = re.compile(r'Villager-aligned\s+sheriff\s+(.+)\s+elected\.\s*\+2\s+points?\.')
+        exile_pattern   = re.compile(r'Werewolf\s+(.+)\s+was\s+banished\.\s*\+2\s+points?\.')
+        poison_pattern  = re.compile(r'Witch\s+killed\s+werewolf\s+(.+)\s+with\s+poison\.\s*\+2\s+points?\.')
+
+        for evt in major_score_events:
+            evt_str = evt.strip()
+            if "rescue_villager" in tasks and not completed_tasks["rescue_villager"]:
+                if rescue_pattern.match(evt_str):
+                    completed_tasks["rescue_villager"] = True
+            if "run_for_sheriff" in tasks and not completed_tasks["run_for_sheriff"]:
+                if sheriff_pattern.match(evt_str):
+                    completed_tasks["run_for_sheriff"] = True
+            if "exile_werewolf" in tasks and not completed_tasks["exile_werewolf"]:
+                if exile_pattern.match(evt_str):
+                    completed_tasks["exile_werewolf"] = True
+            if "poison_werewolf" in tasks and not completed_tasks["poison_werewolf"]:
+                if poison_pattern.match(evt_str):
+                    completed_tasks["poison_werewolf"] = True
+
+        # 6) Daily theoretical max
+        def task_points(tname: str) -> int:
+            if tname == "protect_seer":
+                return 1
+            else:
+                return 2
+
+        daily_theoretical = sum(task_points(t) for t in tasks)
+        if "rescue_villager" in tasks and "poison_werewolf" in tasks:
+            daily_theoretical -= 2
+        if daily_theoretical > 7:
+            daily_theoretical = 7
+
+        # 7) daily_actual_major_score
+        daily_major_score = 0.0
+        for evt_line in major_score_events:
+            match2 = pattern.match(evt_line.strip())
+            if match2:
+                daily_major_score += float(match2.group(1))
+        if completed_tasks["rescue_villager"] and completed_tasks["poison_werewolf"]:
+            daily_major_score -= 2
+        if daily_major_score > 7:
+            daily_major_score = 7
+
+        # 8) Surviving players
+        alive_players_list = self.shared_memory["public_state"].get("alive_players", [])
+        surviving_players = [
+            {"player_id": pid, "role": self.get_player_role(pid)}
+            for pid in alive_players_list
+        ]
+
+        # 9) Build the main result
+        result = {
+            "title": f"{day_label}-stage-result",
+            "daily_score_villager": daily_score_villager,
+            "daily_score_werewolf": daily_score_werewolf,
+            "major_score_events": major_score_events,
+            "task_completion": {t: completed_tasks[t] for t in tasks},
+            "daily_theoretical_max": daily_theoretical,
+            "daily_actual_major_score": daily_major_score,
+            "surviving_players": surviving_players,
+            "config": self.config
+        }
+
+        # 10) File saving logic
+        label_str = day_label.strip().lower()
+        day_number = 0
+        if label_str.startswith("day"):
+            num_part = label_str[3:].strip()
+            try:
+                day_number = int(num_part)
+            except ValueError:
+                day_number = 0
+        day_result_filename = f"Day_{day_number}_to_Day_{day_number + 1}_result.json"
+        result_path = self.shared_memory_path.replace("shared_memory.json", day_result_filename)
+
+        try:
+            with open(result_path, "w", encoding="utf-8") as f:
+                json.dump(result, f, indent=4, ensure_ascii=False)
+        except (FileNotFoundError, OSError) as e:
+            self._log_system(f"Failed to write final result to {result_path}: {e}. "
+                            f"Attempting to rename file with game outcome...")
+            fallback_path = result_path.replace(".json", "_Villagers_win.json")
+            try:
+                with open(fallback_path, "w", encoding="utf-8") as f:
+                    json.dump(result, f, indent=4, ensure_ascii=False)
+                self._log_system(f"Final result successfully written to fallback file {fallback_path}")
+            except Exception as e2:
+                self._log_system(f"Failed to write final result to {result_path}: {e2}. "
+                            f"Attempting to rename file with game outcome...")
+                fallback_path = result_path.replace(".json", "_werewolves_win.json")
+                try:
+                    with open(fallback_path, "w", encoding="utf-8") as f:
+                        json.dump(result, f, indent=4, ensure_ascii=False)
+                    self._log_system(f"Final result successfully written to fallback file {fallback_path}")
+                except Exception as e3:
+                    self._log_system(f"Failed to write final result to {result_path}: {e3}. ")
+        # 11) Build the final_message string in a multi-line format, including each task's result
+        #     in the style of "GAME END!" separation lines
+        survivor_info = "\n".join(
+            f"{player['player_id']} ({player['role']})"
+            for player in surviving_players
+        )
+
+        # We'll also list each task's completion
+        tasks_info_str = ""
+        for t in tasks:
+            status_str = "Completed" if completed_tasks[t] else "Not Completed"
+            tasks_info_str += f"- {t}: {status_str}\n"
+
+        final_message = (
+            f"\n======================================================\n"
+            f"DAILY TASKS RESULT FOR {day_label}\n\n"
+            f"Remaining players:\n{survivor_info}\n\n"
+            f"Scores:\n"
+            f"Villagers: {daily_score_villager:.2f}\n"
+            f"Werewolves: {daily_score_werewolf:.2f}\n"
+            f"Result Score: {daily_major_score:.2f}\n\n"
+            f"Task Completion:\n{tasks_info_str}"
+            f"======================================================\n"
+        )
+
+        # 12) Print final_message in red, then reset color
+        print(Fore.RED + final_message + Style.RESET_ALL)
+
+        return result
+
+    def generate_daily_tasks(self):
+        """
+        Generate two lists of tasks for the current day:
+        1) A private task list (for system determination)
+        2) A public task list (for agents, which may omit or disguise certain info)
+
+        The task definitions follow previous naming:
+        - "protect_seer"
+        - "rescue_villager"
+        - "run_for_sheriff"
+        - "exile_werewolf"
+        - "poison_werewolf"
+
+        Logic for the private task list:
+        1) If the seer is alive, add "protect_seer".
+        2) If the witch has poison_count == 1, add "poison_werewolf".
+        3) If the witch has antidote_count == 1, add "rescue_villager".
+        4) If current day == 1, add "run_for_sheriff".
+        5) Always add "exile_werewolf".
+
+        Logic for the public task list:
+        1) If the witch has poison_count == 1, add "poison_werewolf".
+        2) If the witch has antidote_count == 1, add "rescue_villager".
+        3) If current day == 1, add "run_for_sheriff".
+        4) Always add "exile_werewolf".
+        5) Always add "protect_seer".
+
+        Returns:
+            tuple(list, list): (private_task_list, public_task_list)
+        """
+
+        private_tasks = []
+        public_tasks = []
+
+        # 1) Identify current day
+        current_day = self.shared_memory["public_state"].get("days", 0)
+
+        # 2) Check if the seer is alive
+        seer_alive = False
+        seer_ids = self.get_player_id("seer")
+        if seer_ids:
+            seer_id = seer_ids[0]
+            alive_players = self.shared_memory["public_state"].get("alive_players", [])
+            if seer_id in alive_players:
+                seer_alive = True
+
+        # 3) Get witch's poison_count and antidote_count
+        #    We search for the "witch" role among players in private_state
+        poison_count = 0
+        antidote_count = 0
+        players_info = self.shared_memory["private_state"].get("players", {})
+        for pid, pinfo in players_info.items():
+            if pinfo.get("role") == "witch":
+                status = pinfo.get("status", {})
+                poison_count = status.get("poison_count", 0)
+                antidote_count = status.get("antidote_count", 0)
+                break  # assume only one witch
+
+        # ===== Private tasks logic =====
+        # a) protect_seer if seer is alive
+        if seer_alive:
+            private_tasks.append("protect_seer")
+
+        # b) poison_werewolf if witch has poison_count == 1
+        if poison_count == 1:
+            private_tasks.append("poison_werewolf")
+
+        # c) rescue_villager if witch has antidote_count == 1
+        if antidote_count == 1:
+            private_tasks.append("rescue_villager")
+
+        # d) run_for_sheriff if current_day == 1
+        if current_day == 1:
+            private_tasks.append("run_for_sheriff")
+
+        # e) always add exile_werewolf
+        private_tasks.append("exile_werewolf")
+
+        # ===== Public tasks logic =====
+        # 1) poison_werewolf if witch poison == 1
+        if poison_count == 1:
+            public_tasks.append("poison_werewolf")
+        # 2) rescue_villager if witch antidote == 1
+        if antidote_count == 1:
+            public_tasks.append("rescue_villager")
+        # 3) run_for_sheriff if day1
+        if current_day == 1:
+            public_tasks.append("run_for_sheriff")
+        # 4) always add exile_werewolf
+        public_tasks.append("exile_werewolf")
+        # 5) always add protect_seer
+        public_tasks.append("protect_seer")
+        self.log_event(
+            is_private=True,
+            agent_id="system",
+            content=(
+                "[generate_daily_tasks] Private tasks: "
+                f"{private_tasks}\n"
+                "[generate_daily_tasks] Public tasks: "
+                f"{public_tasks}"
+            )
+        )
+        return private_tasks, public_tasks
+    
     def update_alive_players(self):
         """
         Updates the list of alive players based on their health status in private_state.
@@ -794,7 +1438,6 @@ class WerewolfEnv:
             player_info["status"]["protection_count"] = 0
 
         # Clear the last protected target
-        self.shared_memory["private_state"]["guard_last_night_protect"] = None
 
         # Log the reset action
         self._log_system("Guard protection reset for all players.")
@@ -1285,6 +1928,8 @@ class WerewolfEnv:
             use_antidote = False
             use_poison = False
             poison_target = None
+            self.mark_event_complete(event_type="witch_action")
+            return
         # 获取女巫 ID 及其状态信息
         witch_id = event["sender"]
         witch_status = self.shared_memory["private_state"]["players"][witch_id]["status"]
@@ -1297,36 +1942,40 @@ class WerewolfEnv:
 
         # 处理解药的使用
         if use_antidote and final_target and witch_status["antidote_count"] > 0:
-            # 使用解药将血量恢复至 1
-            self.shared_memory["private_state"]["players"][final_target]["status"]["health"] = 1
-            witch_status["antidote_count"] = 0  # 更新解药数量
+            # 安全获取当晚狼人的死亡列表
+            player_deaths = current_night_log.get("player_dead_tonight", [])
+            if final_target in player_deaths:
+                # 如果 final_target 确实在“即将死亡”列表中
+                self.shared_memory["private_state"]["players"][final_target]["status"]["health"] = 1
+                witch_status["antidote_count"] = 0
+                player_deaths.remove(final_target)
 
-            # 从 death 列表中移除被救的玩家
-            if final_target in current_night_log["player_dead_tonight"]:
-                current_night_log["player_dead_tonight"].remove(final_target)
+                self.log_event(
+                    is_private=True,
+                    agent_id=witch_id,
+                    content=f"Witch used antidote to save {final_target}."
+                )
+                self.log_event(
+                    is_private=True,
+                    agent_id="system",
+                    content=f"Witch used antidote to save {final_target}."
+                )
 
-            # 记录事件日志
-            self.log_event(
-                is_private=True,
-                agent_id=witch_id,
-                content=f"Witch used antidote to save {final_target}."
-            )
-            self.log_event(
-                is_private=True,
-                agent_id="system",
-                content=f"Witch used antidote to save {final_target}."
-            )
-
-            # 更新评分：女巫成功救助被狼人攻击的目标 +1 分
-            self.scores["villager"]["total"] += 1
-            self.scores["villager"]["details"].append(f"Witch saved {final_target} from werewolf attack. +1 point.")
-
-            # 更新 night_cache 中的女巫解药行动
-            current_night_log["witch_action"] = {
-                "action": "antidote",
-                "target": final_target
-            }
-            self.mark_event_complete(event_type="witch_action")
+                # +2 分等原有逻辑 ...
+                current_night_log["witch_action"] = {
+                    "action": "antidote",
+                    "target": final_target
+                }
+                self.mark_event_complete(event_type="witch_action")
+            else:
+                # 否则也要结束事件，避免卡死
+                self.log_event(
+                    is_private=True,
+                    agent_id=witch_id,
+                    content=f"Witch tried to use antidote on {final_target}, but that player was not in the werewolf's kill list."
+                )
+                self.mark_event_complete(event_type="witch_action")
+                return
 
         # 处理毒药的使用
         elif use_poison and poison_target in self.shared_memory["public_state"]["alive_players"] and witch_status["poison_count"] > 0:
@@ -1386,6 +2035,9 @@ class WerewolfEnv:
                 "target": None
             }
             self.mark_event_complete(event_type="witch_action")
+        else:
+            self.mark_event_complete(event_type="witch_action")
+            return
 
     def run_for_sheriff(self) -> None:
         """
@@ -1639,7 +2291,10 @@ class WerewolfEnv:
         
         # 根据玩家 ID 获取对应的玩家引用
         voter_refs = [agent for agent in self.agents if agent.agent_id in never_ran_for_sheriff]
-
+        if not voter_refs:
+            self._log_event("All players have run for sheriff (or none is eligible to vote). Skipping sheriff vote.")
+            self.mark_event_complete(event_type="run_for_sheriff")  # 或者 "vote_for_sheriff" 视你上层事件命名而定
+            return
         # 第三步：构建投票事件
         event = {
             "event_type": "vote_for_sheriff",
@@ -2073,7 +2728,7 @@ class WerewolfEnv:
             if banished_role == "wolf":
                 # 好人阵营得分
                 self.scores["villager"]["total"] += 2
-                self.scores["villager"]["details"].append(f"Werewolf {banished_player_id} was banished. Villagers +2 points.")
+                self.scores["villager"]["details"].append(f"Werewolf {banished_player_id} was banished. +2 points.")
             else:
                 # 狼人阵营得分
                 self.scores["werewolf"]["total"] += 1
@@ -2354,27 +3009,26 @@ class WerewolfEnv:
             self.process_badge_flow(event)
         else:
             self._log_system(f"Unknown event type '{event_type}' received. No action taken.")
-'''
+
 if __name__ == "__main__":
+    for i in range(10):
+        # Game Initialization
+        name = "werewolf_engine_demo"
+        config_path = os.path.join("marble", "configs", "test_config", "werewolf_config_4o.yaml")
 
-    # Game Initialization
-    name = "werewolf_engine_demo"
-    config_path = os.path.join("marble", "configs", "test_config", "werewolf_config.yaml")
+        # Ensure the config file exists
+        if not os.path.exists(config_path):
+            raise FileNotFoundError(f"Configuration file not found at {config_path}")
 
-    # Ensure the config file exists
-    if not os.path.exists(config_path):
-        raise FileNotFoundError(f"Configuration file not found at {config_path}")
+        try:
+            # Create the Werewolf Environment
+            env = WerewolfEnv(name=name, config_path=config_path)
 
-    try:
-        # Create the Werewolf Environment
-        env = WerewolfEnv(name=name, config_path=config_path)
+            # Start the Game
+            print(f"Starting game: {name}")
+            env.start()
 
-        # Start the Game
-        print(f"Starting game: {name}")
-        env.start()
+        except Exception as e:
+            # Handle Initialization or Game Execution Errors
+            print(f"An error occurred while starting the game: {e}")
 
-    except Exception as e:
-        # Handle Initialization or Game Execution Errors
-        print(f"An error occurred while starting the game: {e}")
-
-'''
