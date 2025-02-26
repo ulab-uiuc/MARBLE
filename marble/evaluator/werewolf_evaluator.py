@@ -3,6 +3,7 @@ import re
 import sys
 import time
 import json
+import argparse
 from typing import List, Dict, Any, Optional
 import openai
 from openai import OpenAI
@@ -33,30 +34,25 @@ class WerewolfEvaluator:
         self.base_log_dir = base_log_dir
         self.config_dir = config_dir
 
-        # 用来保存每一夜模拟后的结果
         self.night_cycle_results: List[Dict[str, Any]] = []
 
-        # 用来保存整局模拟的结果
         self.full_run_result: Dict[str, Any] = {}
 
         if not os.path.exists(config_dir):
             raise FileNotFoundError(f"Config file not found at: {config_dir}")
 
         with open(config_dir, "r", encoding="utf-8") as f:
-            config = yaml.safe_load(f)  # 假设使用 YAML 存放配置
+            config = yaml.safe_load(f)  # Assuming YAML is used for configuration
 
         eval_config = config.get("eval_config", {})
 
-        # 获取 API 的基本配置
         self.base_url = eval_config.get("base_url", "https://api.openai.com/v1")
         self.api_key = eval_config.get("api_key", "")
         self.model_name = eval_config.get("model_name", "gpt-4o")
 
-        # 设置 openai 客户端的参数
         openai.api_base = self.base_url
         openai.api_key = self.api_key
 
-        # 为本次评估专门创建一个子文件夹
         timestamp = time.strftime("%Y%m%d_%H%M%S")
         self.evaluator_dir = os.path.join(self.base_log_dir, f"eval_{timestamp}")
         os.makedirs(self.evaluator_dir, exist_ok=True)
@@ -68,8 +64,8 @@ class WerewolfEvaluator:
 
     def find_checkpoint_files(self, pattern="night") -> List[str]:
         """
-        在 self.snapshot_folder 中查找并返回所有符合 'checkpoint_Night(\d+).json' 
-        或 'checkpoint_Day(\d+).json' 的文件路径列表，按数字顺序排列。
+        Search for and return all files matching 'checkpoint_Night(\d+).json' 
+        or 'checkpoint_Day(\d+).json' in self.snapshot_folder, sorted numerically.
         """
         if not os.path.isdir(self.snapshot_folder):
             raise NotADirectoryError(f"Snapshot folder not found: {self.snapshot_folder}")
@@ -82,29 +78,29 @@ class WerewolfEvaluator:
 
         for f in all_files:
             night_match = pattern_night.match(f)
-            # 判断 pattern == "night" 或 "all" 时才加入
+            # Add only when pattern == "night" or "all"
             if night_match and (pattern in ["night", "all"]):
                 matched.append((int(night_match.group(1)), "night", f))
                 continue
 
             day_match = pattern_day.match(f)
-            # 判断 pattern == "day" 或 "all" 时才加入
+            # Add only when pattern == "day" or "all"
             if day_match and (pattern in ["day", "all"]):
                 matched.append((int(day_match.group(1)), "day", f))
                 continue
 
-        # 排序：先按数字升序，再按 day/night 顺序
+        # Sort by number and then by day/night order
         matched.sort(key=lambda x: (x[0], x[1]))
-        # 返回绝对路径
+        # Return absolute paths
         return [os.path.join(self.snapshot_folder, x[2]) for x in matched]
 
     def evaluate_all_nights(self):
         """
-        主调函数:
-        1) 找到所有 checkpoint_*.json 文件, 逐个执行 'simulate_one_cycle=True'。
-        2) 保存单日/单夜模拟结果到 self.night_cycle_results。
-        3) 最后调用 simulate_full_game_run() 执行整局模拟。
-        4) 在 self.evaluator_dir 下写入 final_result.json。
+        Main function:
+        1) Find all checkpoint_*.json files, and simulate each one with 'simulate_one_cycle=True'.
+        2) Save per-night simulation results to self.night_cycle_results.
+        3) After all night simulations are done, run the full simulation from the first night checkpoint.
+        4) Write the final result to 'final_result.json' in self.evaluator_dir.
         """
         checkpoint_files = self.find_checkpoint_files()
         if not checkpoint_files:
@@ -113,13 +109,13 @@ class WerewolfEvaluator:
 
         print(f"[SnapshotEvaluator] Found {len(checkpoint_files)} checkpoint(s). Now evaluating per-night cycles...")
 
-        # 逐个checkpoint文件做单次模拟
+        # Simulate each checkpoint file one by one
         for ckpt_file in checkpoint_files:
             single_result = self.evaluate_single_checkpoint(ckpt_file)
             if single_result:
                 self.night_cycle_results.append(single_result)
 
-        # 等所有夜晚模拟完成后，再来一次全局模拟
+        # After all night simulations, perform a full-run simulation
         first_night_path = None
         for ckpt_file in checkpoint_files:
             if "checkpoint_Night1.json" in ckpt_file:
@@ -127,18 +123,18 @@ class WerewolfEvaluator:
                 break
 
         if first_night_path:
-            # 这里让 simulate_full_game_run 返回 (结果, env)
+            # Return (result, env) from simulate_full_game_run
             full_run_info, final_env = self.simulate_full_game_run(first_night_path)
             self.full_run_result = full_run_info
 
-            # 在整局模拟结束后，用 env 来做村民阵营整体的绩效打分
+            # After the full run ends, use env to evaluate the performance of the Villagers
             if final_env is not None:
                 performance_scores = self.evaluate_villager_merged_performance(final_env)
                 self.full_run_result["villagers_performance"] = performance_scores
         else:
             print("[SnapshotEvaluator] No 'Night1' checkpoint found, skip full-run simulation.")
 
-        # 组合最终结果并写入 final_result.json
+        # Combine final results and write to final_result.json
         final_info = {
             "per_cycle_results": self.night_cycle_results,
             "full_run_result": self.full_run_result
@@ -151,7 +147,7 @@ class WerewolfEvaluator:
 
     def evaluate_single_checkpoint(self, ckpt_path: str) -> Optional[Dict[str, Any]]:
         """
-        针对单个 checkpoint 文件执行一次"simulate_one_cycle=True"的夜晚或白天模拟
+        Simulate a single night or day cycle with 'simulate_one_cycle=True' for a given checkpoint file.
         """
         if not os.path.exists(ckpt_path):
             print(f"[evaluate_single_checkpoint] File not found: {ckpt_path}")
@@ -167,7 +163,7 @@ class WerewolfEvaluator:
             env = WerewolfEnv.load_from_file(
                 file_path=ckpt_path,
                 log_dir=run_dir,
-                override_config_path=self.config_dir  # <-- 新增这个
+                override_config_path=self.config_dir  # <-- Added this
             )
             print(f"[evaluate_single_checkpoint] Loaded env from {ckpt_path}, logs in {run_dir}")
         except Exception as e:
@@ -188,8 +184,8 @@ class WerewolfEvaluator:
 
     def simulate_full_game_run(self, ckpt_path: str):
         """
-        从指定的(通常是 Night1) checkpoint 载入并执行 "simulate_one_cycle=False"，即整局模拟到结束。
-        返回 (game_result, env) 方便外部继续使用 env。
+        Load the specified checkpoint (usually Night1) and perform a full simulation to the game end.
+        Returns (game_result, env) for further use with env.
         """
         base_name = os.path.splitext(os.path.basename(ckpt_path))[0]
         timestamp_str = time.strftime("%Y%m%d_%H%M%S")
@@ -201,7 +197,7 @@ class WerewolfEvaluator:
             env = WerewolfEnv.load_from_file(
                 file_path=ckpt_path,
                 log_dir=run_dir,
-                override_config_path=self.config_dir  # <-- 新增这个
+                override_config_path=self.config_dir  # <-- Added this
             )
             print(f"[simulate_full_game_run] Loaded env from {ckpt_path}, logs in {run_dir}")
         except Exception as e:
@@ -226,7 +222,7 @@ class WerewolfEvaluator:
 
     def gpt_tool_call(self, messages, tools):
         """
-        调用 GPT 模型和指定的工具
+        Call the GPT model with specified tools.
         """
         rounds = 0
         while True:
@@ -250,8 +246,8 @@ class WerewolfEvaluator:
 
     def evaluate_villager_merged_performance(self, env: WerewolfEnv) -> Dict[str, Any]:
         """
-        使用“七维度合并”模型对村民方的表现进行综合评估。
-        包含以下维度：
+        Use the "seven dimensions merged" model to evaluate the performance of the Villagers.
+        It includes the following dimensions:
         1) info_effectiveness_score (10%)
         2) collaboration_limiting_score (20%)
         3) logic_and_reasoning_score (10%)
@@ -260,18 +256,18 @@ class WerewolfEvaluator:
         6) protect_key_players_score (10%)
         7) result_orientation_score (20%)
 
-        调用 GPT 工具 'villager_combined_evaluation' 并解析输出，然后计算加权总分。
+        Call GPT tool 'villager_combined_evaluation' and parse the output to calculate the weighted total score.
         """
 
         shared_memory = env.shared_memory
-        # 1) 获取日志
+        # 1) Get logs
         full_log_text = shared_memory.get("private_event_log", "")
         if not isinstance(full_log_text, str):
             full_log_text = json.dumps(full_log_text, ensure_ascii=False, indent=2)
 
-        # 2) 加载包含七维度Prompt/Tools的 YAML
-        #    你需要提前准备好 'villager_combined_evaluation.yaml' (或其他文件名)
-        #    其中包含 "system"、"user"、"tools"，以及 function: "villager_combined_evaluation"
+        # 2) Load the YAML with the seven dimensions prompts/tools
+        #    You need to prepare 'villager_combined_evaluation.yaml' (or other file names)
+        #    containing "system", "user", "tools", and function: "villager_combined_evaluation"
         combined_yaml_file = "prompts/villager_combined_evaluation.yaml"
         if not os.path.exists(combined_yaml_file):
             print(f"[evaluate_villager_merged_performance] YAML not found: {combined_yaml_file}")
@@ -284,7 +280,7 @@ class WerewolfEvaluator:
         user_prompt = tool_data.get("user", "")
         tools = tool_data.get("tools", [])
 
-        # 将日志替换到 user_prompt 的占位符
+        # Replace logs in user_prompt placeholder
         user_prompt_filled = user_prompt.replace("<<game_log>>", full_log_text)
 
         messages = [
@@ -292,7 +288,7 @@ class WerewolfEvaluator:
             {"role": "user", "content": user_prompt_filled},
         ]
 
-        # 3) 调用 gpt_tool_call()
+        # 3) Call gpt_tool_call()
         try:
             tool_calls = self.gpt_tool_call(messages, tools)
         except Exception as e:
@@ -306,14 +302,14 @@ class WerewolfEvaluator:
         first_call = tool_calls[0]
         arguments_json = first_call.function.arguments
 
-        # 4) 解析 GPT 返回的 JSON
+        # 4) Parse the JSON returned by GPT
         try:
             eval_result = json.loads(arguments_json)
         except json.JSONDecodeError as e:
             print(f"[evaluate_villager_merged_performance] JSON decode error: {e}")
             return {}
 
-        # 5) 依次获取七个维度的 score
+        # 5) Retrieve the seven dimension scores
         info_score = eval_result.get("info_effectiveness_score", 0)
         collab_limiting_score = eval_result.get("collaboration_limiting_score", 0)
         logic_score = eval_result.get("logic_and_reasoning_score", 0)
@@ -322,9 +318,7 @@ class WerewolfEvaluator:
         protect_score = eval_result.get("protect_key_players_score", 0)
         result_score = eval_result.get("result_orientation_score", 0)
 
-        # 6) 根据要求计算加权总分
-        #    collaboration_limiting_score, leadership_and_sheriff_score, result_orientation_score 各20%
-        #    其余 info_score, logic_score, voting_score, protect_score 各10%
+        # 6) Calculate the weighted overall score
         weighted_overall = (
             info_score * 0.10 +
             collab_limiting_score * 0.20 +
@@ -335,9 +329,9 @@ class WerewolfEvaluator:
             result_score * 0.20
         )
 
-        # 7) 组装返回结构（含详细文本）
+        # 7) Return the merged performance with detailed explanation
         merged_performance = {
-            # 各维度分
+            # Scores for each dimension
             "info_effectiveness_score": info_score,
             "collaboration_limiting_score": collab_limiting_score,
             "logic_and_reasoning_score": logic_score,
@@ -346,7 +340,7 @@ class WerewolfEvaluator:
             "protect_key_players_score": protect_score,
             "result_orientation_score": result_score,
             
-            # 各维度的详细说明（GPT 可能会返回长文本）
+            # Detailed explanation for each dimension (GPT might return long texts)
             "info_effectiveness_detail": eval_result.get("info_effectiveness", ""),
             "collaboration_limiting_detail": eval_result.get("collaboration_limiting", ""),
             "logic_and_reasoning_detail": eval_result.get("logic_and_reasoning", ""),
@@ -355,31 +349,34 @@ class WerewolfEvaluator:
             "protect_key_players_detail": eval_result.get("protect_key_players", ""),
             "result_orientation_detail": eval_result.get("result_orientation", ""),
 
-            # 加权总分
+            # Weighted overall score
             "weighted_overall_score": weighted_overall
         }
 
         return merged_performance
+
     
 
     
     def evaluate_multiple_snapshots(self, top_level_dir: str):
         """
-        遍历 top_level_dir 中的所有子文件夹（每个子文件夹对应一局游戏的快照），
-        并对每个子文件夹调用 evaluate_all_nights() 进行评估。
+        Traverse all subfolders in top_level_dir (each subfolder corresponds to a game snapshot),
+        and call evaluate_all_nights() for each subfolder to evaluate.
         
-        每完成一个子文件夹的评估，就将该局的七个细分评分和总分追加到 self.batch_evaluation_results，
-        并将进度保存到 "batch_evaluation_progress.json" 防止中途崩溃数据丢失。
+        After completing the evaluation for each subfolder, append the seven detailed scores and 
+        total score for that game to self.batch_evaluation_results, and save progress to 
+        "batch_evaluation_progress.json" to prevent data loss in case of crashes.
 
-        在全部子文件夹都评估完后，输出每个维度的分数分布和平均分，总分分布和平均分，
-        写入 "batch_evaluation_summary.json"。
+        After all subfolders have been evaluated, output the score distributions and average scores 
+        for each dimension, as well as the total score distribution and average, 
+        and write them to "batch_evaluation_summary.json".
         """
 
         if not os.path.isdir(top_level_dir):
             print(f"[evaluate_multiple_snapshots] {top_level_dir} is not a directory.")
             return
 
-        # 存储所有子文件夹的评分结果，结构示例：
+        # Store the evaluation results for all subfolders, example structure:
         # [
         #   {
         #       "folder": "game_20250108_083807_Villagers_win",
@@ -393,7 +390,7 @@ class WerewolfEvaluator:
         # ]
         self.batch_evaluation_results: List[Dict[str, Any]] = []
 
-        # 先找出 top_level_dir 下的所有子文件夹，假设其中每个子文件夹就对应一个“快照存档”
+        # Find all subfolders under top_level_dir, assuming each subfolder corresponds to a "snapshot archive"
         subfolders = [
             d for d in os.listdir(top_level_dir)
             if os.path.isdir(os.path.join(top_level_dir, d))
@@ -402,30 +399,30 @@ class WerewolfEvaluator:
             print(f"[evaluate_multiple_snapshots] No subfolders found in {top_level_dir}.")
             return
 
-        # 逐个子文件夹进行评估
+        # Evaluate each subfolder
         for idx, folder_name in enumerate(subfolders, start=1):
             snapshot_path = os.path.join(top_level_dir, folder_name)
             print(f"\n=== Evaluating folder {idx}/{len(subfolders)}: {snapshot_path} ===")
 
-            # 每个子文件夹都可以用一个新的 WerewolfEvaluator 实例去跑
-            # 或者你也可重用同一个对象并切换 snapshot_folder，但需注意路径等。
+            # You can either create a new WerewolfEvaluator instance for each subfolder,
+            # or reuse the same object by switching snapshot_folder, but make sure to adjust paths and configurations.
             sub_evaluator = WerewolfEvaluator(
                 snapshot_folder=snapshot_path,
                 config_dir=os.path.join(os.path.dirname(self.snapshot_folder), self.config_dir),
                 base_log_dir=self.base_log_dir
             )
 
-            # 调用 evaluate_all_nights()，它会生成 final_result.json 并在 sub_evaluator.full_run_result 中留存结果
+            # Call evaluate_all_nights(), which generates final_result.json and stores results in sub_evaluator.full_run_result
             sub_evaluator.evaluate_all_nights()
 
-            # 提取合并后的评分
-            # 注意：在 evaluate_all_nights() 完成后，最终结果会存储在 sub_evaluator.full_run_result["villagers_performance"]
+            # Extract the merged performance scores
+            # Note: After evaluate_all_nights() is completed, the final result is stored in sub_evaluator.full_run_result["villagers_performance"]
             merged_perf = sub_evaluator.full_run_result.get("villagers_performance", {})
 
-            # 把这局的评分记录下来
-            # 这里可以把七个明细 + overall_score 全部放进一个dict
+            # Record the scores for this game
+            # Here, you can place all seven dimensions and the overall_score into a dictionary
             record = {
-                "folder": folder_name,  # 方便追溯
+                "folder": folder_name,  # For traceability
                 "info_effectiveness_score": merged_perf.get("info_effectiveness_score", 0),
                 "collaboration_limiting_score": merged_perf.get("collaboration_limiting_score", 0),
                 "logic_and_reasoning_score": merged_perf.get("logic_and_reasoning_score", 0),
@@ -437,12 +434,12 @@ class WerewolfEvaluator:
             }
             self.batch_evaluation_results.append(record)
 
-            # 为防止中途崩溃丢失结果，这里立即写一个进度文件
+            # To prevent data loss due to crash, immediately save progress to a file
             progress_path = os.path.join(self.evaluator_dir, "batch_evaluation_progress.json")
             with open(progress_path, "w", encoding="utf-8") as f:
                 json.dump(self.batch_evaluation_results, f, indent=4, ensure_ascii=False)
 
-        # 全部子文件夹评估完成后，统计各维度的分布和平均值
+        # After all subfolders have been evaluated, calculate score distributions and averages for each dimension
         dimension_keys = [
             "info_effectiveness_score",
             "collaboration_limiting_score",
@@ -454,13 +451,13 @@ class WerewolfEvaluator:
             "weighted_overall_score",
         ]
 
-        # 收集分布
+        # Collect distributions
         dimension_distributions = {k: [] for k in dimension_keys}
         for item in self.batch_evaluation_results:
             for k in dimension_keys:
                 dimension_distributions[k].append(item.get(k, 0))
 
-        # 计算平均分
+        # Calculate averages
         dimension_averages = {}
         for k in dimension_keys:
             values = dimension_distributions[k]
@@ -470,14 +467,13 @@ class WerewolfEvaluator:
                 avg = 0
             dimension_averages[k] = avg
 
-        # 组装一个 summary
+        # Create a summary
         summary = {
             "count_of_snapshots": len(self.batch_evaluation_results),
             "dimension_distributions": dimension_distributions,
             "dimension_averages": dimension_averages
         }
 
-        # 写入最终汇总文件
         summary_path = os.path.join(self.evaluator_dir, "batch_evaluation_summary.json")
         with open(summary_path, "w", encoding="utf-8") as f:
             json.dump(summary, f, indent=4, ensure_ascii=False)
@@ -486,10 +482,17 @@ class WerewolfEvaluator:
         print(f"Batch summary saved to: {summary_path}")
         print(f"Progress details saved to: {progress_path}")
 
-if __name__ == "__main__":
-    top_level_dir = "werewolf_log"
-    config_path = r"marble\configs\test_config\werewolf_config_llama31_8b.yaml"
-
-    # 这时 snapshot_folder 给一个占位值即可，不会真正使用到，因为 evaluate_multiple_snapshots() 会替换
-    evaluator = WerewolfEvaluator(snapshot_folder="placeholder", config_dir=config_path, base_log_dir="werewolf_eval/llama31_8b")
+def evaluate(top_level_dir, config_path, snapshot_folder, base_log_dir):
+    evaluator = WerewolfEvaluator(snapshot_folder=snapshot_folder, config_dir=config_path, base_log_dir=base_log_dir)
     evaluator.evaluate_multiple_snapshots(top_level_dir)
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Start the Werewolf evaluation environment")
+    parser.add_argument('--top_level_dir', type=str, default="werewolf_log", help="Top-level log directory")
+    parser.add_argument('--config_path', type=str, default=r"marble\configs\test_config\werewolf_config.yaml", help="Path to the configuration file")
+    parser.add_argument('--snapshot_folder', type=str, default="placeholder", help="Snapshot folder placeholder, will be replaced by evaluate_multiple_snapshots")
+    parser.add_argument('--base_log_dir', type=str, default="werewolf_eval/4omini", help="Base log directory")
+
+    args = parser.parse_args()
+
+    evaluate(args.top_level_dir, args.config_path, args.snapshot_folder, args.base_log_dir)

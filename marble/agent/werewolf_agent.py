@@ -34,16 +34,16 @@ class WerewolfAgent:
             number (int): Agent's unique number in the game.
             is_villager (bool): Whether the agent is a villager or not. Determines which configuration to use.
         """
-        # 根据 `is_villager` 加载不同的配置
+        # Load different configurations based on `is_villager`
         config_key = "villager_config" if is_villager else "werewolf_config"
         model_config = config.get(config_key, {})
         self.config = config
-        # 获取并保存 API 配置信息为属性
-        self.base_url = model_config.get("base_url", "https://api.openai.com/v1")  # 默认为 OpenAI API
-        self.api_key = model_config.get("api_key", config.get("openai_api_key"))  # 默认使用通用 OpenAI API key
-        self.model_name = model_config.get("model_name", "gpt-4o")  # 默认使用 GPT-4
+        # Get and save API configuration details as attributes
+        self.base_url = model_config.get("base_url", "https://api.openai.com/v1")  # Default to OpenAI API
+        self.api_key = model_config.get("api_key", config.get("openai_api_key"))  # Default to using general OpenAI API key
+        self.model_name = model_config.get("model_name", "gpt-4o")  # Default to GPT-4
         self.strategy = strategy
-        # 初始化 API 客户端
+        # Initialize the API client
         self.client = OpenAI(
             base_url=self.base_url,
             api_key=self.api_key,
@@ -53,39 +53,39 @@ class WerewolfAgent:
         self.id = self.agent_id
         assert isinstance(self.agent_id, str), "agent_id must be a string"
 
-        self.role = role  # 设置角色
+        self.role = role  # Set the role
         self.agent_number = number
-        self.is_villager = is_villager  # 保存是否为村民的标记
+        self.is_villager = is_villager  # Save whether the agent is a villager
         
-        # 保存环境实例
+        # Save the environment instance
         self.env = env
-        # 共享内存文件路径
+        # Shared memory file path
         self.shared_memory = shared_memory
         
-        # 创建一个独立的 logger
+        # Create an independent logger
         self.logger = self._create_logger(self.agent_id)
 
-        # 设置日志文件的路径
+        # Set the log file path
         self.log_file_path = os.path.join(log_path, f"{self.agent_number}-{self.role}-{self.agent_id}_log.txt")
         self._initialize_log_file()
 
-        # 在终端输出并写入日志文件
+        # Print to terminal and write to log file
         init_message = (
             f"{self.role} agent '{self.agent_id}' initialized with role '{self.role}', "
             f"using model '{self.model_name}', base URL '{self.base_url}'"
         )
         self._log_and_save(init_message)
 
-        # 订阅事件
+        # Subscribe to events
         event_bus.subscribe(self, self.receive_communication)
 
-        # 保存 event_bus 引用，方便发布事件
+        # Save event_bus reference for easy event publishing
         self.event_bus = event_bus
 
     def to_dict(self) -> Dict[str, Any]:
         """
-        将 Agent 的关键信息序列化为一个可 JSON 序列化的字典。
-        不包含 event_bus、shared_memory、env 等外部引用。
+        Serialize the agent's key information into a JSON-serializable dictionary.
+        Excludes external references such as event_bus, shared_memory, env, etc.
         """
         return {
             "role": self.role,
@@ -105,13 +105,13 @@ class WerewolfAgent:
         strategy="independent"
     ) -> "WerewolfAgent":
         """
-        传入序列化的数据 (agent_data)，搭配新的 event_bus / shared_memory / env，
-        创建出一个等价的 WerewolfAgent。
+        Given serialized data (agent_data), along with new event_bus / shared_memory / env,
+        create an equivalent WerewolfAgent.
         """
         role = agent_data["role"]
         is_villager = agent_data["is_villager"]
         number = agent_data["number"]
-        # 直接取出原先的 config
+        # Directly extract the original config
         config = agent_data["config"]
         
         new_agent = cls(
@@ -129,60 +129,58 @@ class WerewolfAgent:
     
     def _create_logger(self, agent_id: str):
         """
-        创建并返回每个实例独立的 logger。
+        Creates and returns an independent logger for each instance.
 
         Args:
-            agent_id (str): 当前 Agent 的 ID。
-
+            agent_id (str): The current Agent's ID.
 
         Returns:
-            logging.Logger: 与 agent_id 绑定的日志记录器。
+            logging.Logger: A logger associated with the agent_id.
         """
         logger = logging.getLogger(agent_id)
         logger.setLevel(logging.INFO)
 
-        # 设置处理器和格式
-        handler = logging.StreamHandler()  # 输出到终端
+        # Set handlers and formatter
+        handler = logging.StreamHandler()  # Output to terminal
         formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
         handler.setFormatter(formatter)
 
-        # 添加处理器
-        if not logger.handlers:  # 避免重复添加处理器
+        # Add handler if not already added
+        if not logger.handlers:  # Avoid adding duplicate handlers
             logger.addHandler(handler)
-
 
         return logger
 
     def _initialize_log_file(self) -> None:
         """
-        初始化日志文件。如果文件不存在则创建，不记录任何内容。
+        Initializes the log file. If the file does not exist, it creates one without writing any content.
         """
         if not os.path.exists(self.log_file_path):
             with open(self.log_file_path, 'w', encoding='utf-8') as log_file:
-                pass  # 创建空的日志文件，不写入内容
+                pass  # Create an empty log file without writing anything
 
     def _log_and_save(self, log_entry: str) -> None:
         """
-        将日志信息输出到终端并保存到日志文件中。
+        Outputs log information to the terminal and saves it to the log file.
 
         Args:
-            log_entry (str): 要记录和保存的日志信息。
+            log_entry (str): The log message to be recorded and saved.
         """
-        # 输出到终端
+        # Output to terminal
         self.logger.info(log_entry)
 
-        # 将日志信息写入日志文件
+        # Write the log entry to the log file
         with open(self.log_file_path, 'a', encoding='utf-8') as log_file:
             log_file.write(log_entry + "\n")
 
     def _write_log_entry(self, log_entry: str) -> None:
         """
-        只将日志信息保存到日志文件，不输出到终端。
+        Only saves the log information to the log file, without outputting to the terminal.
 
         Args:
-            log_entry (str): 要保存的日志信息。
+            log_entry (str): The log message to be saved.
         """
-        # 只将日志信息写入日志文件，不输出到终端
+        # Write the log entry to the log file without outputting to the terminal
         with open(self.log_file_path, 'a', encoding='utf-8') as log_file:
             log_file.write(log_entry + "\n")
 
@@ -190,7 +188,6 @@ class WerewolfAgent:
     def act(self, event: Dict[str, Any]) -> Dict[str, Any]:
         """
         Agent takes an action based on the received event.
-
 
         Args:
             event (Dict[str, Any]): The event that triggers an action.
@@ -200,31 +197,31 @@ class WerewolfAgent:
         """
 
         event_type = event.get("event_type", "")
-        reply_event_type = f"reply_{event_type}"  # 将事件类型格式化为 reply_<event_type>
-
+        reply_event_type = f"reply_{event_type}"  # Format the event type as reply_<event_type>
 
         # Initialize result as no_action in expected event format
         result = {"event_type": "reply_no_action", "sender": self.agent_id, "recipients": [], "content": {}}
-        result_content =  {}
-        # 特定处理狼人事件的格式
+        result_content = {}
+        
+        # Special processing for werewolf-related events
         if event_type in ["werewolf_action", "werewolf_discussion"]:
             try:
-                result_content = self._wolf_action(event)  # 获取狼人行动的内容
+                result_content = self._wolf_action(event)  # Get werewolf action content
                 result = {
-                    "event_type": "reply_werewolf_action",  # 格式化后的事件类型
+                    "event_type": "reply_werewolf_action",  # Formatted event type
                     "sender": self.agent_id,
-                    "recipients": [self.env],  # 接收者为系统
-                    "content": result_content.get("action", "no action")  # 事件内容包含在内容字段中
+                    "recipients": [self.env],  # The recipient is the system
+                    "content": result_content.get("action", "no action")  # Event content is inside the content field
                 }
             except Exception as e:
                 self.logger.error(f"Error while performing action {event_type}: {e}")
                 result["content"] = {"error": str(e)}
         else:
             try:
-                # 针对其他事件调用通用的 _perform_action 方法
+                # Call a general method for other events
                 result_content = self._perform_action(event)
                 result = {
-                    "event_type": reply_event_type,  # 格式化后的事件类型
+                    "event_type": reply_event_type,  # Formatted event type
                     "sender": self.agent_id,
                     "recipients": [self.env],
                     "content": result_content.get("action", "no action")
@@ -235,13 +232,11 @@ class WerewolfAgent:
 
         self._write_log_entry(str(result_content))
 
-
         return result
 
     def receive_communication(self, event: Dict[str, Any], debug: bool = False) -> None:
         """
         Receive communication (from EventBus) and process the event.
-
 
         Args:
             event (Dict[str, Any]): The event data received (e.g., other players' actions, state updates).
@@ -250,29 +245,29 @@ class WerewolfAgent:
         if debug:
             self.logger.info(f"Agent {self.agent_id} received event: {event}")
 
-        # 检查自己是否是事件的接受者之一
+        # Check if the agent is one of the recipients of the event
         recipients = event.get("recipients", [])
         if self not in recipients:
             if debug:
                 self.logger.info(f"Agent {self.agent_id} ignored event '{event.get('event_type')}' as it is not a recipient.")
-            return  # 事件不针对该 agent，不做处理
+            return  # Event is not for this agent, no need to process
 
-        # 打印事件接收者及事件类型
+        # Log event processing
         if debug:
             self.logger.info(f"Agent {self.agent_id} processing event '{event.get('event_type')}'. Recipients: {recipients}")
 
-        # 检查 agent 是否在存活列表中
+        # Check if the agent is in the list of alive players
         alive_players = self.shared_memory["public_state"].get("alive_players", [])
         if self.agent_id not in alive_players:
             if debug:
                 self.logger.info(f"Agent {self.agent_id} ignored event '{event.get('event_type')}' as it is not in the alive players list.")
-            return  # 如果 agent 不在存活列表中，不进行处理
+            return  # If agent is not in the alive players list, do not process
 
-        # 打印存活状态
+        # Log alive status
         if debug:
             self.logger.info(f"Agent {self.agent_id} is in the alive players list: {alive_players}")
 
-        # 检查事件类型是否需要特殊条件
+        # Check if the event type requires special conditions
         event_type = event.get("event_type")
         if event_type in ["decide_speech_order", "decide_badge_flow"]:
             badge_count = self.shared_memory["private_state"]["players"][self.agent_id]["status"].get("badge_count", 0)
@@ -283,14 +278,14 @@ class WerewolfAgent:
             if debug:
                 self.logger.info(f"Agent {self.agent_id} processing special event '{event_type}' with badge_count: {badge_count}.")
 
-        # 执行动作并返回 action
+        # Perform the action and return the action
         if debug:
             self.logger.info(f"Agent {self.agent_id} preparing to act on event '{event_type}'.")
         action = self.act(event)
         if debug:
             self.logger.info(f"Agent {self.agent_id} generated action: {action}")
 
-        # 发布动作
+        # Publish the action
         self._publish_action(action)
         if debug:
             self.logger.info(f"Agent {self.agent_id} published action: {action}")
@@ -298,7 +293,6 @@ class WerewolfAgent:
     def _publish_action(self, action: str) -> None:
         """
         Publish the action decided by the agent.
-
 
         Args:
             action (str): The action to publish.
@@ -321,11 +315,11 @@ class WerewolfAgent:
             rounds += 1
             try:
                 response = self.client.chat.completions.create(
-                    model=self.model_name,  # 使用 self.model_name 替代硬编码的模型名称
+                    model=self.model_name,  # Use self.model_name instead of hardcoded model name
                     messages=messages,
                     tools=tools,
                     tool_choice="required",
-                    temperature=0.7,  # 设置温度为1以增加生成的多样性
+                    temperature=0.7,  # Set temperature to 0.7 for more diverse results
                     n=1,
                 )
                 tool_calls = response.choices[0].message.tool_calls
@@ -336,19 +330,17 @@ class WerewolfAgent:
                 if rounds > 3:
                     raise Exception("Chat Completion failed too many times")
 
-
     def _wolf_action(self, event: Dict[str, Any]) -> Dict[str, Any]:
         """
         Process werewolf-specific actions based on the event type (werewolf_action or werewolf_discussion).
 
-
         Args:
             event (Dict[str, Any]): The event data received (with event_type "werewolf_action" or "werewolf_discussion").
         """
-        # Step 1: 获取事件类型
+        # Step 1: Get the event type
         event_type = event.get("event_type", "")
 
-        # Step 2: 定义 YAML 模板路径
+        # Step 2: Define YAML template path
         yaml_paths = {
             "werewolf_action": r"marble\agent\werewolf_prompts\werewolf_action.yaml",
             "werewolf_discussion": r"marble\agent\werewolf_prompts\werewolf_discussion.yaml"
@@ -358,7 +350,7 @@ class WerewolfAgent:
             self.logger.error(f"Invalid event type for werewolf action: {event_type}")
             return {"action": "no_action", "target": None}
 
-        # Step 3: 加载 YAML 模板
+        # Step 3: Load YAML template
         try:
             with open(yaml_path, 'r', encoding='utf-8') as f:
                 action_template = yaml.safe_load(f)
@@ -368,14 +360,13 @@ class WerewolfAgent:
             self.logger.error(f"Failed to load prompt template for {event_type}: {e}")
             return {"action": "no_action", "target": None}
 
-        # Step 4: 读取共享内存中的游戏状态
+        # Step 4: Retrieve game state from shared memory
         try:
-                
             public_state = self.shared_memory.get("public_state", {})
             private_state = self.shared_memory.get("private_state", {}).get("players", {}).get(self.agent_id, {})
             personal_event_log = private_state.get("personal_event_log", "")
 
-            # 构建游戏状态（从 public_state 中）
+            # Build game state (from public_state)
             game_state = {
                 "days": public_state.get("days", 0),
                 "day/night": public_state.get("day/night", "night"),
@@ -383,53 +374,51 @@ class WerewolfAgent:
                 "sheriff": public_state.get("sheriff", None)
             }
 
-            # 使用个人事件日志作为狼人讨论内容的基础
+            # Use personal event log as the base for werewolf discussion
             public_chat = personal_event_log
         except Exception as e:
             self.logger.error(f"Error retrieving game state or personal event log from shared memory: {e}")
             return {"action": "no_action", "target": None}
 
-        # Step 5: 针对 werewolf_action 和 werewolf_discussion 分别填充 prompt
+        # Step 5: Fill in the prompt for werewolf_action and werewolf_discussion
         filled_prompt = ""
 
-
-            # Werewolf Action: 第一次选择目标
+        # Werewolf Action: First time choosing a target
         if event_type == "werewolf_action":
-            # 获取当前夜晚的存活玩家信息
+            # Get current night's alive player information
             player_info = event["content"]["player_info"]
             alive_players_str = player_info["alive_players"]
             alive_werewolves_str = player_info["alive_werewolves"]
 
-            # 填充狼人行动的特定信息
+            # Fill in the specific information for werewolf action
             filled_prompt = prompt_template.replace("<<public_chat>>", public_chat)
             filled_prompt = filled_prompt.replace("<<game_state>>", json.dumps(game_state, indent=2))
             filled_prompt = prompt_template.replace("<<player info>>", f"Alive players: {alive_players_str}\nAlive werewolves: {alive_werewolves_str}")
 
-        # Werewolf Discussion: 统一目标
+        # Werewolf Discussion: Unified target
         elif event_type == "werewolf_discussion":
-            # 获取存活玩家、存活狼人以及上一次讨论选择的信息
+            # Get alive players, alive werewolves, and last round's target information
             player_info = event.get("content", {}).get("allies_info", {})
             alive_players_str = player_info.get("alive_players", "")
             alive_werewolves_str = player_info.get("alive_werewolves", "")
             last_round_targets = player_info.get("last_round_targets", {})
             rounds_remaining = event.get("content", {}).get("rounds_remaining")
-            # 构建 last_round_targets 的格式化字符串
+            # Format the last_round_targets string
             last_round_targets_str = "\n".join(f"{wolf_id}: {target}" for wolf_id, target in last_round_targets.items())
 
-            # 填充狼人讨论的特定信息
+            # Fill in the specific information for werewolf discussion
             filled_prompt = prompt_template.replace("<<public_chat>>", public_chat)
             filled_prompt = filled_prompt.replace("<<game_state>>", json.dumps(game_state, indent=2))
             filled_prompt = filled_prompt.replace("<<player info>>", f"Alive players: {alive_players_str}\nAlive werewolves: {alive_werewolves_str}\nLast round targets:\n{last_round_targets_str}")
             filled_prompt = filled_prompt.replace("<<rounds_remaining>>", str(rounds_remaining))
 
-
-        # Step 6: 准备传递给工具的消息内容
+        # Step 6: Prepare the message content to pass to the tool
         messages = [
             {'role': 'system', 'content': action_template.get('system', '')},
             {'role': 'user', 'content': filled_prompt}
         ]
 
-        # Step 7: 调用 GPT 工具来决定行动
+        # Step 7: Call GPT tool to decide the action
         try:
             tool_calls = json.loads(self.gpt_tool_call(messages, tools)[0].function.arguments)
             return tool_calls

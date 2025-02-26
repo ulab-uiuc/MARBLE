@@ -22,7 +22,3 @@ werewolf_config:
   model_name: "gpt-4o"
 cooperation_mode: "cooperative"
 use_daily_tasks: True
-eval_config:
-  base_url: "https://api.openai.com/v1"
-  api_key: "your api key"
-  model_name: "gpt-4o"
