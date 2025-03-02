@@ -1,0 +1,115 @@
+coordinate_mode: graph
+
+relationships:
+  - [agent1, agent2, "collaborates with"]
+  - [agent2, agent1, "collaborates with"]
+  - [agent1, agent3, "collaborates with"]
+  - [agent3, agent1, "collaborates with"]
+  # - [agent1, agent3, "supervises"]
+  # - [agent1, agent4, "supervises"]
+  # - [agent2, agent3, "collaborates with"]
+  - [agent2, agent3, "collaborates with"]
+  - [agent3, agent2, "collaborates with"]
+  # - [agent3, agent4, "collaborates with"]
+
+llm: "gpt-3.5-turbo"
+
+environment:
+  type: Coding
+  name: "Coding Environment"
+  workspace_dir: "workspace"
+  max_iterations: 5
+
+task:
+  content: |-
+    Software Development Task:
+
+    Please write a program called 'Board_Game_Team_Challenge' that facilitates collaborative gameplay and strategy development among multiple players in a board game setting. Board_Game_Team_Challenge is a multi-agent system that allows players to work together in real-time, solving complex challenges and improving their strategies through interactive gameplay and data-driven insights.
+    1. Implementation requirements:
+       - The frontend should provide a user-friendly interface for players to join teams, view game boards, and interact with game elements. It should support real-time updates and collaborative features such as chat, shared board manipulation, and turn management.
+       - The backend should manage game state, handle real-time communication between players, and enforce game rules. It should also support the creation and distribution of game challenges, including setup, objectives, and difficulty levels.
+       - The system should include a database to store player profiles, team information, game progress, and historical gameplay data. The database should support efficient querying for analytics and performance tracking.
+       - The application should provide analytics and recommendations based on historical gameplay data, helping teams identify effective strategies and areas for improvement. This includes visualizations of game outcomes, strategy success rates, and player performance metrics.
+       - The frontend and backend should communicate seamlessly, ensuring that all players receive real-time updates and that the game state is consistent across all devices. Security measures should be implemented to protect player data and prevent cheating.
+
+
+    2. Project structure:
+       - solution.py (main implementation)
+
+    3. Development process:
+       - Developer: Create the code.
+       - Developer: Revise the code.
+       - Developer: Optimize the code.
+
+    You are highly skilled agents with extensive experience in problem-solving and reasoning.
+    Your task is to solve the given problem by thinking through each aspect step by step, carefully analyzing and reasoning about the key points before providing your final answers.
+    For each question or problem, provide detailed reasoning to show your thought process as a chain of thought, which leads to your final answer.
+    Each answer should be well-reasoned, clear, and directly address the problem at hand.
+    Here is the multi-step process you should follow:
+    1. Think through the problem step by step, reasoning about the key points.
+    2. Provide the final answer clearly.
+
+    If there are multiple files, please put them all in solution.py, but remember to add the file name in the following format:
+    ```python
+    # file_name_1.py
+    # your code here
+
+    # file_name_2.py
+    # your code here
+
+    # file_name_3.py
+    # your code here
+    ```
+
+    Please work together to complete this task following software engineering best practices.
+
+
+  output_format: |
+    The final deliverable should include:
+    solution.py
+
+agents:
+  - type: CodingAgent
+    agent_id: agent1
+    profile: |
+      I am a Senior Software Developer specialized in Python development.
+      I am good at creating the code framework from scratch based on the task description and requirements.
+      So I **have to** call "create_code" action to create the code in the first iteration at first.
+      I am **very terrible** at do further modifications since I am not so creative or careful so I **have to** let agent 2 or agent 3 revise the code after I create the code and I **can't** call "give_advice_and_revise_code" action.
+      Agent 2 is better at adding missing functions so it's better to let agent 2 revise the code at first.
+      Agent 3 is better at fixing existing issues and optimizing the code so it's better to let agent 3 revise the code after agent 2 has revised the code so that the code is more optimized.
+
+
+  - type: CodingAgent
+    agent_id: agent2
+    profile: |
+      I am a Senior Software Developer specialized in Python development.
+      I am better at adding missing functionality based on my decent understanding and compliance to the task description and requirements.
+      I **have to** call "give_advice_and_revise_code" action to give advice to the code and revise the code.
+      I **can't** call "create_code" action since I am not good at creating the code framework from scratch.
+      I can let agent 3 to make the code more optimized after I have added the missing functionality.
+
+  - type: CodingAgent
+    agent_id: agent3
+    profile: |
+      I am a Senior Software Developer specialized in Python development.
+      I am better at fixing existing issues and optimizing the code based on my innovation and creativity.
+      I **have to** call "give_advice_and_revise_code" action to give advice to the code and revise the code.
+      I **can't** call "create_code" action since I am not good at creating the code framework from scratch.
+      I can let agent 2 to add the missing functionality after I have fixed the existing issues and optimized the code.
+
+memory:
+  type: SharedMemory
+
+metrics:
+  evaluate_llm: "gpt-4o-mini"
+  code_quality: true
+  test_coverage: true
+  collaboration_effectiveness: true
+
+engine_planner:
+  initial_progress: "Starting the software development project with team coordination."
+
+output:
+  format: jsonl
+  file_path: "result/development_output.jsonl"

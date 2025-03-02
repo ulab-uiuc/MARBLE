@@ -32,7 +32,7 @@ class CodingAgent:
     Base class for all agents.
     """
 
-    def __init__(self, config: Dict[str, Union[Any, Dict[str, Any]]], env: EnvType, shared_memory: Union[SharedMemory, None] = None, model: str = "meta-llama/Llama-3.1-70B-Instruct"):
+    def __init__(self, config: Dict[str, Union[Any, Dict[str, Any]]], env: EnvType, shared_memory: Union[SharedMemory, None] = None, model: str = "gpt-3.5-turbo"):
         """
         Initialize the agent.
 
@@ -254,6 +254,11 @@ Implementation Requirements:
         output = "Result from the model:" + result_content + "\n"
         if result_from_function_str:
             output += "Result from the function:" + result_from_function_str
+
+        # 在返回结果前添加日志
+        self.logger.info(f"Agent '{self.agent_id}' communication result: {communication}")
+        self.logger.info(f"Agent '{self.agent_id}' action result: {result}")
+        
         return output, communication
 
 

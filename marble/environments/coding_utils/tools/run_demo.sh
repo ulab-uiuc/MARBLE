@@ -2,13 +2,13 @@ WORKSPACE_DIR="/opt/dlami/nvme/zhe/MARBLE/marble/workspace"
 UPDATE_SCRIPT="/opt/dlami/nvme/zhe/MARBLE/marble/environments/coding_utils/tools/update_config.py"
 RUN_DEMO_SCRIPT="/opt/dlami/nvme/zhe/MARBLE/marble/run_demo.sh"
 
-model_name="meta-llama/Llama-3.1-70B-Instruct"
+model_name="gpt-3.5-turbo"
 safe_model_name=$(echo ${model_name} | tr '/' '_')
 LOG_DIR="/opt/dlami/nvme/zhe/MARBLE/marble/logs/${safe_model_name}"
 
 mkdir -p ${LOG_DIR}
 
-for id in {1..2}; do
+for id in {1..100}; do
     echo "Processing task with ID=$id..."
     rm -rf ${WORKSPACE_DIR}/*
     python ${UPDATE_SCRIPT} --id ${id}

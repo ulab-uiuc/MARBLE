@@ -1,0 +1,87 @@
+coordinate_mode: chain
+
+relationships:
+  - [agent1, agent2, "collaborates with"]
+  # - [agent1, agent3, "supervises"]
+  # - [agent1, agent4, "supervises"]
+  # - [agent2, agent3, "collaborates with"]
+  - [agent2, agent3, "collaborates with"]
+  # - [agent3, agent4, "collaborates with"]
+
+llm: "gpt-3.5-turbo"
+
+environment:
+  type: Coding
+  name: "Coding Environment"
+  workspace_dir: "workspace"
+  max_iterations: 10
+
+task:
+  content: |
+    Software Development Task:
+    
+    Create a Python Snake Game with the following requirements:
+    
+    1. Implementation requirements:
+       - The game should be a simple 2D snake game with a snake that moves around the screen and eats food.
+       - The snake should grow in length when it eats food.
+       - The game should be terminal based.
+       - The game should be playable by pressing the arrow keys.
+    
+    2. Project structure:
+       - solution.py (main implementation)
+    
+    3. Development process:
+       - Developer: Create the code.
+       - Developer: Update the code.
+       - Reviewer: Code review 
+    
+    Please work together to complete this task following software engineering best practices.
+
+  output_format: |
+    The final deliverable should include:
+    solution.py
+
+agents:
+  - type: CodingAgent
+    agent_id: agent1
+    profile: |
+      I am a Senior Software Developer specialized in Python development.
+      I have to call "create_code" action to create the code in the first iteration.
+      I need to let agent2 revise the code after I create the code.
+      But if the solution.py already exists, I have to call "revise_code" action to revise the code.
+
+  - type: CodingAgent
+    agent_id: agent2
+    profile: |
+      I am a Senior Software Developer specialized in Python development.
+      I have to call "revise_code" action to revise the code and furtherimprove the code quality.
+
+  - type: CodingAgent
+    agent_id: agent3
+    profile: |
+      I am a Code Reviewer with expertise in code quality and best practices.
+      I have deep knowledge of software architecture and coding standards.
+      I have to call "review_code" action to review the code.
+
+memory:
+  type: SharedMemory
+
+metrics:
+  evaluate_llm: "gpt-4"
+  code_quality: true
+  test_coverage: true
+  collaboration_effectiveness: true
+
+engine_planner:
+  initial_progress: "Starting the software development project with team coordination."
+
+output:
+  format: jsonl
+  file_path: "result/development_output.jsonl"
+
+
+
+         - Developer: Create the code.
+       - Developer: Revise the code.
+       - Developer: Optimize the code.

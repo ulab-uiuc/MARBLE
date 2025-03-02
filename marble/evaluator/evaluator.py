@@ -4,7 +4,9 @@ Evaluator module for tracking metrics and evaluating agent performance.
 
 import json
 import re
+import os
 from typing import Any, Dict, List
+from ruamel.yaml import YAML
 
 from marble.agent import BaseAgent
 from marble.environments import BaseEnvironment
@@ -37,7 +39,7 @@ class Evaluator:
         }
         with open('evaluator/evaluator_prompts.json', 'r', encoding='utf-8') as f:
             self.evaluation_prompts = json.load(f)
-        self.llm = self.metrics_config.get('evaluate_llm', 'meta-llama/Llama-3.1-70B-Instruct')
+        self.llm = self.metrics_config.get('evaluate_llm', 'gpt-4o-mini')
 
 
     def update(self, environment: BaseEnvironment, agents: List[BaseAgent]) -> None:
@@ -544,80 +546,117 @@ Your rating:"""
     def evaluate_code_quality(self, task: str, code_result: str) -> None:
         """
         Evaluate the code quality based on stricter criteria.
-        
-        Args:
-            task (str): The task description.
-            code_result (str): The code result to be evaluated.
         """
-        code_quality_prompt_template = """
-                [Context]
-                **Task:** {task}
+        try:
+            # 读取配置文件
+            config_path = "/opt/dlami/nvme/zhe/MARBLE/marble/configs/coding_config/coding_config.yaml"
+            if not os.path.exists(config_path):
+                self.logger.error("Config file not found")
+                return
 
-                **Code Result:** {code_result}
+            yaml = YAML()
+            with open(config_path, 'r', encoding='utf-8') as f:
+                config = yaml.load(f)
 
-                [System]
-                This evaluation requires **extremely stringent scoring and strict deduction**. The scores must not be generous, and deductions should be applied strictly for every issue found. 
+            full_task_description = config['task']['content']
+            
+            # 提取requirements部分
+            requirements_start = "1. Implementation requirements:\n"
+            requirements_end = "\n\n2. Project structure:"
+            requirements = full_task_description[
+                full_task_description.find(requirements_start) + len(requirements_start):
+                full_task_description.find(requirements_end)
+            ].strip()
 
-                ### **Evaluation Criteria**
-                1. **Instruction-Following:** Does the code fulfill all the requirements of the task? Deduct 1 point for every unmet or partially met requirement from the task instructions. 
-                2. **Executability:** Is the code syntactically correct and executable? Deduct points for any syntax errors, missing imports, or runtime errors. 
-                3. **Consistency:** Is the code consistent in variable naming, formatting, and logic? Deduct points for inconsistent variable naming, formatting issues, or contradictory logic. 
-                4. **Quality:** Is the code well-documented, clear, and modular? Deduct points for poor documentation, unclear logic, or lack of modular design. 
+            # 读取solution.py
+            solution_path = "/opt/dlami/nvme/zhe/MARBLE/marble/workspace/solution.py"
+            solution_content = ""
+            if os.path.exists(solution_path):
+                with open(solution_path, 'r', encoding='utf-8') as f:
+                    solution_content = f.read()
 
-                ### **Scoring**
-                - **1 point:** Below Average - Significant issues that need addressing.
-                - **2 points:** Average - Noticeable areas for improvement.
-                - **3 points:** Good - Minor issues or improvements needed.
+            code_quality_prompt_template = """
+                    [Context]
+                    **Task Description:**
+                    {task_description}
 
-                bonus stage:
-                Only code with a base score of **3** can be considered for bonus points.
-                - **4 points:** Excellent - Almost or fully satisfies the criterion.
-                - **5 points:** Legendary - Flawless, perfectly satisfies the criterion, and exceeds expectations.
+                    **Implementation Requirements:**
+                    {requirements}
 
-                **Do not give the same scores for different criteria, such as 3 for instruction-following, 3 for executability, 3 for consistency, and 3 for quality.**
-                If you give the same scores for the 4 criteria, you have to add or deduct 1 point randomly for one or two criteria.
+                    **Current Solution:**
+                    {solution}
 
-                
+                    [System]
+                    This evaluation requires strict scoring and deduction. The scores should not be generous, and deductions should be applied for every issue found. 
 
-                ### **Question**
-                Based on the criteria, evaluate the code and output the scores for each criterion in the following JSON format:
-                {{
-                    "instruction_following": score,
-                    "executability": score,
-                    "consistency": score,
-                    "quality": score
-                }}
-        """
+                    ### **Evaluation Criteria**
+                    1. **Instruction-Following:** Does the code fulfill all the requirements of the task? Deduct points for unmet or partially met requirement from the task instructions. 
+                    2. **Executability:** Is the code syntactically correct and executable? Deduct points for any syntax errors, missing imports, or runtime errors. 
+                    3. **Consistency:** Is the code consistent in variable naming, formatting, and logic? Deduct points for inconsistent variable naming, formatting issues, or contradictory logic. 
+                    4. **Quality:** Is the code well-documented, clear, and modular? Deduct points for poor documentation, unclear logic, or lack of modular design. 
 
-        # Fill in the template
-        prompt = code_quality_prompt_template.format(task=task, code_result=code_result)
+                    ### **Scoring**
+                    - **1 point:** Below Average - Significant issues that need addressing.
+                    - **2 points:** Average - Noticeable areas for improvement.
+                    - **3 points:** Good - Minor issues or improvements needed.
+                    - **4 points:** Excellent - Almost or fully satisfies the criterion.
+                    - **5 points:** Legendary - Flawless, perfectly satisfies the criterion, and exceeds expectations.
 
-        # Call the LLM
-        response = model_prompting(
-            llm_model=self.llm,
-            messages=[{"role": "user", "content": prompt}],
-            return_num=1,
-            max_token_num=4096,
-            temperature=0.0,
-            top_p=None,
-            stream=None,
-        )[0]
+                    **Do not give the same scores for different criteria, such as 3 for instruction-following, 3 for executability, 3 for consistency, and 3 for quality.**
+                    If you give the same scores for the 4 criteria, you have to add or deduct 1 point randomly for one or two criteria.
 
-        # 使用新的解析方法替换原来的 parse_research_ratings
-        scores = self.parse_code_quality_scores(response.content)
+                    ### **Question**
+                    Based on the criteria, evaluate the code and output the scores for each criterion in the following JSON format:
+                    {{
+                        "instruction_following": score,
+                        "executability": score,
+                        "consistency": score,
+                        "quality": score
+                    }}
+            """
 
-        if scores:
-            self.metrics["code_quality"] = scores
-            self.logger.info(f"Code quality evaluated strictly: {scores}")
-        else:
-            self.logger.error("Failed to parse code quality scores.")
-            # 设置默认的最低分数
+            # Fill in the template
+            prompt = code_quality_prompt_template.format(
+                task_description=full_task_description,
+                requirements=requirements,
+                solution=solution_content
+            )
+
+            # Call the LLM
+            response = model_prompting(
+                llm_model=self.llm,
+                messages=[{"role": "user", "content": prompt}],
+                return_num=1,
+                max_token_num=4096,
+                temperature=0.0,
+                top_p=None,
+                stream=None,
+            )[0]
+
+            # 使用新的解析方法替换原来的 parse_research_ratings
+            scores = self.parse_code_quality_scores(response.content)
+
+            if scores:
+                self.metrics["code_quality"] = scores
+                self.logger.info(f"Code quality evaluated strictly: {scores}")
+            else:
+                self.logger.error("Failed to parse code quality scores.")
+                # 设置默认的最低分数
+                self.metrics["code_quality"] = {
+                    "instruction_following": 1,
+                    "executability": 1,
+                    "consistency": 1,
+                    "quality": 1
+                }
+            self.logger.debug(f"LLM Response: {response.content}")
+            
+        except Exception as e:
+            self.logger.error(f"Error in code quality evaluation: {e}")
             self.metrics["code_quality"] = {
                 "instruction_following": 1,
                 "executability": 1,
                 "consistency": 1,
                 "quality": 1
             }
-        self.logger.debug(f"LLM Response: {response.content}")
 
 

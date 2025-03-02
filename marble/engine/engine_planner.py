@@ -5,10 +5,12 @@ Engine Planner module responsible for task assignment and scheduling.
 """
 
 import json
+import os
 from typing import Any, Dict, List
 
 from litellm import token_counter
 from litellm.types.utils import Message
+from ruamel.yaml import YAML
 
 from marble.graph.agent_graph import AgentGraph
 from marble.llms.model_prompting import model_prompting
@@ -20,7 +22,7 @@ class EnginePlanner:
     The EnginePlanner class handles task assignment and scheduling for agents.
     """
 
-    def __init__(self, agent_graph: AgentGraph, memory: Any, config: Dict[str, Any], task:str, model:str="meta-llama/Llama-3.1-70B-Instruct"):
+    def __init__(self, agent_graph: AgentGraph, memory: Any, config: Dict[str, Any], task:str, model:str="gpt-3.5-turbo"):
         """
         Initialize the EnginePlanner.
 
@@ -148,39 +150,75 @@ class EnginePlanner:
         Returns:
             bool: True to continue, False to terminate.
         """
-        prompt = (
-            "Based on the following agents' results, determine whether the overall task is completed.\n\n"
-            f'Task Description:\n{self.task}\n\n'
-            "Agents' Results:\n"
-        )
-        for result in agents_results:
-            prompt += f"- {result}\n"
-
-        prompt += (
-            "\nYou must respond with a valid JSON object containing a single key 'continue' set to true or false.\n"
-            "Some times the results will have a key call success and its value is true, but this does not mean the task is completed, This only means the tool execute successfully.\n"
-            "You should analyze the results and decide whether the task is completed or not.\n"
-            "Your response must be a valid JSON object in exactly this format:\n"
-            "{\n"
-            '  "continue": true\n'
-            "}\n"
-            "If you cannot provide a JSON response, simply respond with 'true' or 'false' to indicate whether to continue.\n"
-            "Do not include any additional text, explanation, or formatting."
-        )
-
-        messages = [{"role": "system", "content": prompt}]
-        response = model_prompting(
-            llm_model=self.model,
-            messages=messages,
-            return_num=1,
-            max_token_num=2048,
-            temperature=0.3,
-            top_p=1.0
-        )
-        messages = [{"role": "system", "content": prompt}, {"role": "assistant", "content": response[0].content}]
-        self.token_usage += token_counter(model=self.model, messages=messages)
-        
         try:
+            # 读取配置文件
+            config_path = "/opt/dlami/nvme/zhe/MARBLE/marble/configs/coding_config/coding_config.yaml"
+            if not os.path.exists(config_path):
+                self.logger.error("Config file not found")
+                return False
+
+            yaml = YAML()
+            with open(config_path, 'r', encoding='utf-8') as f:
+                config = yaml.load(f)
+
+            full_task_description = config['task']['content']
+            
+            # 提取requirements部分
+            requirements_start = "1. Implementation requirements:\n"
+            requirements_end = "\n\n2. Project structure:"
+            requirements = full_task_description[
+                full_task_description.find(requirements_start) + len(requirements_start):
+                full_task_description.find(requirements_end)
+            ].strip()
+
+            # 读取solution.py
+            solution_path = "/opt/dlami/nvme/zhe/MARBLE/marble/workspace/solution.py"
+            solution_content = ""
+            if os.path.exists(solution_path):
+                with open(solution_path, 'r', encoding='utf-8') as f:
+                    solution_content = f.read()
+
+            prompt = (
+                "You are a task completion validator. Determine if the task is completed based on the following information:\n\n"
+                f"Task Description:\n{full_task_description}\n\n"
+                f"Implementation Requirements:\n{requirements}\n\n"
+                f"Current Solution:\n{solution_content}\n\n"
+                "Agents' Results:\n"
+            )
+            
+            for result in agents_results:
+                prompt += f"- {result}\n"
+
+            prompt += (
+                "\nYou must respond with a valid JSON object containing a single key 'continue' set to true or false.\n"
+                "Consider:\n"
+                "1. Does the solution meet all implementation requirements?\n"
+                "2. Are there any critical issues in the agents' results?\n"
+                "3. Is the code complete and functional?\n\n"
+                "Some times the results will have a key call success and its value is true, but this does not mean the task is completed, "
+                "This only means the tool execute successfully.\n"
+                "You should analyze the results and decide whether the task is completed or not.\n"
+                "Your response must be a valid JSON object in exactly this format:\n"
+                "{\n"
+                '  "continue": true\n'
+                "}\n"
+                "If you cannot provide a JSON response, simply respond with 'true' or 'false' to indicate whether to continue.\n"
+                "Do not include any additional text, explanation, or formatting."
+            )
+
+            messages = [{"role": "system", "content": prompt}]
+            response = model_prompting(
+                llm_model=self.model,
+                messages=messages,
+                return_num=1,
+                max_token_num=2048,
+                temperature=0.3,
+                top_p=1.0
+            )
+            
+            messages = [{"role": "system", "content": prompt}, {"role": "assistant", "content": response[0].content}]
+            self.token_usage += token_counter(model=self.model, messages=messages)
+            
             # 清理响应内容
             content = response[0].content.strip() if response[0].content else ""
             

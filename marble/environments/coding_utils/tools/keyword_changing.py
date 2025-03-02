@@ -1,8 +1,8 @@
 import os
 
 def replace_model_name(file_paths):
-    old_model = "meta-llama/Llama-3.1-8B-Instruct"
-    new_model = "meta-llama/Llama-3.1-70B-Instruct"
+    old_model = "gpt-4o-mini"
+    new_model = "gpt-3.5-turbo"
     
     for file_path in file_paths:
         try:
@@ -28,14 +28,15 @@ def replace_model_name(file_paths):
 if __name__ == "__main__":
     files_to_process = [
         "/opt/dlami/nvme/zhe/MARBLE/marble/engine/engine_planner.py",
-        "/opt/dlami/nvme/zhe/MARBLE/marble/configs/coding_config/coding_config.yaml",
-        "/opt/dlami/nvme/zhe/MARBLE/marble/evaluator/evaluator.py",
+        # "/opt/dlami/nvme/zhe/MARBLE/marble/configs/coding_config/coding_config.yaml",
+        # "/opt/dlami/nvme/zhe/MARBLE/marble/evaluator/evaluator.py",
         "/opt/dlami/nvme/zhe/MARBLE/marble/agent/coding_agent.py",
         "/opt/dlami/nvme/zhe/MARBLE/marble/agent/base_agent.py",
         "/opt/dlami/nvme/zhe/MARBLE/marble/memory/long_term_memory.py",
         "/opt/dlami/nvme/zhe/MARBLE/marble/memory/short_term_memory.py",
         "/opt/dlami/nvme/zhe/MARBLE/marble/environments/coding_utils/coder.py",
         "/opt/dlami/nvme/zhe/MARBLE/marble/environments/coding_utils/reviewer.py",
+        "/opt/dlami/nvme/zhe/MARBLE/marble/environments/coding_utils/tools/run_demo.sh"
     ]
     
     print("Starting model name replacement...")

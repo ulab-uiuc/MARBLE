@@ -3,7 +3,7 @@ x-vllm-server-base: &vllm-server-base
   ipc: host
   command:
     - --disable-log-requests   # To save your eyes from the logs
-    - --model=meta-llama/Llama-3.1-70B-Instruct
+    - --model=meta-llama/Llama-3.3-70B-Instruct
     - --tensor-parallel-size=4
     - --tool-call-parser=llama3_json
     - --enable-auto-tool-choice

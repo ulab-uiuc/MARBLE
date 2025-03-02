@@ -221,7 +221,7 @@ def register_coder_actions(env):
                         "model_name": {
                             "type": "string",
                             "description": "Name of the LLM model to use",
-                            "default": "meta-llama/Llama-3.1-70B-Instruct"
+                            "default": "gpt-3.5-turbo"
                         }
                     },
                     "required": ["task_description", "model_name"],

@@ -169,7 +169,10 @@ class Engine:
                     # Assign the task to the agent
                     iteration_data["task_assignments"][agent_id] = task
                     result, communication = agent.act(task)
+                    self.logger.info(f"Processing result for agent '{agent.agent_id}'")
+                    self.logger.info(f"Communication received: {communication}")
                     if communication:
+                        self.logger.info(f"Adding communication to list: {communication}")
                         communications.append(communication)
                     agents_results.append({agent_id: result})
                     # Record the result
@@ -201,9 +204,11 @@ class Engine:
 
                     # Evaluate communication
             if iteration_data["communications"]:
+                self.logger.info(f"Evaluating communications: {iteration_data['communications']}")
                 communications_str = self._format_communications(iteration_data["communications"])
                 self.evaluator.evaluate_communication(self.task, communications_str)
             else:
+                self.logger.info("No communications to evaluate")
                 # Store -1 if communications are empty
                 self.evaluator.metrics["communication_score"].append(-1)
 
@@ -242,7 +247,10 @@ class Engine:
 
                         # Agent acts on the planned task
                         result, communication = agent.act(task)
+                        self.logger.info(f"Processing result for agent '{agent.agent_id}'")
+                        self.logger.info(f"Communication received: {communication}")
                         if communication:
+                            self.logger.info(f"Adding communication to list: {communication}")
                             communications.append(communication)
                         agents_results.append({agent.agent_id: result})
                         iteration_data["task_results"].append({agent.agent_id: result})
@@ -260,9 +268,11 @@ class Engine:
 
                 # Evaluate communication
                 if iteration_data["communications"]:
+                    self.logger.info(f"Evaluating communications: {iteration_data['communications']}")
                     communications_str = self._format_communications(iteration_data["communications"])
                     self.evaluator.evaluate_communication(self.task, communications_str)
                 else:
+                    self.logger.info("No communications to evaluate")
                     # Store -1 if communications are empty
                     self.evaluator.metrics["communication_score"].append(-1)
 

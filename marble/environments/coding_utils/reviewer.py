@@ -6,6 +6,15 @@ from typing import Dict, Any
 from marble.llms.model_prompting import model_prompting
 from ruamel.yaml import YAML
 
+def log_debug_info(message: str, log_file: str = "/opt/dlami/nvme/zhe/MARBLE/marble/logs/advice_log"):
+    """记录调试信息到指定文件"""
+    timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    os.makedirs(os.path.dirname(log_file), exist_ok=True)
+    with open(log_file, 'a', encoding='utf-8') as f:
+        f.write(f"\n[{timestamp}] ===== Debug Info =====\n")
+        f.write(message)
+        f.write("\n===== End Debug Info =====\n")
+
 def give_advice_and_revise_handler(env, task_description: str, model_name: str) -> Dict[str, Any]:
     """
     Reads solution.py content, provides improvement suggestions based on task description, and revises the code accordingly.
@@ -91,7 +100,7 @@ def give_advice_and_revise_handler(env, task_description: str, model_name: str) 
         # Step 2: Generate modification strategy
         system_prompt_strategy = (
             "You are a Python developer. Based on the suggestion, provide specific modification strategy.\n"
-            "Your response MUST be a valid JSON object with the following structure:\n"
+            "Your response MUST be a valid JSON object with the following structure and nothing else:\n"
             "{\n"
             '  "strategies": [\n'
             '    {\n'
@@ -105,7 +114,7 @@ def give_advice_and_revise_handler(env, task_description: str, model_name: str) 
             '    }\n'
             '  ]\n'
             '}\n'
-            'Do not include any additional text before or after the JSON object.\n\n'
+            'Important: Ensure all JSON properties are properly quoted and delimited.\n\n'
             f"Task Description:\n{full_task_description}\n"
             "\nExisting Code:\n"
             f"{existing_code}\n"
@@ -125,38 +134,36 @@ def give_advice_and_revise_handler(env, task_description: str, model_name: str) 
             max_token_num=4096,
             temperature=0.0
         )[0]
-
-
+        
+        # 记录原始响应
+        debug_info = f"Raw response content:\n{response_strategy.content}\n"
+        
+        content = response_strategy.content.strip()
+        json_start = content.find('{')
+        json_end = content.rfind('}') + 1
+        json_content = content[json_start:json_end]
+        
+        debug_info += f"\nExtracted JSON content:\n{json_content}\n"
+        
         try:
-            content = response_strategy.content.strip()
-            if not content:
-                return {
-                    "success": False,
-                    "error-msg": "Empty response from model"
-                }
-            
-
-            json_start = content.find('{')
-            json_end = content.rfind('}') + 1
-            if json_start >= 0 and json_end > json_start:
-                json_content = content[json_start:json_end]
-                strategy = json.loads(json_content)
-            else:
-                return {
-                    "success": False,
-                    "error-msg": "No valid JSON found in model response"
-                }
-            
+            strategy = json.loads(json_content)
         except json.JSONDecodeError as e:
+            error_context = (
+                f"\nJSON Parse Error:\n{str(e)}\n"
+                f"Error position: line {e.lineno}, column {e.colno}\n"
+                f"Error context:\n"
+                f"{json_content[max(0, e.pos-50):e.pos]}>>>HERE>>>{json_content[e.pos:min(len(json_content), e.pos+50)]}"
+            )
+            debug_info += error_context
+            log_debug_info(debug_info)
             return {
                 "success": False,
-                "error-msg": f"Invalid JSON format: {str(e)}"
+                "error-msg": f"Invalid JSON format: {str(e)}\nJSON content: {json_content}"
             }
-        except Exception as e:
-            return {
-                "success": False,
-                "error-msg": f"Error processing model response: {str(e)}"
-            }
+        
+        # 记录成功解析的JSON
+        debug_info += f"\nParsed strategy:\n{json.dumps(strategy, indent=2)}"
+        log_debug_info(debug_info)
 
         # Step 3: Apply modifications
         modified_code = existing_code
@@ -239,7 +246,7 @@ def register_reviewer_actions(env):
                         "model_name": {
                             "type": "string",
                             "description": "Name of the LLM model to use",
-                            "default": "meta-llama/Llama-3.1-70B-Instruct"
+                            "default": "gpt-3.5-turbo"
                         }
                     },
                     "required": ["task_description", "model_name"],
