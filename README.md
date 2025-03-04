@@ -1,6 +1,13 @@
-# MARBLE
+<h1 align="center">MARBLE</h1>
 
-**M**ulti-**A**gent Coo**R**dination **B**enchmark with **L**LM **E**valuation
+**M**ulti-**A**gent Coo**R**dination **B**ackbone with **L**LM **E**ngine
+
+<div style="display: flex; justify-content: center;">
+  <div style="width: 30%;">
+    <img src="assets/marble.jpg" style="width: 100%;" alt="marble">
+  </div>
+</div>
+
 
 **MultiAgentBench** is a modular and extensible framework designed to facilitate the development, testing, and evaluation of multi-agent systems leveraging Large Language Models (LLMs). It provides a structured environment where agents can interact within various simulated environments, utilizing cognitive abilities and communication mechanisms to perform tasks collaboratively or competitively.
 
@@ -18,10 +25,6 @@
 - [Usage](#usage)
   - [Running the Simulation](#running-the-simulation)
   - [Configuration](#configuration)
-- [Examples](#examples)
-  - [Hierarchical Execution Example](#hierarchical-execution-example)
-  - [Cooperative Execution Example](#cooperative-execution-example)
-  - [Adding a New Agent](#adding-a-new-agent)
 - [Contributing](#contributing)
 - [License](#license)
 - [Contact](#contact)
@@ -39,21 +42,44 @@
 - **Industrial Coding Standards**: High-quality, well-documented code adhering to industry best practices.
 - **Docker Support**: Containerized setup for consistent deployment and easy experimentation.
 
+<div style="display: flex; justify-content: center;">
+  <div style="width: 100; transform: scale(1.0);">
+    <img src="assets/engine.jpg" style="width: 100%;" alt="marble">
+  </div>
+</div>
+
+
 ---
 
 
-#### Install dev options
+### Install from scratch
 
-Follow the installation instruction above and then, instead of running `python -m pip install -e .`, run the following commands:
+Use a virtual environment, e.g. with anaconda3:
 
+```bash
+conda create -n marble python=3.10
+conda activate marble
+curl -sSL https://install.python-poetry.org | python3
+export PATH="$HOME/.local/bin:$PATH"
 ```
-python -m pip install -e ".[dev]"
-mypy --install-types --non-interactive research_town
-python -m pip install pre-commit
-pre-commit install
-```
 
-The installation of pre-commit would avoid formatting error and large file injects into github commits.
+### Configure environment variables
+Environment variables such as `OPENAI_API_KEY` and `Together_API_KEY` related configs are required to run the code. The recommended way to set all the required variable is
+1. Copy the `.env.template` file into the project root with the name `.env`.
+```bash
+cp .env.template .env
+```
+2. Fill the required environment variables in the `.env` file.
+
+### Running the examples
+To run examples provided in the `examples`:
+
+```bash
+poetry install
+cd scripts
+cd werewolf
+bash run_simulation.sh
+```
 
 #### New branch for each feature
 

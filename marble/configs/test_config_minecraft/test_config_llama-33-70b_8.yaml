@@ -1,0 +1,74 @@
+agents:
+- agent_id: agent1
+  agent_port: 5000
+  profile: agent1 is a team member good at finding correct materials in the container
+    and place the block in the correct place. agent1 know that retrieving materials
+    can be done by using 'withdrawItem' and placing blocks can be done by using 'placeBlock'.
+    agent1 is willing to seek help from other team members.
+  type: BaseAgent
+- agent_id: agent2
+  agent_port: 5001
+  profile: agent2 is a team member good at designing the correct order of placing
+    the blocks since a block cannot be directly placed in the air. agent2 knows how
+    to design auxilary blocks when some target blocks have to be in the air. agent2
+    tends to tell agent1 the correct order of placing target blocks and tell agent3
+    when to put auxilary blocks and when to remove them.
+  type: BaseAgent
+- agent_id: agent3
+  agent_port: 5002
+  profile: agent3 is a team member good at placing auxilary blocks and removing them
+    according to the discussion with agent2. agent1 know that placing auxilary blocks
+    can be done by using 'placeBlock' or 'erectDirtLadder' and removing them can be
+    done by using 'MineBlock' or 'dismantleDirtLadder'.
+  type: BaseAgent
+coordinate_mode: graph
+engine_planner:
+  initial_progress: Starting the simulation.
+environment:
+  host: localhost
+  max_iterations: 20
+  name: Minecraft Environment
+  port: 25565
+  task_id: 8
+  task_name: test
+  type: Minecraft
+llm: together_ai/meta-llama/Llama-3.3-70B-Instruct-Turbo
+memory:
+  type: SharedMemory
+metrics:
+  evaluate_llm:
+    model: gpt-3.5-turbo
+    provider: openai
+output:
+  file_path: result/minecraft/discussion_output_llama-33-70b_0.jsonl
+relationships:
+- - agent1
+  - agent2
+  - collaborate with
+- - agent1
+  - agent3
+  - collaborate with
+- - agent2
+  - agent3
+  - collaborate with
+task:
+  content: "This is in the game of Minecraft. Build a building according to a blueprint.\
+    \ The blueprint contains necessary information about the material, facing direction\
+    \ and position of each block.\n*** The minecraft knowledge card ***\nHere are\
+    \ some knowledge about minecraft:\n1. The minecraft world x,z is the horizontal\
+    \ coordinate, y is the vertical coordinate. y=-61 is the ground level.\n2. You\
+    \ can use the tool or empty hand to dig the block, and place the block to the\
+    \ world.\n3. A block cannot be directly placed in the air. When being placed,\
+    \ there must be at least one existing block next to it.\n4. A block can exist\
+    \ in the air by removing all the other blocks attached to it.\n5. You can find\
+    \ the item in the chest. Item in the chest can not directly be seen or used, take\
+    \ it out and use it or equip it.\n6. If their is no items in the chest, maybe\
+    \ you can find the item at other chest or get it from other agent or dig it up\
+    \ or craft it.\n7. One bucket can hold one item, if you want to get more items,\
+    \ you need to get more buckets at first.\n8. You are in a team with other agents,\
+    \ you can try to find the item from other agents, and do not change the blocks\
+    \ other agents placed without permission.\n*** The blueprint ***\n[\n    \"[material:bone_block\
+    \ facing:y positions:[start:[-9 -60 0] end:[-9 -59 0]]]\",\n    \"[material:bone_block\
+    \ facing:y positions:[start:[-9 -60 -2] end:[-9 -58 -2]]]\",\n    \"material:\
+    \ bone_block facing: y position: [-9, -60, 2]\",\n    \"material: bone_block facing:\
+    \ x position: [-8, -57, -2]\"\n]"

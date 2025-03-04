@@ -3,7 +3,7 @@ from beartype import beartype
 from beartype.typing import Any, Dict, List, Optional
 from litellm.types.utils import Message
 
-from .error_handler import api_calling_error_exponential_backoff
+from marble.llms.error_handler import api_calling_error_exponential_backoff
 
 
 @beartype
@@ -26,6 +26,10 @@ def model_prompting(
     Select model via router in LiteLLM with support for function calling.
     """
     # litellm.set_verbose=True
+    if "together_ai/TA" in llm_model:
+        base_url = "https://api.ohmygpt.com/v1"
+    else:
+        base_url = None
     completion = litellm.completion(
         model=llm_model,
         messages=messages,
@@ -35,7 +39,8 @@ def model_prompting(
         temperature=temperature,
         stream=stream,
         tools=tools,
-        tool_choice=tool_choice
+        tool_choice=tool_choice,
+        base_url=base_url,
     )
     message_0: Message = completion.choices[0].message
     assert message_0 is not None
