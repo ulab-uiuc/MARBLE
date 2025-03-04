@@ -1,0 +1,78 @@
+{
+    "anchor_pos": [
+        0,
+        0,
+        0
+    ],
+    "size": [
+        3,
+        4,
+        0
+    ],
+    "blocks": [
+        {
+            "position": [
+                -11,
+                -60,
+                0
+            ],
+            "name": "bone_block",
+            "facing": "y"
+        },
+        {
+            "position": [
+                -11,
+                -59,
+                0
+            ],
+            "name": "bone_block",
+            "facing": "y"
+        },
+        {
+            "position": [
+                -11,
+                -58,
+                0
+            ],
+            "name": "bone_block",
+            "facing": "y"
+        },
+        {
+            "position": [
+                -11,
+                -57,
+                0
+            ],
+            "name": "bone_block",
+            "facing": "y"
+        },
+        {
+            "position": [
+                -10,
+                -56,
+                0
+            ],
+            "name": "bone_block",
+            "facing": "x"
+        },
+        {
+            "position": [
+                -9,
+                -56,
+                0
+            ],
+            "name": "bone_block",
+            "facing": "x"
+        },
+        {
+            "position": [
+                -8,
+                -56,
+                0
+            ],
+            "name": "bone_block",
+            "facing": "x"
+        }
+    ],
+    "name": "minecraft/templates/nether_fossils_fossil_13"
+}

@@ -26,7 +26,7 @@ dig_needed = args.dig_needed
 agent_names = args.agent_names.split(",")
 task_name = args.task_name
 
-with open(".cache/load_status.cache", "w") as f:
+with open("../.cache/load_status.cache", "w") as f:
     json.dump({"status": "loading"}, f, indent=4)
 
 if not os.path.exists("result"):
@@ -42,7 +42,7 @@ bot = mineflayer.createBot({
     "host": args.host,
     "port": args.port,
     'username': "build_judge",
-    'checkTimeoutInterval': 600000,
+    'checkTimeoutInterval': 60*60*1000,
     'auth': 'offline',
     'version': "1.19.2",
 })
@@ -51,7 +51,7 @@ bot = mineflayer.createBot({
 last_time = time.time()
 start_time = None
 task_data = None
-with open("data/score.json", "w") as f:
+with open("../data/score.json", "w") as f:
     json.dump([], f, indent=4)
 
 complexity = 0
@@ -68,15 +68,15 @@ last_update_time = time.time()
 wait_interval = 600
 max_block_hit_rate = 0
 
-if not os.path.exists('data/blueprint_description_all.json'):
-    with open('data/blueprint_description_all.json', 'w') as f:
+if not os.path.exists('../data/blueprint_description_all.json'):
+    with open('../data/blueprint_description_all.json', 'w') as f:
         json.dump({}, f, indent=4)
 
 def calculate_balance():
     # 计算每个agent的时间
-    if not os.path.exists('data/action_log.json'):
+    if not os.path.exists('../data/action_log.json'):
         return
-    with open('data/action_log.json', 'r') as f:
+    with open('../data/action_log.json', 'r') as f:
         data = json.load(f)
     agent_time = []
     for name, actions in data.items():
@@ -205,7 +205,7 @@ def handleViewer(*args):
             bot.chat(f'/setblock {x} {y} {z} air')
 
     def core(select_idx):
-        with open("data/building_blue_print.json", 'r') as f:
+        with open("../data/building_blue_print.json", 'r') as f:
             blue_prints = json.load(f)
 
         # select_idx, select_idx-1, select_idx+1 clear and render
@@ -219,7 +219,7 @@ def handleViewer(*args):
 
         task(blue_prints[select_idx])
 
-        with open(".cache/load_status.cache", "w") as f:
+        with open("../.cache/load_status.cache", "w") as f:
             json.dump({"status": "loaded"}, f, indent=4)
 
         global start_time
@@ -248,22 +248,22 @@ def handleViewer(*args):
             b["position"][1] += y_b
             blocks_list.append(b)
         task_data["blocks"] = blocks_list
-        with open("data/map.json", 'w') as f:
+        with open("../data/map.json", 'w') as f:
             json.dump(task_data, f, indent=4)
 
         if dig_needed:
-            material_pairs = material_factory_load('data/map.json', bot, Vec3, mcData, center_pos=(-12, -60, -12), rate=.5)
+            material_pairs = material_factory_load('../data/map.json', bot, Vec3, mcData, center_pos=(-12, -60, -12), rate=.5)
         time.sleep(2)
-        building_material_load('data/map.json', bot, dig_needed=dig_needed)
+        building_material_load('../data/map.json', bot, dig_needed=dig_needed)
         bot.chat(f"/time set 0")
 
-        with open("data/blueprint_description_all.json", 'r') as f:
+        with open("../data/blueprint_description_all.json", 'r') as f:
             blueprint_description_all = json.load(f)
 
         assert "task_" + str(select_idx) in blueprint_description_all.keys()
 
         string_list = blueprint_description_all["task_" + str(select_idx)]
-        with open('data/map_description.json', 'w') as f:
+        with open('../data/map_description.json', 'w') as f:
             json.dump(string_list, f, indent=4)
         global complexity, max_action_time, max_time
         complexity = measure_complexity(task_data, dig_needed=dig_needed)
@@ -543,9 +543,9 @@ def handleViewer(*args):
     @On(bot, "time")
     def handle(this):
         def calculate_action_time():
-            if not os.path.exists('data/action_log.json'):
+            if not os.path.exists('../data/action_log.json'):
                 return 0
-            with open('data/action_log.json', 'r') as f:
+            with open('../data/action_log.json', 'r') as f:
                 data = json.load(f)
             time_list = []
             for name, actions in data.items():
@@ -597,9 +597,9 @@ def handleViewer(*args):
                         "complexity": complexity,
                         "end_time": time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(now_time))
                     }, f, indent=4)
-                shutil.move("data/action_log.json", os.path.join(os.path.join("result", task_name), "action_log.json"))
-                shutil.move("data/tokens.json", os.path.join(os.path.join("result", task_name), "tokens.json"))
-                with open(".cache/load_status.cache", "w") as f:
+                shutil.move("../data/action_log.json", os.path.join(os.path.join("result", task_name), "action_log.json"))
+                shutil.move("../data/tokens.json", os.path.join(os.path.join("result", task_name), "tokens.json"))
+                with open("../.cache/load_status.cache", "w") as f:
                     json.dump({"status": "end"}, f, indent=4)
 
             if start_time and now_time and calculate_action_time() > max_action_time and task_data:
@@ -621,7 +621,7 @@ def handleViewer(*args):
                         "complexity": complexity,
                         "end_time": time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(now_time))
                     }, f, indent=4)
-                with open(".cache/load_status.cache", "w") as f:
+                with open("../.cache/load_status.cache", "w") as f:
                     json.dump({"status": "end"}, f, indent=4)
 
             if start_time and now_time and now_time - start_time > max_time and task_data:
@@ -647,7 +647,7 @@ def handleViewer(*args):
                         "complexity": complexity,
                         "end_time": time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(now_time))
                     }, f, indent=4)
-                with open(".cache/load_status.cache", "w") as f:
+                with open("../.cache/load_status.cache", "w") as f:
                     json.dump({"status": "end"}, f, indent=4)
 
             if last_update_time and start_time and task_data and last_update_time - start_time > wait_interval and now_time - last_update_time > wait_interval:
@@ -673,10 +673,10 @@ def handleViewer(*args):
                         "complexity": complexity,
                         "end_time": time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(now_time))
                     }, f, indent=4)
-                with open(".cache/load_status.cache", "w") as f:
+                with open("../.cache/load_status.cache", "w") as f:
                     json.dump({"status": "end"}, f, indent=4)
 
-            with open(".cache/heart_beat.cache", "w") as f:
+            with open("../.cache/heart_beat.cache", "w") as f:
                 json.dump({"time": now_time}, f, indent=4)
 
         if now_time - last_time > 10 and task_data:
@@ -695,12 +695,12 @@ def handleViewer(*args):
 
             # bot.chat(f' complexity: {complexity}')
 
-            with open("data/score.json", "r") as f:
+            with open("../data/score.json", "r") as f:
                 score = json.load(f)
             score.append(
                 {"time": time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()), "block_hit_rate": block_hit_rate,
                  "view_hit_rate": view_hit_rate})
-            with open("data/score.json", "w") as f:
+            with open("../data/score.json", "w") as f:
                 json.dump(score, f, indent=4)
 
             last_time = now_time

@@ -2,16 +2,19 @@
 MineCraft environment module.
 """
 
+import os
 import subprocess
+import time
 from typing import Any, Callable, Dict, List, Union
 
 from marble.environments.base_env import BaseEnvironment
 from marble.environments.minecraft_utils.minecraft_client import MinecraftClient
 from marble.environments.minecraft_utils.minecraft_tool_description import *
+from marble.utils.logger import get_logger
 
 
 class MinecraftEnvironment(BaseEnvironment):
-    def __init__(self, name: str, config: Dict[str, Any] = dict(), task_id: int = 0, task_name: str = "test"):
+    def __init__(self, name: str, config: Dict[str, Any] = dict()):
         """
         Initialize the environment.
 
@@ -24,61 +27,72 @@ class MinecraftEnvironment(BaseEnvironment):
         self.host: str = config.get("host", "localhost")
         self.port: int = config.get("port", 25565)
         self.clients: Dict[str, MinecraftClient] = dict()
-        self.task_id: int = task_id
-        self.task_name: str = task_name
+        self.judge: Union[subprocess.Popen, None] = None
+        self.task_id: int = config.get("task_id", 0)
+        self.task_name: str = config.get("task_name", "test")
+        self.logger = get_logger(self.__class__.__name__)
 
         # Register tons of actions.
         self.register_action("scanNearbyEntities", handler=self._scanNearbyEntities_handler, description=scanNearbyEntities_description)
         self.register_action("navigateTo", handler=self._navigateTo_handler, description=navigateTo_description)
-        self.register_action("attackTarget", handler=self._attackTarget_handler, description=attackTarget_description)
-        self.register_action("navigateToBuilding", handler=self._navigateToBuilding_handler, description=navigateToBuilding_description)
-        self.register_action("navigateToAnimal", handler=self._navigateToAnimal_handler, description=navigateToAnimal_description)
-        self.register_action("navigateToPlayer", handler=self._navigateToPlayer_handler, description=navigateToPlayer_description)
-        self.register_action("UseItemOnEntity", handler=self._UseItemOnEntity_handler, description=UseItemOnEntity_description)
-        self.register_action("sleep", handler=self._sleep_handler, description=sleep_description)
-        self.register_action("wake", handler=self._wake_handler, description=wake_description)
+        # self.register_action("attackTarget", handler=self._attackTarget_handler, description=attackTarget_description)
+        # self.register_action("navigateToBuilding", handler=self._navigateToBuilding_handler, description=navigateToBuilding_description)
+        # self.register_action("navigateToAnimal", handler=self._navigateToAnimal_handler, description=navigateToAnimal_description)
+        # self.register_action("navigateToPlayer", handler=self._navigateToPlayer_handler, description=navigateToPlayer_description)
+        # self.register_action("UseItemOnEntity", handler=self._UseItemOnEntity_handler, description=UseItemOnEntity_description)
+        # self.register_action("sleep", handler=self._sleep_handler, description=sleep_description)
+        # self.register_action("wake", handler=self._wake_handler, description=wake_description)
         self.register_action("MineBlock", handler=self._MineBlock_handler, description=MineBlock_description)
         self.register_action("placeBlock", handler=self._placeBlock_handler, description=placeBlock_description)
         self.register_action("equipItem", handler=self._equipItem_handler, description=equipItem_description)
-        self.register_action("tossItem", handler=self._tossItem_handler, description=tossItem_description)
-        self.register_action("talkTo", handler=self._talkTo_handler, description=talkTo_description)
+        # self.register_action("tossItem", handler=self._tossItem_handler, description=tossItem_description)
+        # self.register_action("talkTo", handler=self._talkTo_handler, description=talkTo_description)
         self.register_action("handoverBlock", handler=self._handoverBlock_handler, description=handoverBlock_description)
         self.register_action("withdrawItem", handler=self._withdrawItem_handler, description=withdrawItem_description)
-        self.register_action("storeItem", handler=self._storeItem_handler, description=storeItem_description)
-        self.register_action("craftBlock", handler=self._craftBlock_handler, description=craftBlock_description)
-        self.register_action("SmeltingCooking", handler=self._SmeltingCooking_handler, description=SmeltingCooking_description)
+        # self.register_action("storeItem", handler=self._storeItem_handler, description=storeItem_description)
+        # self.register_action("craftBlock", handler=self._craftBlock_handler, description=craftBlock_description)
+        # self.register_action("SmeltingCooking", handler=self._SmeltingCooking_handler, description=SmeltingCooking_description)
         self.register_action("erectDirtLadder", handler=self._erectDirtLadder_handler, description=erectDirtLadder_description)
         self.register_action("dismantleDirtLadder", handler=self._dismantleDirtLadder_handler, description=dismantleDirtLadder_description)
-        self.register_action("enchantItem", handler=self._enchantItem_handler, description=enchantItem_description)
-        self.register_action("trade", handler=self._trade_handler, description=trade_description)
-        self.register_action("repairItem", handler=self._repairItem_handler, description=repairItem_description)
-        self.register_action("eat", handler=self._eat_handler, description=eat_description)
-        self.register_action("drink", handler=self._drink_handler, description=drink_description)
-        self.register_action("wear", handler=self._wear_handler, description=wear_description)
-        self.register_action("layDirtBeam", handler=self._layDirtBeam_handler, description=layDirtBeam_description)
-        self.register_action("removeDirtBeam", handler=self._removeDirtBeam_handler, description=removeDirtBeam_description)
-        self.register_action("openContainer", handler=self._openContainer_handler, description=openContainer_description)
-        self.register_action("closeContainer", handler=self._closeContainer_handler, description=closeContainer_description)
+        # self.register_action("enchantItem", handler=self._enchantItem_handler, description=enchantItem_description)
+        # self.register_action("trade", handler=self._trade_handler, description=trade_description)
+        # self.register_action("repairItem", handler=self._repairItem_handler, description=repairItem_description)
+        # self.register_action("eat", handler=self._eat_handler, description=eat_description)
+        # self.register_action("drink", handler=self._drink_handler, description=drink_description)
+        # self.register_action("wear", handler=self._wear_handler, description=wear_description)
+        # self.register_action("layDirtBeam", handler=self._layDirtBeam_handler, description=layDirtBeam_description)
+        # self.register_action("removeDirtBeam", handler=self._removeDirtBeam_handler, description=removeDirtBeam_description)
+        # self.register_action("openContainer", handler=self._openContainer_handler, description=openContainer_description)
+        # self.register_action("closeContainer", handler=self._closeContainer_handler, description=closeContainer_description)
         self.register_action("fetchContainerContents", handler=self._fetchContainerContents_handler, description=fetchContainerContents_description)
-        self.register_action("toggleAction", handler=self._toggleAction_handler, description=toggleAction_description)
-        self.register_action("get_entity_info", handler=self._get_entity_info_handler, description=get_entity_info_description)
+        # self.register_action("toggleAction", handler=self._toggleAction_handler, description=toggleAction_description)
+        # self.register_action("get_entity_info", handler=self._get_entity_info_handler, description=get_entity_info_description)
         self.register_action("get_environment_info", handler=self._get_environment_info_handler, description=get_environment_info_description)
-        self.register_action("performMovement", handler=self._performMovement_handler, description=performMovement_description)
-        self.register_action("lookAt", handler=self._lookAt_handler, description=lookAt_description)
-        self.register_action("startFishing", handler=self._startFishing_handler, description=startFishing_description)
-        self.register_action("stopFishing", handler=self._stopFishing_handler, description=stopFishing_description)
-        self.register_action("read", handler=self._read_handler, description=read_description)
-        self.register_action("readPage", handler=self._readPage_handler, description=readPage_description)
-        self.register_action("write", handler=self._write_handler, description=write_description)
+        # self.register_action("performMovement", handler=self._performMovement_handler, description=performMovement_description)
+        # self.register_action("lookAt", handler=self._lookAt_handler, description=lookAt_description)
+        # self.register_action("startFishing", handler=self._startFishing_handler, description=startFishing_description)
+        # self.register_action("stopFishing", handler=self._stopFishing_handler, description=stopFishing_description)
+        # self.register_action("read", handler=self._read_handler, description=read_description)
+        # self.register_action("readPage", handler=self._readPage_handler, description=readPage_description)
+        # self.register_action("write", handler=self._write_handler, description=write_description)
 
     def register_agent(self, name: str, local_port: int):
         self.agents.append(name)
         self.clients[name] = MinecraftClient(name=name, local_port=local_port)
+        self.logger.info(f"Agent {name} registered.")
 
     def launch(self):
         MinecraftClient.launch(host=self.host, port=self.port)
-        subprocess.Popen(["python", "marble/environments/minecraft_utils/build_judger.py", "--idx", str(self.task_id), "--host", self.host, "--port" , str(self.port), "--agent_num", str(len(self.agents)), "--agent_names", ",".join(self.agents), "--task_name", self.task_name], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        print(f"""python env/build_judger.py --idx {self.task_id} --host \"{self.host}\" --port {self.port} --agent_num {len(self.agents)} --agent_names \"{",".join(self.agents)}\" --task_name \"{self.task_name}\"""")
+        self.logger.info(f"Minecraft environment launched.")
+        self.judge = subprocess.Popen(["python", "environments/minecraft_utils/build_judger.py", "--idx", str(self.task_id), "--host", self.host, "--port" , str(self.port), "--agent_num", str(len(self.agents)), "--agent_names", ",".join(self.agents), "--task_name", self.task_name], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        # print(f"""python environments/minecraft_utils/build_judger.py --idx {self.task_id} --host \"{self.host}\" --port {self.port} --agent_num {len(self.agents)} --agent_names \"{",".join(self.agents)}\" --task_name \"{self.task_name}\"""")
+        self.logger.debug(f"Current working directory: {os.getcwd()}")
+        self.logger.debug(f"""python environments/minecraft_utils/build_judger.py --idx {self.task_id} --host \"{self.host}\" --port {self.port} --agent_num {len(self.agents)} --agent_names \"{",".join(self.agents)}\" --task_name \"{self.task_name}\"""")
+        time.sleep(40)
+
+    def finish(self):
+        MinecraftClient.kill()
+        self.judge.terminate()
 
     def _scanNearbyEntities_handler(self, player_name: str, item_name: str, radius: int = 10, item_num: int = -1):
         return MinecraftClient.scanNearbyEntities(player_name, item_name, radius, item_num)
