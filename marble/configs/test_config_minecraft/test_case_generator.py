@@ -1,4 +1,6 @@
-import yaml, json
+import json
+
+import yaml
 from tqdm import tqdm
 
 # with open("marble/configs/test_config_minecraft/depricated/test_config_llama-31-8b_4.yaml", "r") as f:
@@ -31,6 +33,29 @@ models = [
         "together_ai/meta-llama/Llama-3.3-70B-Instruct-Turbo"
     ]
 ]
+
+# models = [
+#     [
+#         "gpt-4o-mini",
+#         "gpt-4o-mini"
+#     ],
+#     [
+#         "gpt-35-turbo",
+#         "gpt-3.5-turbo"
+#     ],
+#     [
+#         "llama-31-8b",
+#         "together_ai/TA/meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo"
+#     ],
+#     [
+#         "llama-31-70b",
+#         "together_ai/TA/meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo"
+#     ],
+#     [
+#         "llama-33-70b",
+#         "together_ai/TA/meta-llama/Llama-3.3-70B-Instruct-Turbo"
+#     ]
+# ]
 
 minecraft_knowledge_card = """
 Here are some knowledge about minecraft:
@@ -80,8 +105,8 @@ for model in tqdm(models):
             "type": "Minecraft",
             "name": "Minecraft Environment",
             "host": "localhost",
-            "port": 25565,
-            "max_iterations": 10,
+            "port": 25565 + task_id//20,
+            "max_iterations": 20,
             "task_id": task_id,
             "task_name": "test"
         }
@@ -112,19 +137,19 @@ for model in tqdm(models):
             {
                 "type": "BaseAgent",
                 "agent_id": "agent1",
-                "agent_port": 5000,
+                "agent_port": 5000 + 10*(task_id//20),
                 "profile": "agent1 is a team member good at finding correct materials in the container and place the block in the correct place. agent1 know that retrieving materials can be done by using 'withdrawItem' and placing blocks can be done by using 'placeBlock'. agent1 is willing to seek help from other team members."
             },
             {
                 "type": "BaseAgent",
                 "agent_id": "agent2",
-                "agent_port": 5001,
+                "agent_port": 5001 + 10*(task_id//20),
                 "profile": "agent2 is a team member good at designing the correct order of placing the blocks since a block cannot be directly placed in the air. agent2 knows how to design auxilary blocks when some target blocks have to be in the air. agent2 tends to tell agent1 the correct order of placing target blocks and tell agent3 when to put auxilary blocks and when to remove them."
             },
             {
                 "type": "BaseAgent",
                 "agent_id": "agent3",
-                "agent_port": 5002,
+                "agent_port": 5002 + 10*(task_id//20),
                 "profile": "agent3 is a team member good at placing auxilary blocks and removing them according to the discussion with agent2. agent1 know that placing auxilary blocks can be done by using 'placeBlock' or 'erectDirtLadder' and removing them can be done by using 'MineBlock' or 'dismantleDirtLadder'."
             }
         ]
@@ -142,7 +167,7 @@ for model in tqdm(models):
         }
         task_config["llm"] = long_model_name
         task_config["output"] = {
-            "file_path": f"result/minecraft/discussion_output_{short_model_name}.jsonl"
+            "file_path": f"result/minecraft/discussion_output_{short_model_name}_{task_id//20}.jsonl"
         }
         with open(f"marble/configs/test_config_minecraft/test_config_{short_model_name}_{task_id}.yaml", "w") as f:
             yaml.safe_dump(task_config, f)

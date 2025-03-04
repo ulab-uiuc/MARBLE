@@ -213,24 +213,26 @@ class Engine:
             if iteration_data["communications"]:
                 iteration_data_communications = iteration_data.get("communications")
                 assert isinstance(iteration_data_communications, list)
-                communications_str = self._format_communications(iteration_data_communications)
-                self.evaluator.evaluate_communication(self.task, communications_str)
+                # communications_str = self._format_communications(iteration_data_communications)
+                # self.evaluator.evaluate_communication(self.task, communications_str)
+                self.evaluator.metrics["communication_score"].append(-1)
             else:
                 # Store -1 if communications are empty
                 self.evaluator.metrics["communication_score"].append(-1)
 
             # Evaluate planning
-            agent_profiles = self._get_agent_profiles()
-            iteration_data_task_assignments = iteration_data.get("task_assignments")
-            assert isinstance(iteration_data_task_assignments, dict)
-            agent_tasks_str = self._format_agent_tasks(iteration_data_task_assignments)
-            iteration_data_task_results = iteration_data.get("task_results")
-            assert isinstance(iteration_data_task_results, list)
-            results_str = self._format_results(iteration_data_task_results)
-            iteration_data_summary = iteration_data.get("summary")
-            assert isinstance(iteration_data_summary, str)
-            self.evaluator.evaluate_planning(iteration_data_summary, agent_profiles, agent_tasks_str, results_str)
-            self.evaluator.evaluate_kpi(self.task, results_str)
+            # agent_profiles = self._get_agent_profiles()
+            # iteration_data_task_assignments = iteration_data.get("task_assignments")
+            # assert isinstance(iteration_data_task_assignments, dict)
+            # agent_tasks_str = self._format_agent_tasks(iteration_data_task_assignments)
+            # iteration_data_task_results = iteration_data.get("task_results")
+            # assert isinstance(iteration_data_task_results, list)
+            # results_str = self._format_results(iteration_data_task_results)
+            # iteration_data_summary = iteration_data.get("summary")
+            # assert isinstance(iteration_data_summary, str)
+            # self.evaluator.evaluate_planning(iteration_data_summary, agent_profiles, agent_tasks_str, results_str)
+            # self.evaluator.evaluate_kpi(self.task, results_str)
+            self.evaluator.metrics["planning_score"].append(-1)
 
             while self.current_iteration < self.max_iterations:
                 iteration_data = {
@@ -284,24 +286,26 @@ class Engine:
                 if iteration_data["communications"]:
                     iteration_data_communications = iteration_data.get("communications")
                     assert isinstance(iteration_data_communications, list)
-                    communications_str = self._format_communications(iteration_data_communications)
-                    self.evaluator.evaluate_communication(self.task, communications_str)
+                    # communications_str = self._format_communications(iteration_data_communications)
+                    # self.evaluator.evaluate_communication(self.task, communications_str)
+                    self.evaluator.metrics["communication_score"].append(-1)
                 else:
                     # Store -1 if communications are empty
                     self.evaluator.metrics["communication_score"].append(-1)
 
                 # Evaluate planning
-                agent_profiles = self._get_agent_profiles()
-                iteration_data_task_assignments = iteration_data.get("task_assignments")
-                assert isinstance(iteration_data_task_assignments, dict)
-                agent_tasks_str = self._format_agent_tasks(iteration_data_task_assignments)
-                iteration_data_task_results = iteration_data.get("task_results")
-                assert isinstance(iteration_data_task_results, list)
-                results_str = self._format_results(iteration_data_task_results)
-                iteration_data_summary = iteration_data.get("summary")
-                assert isinstance(iteration_data_summary, str)
-                self.evaluator.evaluate_planning(iteration_data_summary, agent_profiles, agent_tasks_str, results_str)
-                self.evaluator.evaluate_kpi(self.task, results_str)
+                # agent_profiles = self._get_agent_profiles()
+                # iteration_data_task_assignments = iteration_data.get("task_assignments")
+                # assert isinstance(iteration_data_task_assignments, dict)
+                # agent_tasks_str = self._format_agent_tasks(iteration_data_task_assignments)
+                # iteration_data_task_results = iteration_data.get("task_results")
+                # assert isinstance(iteration_data_task_results, list)
+                # results_str = self._format_results(iteration_data_task_results)
+                # iteration_data_summary = iteration_data.get("summary")
+                # assert isinstance(iteration_data_summary, str)
+                # self.evaluator.evaluate_planning(iteration_data_summary, agent_profiles, agent_tasks_str, results_str)
+                # self.evaluator.evaluate_kpi(self.task, results_str)
+                self.evaluator.metrics["planning_score"].append(-1)
                 # Decide whether to continue or terminate
                 if isinstance(self.environment, MinecraftEnvironment):
                     try:

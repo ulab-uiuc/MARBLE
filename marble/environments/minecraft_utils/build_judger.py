@@ -42,7 +42,7 @@ bot = mineflayer.createBot({
     "host": args.host,
     "port": args.port,
     'username': "build_judge",
-    'checkTimeoutInterval': 600000,
+    'checkTimeoutInterval': 60*60*1000,
     'auth': 'offline',
     'version': "1.19.2",
 })

@@ -169,3 +169,19 @@ marble/process_result.py
 marble/result/test
 # Werewolf log folder
 werewolf_log/
+
+postprocess
+adding_new_items_from_yamls.py
+create_human_eval.py
+difficulty_stats_1.py
+difficulty_stats_2.py
+human_eval_minecraft.csv
+human_eval_research.csv
+output_10.csv
+output_20.csv
+output_final.csv
+output_iteration_ablation.csv
+output_old-2.csv
+output_old.csv
+**/*.7z
+**/*.zip

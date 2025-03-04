@@ -1,13 +1,13 @@
 agents:
 - agent_id: agent1
-  agent_port: 5000
+  agent_port: 5010
   profile: agent1 is a team member good at finding correct materials in the container
     and place the block in the correct place. agent1 know that retrieving materials
     can be done by using 'withdrawItem' and placing blocks can be done by using 'placeBlock'.
     agent1 is willing to seek help from other team members.
   type: BaseAgent
 - agent_id: agent2
-  agent_port: 5001
+  agent_port: 5011
   profile: agent2 is a team member good at designing the correct order of placing
     the blocks since a block cannot be directly placed in the air. agent2 knows how
     to design auxilary blocks when some target blocks have to be in the air. agent2
@@ -15,7 +15,7 @@ agents:
     when to put auxilary blocks and when to remove them.
   type: BaseAgent
 - agent_id: agent3
-  agent_port: 5002
+  agent_port: 5012
   profile: agent3 is a team member good at placing auxilary blocks and removing them
     according to the discussion with agent2. agent1 know that placing auxilary blocks
     can be done by using 'placeBlock' or 'erectDirtLadder' and removing them can be
@@ -26,9 +26,9 @@ engine_planner:
   initial_progress: Starting the simulation.
 environment:
   host: localhost
-  max_iterations: 10
+  max_iterations: 20
   name: Minecraft Environment
-  port: 25565
+  port: 25566
   task_id: 28
   task_name: test
   type: Minecraft
@@ -40,7 +40,7 @@ metrics:
     model: gpt-3.5-turbo
     provider: openai
 output:
-  file_path: result/minecraft/discussion_output_llama-31-8b.jsonl
+  file_path: result/minecraft/discussion_output_llama-31-8b_1.jsonl
 relationships:
 - - agent1
   - agent2

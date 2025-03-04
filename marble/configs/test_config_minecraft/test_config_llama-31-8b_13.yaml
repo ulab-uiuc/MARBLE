@@ -26,7 +26,7 @@ engine_planner:
   initial_progress: Starting the simulation.
 environment:
   host: localhost
-  max_iterations: 10
+  max_iterations: 20
   name: Minecraft Environment
   port: 25565
   task_id: 13
@@ -40,7 +40,7 @@ metrics:
     model: gpt-3.5-turbo
     provider: openai
 output:
-  file_path: result/minecraft/discussion_output_llama-31-8b.jsonl
+  file_path: result/minecraft/discussion_output_llama-31-8b_0.jsonl
 relationships:
 - - agent1
   - agent2
