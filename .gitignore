@@ -173,3 +173,11 @@ llm_eval_result/
 werewolf_result1/
 werewolf_data/
 backup/
+
+werewolf_eval/
+werewolf_result/
+human_eval/
+llm_eval_result/
+werewolf_result1/
+werewolf_data/
+backup/

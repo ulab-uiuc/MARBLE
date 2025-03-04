@@ -10,6 +10,7 @@ __all__ = [
     'DBEnvironment',
     'WebEnvironment',
     "MinecraftEnvironment",
+    "MinecraftEnvironment",
     'ResearchEnvironment',
     'WebEnvironment',
     'WorldSimulationEnvironment'

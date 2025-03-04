@@ -40,6 +40,7 @@ class Engine:
         self.logger = get_logger(self.__class__.__name__)
         self.config = config
         self.planning_method = config.engine_planner.get('planning_method', 'naive')
+        self.planning_method = config.engine_planner.get('planning_method', 'naive')
         # Initialize Environment
         self.environment = self._initialize_environment(config.environment)
         # Initialize Agents
@@ -184,6 +185,8 @@ class Engine:
             self.logger.info(f"Initial Summary:\n{summary}")
             summary = self.planner.summarize_output(summary, self.task, self.output_format)
             iteration_data["summary"] = summary.content
+            summary = self.planner.summarize_output(summary, self.task, self.output_format)
+            iteration_data["summary"] = summary.content
 
             # Decide whether to continue or terminate after initial assignment
             continue_simulation = self.planner.decide_next_step(agents_results)
@@ -298,6 +301,7 @@ class Engine:
                 continue_simulation = self.planner.decide_next_step(agents_results)
                 iteration_data["continue_simulation"] = continue_simulation
                 summary_data["iterations"].append(iteration_data)
+                summary_data["iterations"].append(iteration_data)
                 if not continue_simulation:
                     self.logger.info("EnginePlanner decided to terminate the simulation.")
                     break
@@ -358,6 +362,7 @@ class Engine:
 
                 # Assign tasks to agents
                 assignment = self.planner.assign_tasks(planning_method=self.planning_method)
+                assignment = self.planner.assign_tasks(planning_method=self.planning_method)
                 tasks = assignment.get("tasks", {})
                 iteration_data["task_assignments"] = tasks
                 self.logger.info(f"Assigned tasks: {tasks}")
@@ -388,6 +393,7 @@ class Engine:
                 self.logger.info(summary)
                 self.planner.update_progress(summary)
                 self.current_iteration += 1
+                self.current_iteration += 1
 
                 # Evaluate communication
                 if iteration_data["communications"]:
@@ -407,6 +413,7 @@ class Engine:
                 # Decide whether to continue or terminate
                 continue_simulation = self.planner.decide_next_step(agents_results)
                 iteration_data["continue_simulation"] = continue_simulation
+                summary_data["iterations"].append(iteration_data)
                 summary_data["iterations"].append(iteration_data)
                 if not continue_simulation:
                     self.logger.info("EnginePlanner decided to terminate the simulation.")
@@ -484,8 +491,15 @@ class Engine:
                 self.logger.info(f"Agent '{current_agent.agent_id}' completed task with result: {result}")
                 # Get profiles of other agents
                 agent_profiles = self.graph.get_agent_profiles_linked(current_agent.agent_id)
+                agent_profiles = self.graph.get_agent_profiles_linked(current_agent.agent_id)
                 # Current agent chooses the next agent
                 next_agent_id, plan = current_agent.plan_next_agent(result, agent_profiles)
+                current_agent_ = current_agent
+                try:
+                    current_agent = self.graph.get_agent(next_agent_id)
+                except Exception:
+                    self.logger.error(f"Agent '{next_agent_id}' not found in the graph. keep the same agent.")
+                    current_agent = current_agent_
                 current_agent_ = current_agent
                 try:
                     current_agent = self.graph.get_agent(next_agent_id)
@@ -568,6 +582,7 @@ class Engine:
             self.evaluator.finalize()
             self.logger.info("Chain-based coordination simulation completed.")
             summary_data["token_usage"] = self._get_totoal_token_usage()
+            summary_data["token_usage"] = self._get_totoal_token_usage()
             self._write_to_jsonl(summary_data)
 
     def tree_coordinate(self) -> None:
@@ -599,6 +614,8 @@ class Engine:
                 summary = self._summarize_results(results)
                 summary = self.planner.summarize_output(summary, self.task,  self.output_format)
                 iteration_data["summary"] = summary.content
+                summary = self.planner.summarize_output(summary, self.task,  self.output_format)
+                iteration_data["summary"] = summary.content
                 self.logger.info(f"Iteration {self.current_iteration} Summary:\n{summary}")
                 self.planner.update_progress(summary)
                 iteration_data["communications"] = communication
@@ -622,6 +639,7 @@ class Engine:
                 # Decide whether to continue or terminate
                 continue_simulation = self.planner.decide_next_step(results)
                 iteration_data["continue_simulation"] = continue_simulation
+                summary_data["iterations"].append(iteration_data)
                 summary_data["iterations"].append(iteration_data)
                 if not continue_simulation:
                     self.logger.info("EnginePlanner decided to terminate the simulation.")
@@ -671,6 +689,9 @@ class Engine:
         print(agent.children)
         if len(agent.children) > 0:
             print("******************start recursive******************")
+        print(agent.children)
+        if len(agent.children) > 0:
+            print("******************start recursive******************")
             # Agent assigns tasks to children
             tasks_for_children = agent.plan_tasks_for_children(task)
             tasks.append(tasks_for_children)
@@ -685,6 +706,11 @@ class Engine:
                         communications.append(communication)
                     children_results += child_result
             # Agent may also act itself
+            results_str = "\n".join(json.dumps(result)[:500] for result in children_results)
+
+            task_for_father = task + "\nHere are the results of the children: " + results_str + "\nPlease don't repeat the same task and continue to work on the original task. You may also need to communicate with other agents or summarize the results or just continue to work on the original task."
+            own_result, communication = agent.act(task_for_father)
+
             results_str = "\n".join(json.dumps(result)[:500] for result in children_results)
 
             task_for_father = task + "\nHere are the results of the children: " + results_str + "\nPlease don't repeat the same task and continue to work on the original task. You may also need to communicate with other agents or summarize the results or just continue to work on the original task."
@@ -770,6 +796,9 @@ class Engine:
             shorten_result = f"- {result}"
             shorten_result = shorten_result[:1000]
             summary += f"{shorten_result}\n"
+            shorten_result = f"- {result}"
+            shorten_result = shorten_result[:1000]
+            summary += f"{shorten_result}\n"
 
         self.logger.debug(f"Summarized agents' results:\n{summary}")
         return summary
@@ -791,6 +820,15 @@ class Engine:
             self.logger.info(f"Summary data successfully written to {file_path}")
         except IOError as e:
             self.logger.error(f"Failed to write summary data to {file_path}: {e}")
+
+    def _get_final_ooutput_in_graph(self):
+        """
+        Get the final output graph.
+
+        Returns:
+            Dict[str, Any]: The final output graph.
+        """
+        return self.graph.get_output_graph()
 
     def _get_final_ooutput_in_graph(self):
         """
