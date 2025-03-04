@@ -197,11 +197,11 @@ class Evaluator:
             task (str): The task description.
             result (str): The final world idea.
         """
-        # Get the world evaluation prompt
-        world_prompt_template = self.evaluation_prompts["world"]["task_evaluation"]["prompt"]
-        # Fill in the placeholders {task} and {result}
+        # change the prompt to evaluate buyer and seller
+        # world_prompt_template = self.evaluation_prompts["world"]["task_evaluation"]["buyer_prompt"]
+        world_prompt_template = self.evaluation_prompts["world"]["task_evaluation"]["seller_prompt"]
         prompt = world_prompt_template.format(task=task, result=result)
-        # Call the language model
+
         llm_response = model_prompting(
             llm_model=self.llm,
             messages=[{"role": "user", "content": prompt}],
@@ -211,13 +211,71 @@ class Evaluator:
             top_p=None,
             stream=None,
         )[0]
-        # Parse the ratings from llm_response.content
-        ratings = self.parse_research_ratings(llm_response.content)
-        # Update the metrics
-        if ratings:
-            self.metrics["task_evaluation"] = ratings
-        else:
-            self.logger.error("Failed to parse world ratings")
+
+        ratings = self.parse_task_world_evaluation(llm_response.content)
+
+        self.metrics["task_evaluation"]["buyer"] = ratings["buyer"]
+        self.metrics["task_evaluation"]["seller"] = ratings["seller"]
+
+
+    def parse_task_world_evaluation(self, llm_response: str) -> Dict[str, Any]:
+        """
+        Parse the JSON ratings from the LLM response for buyer and seller evaluation.
+        If the response is not a valid JSON, return default scores of -1.
+
+        Args:
+            llm_response (str): The LLM response containing the ratings in JSON format.
+
+        Returns:
+            Dict[str, Any]: A dictionary containing parsed ratings for buyer and seller.
+        """
+        # 设置默认评分
+        default_ratings = {
+            "buyer": {
+                "effectiveness_of_strategies": -1,
+                "progress_and_outcome": -1,
+                "interaction_dynamics": -1
+            },
+            "seller": {
+                "effectiveness_of_strategies": -1,
+                "progress_and_outcome": -1,
+                "interaction_dynamics": -1
+            }
+        }
+
+        try:
+            # 提取 JSON 块
+            match = re.search(r'\{[\s\S]*\}', llm_response)
+            if not match:
+                return default_ratings  # 返回默认评分
+
+            json_str = match.group(0)
+
+            # 解析 JSON
+            ratings = json.loads(json_str)
+
+            # 确保 `buyer` 和 `seller` 至少存在一个
+            if "buyer" not in ratings and "seller" not in ratings:
+                return default_ratings
+
+            # 确保评分为整数，缺失的字段填充 -1
+            parsed_ratings = {
+                "buyer": {
+                    "effectiveness_of_strategies": int(ratings["buyer"].get("effectiveness_of_strategies", -1)),
+                    "progress_and_outcome": int(ratings["buyer"].get("progress_and_outcome", -1)),
+                    "interaction_dynamics": int(ratings["buyer"].get("interaction_dynamics", -1))
+                } if "buyer" in ratings else default_ratings["buyer"],
+                "seller": {
+                    "effectiveness_of_strategies": int(ratings["seller"].get("effectiveness_of_strategies", -1)),
+                    "progress_and_outcome": int(ratings["seller"].get("progress_and_outcome", -1)),
+                    "interaction_dynamics": int(ratings["seller"].get("interaction_dynamics", -1))
+                } if "seller" in ratings else default_ratings["seller"]
+            }
+
+            return parsed_ratings
+
+        except (json.JSONDecodeError, KeyError, ValueError):
+            return default_ratings  # 解析失败则返回默认评分
 
     def parse_research_ratings(self, assistant_answer: str) -> Dict[str, int]:
         """

@@ -110,9 +110,11 @@ class Engine:
         agents = []
         llm = self.config.llm
         for agent_config in agent_configs:
+            agent_llm = agent_config.get("llm", llm)  # use agent-specific LLM if provided
             agent_type = agent_config.get("type")
-            agent = BaseAgent(config=agent_config, env=self.environment, model=llm)
+            agent = BaseAgent(config=agent_config, env=self.environment, model=agent_llm)
             agents.append(agent)
+            self.logger.debug(f"Agent '{agent.agent_id}' of type '{agent_type}' using LLM '{agent_llm}' initialized.")
             if isinstance(self.environment, MinecraftEnvironment):
                 assert "agent_id" in agent_config and "agent_port" in agent_config
                 self.environment.register_agent(agent_config.get("agent_id"), agent_config.get("agent_port"))
@@ -340,6 +342,11 @@ class Engine:
                 assert isinstance(iteration_data_summary, str)
                 self.evaluator.evaluate_task_research(self.task, iteration_data_summary)
                 summary_data['task_evaluation'] = self.evaluator.metrics["task_evaluation"]
+                self.logger.info("Engine graph-based coordination loop completed.")
+            elif self.environment.name == 'World Simulation Environment':
+                self.evaluator.evaluate_task_world(self.task, iteration_data["summary"])
+                summary_data['task_evaluation'] = self.evaluator.metrics["task_evaluation"]
+                self.logger.info("Engine graph-based coordination loop completed.")
             elif isinstance(self.environment, MinecraftEnvironment):
                 try:
                     with open("../data/score.json", "r") as f:
@@ -444,7 +451,11 @@ class Engine:
             if self.environment.name == 'Research Environment':
                 self.evaluator.evaluate_task_research(self.task, iteration_data["summary"])
                 summary_data['task_evaluation'] = self.evaluator.metrics["task_evaluation"]
-                self.logger.info("Engine graph-based coordination loop completed.")
+                self.logger.info("Engine star-based coordination loop completed.")
+            elif self.environment.name == 'World Simulation Environment':
+                self.evaluator.evaluate_task_world(self.task, iteration_data["summary"])
+                summary_data['task_evaluation'] = self.evaluator.metrics["task_evaluation"]
+                self.logger.info("Engine star-based coordination loop completed.")
             self.logger.info("Engine simulation loop completed.")
 
         except Exception:
@@ -554,7 +565,11 @@ class Engine:
             if self.environment.name == 'Research Environment':
                 self.evaluator.evaluate_task_research(self.task, iteration_data["summary"])
                 #summary_data['task_evaluation'] = self.evaluator.metrics["task_evaluation"]
-                self.logger.info("Engine graph-based coordination loop completed.")
+                self.logger.info("Engine chain-based coordination loop completed.")
+            elif self.environment.name == 'World Simulation Environment':
+                self.evaluator.evaluate_task_world(self.task, iteration_data["summary"])
+                summary_data['task_evaluation'] = self.evaluator.metrics["task_evaluation"]
+                self.logger.info("Engine chain-based coordination loop completed.")
             self.logger.info("Chain-based coordination simulation completed.")
 
         except Exception:
@@ -631,7 +646,11 @@ class Engine:
             if self.environment.name == 'Research Environment':
                 self.evaluator.evaluate_task_research(self.task, iteration_data["summary"])
                 summary_data['task_evaluation'] = self.evaluator.metrics["task_evaluation"]
-                self.logger.info("Engine graph-based coordination loop completed.")
+                self.logger.info("Engine tree-based coordination loop completed.")
+            elif self.environment.name == 'World Simulation Environment':
+                self.evaluator.evaluate_task_world(self.task, iteration_data["summary"])
+                summary_data['task_evaluation'] = self.evaluator.metrics["task_evaluation"]
+                self.logger.info("Engine tree-based coordination loop completed.")
             self.logger.info("Tree-based coordination simulation completed.")
 
         except Exception:
