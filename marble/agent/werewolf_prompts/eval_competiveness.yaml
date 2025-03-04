@@ -1,0 +1,91 @@
+system: |
+  You are asked to compare the villagers’ performance in two Werewolf game across five key aspects. Each aspect should be assessed on a scale of 0-5 using the scoring criteria provided below. Record both the reasoning and the score for each aspect. The overall score will be calculated as the average of these seven scores.
+
+  Below are the five dimensions and their detailed scoring guidelines:
+
+  1. **Information Effectiveness (info_effectiveness)**  
+
+  2. **Collaboration** 
+
+  3. **Logic and Reasoning (logic_and_reasoning)**  
+
+  4. **Leadership & key player's leadership performance**
+
+  5. **Result Orientation (result_orientation)**  
+
+user: |
+  <<game_log>>
+  
+  Evaluate the villagers' competitive performance against the werewolf team in this game based on the criteria provided. Write detailed reasoning for each category and assign scores accordingly.
+
+tools:
+  - type: "function"
+    function:
+      name: "villager_combined_evaluation"
+      description: "Use this to evaluate the villagers’ performance in the Werewolf game across seven merged aspects. Provide detailed reasoning and assign a score (0-5) for each aspect. The overall score is the average of the seven aspect scores."
+      parameters:
+        type: "object"
+        properties:
+          info_effectiveness:
+            type: "string"
+            description: "Reasoning and evaluation for Information Effectiveness. Provide observations on clarity, completeness, and relevance of information sharing."
+          info_effectiveness_score:
+            type: "integer"
+            description: "Score (0-5) for Information Effectiveness. Criteria:\n\n- 5: Information was consistently clear, complete, and relevant.\n- 4: Mostly clear info with minor gaps or delays.\n- 3: Inconsistent sharing, some delays or omissions.\n- 2: Key info often missing or unclear.\n- 1: Severely lacking or misleading communication.\n- 0: No meaningful information shared."
+
+          collaboration_limiting:
+            type: "string"
+            description: "Reasoning and evaluation for Collaboration & Limiting Werewolf Actions. Discuss teamwork among villagers and any success in exposing or disrupting werewolf strategies."
+          collaboration_limiting_score:
+            type: "integer"
+            description: "Score (0-5) for Collaboration & Limiting Werewolf Actions. Criteria:\n\n- 5: Excellent teamwork, villagers disrupt werewolf plans effectively.\n- 4: Strong collaboration, occasional errors let some wolf actions succeed.\n- 3: Some cooperation, some disruptions, but inconsistent.\n- 2: Weak collaboration, villagers often misled.\n- 1: Almost no collaboration, werewolves dominate strategies.\n- 0: Complete disorganization, unwittingly assisting werewolves."
+
+          logic_and_reasoning:
+            type: "string"
+            description: "Reasoning and evaluation for Logic and Reasoning. Address how well villagers analyzed information and formed accurate conclusions."
+          logic_and_reasoning_score:
+            type: "integer"
+            description: "Score (0-5) for Logic and Reasoning. Criteria:\n\n- 5: Excellent logical analysis, leading to accurate deductions.\n- 4: Mostly sound reasoning with minor oversights.\n- 3: Reasoning contains notable mistakes but has some merit.\n- 2: Frequent logical errors or reliance on guesswork.\n- 1: Decisions driven mostly by emotion or random guesses.\n- 0: No logical reasoning evident."
+
+          leadership_and_sheriff:
+            type: "string"
+            description: "Reasoning and evaluation for Leadership & Sheriff Election Performance. Address the quality of leadership, direction provided, and outcomes of the Sheriff election."
+          leadership_and_sheriff_score:
+            type: "integer"
+            description: "Score (0-5) for Leadership & Sheriff Election Performance. Criteria:\n\n- 5: Strong leadership and an effective Sheriff election that hindered werewolves.\n- 4: Mostly good leadership, minor lapses. Sheriff was capable despite some interference.\n- 3: Leadership present but inconsistent. Sheriff election was somewhat chaotic yet provided some guidance.\n- 2: Weak leadership, heavily disrupted Sheriff election.\n- 1: No meaningful leadership. Sheriff election failed, leading to a werewolf or ineffective Sheriff.\n- 0: Leadership misled the village. Sheriff election dominated by werewolves."
+
+          voting_eliminations:
+            type: "string"
+            description: "Reasoning and evaluation for Voting to Eliminate Werewolves. Discuss accuracy in identifying and removing werewolves, and any misvotes on villagers."
+          voting_eliminations_score:
+            type: "integer"
+            description: "Score (0-5) for Voting to Eliminate Werewolves. Criteria:\n\n- 5: Precise eliminations of werewolves, minimal harm to villagers.\n- 4: Mostly effective with occasional errors.\n- 3: Mixed success, some correct votes but also notable mistakes.\n- 2: Multiple errors, frequent innocent casualties.\n- 1: Chaotic voting, failed to remove any werewolves.\n- 0: Voting consistently aided werewolves, eliminating only villagers."
+
+          protect_key_players:
+            type: "string"
+            description: "Reasoning and evaluation for Protecting Key Players. Focus on how well roles like Guard and Witch preserved crucial villager roles (Seer, etc.)."
+          protect_key_players_score:
+            type: "integer"
+            description: "Score (0-5) for Protecting Key Players. Criteria:\n\n- 5: Guard consistently defended targets, Witch used antidote effectively, key roles survived.\n- 4: Mostly effective protection with minimal errors.\n- 3: Occasional successes, but key roles often lost too early.\n- 2: Frequent failures in protecting important roles.\n- 1: Almost no protection; critical roles fell quickly.\n- 0: Counterproductive actions causing swift elimination of key roles."
+
+          result_orientation:
+            type: "string"
+            description: "Reasoning and evaluation for overall Result Orientation. Consider whether villagers achieved victory or progress, and how communication and strategy contributed."
+          result_orientation_score:
+            type: "integer"
+            description: "Score (0-5) for Result Orientation. Criteria:\n\n- 5: Decisive villager victory with minimal mistakes.\n- 4: Villagers won with some errors or inefficiencies.\n- 3: Notable efforts, but a crucial failure led to a loss.\n- 2: Minimal progress, werewolves prevailed.\n- 1: Rapid loss with severe breakdowns.\n- 0: Utterly ineffective performance, a decisive defeat."
+        required:
+          - info_effectiveness
+          - info_effectiveness_score
+          - collaboration_limiting
+          - collaboration_limiting_score
+          - logic_and_reasoning
+          - logic_and_reasoning_score
+          - leadership_and_sheriff
+          - leadership_and_sheriff_score
+          - voting_eliminations
+          - voting_eliminations_score
+          - protect_key_players
+          - protect_key_players_score
+          - result_orientation
+          - result_orientation_score
