@@ -196,7 +196,16 @@ class Engine:
             iteration_data["summary"] = summary.content
 
             # Decide whether to continue or terminate after initial assignment
-            continue_simulation = self.planner.decide_next_step(agents_results)
+            if isinstance(self.environment, MinecraftEnvironment):
+                try:
+                    with open("../data/score.json", "r") as f:
+                        block_hit_rate = json.load(f)[-1]["block_hit_rate"]
+                except:
+                    block_hit_rate = 0.0
+                self.logger.info(f"Using a rule-based EnginePlanner. block_hit_rate is {block_hit_rate}")
+                continue_simulation = (int(block_hit_rate) != 1)
+            else:
+                continue_simulation = self.planner.decide_next_step(agents_results)
             iteration_data["continue_simulation"] = continue_simulation
             if not continue_simulation:
                 self.logger.info("EnginePlanner decided to terminate the simulation after initial assignment.")
@@ -335,12 +344,24 @@ class Engine:
             summary_data["token_usage"] = self._get_totoal_token_usage()
             summary_data["agent_kpis"] = self.evaluator.metrics["agent_kpis"]
             summary_data["total_milestones"] = self.evaluator.metrics["total_milestones"]
-            if self.environment.name == 'Research Environment':
+            # if self.environment.name == 'Research Environment':
+            if isinstance(self.environment, ResearchEnvironment):
                 iteration_data_summary = iteration_data.get("summary")
                 assert isinstance(iteration_data_summary, str)
                 self.evaluator.evaluate_task_research(self.task, iteration_data_summary)
                 summary_data['task_evaluation'] = self.evaluator.metrics["task_evaluation"]
                 self.logger.info("Engine graph-based coordination loop completed.")
+            elif self.environment.name == 'World Simulation Environment':
+                self.evaluator.evaluate_task_world(self.task, iteration_data["summary"])
+                summary_data['task_evaluation'] = self.evaluator.metrics["task_evaluation"]
+                self.logger.info("Engine graph-based coordination loop completed.")
+            elif isinstance(self.environment, MinecraftEnvironment):
+                try:
+                    with open("../data/score.json", "r") as f:
+                        block_hit_rate = json.load(f)[-1]["block_hit_rate"]
+                except:
+                    block_hit_rate = 0.0
+                summary_data['task_evaluation'] = block_hit_rate * 5
             elif self.environment.name == 'DB Environment':
                 self.evaluator.evaluate_task_db(
                     self.task, iteration_data["summary"],
