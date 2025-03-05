@@ -4,7 +4,6 @@
 The core engine module that coordinates agents within the environment.
 """
 import json
-import os
 from typing import Any, Dict, List, Optional, Union
 
 from marble.agent import BaseAgent
@@ -13,7 +12,6 @@ from marble.engine.engine_planner import EnginePlanner
 from marble.environments import (
     BaseEnvironment,
     DBEnvironment,
-    MinecraftEnvironment,
     ResearchEnvironment,
     WebEnvironment,
     WorldSimulationEnvironment,
@@ -24,7 +22,7 @@ from marble.memory.base_memory import BaseMemory
 from marble.memory.shared_memory import SharedMemory
 from marble.utils.logger import get_logger
 
-EnvType = Union[BaseEnvironment, WebEnvironment, ResearchEnvironment, WorldSimulationEnvironment, MinecraftEnvironment]
+EnvType = Union[BaseEnvironment, WebEnvironment, ResearchEnvironment, WorldSimulationEnvironment]
 AgentType = Union[BaseAgent]
 
 class Engine:
@@ -41,7 +39,6 @@ class Engine:
         """
         self.logger = get_logger(self.__class__.__name__)
         self.config = config
-        self.planning_method = config.engine_planner.get('planning_method', 'naive')
         self.planning_method = config.engine_planner.get('planning_method', 'naive')
         # Initialize Environment
         self.environment = self._initialize_environment(config.environment)
@@ -95,8 +92,6 @@ class Engine:
             return env4
         elif env_type == "DB":
             env5 = DBEnvironment(name="DB Environment", config=env_config)
-        elif env_type == "Minecraft":
-            env5 = MinecraftEnvironment(name="Minecraft Environment", config=env_config)
             return env5
         else:
             raise ValueError(f"Unsupported environment type: {env_type}")
@@ -114,14 +109,9 @@ class Engine:
         agents = []
         llm = self.config.llm
         for agent_config in agent_configs:
-            agent_llm = agent_config.get("llm", llm)  # use agent-specific LLM if provided
             agent_type = agent_config.get("type")
-            agent = BaseAgent(config=agent_config, env=self.environment, model=agent_llm)
+            agent = BaseAgent(config=agent_config, env=self.environment, model=llm)
             agents.append(agent)
-            self.logger.debug(f"Agent '{agent.agent_id}' of type '{agent_type}' using LLM '{agent_llm}' initialized.")
-            if isinstance(self.environment, MinecraftEnvironment):
-                assert "agent_id" in agent_config and "agent_port" in agent_config
-                self.environment.register_agent(agent_config.get("agent_id"), agent_config.get("agent_port"))
             self.logger.debug(f"Agent '{agent.agent_id}' of type '{agent_type}' initialized.")
         return agents
 
@@ -194,20 +184,9 @@ class Engine:
             self.logger.info(f"Initial Summary:\n{summary}")
             summary = self.planner.summarize_output(summary, self.task, self.output_format)
             iteration_data["summary"] = summary.content
-            summary = self.planner.summarize_output(summary, self.task, self.output_format)
-            iteration_data["summary"] = summary.content
 
             # Decide whether to continue or terminate after initial assignment
-            if isinstance(self.environment, MinecraftEnvironment):
-                try:
-                    with open("../data/score.json", "r") as f:
-                        block_hit_rate = json.load(f)[-1]["block_hit_rate"]
-                except:
-                    block_hit_rate = 0.0
-                self.logger.info(f"Using a rule-based EnginePlanner. block_hit_rate is {block_hit_rate}")
-                continue_simulation = (int(block_hit_rate) != 1)
-            else:
-                continue_simulation = self.planner.decide_next_step(agents_results)
+            continue_simulation = self.planner.decide_next_step(agents_results)
             iteration_data["continue_simulation"] = continue_simulation
             if not continue_simulation:
                 self.logger.info("EnginePlanner decided to terminate the simulation after initial assignment.")
@@ -218,30 +197,29 @@ class Engine:
 
             summary_data["iterations"].append(iteration_data)
 
-            # Evaluate communication
+                    # Evaluate communication
             if iteration_data["communications"]:
                 iteration_data_communications = iteration_data.get("communications")
                 assert isinstance(iteration_data_communications, list)
-                # communications_str = self._format_communications(iteration_data_communications)
-                # self.evaluator.evaluate_communication(self.task, communications_str)
-                self.evaluator.metrics["communication_score"].append(-1)
+                communications_str = self._format_communications(iteration_data_communications)
+                self.evaluator.evaluate_communication(self.task, communications_str)
             else:
                 # Store -1 if communications are empty
                 self.evaluator.metrics["communication_score"].append(-1)
 
             # Evaluate planning
-            # agent_profiles = self._get_agent_profiles()
-            # iteration_data_task_assignments = iteration_data.get("task_assignments")
-            # assert isinstance(iteration_data_task_assignments, dict)
-            # agent_tasks_str = self._format_agent_tasks(iteration_data_task_assignments)
-            # iteration_data_task_results = iteration_data.get("task_results")
-            # assert isinstance(iteration_data_task_results, list)
-            # results_str = self._format_results(iteration_data_task_results)
-            # iteration_data_summary = iteration_data.get("summary")
-            # assert isinstance(iteration_data_summary, str)
-            # self.evaluator.evaluate_planning(iteration_data_summary, agent_profiles, agent_tasks_str, results_str)
-            # self.evaluator.evaluate_kpi(self.task, results_str)
-            self.evaluator.metrics["planning_score"].append(-1)
+            agent_profiles = self._get_agent_profiles()
+            iteration_data_task_assignments = iteration_data.get("task_assignments")
+            assert isinstance(iteration_data_task_assignments, dict)
+            agent_tasks_str = self._format_agent_tasks(iteration_data_task_assignments)
+            iteration_data_task_results = iteration_data.get("task_results")
+            assert isinstance(iteration_data_task_results, list)
+            results_str = self._format_results(iteration_data_task_results)
+            iteration_data_summary = iteration_data.get("summary")
+
+            assert isinstance(iteration_data_summary, str)
+            self.evaluator.evaluate_planning(iteration_data_summary, agent_profiles, agent_tasks_str, results_str)
+            self.evaluator.evaluate_kpi(self.task, results_str)
 
             end_on_iter_0 = False
             if not continue_simulation:
@@ -298,39 +276,27 @@ class Engine:
                 if iteration_data["communications"]:
                     iteration_data_communications = iteration_data.get("communications")
                     assert isinstance(iteration_data_communications, list)
-                    # communications_str = self._format_communications(iteration_data_communications)
-                    # self.evaluator.evaluate_communication(self.task, communications_str)
-                    self.evaluator.metrics["communication_score"].append(-1)
+                    communications_str = self._format_communications(iteration_data_communications)
+                    self.evaluator.evaluate_communication(self.task, communications_str)
                 else:
                     # Store -1 if communications are empty
                     self.evaluator.metrics["communication_score"].append(-1)
 
                 # Evaluate planning
-                # agent_profiles = self._get_agent_profiles()
-                # iteration_data_task_assignments = iteration_data.get("task_assignments")
-                # assert isinstance(iteration_data_task_assignments, dict)
-                # agent_tasks_str = self._format_agent_tasks(iteration_data_task_assignments)
-                # iteration_data_task_results = iteration_data.get("task_results")
-                # assert isinstance(iteration_data_task_results, list)
-                # results_str = self._format_results(iteration_data_task_results)
-                # iteration_data_summary = iteration_data.get("summary")
-                # assert isinstance(iteration_data_summary, str)
-                # self.evaluator.evaluate_planning(iteration_data_summary, agent_profiles, agent_tasks_str, results_str)
-                # self.evaluator.evaluate_kpi(self.task, results_str)
-                self.evaluator.metrics["planning_score"].append(-1)
+                agent_profiles = self._get_agent_profiles()
+                iteration_data_task_assignments = iteration_data.get("task_assignments")
+                assert isinstance(iteration_data_task_assignments, dict)
+                agent_tasks_str = self._format_agent_tasks(iteration_data_task_assignments)
+                iteration_data_task_results = iteration_data.get("task_results")
+                assert isinstance(iteration_data_task_results, list)
+                results_str = self._format_results(iteration_data_task_results)
+                iteration_data_summary = iteration_data.get("summary")
+                assert isinstance(iteration_data_summary, str)
+                self.evaluator.evaluate_planning(iteration_data_summary, agent_profiles, agent_tasks_str, results_str)
+                self.evaluator.evaluate_kpi(self.task, results_str)
                 # Decide whether to continue or terminate
-                if isinstance(self.environment, MinecraftEnvironment):
-                    try:
-                        with open("../data/score.json", "r") as f:
-                            block_hit_rate = json.load(f)[-1]["block_hit_rate"]
-                    except:
-                        block_hit_rate = 0.0
-                    self.logger.info(f"Using a rule-based EnginePlanner. block_hit_rate is {block_hit_rate}")
-                    continue_simulation = (int(block_hit_rate) != 1)
-                else:
-                    continue_simulation = self.planner.decide_next_step(agents_results)
+                continue_simulation = self.planner.decide_next_step(agents_results)
                 iteration_data["continue_simulation"] = continue_simulation
-                summary_data["iterations"].append(iteration_data)
                 summary_data["iterations"].append(iteration_data)
                 if not continue_simulation:
                     self.logger.info("EnginePlanner decided to terminate the simulation.")
@@ -346,8 +312,7 @@ class Engine:
             summary_data["token_usage"] = self._get_totoal_token_usage()
             summary_data["agent_kpis"] = self.evaluator.metrics["agent_kpis"]
             summary_data["total_milestones"] = self.evaluator.metrics["total_milestones"]
-            # if self.environment.name == 'Research Environment':
-            if isinstance(self.environment, ResearchEnvironment):
+            if self.environment.name == 'Research Environment':
                 iteration_data_summary = iteration_data.get("summary")
                 assert isinstance(iteration_data_summary, str)
                 self.evaluator.evaluate_task_research(self.task, iteration_data_summary)
@@ -362,17 +327,6 @@ class Engine:
                 )
                 summary_data['task_evaluation'] = self.evaluator.metrics["task_evaluation"]
                 self.logger.info("Engine graph-based coordination loop completed.")
-            elif self.environment.name == 'World Simulation Environment':
-                self.evaluator.evaluate_task_world(self.task, iteration_data["summary"])
-                summary_data['task_evaluation'] = self.evaluator.metrics["task_evaluation"]
-                self.logger.info("Engine graph-based coordination loop completed.")
-            elif isinstance(self.environment, MinecraftEnvironment):
-                try:
-                    with open("../data/score.json", "r") as f:
-                        block_hit_rate = json.load(f)[-1]["block_hit_rate"]
-                except:
-                    block_hit_rate = 0.0
-                summary_data['task_evaluation'] = block_hit_rate * 5
             self.logger.info("Engine graph-based coordination loop completed.")
 
         except Exception:
@@ -404,7 +358,6 @@ class Engine:
 
                 # Assign tasks to agents
                 assignment = self.planner.assign_tasks(planning_method=self.planning_method)
-                assignment = self.planner.assign_tasks(planning_method=self.planning_method)
                 tasks = assignment.get("tasks", {})
                 iteration_data["task_assignments"] = tasks
                 self.logger.info(f"Assigned tasks: {tasks}")
@@ -435,7 +388,6 @@ class Engine:
                 self.logger.info(summary)
                 self.planner.update_progress(summary)
                 self.current_iteration += 1
-                self.current_iteration += 1
 
                 # Evaluate communication
                 if iteration_data["communications"]:
@@ -455,7 +407,6 @@ class Engine:
                 # Decide whether to continue or terminate
                 continue_simulation = self.planner.decide_next_step(agents_results)
                 iteration_data["continue_simulation"] = continue_simulation
-                summary_data["iterations"].append(iteration_data)
                 summary_data["iterations"].append(iteration_data)
                 if not continue_simulation:
                     self.logger.info("EnginePlanner decided to terminate the simulation.")
@@ -481,8 +432,6 @@ class Engine:
                     self.config.task["number_of_labels_pred"],
                     self.config.task["root_causes"]
                 )
-            elif self.environment.name == 'World Simulation Environment':
-                self.evaluator.evaluate_task_world(self.task, iteration_data["summary"])
                 summary_data['task_evaluation'] = self.evaluator.metrics["task_evaluation"]
                 self.logger.info("Engine star-based coordination loop completed.")
             self.logger.info("Engine simulation loop completed.")
@@ -535,15 +484,8 @@ class Engine:
                 self.logger.info(f"Agent '{current_agent.agent_id}' completed task with result: {result}")
                 # Get profiles of other agents
                 agent_profiles = self.graph.get_agent_profiles_linked(current_agent.agent_id)
-                agent_profiles = self.graph.get_agent_profiles_linked(current_agent.agent_id)
                 # Current agent chooses the next agent
                 next_agent_id, plan = current_agent.plan_next_agent(result, agent_profiles)
-                current_agent_ = current_agent
-                try:
-                    current_agent = self.graph.get_agent(next_agent_id)
-                except Exception:
-                    self.logger.error(f"Agent '{next_agent_id}' not found in the graph. keep the same agent.")
-                    current_agent = current_agent_
                 current_agent_ = current_agent
                 try:
                     current_agent = self.graph.get_agent(next_agent_id)
@@ -626,7 +568,6 @@ class Engine:
             self.evaluator.finalize()
             self.logger.info("Chain-based coordination simulation completed.")
             summary_data["token_usage"] = self._get_totoal_token_usage()
-            summary_data["token_usage"] = self._get_totoal_token_usage()
             self._write_to_jsonl(summary_data)
 
     def tree_coordinate(self) -> None:
@@ -658,8 +599,6 @@ class Engine:
                 summary = self._summarize_results(results)
                 summary = self.planner.summarize_output(summary, self.task,  self.output_format)
                 iteration_data["summary"] = summary.content
-                summary = self.planner.summarize_output(summary, self.task,  self.output_format)
-                iteration_data["summary"] = summary.content
                 self.logger.info(f"Iteration {self.current_iteration} Summary:\n{summary}")
                 self.planner.update_progress(summary)
                 iteration_data["communications"] = communication
@@ -684,7 +623,6 @@ class Engine:
                 continue_simulation = self.planner.decide_next_step(results)
                 iteration_data["continue_simulation"] = continue_simulation
                 summary_data["iterations"].append(iteration_data)
-                summary_data["iterations"].append(iteration_data)
                 if not continue_simulation:
                     self.logger.info("EnginePlanner decided to terminate the simulation.")
                     break
@@ -705,8 +643,6 @@ class Engine:
                     self.config.task["number_of_labels_pred"],
                     self.config.task["root_causes"]
                 )
-            elif self.environment.name == 'World Simulation Environment':
-                self.evaluator.evaluate_task_world(self.task, iteration_data["summary"])
                 summary_data['task_evaluation'] = self.evaluator.metrics["task_evaluation"]
                 self.logger.info("Engine tree-based coordination loop completed.")
             self.logger.info("Tree-based coordination simulation completed.")
@@ -735,9 +671,6 @@ class Engine:
         print(agent.children)
         if len(agent.children) > 0:
             print("******************start recursive******************")
-        print(agent.children)
-        if len(agent.children) > 0:
-            print("******************start recursive******************")
             # Agent assigns tasks to children
             tasks_for_children = agent.plan_tasks_for_children(task)
             tasks.append(tasks_for_children)
@@ -752,11 +685,6 @@ class Engine:
                         communications.append(communication)
                     children_results += child_result
             # Agent may also act itself
-            results_str = "\n".join(json.dumps(result)[:500] for result in children_results)
-
-            task_for_father = task + "\nHere are the results of the children: " + results_str + "\nPlease don't repeat the same task and continue to work on the original task. You may also need to communicate with other agents or summarize the results or just continue to work on the original task."
-            own_result, communication = agent.act(task_for_father)
-
             results_str = "\n".join(json.dumps(result)[:500] for result in children_results)
 
             task_for_father = task + "\nHere are the results of the children: " + results_str + "\nPlease don't repeat the same task and continue to work on the original task. You may also need to communicate with other agents or summarize the results or just continue to work on the original task."
@@ -798,8 +726,6 @@ class Engine:
         Start the engine to run the simulation.
         """
         self.logger.info("Engine starting simulation.")
-        if isinstance(self.environment, MinecraftEnvironment):
-            self.environment.launch()
         if self.coordinate_mode == "star":
             self.logger.info("Running in centralized coordination mode.")
             self.star_coordinate()
@@ -815,8 +741,6 @@ class Engine:
         else:
             self.logger.error(f"Unsupported coordinate mode: {self.coordinate_mode}")
             raise ValueError(f"Unsupported coordinate mode: {self.coordinate_mode}")
-        if isinstance(self.environment, MinecraftEnvironment):
-            self.environment.finish()
 
 
     def _should_terminate(self) -> bool:
@@ -846,9 +770,6 @@ class Engine:
             shorten_result = f"- {result}"
             shorten_result = shorten_result[:1000]
             summary += f"{shorten_result}\n"
-            shorten_result = f"- {result}"
-            shorten_result = shorten_result[:1000]
-            summary += f"{shorten_result}\n"
 
         self.logger.debug(f"Summarized agents' results:\n{summary}")
         return summary
@@ -863,22 +784,12 @@ class Engine:
         file_path = self.config.output.get("file_path", "result/discussion_output.jsonl")
         try:
             with open(file_path, "a") as jsonl_file:
-                # print(summary_data)
                 jsonl_file.write(json.dumps(summary_data) + "\n")
 
                 jsonl_file.flush()
             self.logger.info(f"Summary data successfully written to {file_path}")
         except IOError as e:
             self.logger.error(f"Failed to write summary data to {file_path}: {e}")
-
-    def _get_final_ooutput_in_graph(self):
-        """
-        Get the final output graph.
-
-        Returns:
-            Dict[str, Any]: The final output graph.
-        """
-        return self.graph.get_output_graph()
 
     def _get_final_ooutput_in_graph(self):
         """
