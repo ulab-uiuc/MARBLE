@@ -683,6 +683,10 @@ class Engine:
                 self.evaluator.evaluate_task_research(self.task, iteration_data["summary"])
                 summary_data['task_evaluation'] = self.evaluator.metrics["task_evaluation"]
                 self.logger.info("Engine tree-based coordination loop completed.")
+            elif self.environment.name == 'World Simulation Environment':
+                self.evaluator.evaluate_task_world(self.task, iteration_data["summary"])
+                summary_data['task_evaluation'] = self.evaluator.metrics["task_evaluation"]
+                self.logger.info("Engine tree-based coordination loop completed.")
             elif self.environment.name == 'DB Environment':
                 self.evaluator.evaluate_task_db(
                     self.task, iteration_data["summary"],
@@ -773,6 +777,8 @@ class Engine:
         Start the engine to run the simulation.
         """
         self.logger.info("Engine starting simulation.")
+        if isinstance(self.environment, MinecraftEnvironment):
+            self.environment.launch()
         if self.coordinate_mode == "star":
             self.logger.info("Running in centralized coordination mode.")
             self.star_coordinate()
@@ -788,6 +794,8 @@ class Engine:
         else:
             self.logger.error(f"Unsupported coordinate mode: {self.coordinate_mode}")
             raise ValueError(f"Unsupported coordinate mode: {self.coordinate_mode}")
+        if isinstance(self.environment, MinecraftEnvironment):
+            self.environment.finish()
 
 
     def _should_terminate(self) -> bool:
@@ -831,6 +839,7 @@ class Engine:
         file_path = self.config.output.get("file_path", "result/discussion_output.jsonl")
         try:
             with open(file_path, "a") as jsonl_file:
+                print(summary_data)
                 jsonl_file.write(json.dumps(summary_data) + "\n")
 
                 jsonl_file.flush()
