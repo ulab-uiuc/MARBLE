@@ -91,7 +91,7 @@ class Engine:
             return env3
         elif env_type == "WorldSimulation":
             env4 = WorldSimulationEnvironment(name="World Simulation Environment", config=env_config)
-            return env4        
+            return env4
         elif env_type == "Minecraft":
             env5 = MinecraftEnvironment(name="Minecraft Environment", config=env_config)
             return env5
