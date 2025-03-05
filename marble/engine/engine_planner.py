@@ -368,7 +368,6 @@ class EnginePlanner:
         Returns:
             str: The summarized output.
         """
-        messages = [{"role": "user", "content": f"Summarize the output of the agents for the task: {task}\n\nNow here is some result of thr agent: {summary}, please summarize it. You should follow the use of the following format: {output_format}"}]
         response = model_prompting(
             llm_model=self.model,
             messages=[{"role": "user", "content": f"Summarize the output of the agents for the task: {task}\n\nNow here is some result of thr agent: {summary}, please analyze it. Return the final output into a json following the format: {output_format}"}],
@@ -391,7 +390,6 @@ class EnginePlanner:
         Returns:
             bool: True to continue, False to terminate.
         """
-
         prompt = (
             "Based on the following agents' results, determine whether the overall task is completed.\n\n"
             f"Task Description:\n{self.task}\n\n"
@@ -413,9 +411,6 @@ class EnginePlanner:
         )
 
         messages = [{"role": "system", "content": prompt}]
-        # trim messages
-        messages = trim_messages(messages, model=self.model, max_tokens=int(16384 * 0.6))
-
         response = model_prompting(
             llm_model=self.model,
             messages=messages,
