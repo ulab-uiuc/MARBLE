@@ -588,11 +588,9 @@ class Engine:
             summary_data["agent_kpis"] = self.evaluator.metrics["agent_kpis"]
             summary_data["total_milestones"] = self.evaluator.metrics["total_milestones"]
             if self.environment.name == 'Research Environment':
-                iteration_data_summary = iteration_data.get("summary")
-                assert isinstance(iteration_data_summary, str)
-                self.evaluator.evaluate_task_research(self.task, iteration_data_summary)
-                summary_data['task_evaluation'] = self.evaluator.metrics["task_evaluation"]
-                self.logger.info("Engine graph-based coordination loop completed.")
+                self.evaluator.evaluate_task_research(self.task, iteration_data["summary"])
+                #summary_data['task_evaluation'] = self.evaluator.metrics["task_evaluation"]
+                self.logger.info("Engine chain-based coordination loop completed.")
             elif self.environment.name == 'World Simulation Environment':
                 self.evaluator.evaluate_task_world(self.task, iteration_data["summary"])
                 summary_data['task_evaluation'] = self.evaluator.metrics["task_evaluation"]
