@@ -8,6 +8,12 @@
 
 **MultiAgentBench** is a modular and extensible framework designed to facilitate the development, testing, and evaluation of multi-agent systems leveraging Large Language Models (LLMs). It provides a structured environment where agents can interact within various simulated environments, utilizing cognitive abilities and communication mechanisms to perform tasks collaboratively or competitively.
 
+<div style="display: flex; justify-content: center;">
+  <div style="width: 100; transform: scale(1.0);">
+    <img src="assets/benchmark.png" style="width: 100%;" alt="marble">
+  </div>
+</div>
+
 ---
 
 ## Table of Contents
