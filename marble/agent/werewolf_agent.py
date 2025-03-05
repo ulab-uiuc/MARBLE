@@ -1,10 +1,16 @@
 import json
 import logging
+import logging
 import os
 import time
 from typing import Any, Dict
 
+from typing import Any, Dict
+
 import yaml
+import logging
+from typing import Any, Dict
+from marble.utils.eventbus import EventBus # 假设 BaseAgent 在 base_agent_module 中
 from openai import OpenAI
 
 
@@ -468,7 +474,7 @@ class WerewolfAgent:
 
         # Step 4: Read from shared memory (public and private)
         try:
-
+                    
             public_state = self.shared_memory.get("public_state", {})
             private_state = self.shared_memory.get("private_state", {}).get("players", {}).get(self.agent_id, {})
             personal_event_log = private_state.get("personal_event_log", "")
@@ -616,18 +622,18 @@ class WerewolfAgent:
         elif event_type == "vote_action":
 
             filled_prompt = prompt_template.replace("<<public_chat>>", public_chat)
-            filled_prompt = filled_prompt.replace("<<game_state>>", json.dumps(game_state, indent=2))
-
+            filled_prompt = filled_prompt.replace("<<game_state>>", json.dumps(game_state, indent=2))       
+ 
         elif event_type == "last_words":
 
             filled_prompt = prompt_template.replace("<<public_chat>>", public_chat)
             filled_prompt = filled_prompt.replace("<<game_state>>", json.dumps(game_state, indent=2))
-
+        
         elif event_type == "badge_flow":
 
             filled_prompt = prompt_template.replace("<<public_chat>>", public_chat)
             filled_prompt = filled_prompt.replace("<<game_state>>", json.dumps(game_state, indent=2))
-
+        
         else:
 
             filled_prompt = prompt_template.replace("<<public_chat>>", public_chat)
