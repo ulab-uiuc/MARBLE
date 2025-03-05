@@ -94,7 +94,7 @@ Run `poetry run pytest` to make sure all tests pass (this will ensure dynamic ty
 Check the github action result to make sure all tests pass. If not, fix the errors and push again.
 
 ## Citation
-Please cite the following paper if you find RAGEval helpful!
+Please cite the following paper if you find Marble helpful!
 ```bibtex
 @misc{zhu2025multiagentbenchevaluatingcollaborationcompetition,
       title={MultiAgentBench: Evaluating the Collaboration and Competition of LLM agents}, 
