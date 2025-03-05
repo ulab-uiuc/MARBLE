@@ -236,7 +236,6 @@ class Engine:
             # assert isinstance(iteration_data_task_results, list)
             # results_str = self._format_results(iteration_data_task_results)
             # iteration_data_summary = iteration_data.get("summary")
-
             # assert isinstance(iteration_data_summary, str)
             # self.evaluator.evaluate_planning(iteration_data_summary, agent_profiles, agent_tasks_str, results_str)
             # self.evaluator.evaluate_kpi(self.task, results_str)
@@ -467,6 +466,10 @@ class Engine:
             summary_data["total_milestones"] = self.evaluator.metrics["total_milestones"]
             if self.environment.name == 'Research Environment':
                 self.evaluator.evaluate_task_research(self.task, iteration_data["summary"])
+                summary_data['task_evaluation'] = self.evaluator.metrics["task_evaluation"]
+                self.logger.info("Engine star-based coordination loop completed.")
+            elif self.environment.name == 'World Simulation Environment':
+                self.evaluator.evaluate_task_world(self.task, iteration_data["summary"])
                 summary_data['task_evaluation'] = self.evaluator.metrics["task_evaluation"]
                 self.logger.info("Engine star-based coordination loop completed.")
             elif self.environment.name == 'DB Environment':
