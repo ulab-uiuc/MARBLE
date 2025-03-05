@@ -305,7 +305,16 @@ class Engine:
                 self.evaluator.evaluate_planning(iteration_data_summary, agent_profiles, agent_tasks_str, results_str)
                 self.evaluator.evaluate_kpi(self.task, results_str)
                 # Decide whether to continue or terminate
-                continue_simulation = self.planner.decide_next_step(agents_results)
+                if isinstance(self.environment, MinecraftEnvironment):
+                    try:
+                        with open("../data/score.json", "r") as f:
+                            block_hit_rate = json.load(f)[-1]["block_hit_rate"]
+                    except:
+                        block_hit_rate = 0.0
+                    self.logger.info(f"Using a rule-based EnginePlanner. block_hit_rate is {block_hit_rate}")
+                    continue_simulation = (int(block_hit_rate) != 1)
+                else:
+                    continue_simulation = self.planner.decide_next_step(agents_results)
                 iteration_data["continue_simulation"] = continue_simulation
                 summary_data["iterations"].append(iteration_data)
                 if not continue_simulation:
