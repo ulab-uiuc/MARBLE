@@ -1,14 +1,6 @@
 import os
 import re
-import re
 import sys
-import time
-import json
-import argparse
-from typing import List, Dict, Any, Optional
-import openai
-from openai import OpenAI
-import yaml
 import time
 import json
 import argparse
@@ -18,6 +10,7 @@ from openai import OpenAI
 import yaml
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../../")))
 from marble.environments.werewolf_env import WerewolfEnv
+
 
 class WerewolfEvaluator:
     """
