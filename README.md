@@ -1,12 +1,9 @@
-<h1 align="center">MARBLE</h1>
+<div align= "center">
+    <h1> <img src="assets/marble.jpg" height=40 align="texttop">MARBLE</h1>
+</div>
+
 
 **M**ulti-**A**gent Coo**R**dination **B**ackbone with **L**LM **E**ngine
-
-<div style="display: flex; justify-content: center;">
-  <div style="width: 30%;">
-    <img src="assets/marble.jpg" style="width: 100%;" alt="marble">
-  </div>
-</div>
 
 
 **MultiAgentBench** is a modular and extensible framework designed to facilitate the development, testing, and evaluation of multi-agent systems leveraging Large Language Models (LLMs). It provides a structured environment where agents can interact within various simulated environments, utilizing cognitive abilities and communication mechanisms to perform tasks collaboratively or competitively.
