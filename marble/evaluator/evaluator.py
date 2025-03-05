@@ -288,27 +288,12 @@ class Evaluator:
             pred_num (int): The number of predicted root causes.
             root_causes (List[str]): The root cause labels.
         """
-        # for root_cause in root_causes:
-        #     assert root_cause in labels, f"Root cause {root_cause} not found in the list of labels."
-        # # Get the database evaluation prompt
-        # predicted_labels = []
-        # for label in labels:
-        #     if label.lower().replace('_', ' ') in result.lower().replace('_', ' '):
-        #         predicted_labels.append(label)
-        # if len(predicted_labels) == pred_num:
-        #     print("You seems to be predicting wrong number of root causes. Please update prompts to enforce the correct number of root causes predicted.")
-        # if 'INSERT_LARGE_DATA,IO_CONTENTION' in predicted_labels:
-        #     predicted_labels.append('INSERT_LARGE_DATA')
-        # if 'INSERT_LARGE_DATA,IO_CONTENTION' in root_causes:
-        #     root_causes.append('INSERT_LARGE_DATA')
-        # accuracy = len(set(predicted_labels).intersection(root_causes)) / len(root_causes)
+        # Evaluation will take place separately as it might not follow the 
+        # requested format
         self.metrics["task_evaluation"] = {
-            # 'predicted_labels': predicted_labels,
             'root_cause': root_causes,
             'predicted': result,
-            # 'accuracy': accuracy
         }
-        # self.logger.error(f"Predicted {len(predicted_labels)} root causes: {', '.join(predicted_labels)}")
 
     def parse_research_ratings(self, assistant_answer: str) -> Dict[str, int]:
         """
