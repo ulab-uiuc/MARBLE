@@ -4,6 +4,7 @@
 The core engine module that coordinates agents within the environment.
 """
 import json
+import os
 from typing import Any, Dict, List, Optional, Union
 
 from marble.agent import BaseAgent
@@ -11,6 +12,7 @@ from marble.configs.config import Config
 from marble.engine.engine_planner import EnginePlanner
 from marble.environments import (
     BaseEnvironment,
+    MinecraftEnvironment,
     DBEnvironment,
     ResearchEnvironment,
     WebEnvironment,
@@ -22,7 +24,7 @@ from marble.memory.base_memory import BaseMemory
 from marble.memory.shared_memory import SharedMemory
 from marble.utils.logger import get_logger
 
-EnvType = Union[BaseEnvironment, WebEnvironment, ResearchEnvironment, WorldSimulationEnvironment]
+EnvType = Union[BaseEnvironment, WebEnvironment, ResearchEnvironment, WorldSimulationEnvironment, MinecraftEnvironment, DBEnvironment]
 AgentType = Union[BaseAgent]
 
 class Engine:
@@ -89,10 +91,13 @@ class Engine:
             return env3
         elif env_type == "WorldSimulation":
             env4 = WorldSimulationEnvironment(name="World Simulation Environment", config=env_config)
-            return env4
-        elif env_type == "DB":
-            env5 = DBEnvironment(name="DB Environment", config=env_config)
+            return env4        
+        elif env_type == "Minecraft":
+            env5 = MinecraftEnvironment(name="Minecraft Environment", config=env_config)
             return env5
+        elif env_type == "DB":
+            env6 = DBEnvironment(name="DB Environment", config=env_config)
+            return env6
         else:
             raise ValueError(f"Unsupported environment type: {env_type}")
 
@@ -109,9 +114,14 @@ class Engine:
         agents = []
         llm = self.config.llm
         for agent_config in agent_configs:
+            agent_llm = agent_config.get("llm", llm)  # use agent-specific LLM if provided
             agent_type = agent_config.get("type")
-            agent = BaseAgent(config=agent_config, env=self.environment, model=llm)
+            agent = BaseAgent(config=agent_config, env=self.environment, model=agent_llm)
             agents.append(agent)
+            self.logger.debug(f"Agent '{agent.agent_id}' of type '{agent_type}' using LLM '{agent_llm}' initialized.")
+            if isinstance(self.environment, MinecraftEnvironment):
+                assert "agent_id" in agent_config and "agent_port" in agent_config
+                self.environment.register_agent(agent_config.get("agent_id"), agent_config.get("agent_port"))
             self.logger.debug(f"Agent '{agent.agent_id}' of type '{agent_type}' initialized.")
         return agents
 
@@ -197,7 +207,7 @@ class Engine:
 
             summary_data["iterations"].append(iteration_data)
 
-                    # Evaluate communication
+            # Evaluate communication
             if iteration_data["communications"]:
                 iteration_data_communications = iteration_data.get("communications")
                 assert isinstance(iteration_data_communications, list)
