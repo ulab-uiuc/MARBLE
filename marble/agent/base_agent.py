@@ -222,10 +222,8 @@ class BaseAgent:
             assert function_name is not None
             function_args = json.loads(function_call.function.arguments)
             if function_name != "new_communication_session":
-                # import pdb; pdb.set_trace()
                 result_from_function = self.env.apply_action(agent_id=self.agent_id, action_name=function_name, arguments=function_args)
                 result_from_function_str = convert_to_str(result_from_function)
-                print(result_from_function)
             else: # function_name == "new_communication_session"
                 self.session_id = uuid.uuid4() # new session id
                 target_agent_id = function_args["target_agent_id"]
@@ -747,4 +745,3 @@ class BaseAgent:
             return next_agent_id, planning_task
         else:
             self.logger.warning(f"Agent '{self.agent_id}' did not select a valid next agent.")
-            return None, None
