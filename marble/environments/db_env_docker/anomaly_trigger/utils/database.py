@@ -21,7 +21,7 @@ SERVER_CONFIG = {
     "host": "localhost",
     "port": 22,
     "user": 'root',
-    "password": 'xxxx'
+    "password": 'xxxx',
 }
 
 

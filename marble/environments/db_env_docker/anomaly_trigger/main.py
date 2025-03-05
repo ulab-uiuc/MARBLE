@@ -6,7 +6,7 @@ import dropdatabase
 
 parser = argparse.ArgumentParser(description='Anomaly simulation tool')
 parser.add_argument('--anomaly', type=str, required=True, choices=['INSERT_LARGE_DATA', 'MISSING_INDEXES','LOCK_CONTENTION','VACUUM','REDUNDANT_INDEX','INSERT_LARGE_DATA,IO_CONTENTION',
-                                                                   'FETCH_LARGE_DATA,CORRELATED_SUBQUERY','POOR_JOIN_PERFORMANCE,CPU_CONTENTION'],
+                                                                   'FETCH_LARGE_DATA','POOR_JOIN_PERFORMANCE,CPU_CONTENTION'],
                         help='Specify the type of anomaly to simulate')
 parser.add_argument('--threads',type=int,default=0,help='threads')
 parser.add_argument('--duration', type=int, default=60, help='duration')
@@ -79,7 +79,7 @@ elif args.anomaly == 'INSERT_LARGE_DATA,IO_CONTENTION':
     except Exception as e:
         print(f"[EXCEPTION] {e}")
 
-elif args.anomaly == 'FETCH_LARGE_DATA,CORRELATED_SUBQUERY':
+elif args.anomaly == 'FETCH_LARGE_DATA': #,CORRELATED_SUBQUERY
     try:
         anomaly.fetch_large_data()
     except Exception as e:

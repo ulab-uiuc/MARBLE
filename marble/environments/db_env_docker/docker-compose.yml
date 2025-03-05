@@ -11,14 +11,17 @@ services:
       - 9090:9090
 
   postgres_db:
-    image: postgres:12.11
+    image: postgres
+    ports:
+      - 5432:5432
+    volumes:
+      - /var/lib/postgresql/data
+    command: postgres -c shared_preload_libraries=pg_stat_statements -c pg_stat_statements.track=all -c max_connections=200 -c log_min_error_statement=info -c logging_collector=on
     environment:
       POSTGRES_USER: test
       POSTGRES_PASSWORD: Test123_456
       POSTGRES_DB: sysbench
       POSTGRES_PORT: 5432
-    ports:
-      - 5432:5432
 
   node_exporter:
     image: prom/node-exporter
@@ -36,9 +39,9 @@ services:
       - 9100:9100
 
   pg_exporter:
-    #image: wrouesnel/postgres_exporter
-    image: vonng/pg_exporter:v0.6.1
+    image: wrouesnel/postgres_exporter
+    # image: vonng/pg_exporter:v0.6.1
     environment:
-      PG_EXPORTER_URL: 'postgresql://test:Test123_456@postgres_db:5432/sysbench?sslmode=disable'
+      DATA_SOURCE_NAME: 'postgresql://test:Test123_456@postgres_db:5432/sysbench?sslmode=disable'
     ports:
       - 9187:9187

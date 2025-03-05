@@ -29,6 +29,8 @@ pypdf2 = "^3.0.1"
 tqdm = "^4.67.0"
 semanticscholar = "^0.8.4"
 requests = "^2.32.3"
+psycopg2-binary = "^2.9.10"
+pymysql = "^1.1.1"
 colorlog = "^6.9.0"
 
 

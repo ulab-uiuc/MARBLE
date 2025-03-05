@@ -13,6 +13,7 @@ from marble.engine.engine_planner import EnginePlanner
 from marble.environments import (
     BaseEnvironment,
     MinecraftEnvironment,
+    DBEnvironment,
     ResearchEnvironment,
     WebEnvironment,
     WorldSimulationEnvironment,
@@ -23,7 +24,7 @@ from marble.memory.base_memory import BaseMemory
 from marble.memory.shared_memory import SharedMemory
 from marble.utils.logger import get_logger
 
-EnvType = Union[BaseEnvironment, WebEnvironment, ResearchEnvironment, WorldSimulationEnvironment, MinecraftEnvironment]
+EnvType = Union[BaseEnvironment, WebEnvironment, ResearchEnvironment, WorldSimulationEnvironment, MinecraftEnvironment, DBEnvironment]
 AgentType = Union[BaseAgent]
 
 class Engine:
@@ -94,6 +95,9 @@ class Engine:
         elif env_type == "Minecraft":
             env5 = MinecraftEnvironment(name="Minecraft Environment", config=env_config)
             return env5
+        elif env_type == "DB":
+            env6 = DBEnvironment(name="DB Environment", config=env_config)
+            return env6
         else:
             raise ValueError(f"Unsupported environment type: {env_type}")
 
@@ -237,7 +241,11 @@ class Engine:
             # self.evaluator.evaluate_kpi(self.task, results_str)
             self.evaluator.metrics["planning_score"].append(-1)
 
-            while self.current_iteration < self.max_iterations:
+            end_on_iter_0 = False
+            if not continue_simulation:
+                end_on_iter_0 = True
+
+            while self.current_iteration < self.max_iterations and not end_on_iter_0:
                 iteration_data = {
                     "iteration": self.current_iteration + 1,
                     "task_assignments": {},
@@ -283,7 +291,6 @@ class Engine:
                 self.current_iteration += 1
                 summary_from_planner = self.planner.summarize_output(summary, self.task, self.output_format)
                 iteration_data["summary"] = summary_from_planner.content
-
 
                 # Evaluate communication
                 if iteration_data["communications"]:
@@ -354,6 +361,15 @@ class Engine:
                 except:
                     block_hit_rate = 0.0
                 summary_data['task_evaluation'] = block_hit_rate * 5
+            elif self.environment.name == 'DB Environment':
+                self.evaluator.evaluate_task_db(
+                    self.task, iteration_data["summary"],
+                    self.config.task["labels"],
+                    self.config.task["number_of_labels_pred"],
+                    self.config.task["root_causes"]
+                )
+                summary_data['task_evaluation'] = self.evaluator.metrics["task_evaluation"]
+                self.logger.info("Engine graph-based coordination loop completed.")
             self.logger.info("Engine graph-based coordination loop completed.")
 
         except Exception:
@@ -454,6 +470,15 @@ class Engine:
                 self.logger.info("Engine star-based coordination loop completed.")
             elif self.environment.name == 'World Simulation Environment':
                 self.evaluator.evaluate_task_world(self.task, iteration_data["summary"])
+                summary_data['task_evaluation'] = self.evaluator.metrics["task_evaluation"]
+                self.logger.info("Engine star-based coordination loop completed.")
+            elif self.environment.name == 'DB Environment':
+                self.evaluator.evaluate_task_db(
+                    self.task, iteration_data["summary"],
+                    self.config.task["labels"],
+                    self.config.task["number_of_labels_pred"],
+                    self.config.task["root_causes"]
+                )
                 summary_data['task_evaluation'] = self.evaluator.metrics["task_evaluation"]
                 self.logger.info("Engine star-based coordination loop completed.")
             self.logger.info("Engine simulation loop completed.")
@@ -570,6 +595,15 @@ class Engine:
                 self.evaluator.evaluate_task_world(self.task, iteration_data["summary"])
                 summary_data['task_evaluation'] = self.evaluator.metrics["task_evaluation"]
                 self.logger.info("Engine chain-based coordination loop completed.")
+            elif self.environment.name == 'DB Environment':
+                self.evaluator.evaluate_task_db(
+                    self.task, iteration_data["summary"],
+                    self.config.task["labels"],
+                    self.config.task["number_of_labels_pred"],
+                    self.config.task["root_causes"]
+                )
+                summary_data['task_evaluation'] = self.evaluator.metrics["task_evaluation"]
+                self.logger.info("Engine chain-based coordination loop completed.")
             self.logger.info("Chain-based coordination simulation completed.")
 
         except Exception:
@@ -649,6 +683,15 @@ class Engine:
                 self.logger.info("Engine tree-based coordination loop completed.")
             elif self.environment.name == 'World Simulation Environment':
                 self.evaluator.evaluate_task_world(self.task, iteration_data["summary"])
+                summary_data['task_evaluation'] = self.evaluator.metrics["task_evaluation"]
+                self.logger.info("Engine tree-based coordination loop completed.")
+            elif self.environment.name == 'DB Environment':
+                self.evaluator.evaluate_task_db(
+                    self.task, iteration_data["summary"],
+                    self.config.task["labels"],
+                    self.config.task["number_of_labels_pred"],
+                    self.config.task["root_causes"]
+                )
                 summary_data['task_evaluation'] = self.evaluator.metrics["task_evaluation"]
                 self.logger.info("Engine tree-based coordination loop completed.")
             self.logger.info("Tree-based coordination simulation completed.")

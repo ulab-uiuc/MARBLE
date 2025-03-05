@@ -13,10 +13,10 @@ class Database():
 
     def __init__(self):
         self.conn = None
-        self.conn = psycopg2.connect(database='tpch',
-                                     user='xxxx',
-                                     password='xxxx',
-                                     host='xxxx',
+        self.conn = psycopg2.connect(database='sysbench',
+                                     user='test',
+                                     password='Test123_456',
+                                     host='localhost',
                                      port=5432)
 
     def execute_sql(self, sql):

@@ -36,7 +36,7 @@ class Evaluator:
         }
         with open('evaluator/evaluator_prompts.json', 'r', encoding='utf-8') as f:
             self.evaluation_prompts = json.load(f)
-        
+
         evaluate_llm_config = self.metrics_config.get('evaluate_llm', {})
         self.llm = evaluate_llm_config.get('model', 'gpt-3.5-turbo') if isinstance(evaluate_llm_config, dict) else evaluate_llm_config
 
@@ -276,6 +276,24 @@ class Evaluator:
 
         except (json.JSONDecodeError, KeyError, ValueError):
             return default_ratings  # 解析失败则返回默认评分
+
+    def evaluate_task_db(self, task: str, result: str, labels: List[str], pred_num: int, root_causes: List[str]) -> None:
+        """
+        Evaluate the final database idea based on Data Quality, Data Security, and Data Privacy.
+
+        Args:
+            task (str): The task description.
+            result (str): The final root cause analysis.
+            labels (List[str]): The list of root cause labels.
+            pred_num (int): The number of predicted root causes.
+            root_causes (List[str]): The root cause labels.
+        """
+        # Evaluation will take place separately as it might not follow the 
+        # requested format
+        self.metrics["task_evaluation"] = {
+            'root_cause': root_causes,
+            'predicted': result,
+        }
 
     def parse_research_ratings(self, assistant_answer: str) -> Dict[str, int]:
         """
