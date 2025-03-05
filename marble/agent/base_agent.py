@@ -745,3 +745,4 @@ class BaseAgent:
             return next_agent_id, planning_task
         else:
             self.logger.warning(f"Agent '{self.agent_id}' did not select a valid next agent.")
+            return None, None
