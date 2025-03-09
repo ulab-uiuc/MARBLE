@@ -1,0 +1,172 @@
+coordinate_mode: graph
+relationships:
+- - agent1
+  - agent2
+  - collaborate with
+- - agent1
+  - agent3
+  - collaborate with
+- - agent1
+  - agent4
+  - collaborate with
+- - agent1
+  - agent5
+  - collaborate with
+- - agent2
+  - agent3
+  - collaborate with
+- - agent2
+  - agent4
+  - collaborate with
+- - agent2
+  - agent5
+  - collaborate with
+- - agent3
+  - agent4
+  - collaborate with
+- - agent3
+  - agent5
+  - collaborate with
+- - agent4
+  - agent5
+  - collaborate with
+llm: fireworks_ai/accounts/fireworks/models/llama-v3p3-70b-instruct
+environment:
+  type: DB
+  name: DB Simulation Environment
+  max_iterations: 5
+  init_sql: "-- 1. Users table (stores user information)\nCREATE TABLE users (\n \
+    \   user_id SERIAL PRIMARY KEY,  -- Unique user ID\n    username VARCHAR(100)\
+    \ UNIQUE NOT NULL,  -- Unique username\n    email VARCHAR(255) UNIQUE NOT NULL,\
+    \  -- Unique email\n    password_hash VARCHAR(255) NOT NULL,  -- Hashed password\n\
+    \    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP  -- Account creation time\n\
+    );\n\n-- 2. Files table (stores file details)\nCREATE TABLE files (\n    file_id\
+    \ SERIAL PRIMARY KEY,  -- Unique file ID\n    user_id INT REFERENCES users(user_id),\
+    \  -- Foreign key to users\n    file_name VARCHAR(255) NOT NULL,  -- File name\n\
+    \    file_path TEXT NOT NULL,  -- Path to the file on the server\n    file_size\
+    \ BIGINT NOT NULL,  -- Size of the file in bytes\n    created_at TIMESTAMP DEFAULT\
+    \ CURRENT_TIMESTAMP,  -- Upload time\n    last_modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP\
+    \  -- Last modification time\n);\n\n-- 3. Shared_Files table (stores files shared\
+    \ with other users)\nCREATE TABLE shared_files (\n    share_id SERIAL PRIMARY\
+    \ KEY,  -- Unique share ID\n    file_id INT REFERENCES files(file_id),  -- Foreign\
+    \ key to files\n    owner_id INT REFERENCES users(user_id),  -- Foreign key to\
+    \ owner (user who shared)\n    shared_with INT REFERENCES users(user_id),  --\
+    \ Foreign key to the user the file is shared with\n    shared_at TIMESTAMP DEFAULT\
+    \ CURRENT_TIMESTAMP,  -- Time the file was shared\n    permissions VARCHAR(50)\
+    \ DEFAULT 'read'  -- Permissions (e.g., 'read', 'write')\n);\n\n-- 4. File_Access_Logs\
+    \ table (stores logs of file access)\nCREATE TABLE file_access_logs (\n    log_id\
+    \ SERIAL PRIMARY KEY,  -- Unique log ID\n    user_id INT REFERENCES users(user_id),\
+    \  -- Foreign key to users\n    file_id INT REFERENCES files(file_id),  -- Foreign\
+    \ key to files\n    access_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,  -- Time\
+    \ the file was accessed\n    action VARCHAR(50) NOT NULL,  -- Action (e.g., 'viewed',\
+    \ 'downloaded')\n    ip_address VARCHAR(50)  -- IP address from which the file\
+    \ was accessed\n);\n\n-- Insert sample users\nINSERT INTO users (username, email,\
+    \ password_hash) \nVALUES \n('john_doe', 'john.doe@example.com', 'hashed_password_1'),\n\
+    ('jane_smith', 'jane.smith@example.com', 'hashed_password_2');\n\n-- Insert sample\
+    \ files for John\nINSERT INTO files (user_id, file_name, file_path, file_size)\
+    \ \nVALUES \n(1, 'document1.pdf', '/files/john_doe/document1.pdf', 102400),\n\
+    (1, 'image1.jpg', '/files/john_doe/image1.jpg', 204800);\n\n-- Insert sample files\
+    \ for Jane\nINSERT INTO files (user_id, file_name, file_path, file_size) \nVALUES\
+    \ \n(2, 'presentation.pptx', '/files/jane_smith/presentation.pptx', 512000);\n\
+    \n-- Share files with other users\nINSERT INTO shared_files (file_id, owner_id,\
+    \ shared_with, permissions) \nVALUES \n(1, 1, 2, 'read'),  -- John shares document1.pdf\
+    \ with Jane\n(2, 1, 2, 'write');  -- John shares image1.jpg with Jane\n\n-- Insert\
+    \ file access logs\nINSERT INTO file_access_logs (user_id, file_id, action, ip_address)\
+    \ \nVALUES \n(2, 1, 'viewed', '192.168.1.1'),  -- Jane viewed document1.pdf\n\
+    (2, 2, 'downloaded', '192.168.1.2');  -- Jane downloaded image1.jpg\n\n-- Query\
+    \ to retrieve all shared files for a user\nSELECT sf.share_id, f.file_name, u.username\
+    \ AS shared_by, sf.permissions \nFROM shared_files sf\nJOIN files f ON sf.file_id\
+    \ = f.file_id\nJOIN users u ON sf.owner_id = u.user_id\nWHERE sf.shared_with =\
+    \ 2;  -- Files shared with Jane\n\n-- Query to retrieve all file access logs for\
+    \ a user\nSELECT u.username, f.file_name, fal.action, fal.access_time, fal.ip_address\n\
+    FROM file_access_logs fal\nJOIN users u ON fal.user_id = u.user_id\nJOIN files\
+    \ f ON fal.file_id = f.file_id\nWHERE u.user_id = 2;  -- Access logs for Jane\n\
+    \n-- Query to list all files uploaded by a user\nSELECT f.file_name, f.file_size,\
+    \ f.created_at\nFROM files f\nWHERE f.user_id = 1;  -- Files uploaded by John\n\
+    \n-- Query to count how many times a file was accessed\nSELECT f.file_name, COUNT(fal.log_id)\
+    \ AS access_count\nFROM file_access_logs fal\nJOIN files f ON fal.file_id = f.file_id\n\
+    GROUP BY f.file_name;\n\n-- Query to get all users who have shared files with\
+    \ a specific user\nSELECT u.username, COUNT(sf.share_id) AS shared_files_count\n\
+    FROM shared_files sf\nJOIN users u ON sf.owner_id = u.user_id\nWHERE sf.shared_with\
+    \ = 2  -- Files shared with Jane\nGROUP BY u.username;\n"
+  anomalies:
+  - anomaly: VACUUM
+    threads: 100
+    ncolumn: 20
+    nrow: 20000
+    colsize: 100
+  - anomaly: FETCH_LARGE_DATA
+    threads: 100
+    ncolumn: 20
+    nrow: 20000
+    colsize: 100
+communication: false
+task:
+  content: 'This database is used in a File Sharing System to manage users, files,
+    file sharing, and file access logs. It consists of four main tables: users, files,
+    shared_files, and file_access_logs.
+
+    Recently, during operation, the database has seen performance issues. Use sql
+    queries to find out what is wrong, and find out the reason that caused it. The
+    root cause can be only three of the following: ''INSERT_LARGE_DATA'', ''MISSING_INDEXES'',
+    ''LOCK_CONTENTION'', ''VACUUM'', ''REDUNDANT_INDEX'', ''FETCH_LARGE_DATA'', ''POOR_JOIN_PERFORMANCE,CPU_CONTENTION''.
+    The planner should assign different agent to analyze possbility for each root
+    cause and make final decision. Agents can also chat with each other to share information.  Please
+    make the decision after using all these tools, as a premature decision may lead
+    to incorrect conclusions.
+
+    '
+  output_format: "Please make the decision after exploring all rootcauses, as a premature\
+    \ decision may lead to incorrect conclusions.\nPlease choose the most likely cause\
+    \ of the database anomaly from the following list, based on the expert agents:\
+    \ \n'INSERT_LARGE_DATA', 'LOCK_CONTENTION', 'VACUUM', 'REDUNDANT_INDEX', 'FETCH_LARGE_DATA'\n\
+    You can ONLY CHOOSE three.\nYou have access to the Database, and you can perform\
+    \ queries to get the required information. Agents can also chat with each other\
+    \ to share information.\nThese tables include:\n- `pg_stat_statements` (for detailed\
+    \ query stats)\n- `pg_locks` (for lock waits and contention)\n- `pg_stat_user_indexes`\
+    \ (for index usage)\n- `pg_indexes` (for index definitions)\n- `pg_stat_all_tables`\
+    \ (detailed statistics about vacuuming, auto vacuuming, and analyze operations\
+    \ for each table)\n- `pg_stat_progress_vacuum` (for vacuum progress)\n- `pg_stat_user_tables`\
+    \ (for dead tuples and vacuum stats)\n"
+  labels:
+  - INSERT_LARGE_DATA
+  - LOCK_CONTENTION
+  - VACUUM
+  - REDUNDANT_INDEX
+  - FETCH_LARGE_DATA
+  root_causes:
+  - VACUUM
+  - FETCH_LARGE_DATA
+  number_of_labels_pred: 3
+agents:
+- type: BaseAgent
+  agent_id: agent1
+  profile: 'agent1 will explore the possibility of INSERT_LARGE_DATA as a root cause.
+    Recommended tables: `pg_stat_statements`. You can search for INSERTs.'
+- type: BaseAgent
+  agent_id: agent2
+  profile: 'agent2 will explore the possibility of LOCK_CONTENTION as a root cause.
+    Recommended tables: `pg_locks`.'
+- type: BaseAgent
+  agent_id: agent3
+  profile: 'agent3 will explore the possibility of VACUUM as a root cause. Recommended
+    to search for inappropiate VACUUMs from `pg_stat_all_tables`: SELECT query, calls,
+    total_plan_time, rows, mean_plan_time FROM pg_stat_statements WHERE query LIKE
+    ''VACUUM%'';'
+- type: BaseAgent
+  agent_id: agent4
+  profile: 'agent4 will explore the possibility of REDUNDANT_INDEX as a root cause.
+    Recommended tables: `pg_stat_user_indexes`, `pg_indexes`.'
+- type: BaseAgent
+  agent_id: agent5
+  profile: agent5 will explore the possibility of FETCH_LARGE_DATA as a root cause.
+    Recommended to search for SELECTs from `pg_stat_statements`.
+memory:
+  type: SharedMemory
+metrics:
+  accuracy: true
+  response_time: true
+output:
+  file_path: result/result_llama-3.3-70b/FILE_SHARING_VACUUM_FETCH_LARGE_DATA_RESULT.json
+engine_planner:
+  initial_progress: Starting the simulation.
