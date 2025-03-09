@@ -1,0 +1,153 @@
+coordinate_mode: graph
+relationships:
+- - agent1
+  - agent2
+  - collaborate with
+- - agent1
+  - agent3
+  - collaborate with
+- - agent1
+  - agent4
+  - collaborate with
+- - agent1
+  - agent5
+  - collaborate with
+- - agent2
+  - agent3
+  - collaborate with
+- - agent2
+  - agent4
+  - collaborate with
+- - agent2
+  - agent5
+  - collaborate with
+- - agent3
+  - agent4
+  - collaborate with
+- - agent3
+  - agent5
+  - collaborate with
+- - agent4
+  - agent5
+  - collaborate with
+llm: fireworks_ai/accounts/fireworks/models/llama-v3p1-70b-instruct
+environment:
+  type: DB
+  name: DB Simulation Environment
+  max_iterations: 5
+  init_sql: "-- 1. Students table (stores student information)\nCREATE TABLE students\
+    \ (\n    student_id SERIAL PRIMARY KEY,  -- Unique student ID\n    first_name\
+    \ VARCHAR(100),\n    last_name VARCHAR(100),\n    email VARCHAR(255) UNIQUE NOT\
+    \ NULL,  -- Unique email\n    phone VARCHAR(20),\n    address VARCHAR(255),\n\
+    \    enrolled_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP\n);\n\n-- 2. Courses table\
+    \ (stores course details)\nCREATE TABLE courses (\n    course_id SERIAL PRIMARY\
+    \ KEY,  -- Unique course ID\n    course_name VARCHAR(255) NOT NULL,\n    description\
+    \ TEXT,\n    credits INT NOT NULL,  -- Number of credits\n    created_at TIMESTAMP\
+    \ DEFAULT CURRENT_TIMESTAMP\n);\n\n-- 3. Enrollments table (stores students' enrollments\
+    \ in courses)\nCREATE TABLE enrollments (\n    enrollment_id SERIAL PRIMARY KEY,\
+    \  -- Unique enrollment ID\n    student_id INT REFERENCES students(student_id),\
+    \  -- Foreign key to students\n    course_id INT REFERENCES courses(course_id),\
+    \  -- Foreign key to courses\n    enrollment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\n\
+    \    grade VARCHAR(2)  -- Grade for the course (e.g., A, B, C)\n);\n\n-- 4. Payments\
+    \ table (stores payment details for course enrollments)\nCREATE TABLE payments\
+    \ (\n    payment_id SERIAL PRIMARY KEY,  -- Unique payment ID\n    student_id\
+    \ INT REFERENCES students(student_id),  -- Foreign key to students\n    payment_date\
+    \ TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\n    amount DECIMAL(10, 2) NOT NULL,  --\
+    \ Payment amount\n    payment_method VARCHAR(50),  -- Payment method (e.g., credit\
+    \ card, bank transfer)\n    status VARCHAR(50) DEFAULT 'completed'  -- Payment\
+    \ status (e.g., completed, pending)\n);\n\n-- Insert sample students\nINSERT INTO\
+    \ students (first_name, last_name, email, phone, address) \nVALUES \n('John',\
+    \ 'Doe', 'john.doe@example.com', '555-1234', '789 Student St, Cityville'),\n('Jane',\
+    \ 'Smith', 'jane.smith@example.com', '555-5678', '456 College Ave, Cityville');\n\
+    \n-- Insert sample courses\nINSERT INTO courses (course_name, description, credits)\
+    \ \nVALUES \n('Introduction to Computer Science', 'Basic concepts of computer\
+    \ science and programming.', 3),\n('Data Structures and Algorithms', 'Study of\
+    \ data structures and algorithms in computer science.', 4);\n\n-- Insert sample\
+    \ enrollments\nINSERT INTO enrollments (student_id, course_id, grade) \nVALUES\
+    \ \n(1, 1, 'A'),  -- John enrolled in Introduction to Computer Science with grade\
+    \ A\n(1, 2, 'B'),  -- John enrolled in Data Structures and Algorithms with grade\
+    \ B\n(2, 1, 'B');  -- Jane enrolled in Introduction to Computer Science with grade\
+    \ B\n\n-- Insert sample payments\nINSERT INTO payments (student_id, amount, payment_method,\
+    \ status) \nVALUES \n(1, 500.00, 'Credit Card', 'completed'),  -- Payment for\
+    \ John\n(2, 500.00, 'Bank Transfer', 'completed');  -- Payment for Jane\n\n--\
+    \ Query to get student enrollments and grades\nSELECT s.first_name, s.last_name,\
+    \ c.course_name, e.grade\nFROM enrollments e\nJOIN students s ON e.student_id\
+    \ = s.student_id\nJOIN courses c ON e.course_id = c.course_id;\n\n-- Query to\
+    \ get payment details for a student\nSELECT p.payment_date, p.amount, p.payment_method,\
+    \ p.status\nFROM payments p\nJOIN students s ON p.student_id = s.student_id\n\
+    WHERE s.student_id = 1;  -- Payment details for student with ID 1 (John)\n"
+  anomalies:
+  - anomaly: VACUUM
+    threads: 100
+    ncolumn: 20
+    nrow: 20000
+    colsize: 100
+communication: false
+task:
+  content: 'This database is used in an educational system to manage student, course,
+    enrollment, and payment information. It consists of four tables: students, courses,
+    enrollments, and payments.
+
+    Recently, during operation, the database has seen performance issues. Use sql
+    queries to find out what is wrong, and find out the reason that caused it. The
+    root cause can be only two of the following: ''INSERT_LARGE_DATA'', ''MISSING_INDEXES'',
+    ''LOCK_CONTENTION'', ''VACUUM'', ''REDUNDANT_INDEX'', ''FETCH_LARGE_DATA'', ''POOR_JOIN_PERFORMANCE,CPU_CONTENTION''.
+    The planner should assign different agent to analyze possbility for each root
+    cause and make final decision. Agents can also chat with each other to share information.  Please
+    make the decision after using all these tools, as a premature decision may lead
+    to incorrect conclusions.
+
+    '
+  output_format: "Please make the decision after exploring all rootcauses, as a premature\
+    \ decision may lead to incorrect conclusions.\nPlease choose the most likely cause\
+    \ of the database anomaly from the following list, based on the expert agents:\
+    \ \n'INSERT_LARGE_DATA', 'LOCK_CONTENTION', 'VACUUM', 'REDUNDANT_INDEX', 'FETCH_LARGE_DATA'\n\
+    You can ONLY CHOOSE two.\nYou have access to the Database, and you can perform\
+    \ queries to get the required information. Agents can also chat with each other\
+    \ to share information.\nThese tables include:\n- `pg_stat_statements` (for detailed\
+    \ query stats)\n- `pg_locks` (for lock waits and contention)\n- `pg_stat_user_indexes`\
+    \ (for index usage)\n- `pg_indexes` (for index definitions)\n- `pg_stat_all_tables`\
+    \ (detailed statistics about vacuuming, auto vacuuming, and analyze operations\
+    \ for each table)\n- `pg_stat_progress_vacuum` (for vacuum progress)\n- `pg_stat_user_tables`\
+    \ (for dead tuples and vacuum stats)\n"
+  labels:
+  - INSERT_LARGE_DATA
+  - LOCK_CONTENTION
+  - VACUUM
+  - REDUNDANT_INDEX
+  - FETCH_LARGE_DATA
+  root_causes:
+  - VACUUM
+  number_of_labels_pred: 2
+agents:
+- type: BaseAgent
+  agent_id: agent1
+  profile: 'agent1 will explore the possibility of INSERT_LARGE_DATA as a root cause.
+    Recommended tables: `pg_stat_statements`. You can search for INSERTs.'
+- type: BaseAgent
+  agent_id: agent2
+  profile: 'agent2 will explore the possibility of LOCK_CONTENTION as a root cause.
+    Recommended tables: `pg_locks`.'
+- type: BaseAgent
+  agent_id: agent3
+  profile: 'agent3 will explore the possibility of VACUUM as a root cause. Recommended
+    to search for inappropiate VACUUMs from `pg_stat_all_tables`: SELECT query, calls,
+    total_plan_time, rows, mean_plan_time FROM pg_stat_statements WHERE query LIKE
+    ''VACUUM%'';'
+- type: BaseAgent
+  agent_id: agent4
+  profile: 'agent4 will explore the possibility of REDUNDANT_INDEX as a root cause.
+    Recommended tables: `pg_stat_user_indexes`, `pg_indexes`.'
+- type: BaseAgent
+  agent_id: agent5
+  profile: agent5 will explore the possibility of FETCH_LARGE_DATA as a root cause.
+    Recommended to search for SELECTs from `pg_stat_statements`.
+memory:
+  type: SharedMemory
+metrics:
+  accuracy: true
+  response_time: true
+output:
+  file_path: result/result_llama-3.1-70b/EDUCATION_VACUUM_RESULT.json
+engine_planner:
+  initial_progress: Starting the simulation.

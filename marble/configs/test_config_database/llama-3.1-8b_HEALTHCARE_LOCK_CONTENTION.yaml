@@ -1,0 +1,184 @@
+coordinate_mode: graph
+relationships:
+- - agent1
+  - agent2
+  - collaborate with
+- - agent1
+  - agent3
+  - collaborate with
+- - agent1
+  - agent4
+  - collaborate with
+- - agent1
+  - agent5
+  - collaborate with
+- - agent2
+  - agent3
+  - collaborate with
+- - agent2
+  - agent4
+  - collaborate with
+- - agent2
+  - agent5
+  - collaborate with
+- - agent3
+  - agent4
+  - collaborate with
+- - agent3
+  - agent5
+  - collaborate with
+- - agent4
+  - agent5
+  - collaborate with
+llm: fireworks_ai/accounts/fireworks/models/llama-v3p1-8b-instruct
+environment:
+  type: DB
+  name: DB Simulation Environment
+  max_iterations: 5
+  init_sql: "-- 1. Patients table (stores patient information)\nCREATE TABLE patients\
+    \ (\n    patient_id SERIAL PRIMARY KEY,  -- Unique patient ID\n    first_name\
+    \ VARCHAR(100) NOT NULL,  -- Patient's first name\n    last_name VARCHAR(100)\
+    \ NOT NULL,  -- Patient's last name\n    date_of_birth DATE NOT NULL,  -- Patient's\
+    \ date of birth\n    gender VARCHAR(10),  -- Patient's gender\n    email VARCHAR(255)\
+    \ UNIQUE NOT NULL,  -- Unique email\n    phone VARCHAR(20),  -- Contact number\n\
+    \    address VARCHAR(255),  -- Address\n    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP\
+    \  -- Registration date\n);\n\n-- 2. Doctors table (stores doctor information)\n\
+    CREATE TABLE doctors (\n    doctor_id SERIAL PRIMARY KEY,  -- Unique doctor ID\n\
+    \    first_name VARCHAR(100) NOT NULL,  -- Doctor's first name\n    last_name\
+    \ VARCHAR(100) NOT NULL,  -- Doctor's last name\n    specialty VARCHAR(100), \
+    \ -- Doctor's specialty (e.g., cardiologist, dermatologist)\n    email VARCHAR(255)\
+    \ UNIQUE NOT NULL,  -- Unique email\n    phone VARCHAR(20),  -- Contact number\n\
+    \    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP  -- Date of joining\n);\n\n\
+    -- 3. Appointments table (stores patient appointments)\nCREATE TABLE appointments\
+    \ (\n    appointment_id SERIAL PRIMARY KEY,  -- Unique appointment ID\n    patient_id\
+    \ INT REFERENCES patients(patient_id),  -- Foreign key to patients\n    doctor_id\
+    \ INT REFERENCES doctors(doctor_id),  -- Foreign key to doctors\n    appointment_date\
+    \ TIMESTAMP NOT NULL,  -- Date and time of the appointment\n    status VARCHAR(50)\
+    \ DEFAULT 'scheduled',  -- Appointment status (e.g., scheduled, completed)\n \
+    \   reason TEXT  -- Reason for the appointment\n);\n\n-- 4. Medical Records table\
+    \ (stores medical records for patients)\nCREATE TABLE medical_records (\n    record_id\
+    \ SERIAL PRIMARY KEY,  -- Unique record ID\n    patient_id INT REFERENCES patients(patient_id),\
+    \  -- Foreign key to patients\n    doctor_id INT REFERENCES doctors(doctor_id),\
+    \  -- Foreign key to doctors\n    record_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\
+    \  -- Date of the medical record\n    diagnosis TEXT,  -- Diagnosis made by the\
+    \ doctor\n    treatment TEXT,  -- Treatment prescribed by the doctor\n    prescriptions\
+    \ TEXT  -- Prescriptions provided during the visit\n);\n\n-- 5. Treatments table\
+    \ (stores details of treatments for patients)\nCREATE TABLE treatments (\n   \
+    \ treatment_id SERIAL PRIMARY KEY,  -- Unique treatment ID\n    patient_id INT\
+    \ REFERENCES patients(patient_id),  -- Foreign key to patients\n    doctor_id\
+    \ INT REFERENCES doctors(doctor_id),  -- Foreign key to doctors\n    treatment_date\
+    \ TIMESTAMP DEFAULT CURRENT_TIMESTAMP,  -- Date of treatment\n    treatment_type\
+    \ VARCHAR(100),  -- Type of treatment (e.g., surgery, medication)\n    treatment_description\
+    \ TEXT  -- Description of the treatment\n);\n\n-- Insert sample patients\nINSERT\
+    \ INTO patients (first_name, last_name, date_of_birth, gender, email, phone, address)\
+    \ \nVALUES \n('Alice', 'Johnson', '1985-04-12', 'Female', 'alice.johnson@example.com',\
+    \ '123-456-7890', '123 Elm St, Springfield'),\n('Bob', 'Smith', '1990-08-23',\
+    \ 'Male', 'bob.smith@example.com', '234-567-8901', '456 Oak St, Springfield');\n\
+    \n-- Insert sample doctors\nINSERT INTO doctors (first_name, last_name, specialty,\
+    \ email, phone) \nVALUES \n('Dr. Sarah', 'Miller', 'Cardiologist', 'dr.sarah.miller@example.com',\
+    \ '345-678-9012'),\n('Dr. James', 'Taylor', 'Dermatologist', 'dr.james.taylor@example.com',\
+    \ '456-789-0123');\n\n-- Insert sample appointments\nINSERT INTO appointments\
+    \ (patient_id, doctor_id, appointment_date, status, reason) \nVALUES \n(1, 1,\
+    \ '2024-12-14 09:00:00', 'scheduled', 'Routine checkup'),\n(2, 2, '2024-12-14\
+    \ 11:00:00', 'scheduled', 'Skin rash evaluation');\n\n-- Insert sample medical\
+    \ records\nINSERT INTO medical_records (patient_id, doctor_id, diagnosis, treatment,\
+    \ prescriptions) \nVALUES \n(1, 1, 'Hypertension', 'Lifestyle changes, medication',\
+    \ 'Lisinopril 10mg daily'),\n(2, 2, 'Eczema', 'Topical steroids, moisturizers',\
+    \ 'Hydrocortisone cream');\n\n-- Insert sample treatments\nINSERT INTO treatments\
+    \ (patient_id, doctor_id, treatment_type, treatment_description) \nVALUES \n(1,\
+    \ 1, 'Medication', 'Prescription for hypertension medication'),\n(2, 2, 'Topical\
+    \ Treatment', 'Application of hydrocortisone cream for eczema');\n\n-- Query to\
+    \ get patient details\nSELECT p.patient_id, p.first_name, p.last_name, p.date_of_birth,\
+    \ p.gender, p.email, p.phone\nFROM patients p\nWHERE p.patient_id = 1;  -- Details\
+    \ for Alice\n\n-- Query to get doctor details\nSELECT d.doctor_id, d.first_name,\
+    \ d.last_name, d.specialty, d.email, d.phone\nFROM doctors d\nWHERE d.doctor_id\
+    \ = 1;  -- Details for Dr. Sarah\n\n-- Query to get all appointments for a patient\n\
+    SELECT a.appointment_id, a.appointment_date, a.status, a.reason\nFROM appointments\
+    \ a\nWHERE a.patient_id = 1;  -- Appointments for Alice\n\n-- Query to get medical\
+    \ records for a patient\nSELECT mr.record_id, mr.record_date, mr.diagnosis, mr.treatment,\
+    \ mr.prescriptions\nFROM medical_records mr\nWHERE mr.patient_id = 1;  -- Medical\
+    \ records for Alice\n\n-- Query to get treatments for a patient\nSELECT t.treatment_id,\
+    \ t.treatment_date, t.treatment_type, t.treatment_description\nFROM treatments\
+    \ t\nWHERE t.patient_id = 1;  -- Treatments for Alice\n\n-- Query to get all appointments\
+    \ for a doctor\nSELECT a.appointment_id, a.patient_id, a.appointment_date, a.status,\
+    \ a.reason\nFROM appointments a\nWHERE a.doctor_id = 1;  -- Appointments for Dr.\
+    \ Sarah\n\n-- Query to get all treatments performed by a doctor\nSELECT t.treatment_id,\
+    \ t.patient_id, t.treatment_date, t.treatment_type, t.treatment_description\n\
+    FROM treatments t\nWHERE t.doctor_id = 1;  -- Treatments by Dr. Sarah\n\n-- Query\
+    \ to calculate the number of appointments for each doctor\nSELECT d.first_name,\
+    \ d.last_name, COUNT(a.appointment_id) AS num_appointments\nFROM doctors d\nLEFT\
+    \ JOIN appointments a ON d.doctor_id = a.doctor_id\nGROUP BY d.doctor_id;\n"
+  anomalies:
+  - anomaly: LOCK_CONTENTION
+    threads: 100
+    ncolumn: 20
+    nrow: 20000
+    colsize: 100
+communication: false
+task:
+  content: 'This database is used in a healthcare management system to track and manage
+    patient information, doctor details, appointments, medical records, and treatments.
+
+    Recently, during operation, the database has seen performance issues. Use sql
+    queries to find out what is wrong, and find out the reason that caused it. The
+    root cause can be only two of the following: ''INSERT_LARGE_DATA'', ''MISSING_INDEXES'',
+    ''LOCK_CONTENTION'', ''VACUUM'', ''REDUNDANT_INDEX'', ''FETCH_LARGE_DATA'', ''POOR_JOIN_PERFORMANCE,CPU_CONTENTION''.
+    The planner should assign different agent to analyze possbility for each root
+    cause and make final decision. Agents can also chat with each other to share information.  Please
+    make the decision after using all these tools, as a premature decision may lead
+    to incorrect conclusions.
+
+    '
+  output_format: "Please make the decision after exploring all rootcauses, as a premature\
+    \ decision may lead to incorrect conclusions.\nPlease choose the most likely cause\
+    \ of the database anomaly from the following list, based on the expert agents:\
+    \ \n'INSERT_LARGE_DATA', 'LOCK_CONTENTION', 'VACUUM', 'REDUNDANT_INDEX', 'FETCH_LARGE_DATA'\n\
+    You can ONLY CHOOSE two.\nYou have access to the Database, and you can perform\
+    \ queries to get the required information. Agents can also chat with each other\
+    \ to share information.\nThese tables include:\n- `pg_stat_statements` (for detailed\
+    \ query stats)\n- `pg_locks` (for lock waits and contention)\n- `pg_stat_user_indexes`\
+    \ (for index usage)\n- `pg_indexes` (for index definitions)\n- `pg_stat_all_tables`\
+    \ (detailed statistics about vacuuming, auto vacuuming, and analyze operations\
+    \ for each table)\n- `pg_stat_progress_vacuum` (for vacuum progress)\n- `pg_stat_user_tables`\
+    \ (for dead tuples and vacuum stats)\n"
+  labels:
+  - INSERT_LARGE_DATA
+  - LOCK_CONTENTION
+  - VACUUM
+  - REDUNDANT_INDEX
+  - FETCH_LARGE_DATA
+  root_causes:
+  - LOCK_CONTENTION
+  number_of_labels_pred: 2
+agents:
+- type: BaseAgent
+  agent_id: agent1
+  profile: 'agent1 will explore the possibility of INSERT_LARGE_DATA as a root cause.
+    Recommended tables: `pg_stat_statements`. You can search for INSERTs.'
+- type: BaseAgent
+  agent_id: agent2
+  profile: 'agent2 will explore the possibility of LOCK_CONTENTION as a root cause.
+    Recommended tables: `pg_locks`.'
+- type: BaseAgent
+  agent_id: agent3
+  profile: 'agent3 will explore the possibility of VACUUM as a root cause. Recommended
+    to search for inappropiate VACUUMs from `pg_stat_all_tables`: SELECT query, calls,
+    total_plan_time, rows, mean_plan_time FROM pg_stat_statements WHERE query LIKE
+    ''VACUUM%'';'
+- type: BaseAgent
+  agent_id: agent4
+  profile: 'agent4 will explore the possibility of REDUNDANT_INDEX as a root cause.
+    Recommended tables: `pg_stat_user_indexes`, `pg_indexes`.'
+- type: BaseAgent
+  agent_id: agent5
+  profile: agent5 will explore the possibility of FETCH_LARGE_DATA as a root cause.
+    Recommended to search for SELECTs from `pg_stat_statements`.
+memory:
+  type: SharedMemory
+metrics:
+  accuracy: true
+  response_time: true
+output:
+  file_path: result/result_llama-3.1-8b/HEALTHCARE_LOCK_CONTENTION_RESULT.json
+engine_planner:
+  initial_progress: Starting the simulation.
