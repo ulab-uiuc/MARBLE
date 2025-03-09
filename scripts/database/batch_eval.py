@@ -1,10 +1,9 @@
-import json
 import os
+import json
 import time
-
+from tqdm import tqdm
 import litellm
 from litellm.utils import trim_messages
-from tqdm import tqdm
 
 # Initialize error counter
 error_count = 0
@@ -61,12 +60,6 @@ for folder in folder_list:
         task_eval = data["task_evaluation"]
         gold_labels = task_eval.get("root_cause", [])
 
-        if len(gold_labels) != 1:
-            print(f"Invalid gold labels in file: {file_name}")
-            error_count += 1
-            continue
-
-        gold_label = gold_labels[0]
         predicted = task_eval.get("predicted", "")
 
         # Create prompt for the LLM
@@ -96,7 +89,12 @@ for folder in folder_list:
             continue
 
         # Compare predictions with the gold label
-        task_scores.append(1 if gold_label in predicted_labels else 0)
+        match_count = sum(g in predicted_labels for g in gold_labels)
+        # print(f"Predicted labels: {predicted_labels}")
+        # print(f"Gold labels: {gold_labels}")
+        # print(f"Match count: {match_count}\n")
+        # print(f"Accuracy: {match_count / len(gold_labels) if gold_labels else 0}\n")
+        task_scores.append(match_count / len(gold_labels) if gold_labels else 0)
 
         # Add a delay to avoid API rate limits
         time.sleep(0.5)
@@ -110,7 +108,7 @@ for folder in folder_list:
 
     if task_scores:
         avg_task_score = sum(task_scores) / len(task_scores)
-        print(f"Scaled task score for {folder}: {avg_task_score * 5:6f}")
+        print(f"Scaled task score for {folder}: {avg_task_score * 100:1f}")
     else:
         print(f"No task scores for {folder}.")
 
