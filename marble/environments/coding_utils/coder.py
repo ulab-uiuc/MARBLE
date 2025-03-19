@@ -103,8 +103,6 @@ def create_solution_handler(
         return {"success": False, "error-msg": str(e)}
 
 
-# 以下 revise_solution_handler 函数也可以做类似的修改以确保输出纯代码，
-# 这里只是作为参考，现已注释掉：
 #
 # def revise_solution_handler(env, task_description: str, model_name: str, file_path: str = "solution.py") -> Dict[str, Any]:
 #     """

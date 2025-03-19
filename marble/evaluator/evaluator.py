@@ -238,7 +238,6 @@ class Evaluator:
         Returns:
             Dict[str, Any]: A dictionary containing parsed ratings for buyer and seller.
         """
-        # 设置默认评分
         default_ratings = {
             "buyer": {
                 "effectiveness_of_strategies": -1,
@@ -253,21 +252,17 @@ class Evaluator:
         }
 
         try:
-            # 提取 JSON 块
             match = re.search(r'\{[\s\S]*\}', llm_response)
             if not match:
-                return default_ratings  # 返回默认评分
+                return default_ratings
 
             json_str = match.group(0)
 
-            # 解析 JSON
             ratings = json.loads(json_str)
 
-            # 确保 `buyer` 和 `seller` 至少存在一个
             if "buyer" not in ratings and "seller" not in ratings:
                 return default_ratings
 
-            # 确保评分为整数，缺失的字段填充 -1
             parsed_ratings = {
                 "buyer": {
                     "effectiveness_of_strategies": int(ratings["buyer"].get("effectiveness_of_strategies", -1)),
@@ -315,10 +310,8 @@ class Evaluator:
             Dict[str, int]: The parsed ratings.
         """
         try:
-            # 清理响应内容
             content = assistant_answer.strip()
 
-            # 尝试提取JSON部分
             json_start = content.find('{')
             json_end = content.rfind('}') + 1
 
@@ -467,10 +460,8 @@ class Evaluator:
             Dict[str, int]: The parsed code quality scores.
         """
         try:
-            # 清理响应内容
             content = assistant_answer.strip()
 
-            # 尝试提取JSON部分
             json_start = content.find('{')
             json_end = content.rfind('}') + 1
 
@@ -478,7 +469,6 @@ class Evaluator:
                 json_str = content[json_start:json_end]
                 scores = json.loads(json_str)
 
-                # 验证所有必需的键都存在且值在有效范围内
                 required_keys = {
                     "instruction_following",
                     "executability",
