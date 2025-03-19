@@ -32,7 +32,7 @@ def create_solution_handler(env, task_description: str, model_name: str, file_pa
                 "error-msg": f"Solution file already exists at {full_path}. Operation aborted."
             }
             
-        config_path = "/opt/dlami/nvme/zhe/MARBLE/marble/configs/coding_config/coding_config.yaml"
+        config_path = "marble/configs/coding_config/coding_config.yaml"
         if not os.path.exists(config_path):
             return {
                 "success": False,

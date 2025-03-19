@@ -6,8 +6,10 @@ from typing import Dict, Any
 from marble.llms.model_prompting import model_prompting
 from ruamel.yaml import YAML
 
-def log_debug_info(message: str, log_file: str = "/opt/dlami/nvme/zhe/MARBLE/marble/logs/advice_log"):
-    """记录调试信息到指定文件"""
+def log_debug_info(message: str, log_file: str = "marble/logs/advice_log"):
+    """
+    Log debug information to a specified file.
+    """
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     os.makedirs(os.path.dirname(log_file), exist_ok=True)
     with open(log_file, 'a', encoding='utf-8') as f:
@@ -46,7 +48,7 @@ def give_advice_and_revise_handler(env, task_description: str, model_name: str) 
             }
 
 
-        config_path = "/opt/dlami/nvme/zhe/MARBLE/marble/configs/coding_config/coding_config.yaml"
+        config_path = "marble/configs/coding_config/coding_config.yaml"
         if not os.path.exists(config_path):
             return {
                 "success": False,

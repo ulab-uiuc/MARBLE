@@ -160,7 +160,52 @@ cython_debug/
 #.idea/
 
 # Scratch
-scratch.py
+scratch*
 marble/result/discussion_output.jsonl
 data/research-data/benchmark_0930.json
 data/research-data/intro_logging.jsonl
+output.csv
+marble/process_result.py
+marble/result/test
+# Werewolf log folder
+werewolf_log/
+werewolf_eval/
+werewolf_result/
+human_eval/
+llm_eval_result/
+werewolf_result1/
+werewolf_data/
+backup/
+
+werewolf_eval/
+werewolf_result/
+human_eval/
+llm_eval_result/
+werewolf_result1/
+werewolf_data/
+backup/
+postprocess
+adding_new_items_from_yamls.py
+create_human_eval.py
+difficulty_stats_1.py
+difficulty_stats_2.py
+human_eval_minecraft.csv
+human_eval_research.csv
+output_10.csv
+output_20.csv
+output_final.csv
+output_iteration_ablation.csv
+output_old-2.csv
+output_old.csv
+**/*.7z
+**/*.zip
+
+#Coding Environment
+marble/workspace
+// ... existing code ...
+
+#Coding Environment
+marble/workspace
+marble/logs
+marble/results
+backup/

@@ -47,6 +47,10 @@ tools:
             type: "string"
             description: "An outline of the key points you want to share in your last words, including any suspicions, advice, or strategy recommendations."
           action:
-            type: "string"
-            description: "Your final last words, summarizing your thoughts, suspicions, and any final messages for the remaining players."
+            type: "object"
+            properties:
+              speech_content:
+                type: "string"
+                description: "Your final last words, summarizing your thoughts, suspicions, and any final messages for the remaining players."
+            required: ["speech_content"]
         required: ["werewolf_suspects", "alliance_thoughts", "last_words_goal", "perception_analysis", "last_words_outline", "action"]

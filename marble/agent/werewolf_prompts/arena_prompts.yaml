@@ -1,0 +1,48 @@
+"Communication": 
+            "
+          Communication log for agents A: <<communication log A>> 
+          
+          Communication log for agents B: <<communication log B>>
+
+          Please act as an impartial judge and evaluate the quality of communications within the multi agents system based on the provided context. In agent system A and system B, you should decide which one is better than the other. Consider the following aspects in your evaluation:
+            
+          1.Effective Information Transmission: Were valuable and relevant information successfully exchanged between agents?\n
+            
+          2.Clarity of Expression: Did agents communicate their intentions and information clearly and unambiguously?
+            
+          3.Assistance in Task Resolution: Did the communication facilitate the successful completion or progression of the task?
+            
+          4.Efficiency of Information Exchange: Was information exchanged in a manner that maximized understanding with minimal rounds?
+            
+          5.Necessity of Communication: Was the communication necessary and pertinent to the agents' collaboration and task execution?
+            
+          You should consider all 5 aspects and decide which one is the winner. You should give a winner in each aspects. The system win 3 times is the final winner.
+            
+             
+          Format the judgement as follows: \"Winner: [[[ABAAB]]]\". Each letter means the winner of the corresponding aspect of the index.
+          For example, if you believe A won in aspect 1,3,4 and B won 2,5., you would enter: \"Winner: [[[ABAAB]]]\".
+        
+
+"Planning": 
+            "
+          Agent A profile: <<agent A profile>> 
+
+          Agent A Tasks: <<agent A tasks>>
+
+          Result: <<Agent A results>>
+           
+          Agent B profile: <<agent B profile>> 
+
+          Agent B Tasks: <<agent B tasks>>
+            
+          Result: <<Agent B results>>
+            
+          Please act as an impartial judge and evaluate the the effectiveness of self-coordination within the multi agents system based on the provided context. Focus on whether agents autonomously organized their tasks and maintained clarity of roles without centralized oversight. In agent system A and system B, you should decide which one is better than the other. Consider the following aspects in your evaluation:
+          1. Whether agents can claerly understanding their roles and responsibilities.
+          2. Whether their self-coordination is effective enough.
+          3. Whether agents have excellent logical analysis, consistently leading to accurate deductions and effective strategies.
+          You should consider all 5 aspects and decide which one is the winner. You should give a winner in each aspects. The system win 3 times is the final winner.
+              
+          Format the judgement as follows: \"Winner: [[[ABA]]]\". Each letter means the winner of the corresponding aspect of the index.
+          For example, if you believe A won in aspect 1,3 and B won 2, you would enter: \"Winner: [[[ABA]]]\".
+        

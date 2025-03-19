@@ -27,5 +27,5 @@ def get_logger(name: str) -> logging.Logger:
         file_handler = RotatingFileHandler('logs/app.log', maxBytes=10485760, backupCount=5)
         file_handler.setFormatter(formatter)
         logger.addHandler(stream_handler)
-        logger.addHandler(file_handler)
+        # logger.addHandler(file_handler)
     return logger

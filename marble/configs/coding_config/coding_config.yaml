@@ -61,7 +61,7 @@ task:
     solution.py
 
 agents:
-  - type: CodingAgent
+  - type: BaseAgent
     agent_id: agent1
     profile: |
       I am a Senior Software Developer specialized in Python development.
@@ -72,7 +72,7 @@ agents:
       Agent 3 is better at fixing existing issues and optimizing the code so it's better to let agent 3 revise the code after agent 2 has revised the code so that the code is more optimized.
 
 
-  - type: CodingAgent
+  - type: BaseAgent
     agent_id: agent2
     profile: |
       I am a Senior Software Developer specialized in Python development.
@@ -81,7 +81,7 @@ agents:
       I **can't** call "create_code" action since I am not good at creating the code framework from scratch.
       I can let agent 3 to make the code more optimized after I have added the missing functionality.
 
-  - type: CodingAgent
+  - type: BaseAgent
     agent_id: agent3
     profile: |
       I am a Senior Software Developer specialized in Python development.

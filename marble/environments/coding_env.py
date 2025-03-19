@@ -4,7 +4,6 @@ import sys
 import pytest
 from typing import Any, Dict, Optional
 
-# Import registration functions
 from marble.environments.coding_utils import (
     register_coder_actions,
     # register_tester_actions,
@@ -38,8 +37,8 @@ class CodingEnvironment(BaseEnvironment):
         """Register all standard actions available in the coding environment."""
         # Register actions based on roles
         register_coder_actions(self)
-        # register_tester_actions(self)
         register_reviewer_actions(self)
+        # register_tester_actions(self)
         # register_debugger_actions(self)
         # register_analyst_actions(self)  
 

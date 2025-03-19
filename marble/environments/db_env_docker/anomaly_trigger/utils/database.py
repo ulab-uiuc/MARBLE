@@ -3,7 +3,7 @@ import logging
 import random
 import time
 from enum import IntEnum
-from multiprocessing.pool import *
+from multiprocessing.pool import ThreadPool
 
 import psycopg2
 import pymysql
@@ -21,7 +21,7 @@ SERVER_CONFIG = {
     "host": "localhost",
     "port": 22,
     "user": 'root',
-    "password": 'xxxx'
+    "password": 'xxxx',
 }
 
 

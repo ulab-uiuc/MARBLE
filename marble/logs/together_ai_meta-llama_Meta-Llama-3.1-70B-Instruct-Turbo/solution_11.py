@@ -1,1 +1,0 @@
-server.listen(5000, () => { console.log('Server started on port 5000'); });socketio.run(app, host="localhost", port=5000, debug=True)

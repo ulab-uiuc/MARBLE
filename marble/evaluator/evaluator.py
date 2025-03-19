@@ -39,7 +39,10 @@ class Evaluator:
         }
         with open('evaluator/evaluator_prompts.json', 'r', encoding='utf-8') as f:
             self.evaluation_prompts = json.load(f)
-        self.llm = self.metrics_config.get('evaluate_llm', 'gpt-4o-mini')
+
+        evaluate_llm_config = self.metrics_config.get('evaluate_llm', {})
+        self.llm = evaluate_llm_config.get('model', 'gpt-3.5-turbo') if isinstance(evaluate_llm_config, dict) else evaluate_llm_config
+
 
 
     def update(self, environment: BaseEnvironment, agents: List[BaseAgent]) -> None:
@@ -68,68 +71,25 @@ class Evaluator:
             task (str): The task description.
             communications (str): The communication logs between agents.
         """
-        result = None
-        evaluation_type = "Communication"
-        try:
-            # Get the communication prompt
-            communication_prompt_template = """
-Rate the following communication between agents on a scale of 1-5 for each aspect:
-
-Task Context:
-{task}
-
-Communication Logs:
-{communications}
-
-Evaluation Criteria:
-1. Information Exchange (1-5): Was information shared effectively?
-2. Clarity (1-5): Were messages clear and understandable?
-3. Task Focus (1-5): Did communication stay relevant to the task?
-
-Respond ONLY with three numbers separated by commas. Example:
-4,3,5
-
-Your rating:"""
-            
-            # Limit input length
-            task = task[:1000] if task else ""
-            communications = communications[:5000] if communications else ""
-            
-            # Format prompt
-            prompt = communication_prompt_template.format(
-                task=task,
-                communications=communications
-            )
-            
-            # Get LLM response
-            result = model_prompting(
-                llm_model=self.llm,
-                messages=[{"role": "user", "content": prompt}],
-                return_num=1,
-                max_token_num=512,
-                temperature=0.0,
-                top_p=None,
-                stream=None,
-            )[0]
-            
-            # Parse scores
-            scores = [int(x.strip()) for x in result.content.strip().split(',') if x.strip().isdigit()]
-            if len(scores) == 3 and all(1 <= s <= 5 for s in scores):
-                final_score = round(sum(scores) / 3)  # Average score rounded to nearest integer
-                self.metrics["communication_score"].append(final_score)
-                self.logger.info(f"[{evaluation_type}] Evaluation scores - Exchange: {scores[0]}, Clarity: {scores[1]}, Focus: {scores[2]} - Final: {final_score}/5")
-            else:
-                self.logger.warning(f"[{evaluation_type}] Invalid score format, using default score 3/5")
-                self.metrics["communication_score"].append(3)
-                
-        except Exception as e:
-            self.logger.error(f"[{evaluation_type}] Error in evaluation: {e}")
-            self.metrics["communication_score"].append(3)
-        finally:
-            if result is not None:
-                self.logger.debug(f"[{evaluation_type}] LLM Response: {result.content}")
-            else:
-                self.logger.warning(f"[{evaluation_type}] No LLM response available")
+        # Get the communication prompt
+        communication_prompt_template = self.evaluation_prompts["Graph"]["Communication"]["prompt"]
+        # Fill in the placeholders {task} and {communications}
+        prompt = communication_prompt_template.format(task=task, communications=communications)
+        # Call the language model
+        result = model_prompting(
+            llm_model=self.llm,
+            messages=[{"role": "user", "content": prompt}],
+            return_num=1,
+            max_token_num=512,
+            temperature=0.0,
+            top_p=None,
+            stream=None,
+        )[0]
+        # Parse the score from result.content
+        assert isinstance(result.content, str)
+        score = self.parse_score(result.content)
+        # Update the metric
+        self.metrics["communication_score"].append(score)
 
     def evaluate_planning(self, summary: str, agent_profiles: str, agent_tasks: str, results: str) -> None:
         """
@@ -141,72 +101,30 @@ Your rating:"""
             agent_tasks (str): Tasks assigned to agents.
             results (str): Results of the next round.
         """
-        result = None
-        evaluation_type = "Planning"
-        try:
-            # Get the planning prompt
-            planning_prompt_template = """
-Rate the following planning and coordination between agents on a scale of 1-5 for each aspect:
-
-Context:
-Summary: {summary}
-Agent Profiles: {agent_profiles}
-Tasks: {agent_tasks}
-Results: {results}
-
-Evaluation Criteria:
-1. Role Understanding (1-5): Did agents understand their roles?
-2. Task Alignment (1-5): Were tasks properly aligned with goals?
-3. Execution (1-5): How well did agents execute their tasks?
-
-Respond ONLY with three numbers separated by commas. Example:
-4,3,5
-
-Your rating:"""
-            
-            # Limit input length
-            summary = summary[:2000] if summary else ""
-            agent_profiles = agent_profiles[:1000] if agent_profiles else ""
-            agent_tasks = agent_tasks[:1000] if agent_tasks else ""
-            results = results[:5000] if results else ""
-            
-            # Format prompt
-            prompt = planning_prompt_template.format(
-                summary=summary,
-                agent_profiles=agent_profiles,
-                agent_tasks=agent_tasks,
-                results=results
-            )
-            
-            # Get LLM response
-            result = model_prompting(
-                llm_model=self.llm,
-                messages=[{"role": "user", "content": prompt}],
-                return_num=1,
-                max_token_num=512,
-                temperature=0.0,
-                top_p=None,
-                stream=None,
-            )[0]
-            
-            # Parse scores
-            scores = [int(x.strip()) for x in result.content.strip().split(',') if x.strip().isdigit()]
-            if len(scores) == 3 and all(1 <= s <= 5 for s in scores):
-                final_score = round(sum(scores) / 3)  # Average score rounded to nearest integer
-                self.metrics["planning_score"].append(final_score)
-                self.logger.info(f"[{evaluation_type}] Evaluation scores - Roles: {scores[0]}, Alignment: {scores[1]}, Execution: {scores[2]} - Final: {final_score}/5")
-            else:
-                self.logger.warning(f"[{evaluation_type}] Invalid score format, using default score 3/5")
-                self.metrics["planning_score"].append(3)
-                
-        except Exception as e:
-            self.logger.error(f"[{evaluation_type}] Error in evaluation: {e}")
-            self.metrics["planning_score"].append(3)
-        finally:
-            if result is not None:
-                self.logger.debug(f"[{evaluation_type}] LLM Response: {result.content}")
-            else:
-                self.logger.warning(f"[{evaluation_type}] No LLM response available")
+        # Get the planning prompt
+        planning_prompt_template = self.evaluation_prompts["Graph"]["Planning"]["prompt"]
+        # Fill in the placeholders
+        prompt = planning_prompt_template.format(
+            summary=summary,
+            agent_profiles=agent_profiles,
+            agent_tasks=agent_tasks,
+            results=results
+        )
+        # Call the language model
+        result = model_prompting(
+            llm_model=self.llm,
+            messages=[{"role": "user", "content": prompt}],
+            return_num=1,
+            max_token_num=512,
+            temperature=0.0,
+            top_p=None,
+            stream=None,
+        )[0]
+        # Parse the score from result.content
+        assert isinstance(result.content, str)
+        score = self.parse_score(result.content)
+        # Update the metric
+        self.metrics["planning_score"].append(score)
 
     def evaluate_kpi(self, task: str, agent_results: str) -> None:
         """
@@ -235,6 +153,7 @@ Your rating:"""
             stream=None,
         )[0]
         # Parse the milestones from result.content
+        assert isinstance(result.content, str)
         milestones = self.parse_milestones(result.content)
         # Update the metrics
         self.metrics["total_milestones"] += len(milestones)
@@ -270,13 +189,119 @@ Your rating:"""
             stream=None,
         )[0]
         # Parse the ratings from llm_response.content
+        assert isinstance(llm_response.content, str)
         ratings = self.parse_research_ratings(llm_response.content)
         # Update the metrics
         if ratings:
             self.metrics["task_evaluation"] = ratings
         else:
             self.logger.error("Failed to parse research ratings.")
-        self.logger.debug(f"LLM Response: {llm_response.content}")
+
+    def evaluate_task_world(self, task: str, result: str) -> None:
+        """
+        Evaluate the final world idea based on Effectiveness of Strategies, Progress and Outcome and Interaction Dynamics
+
+        Args:
+            task (str): The task description.
+            result (str): The final world idea.
+        """
+        # change the prompt to evaluate buyer and seller
+        # world_prompt_template = self.evaluation_prompts["world"]["task_evaluation"]["buyer_prompt"]
+        world_prompt_template = self.evaluation_prompts["world"]["task_evaluation"]["seller_prompt"]
+        prompt = world_prompt_template.format(task=task, result=result)
+
+        llm_response = model_prompting(
+            llm_model=self.llm,
+            messages=[{"role": "user", "content": prompt}],
+            return_num=1,
+            max_token_num=512,
+            temperature=0.0,
+            top_p=None,
+            stream=None,
+        )[0]
+
+        ratings = self.parse_task_world_evaluation(llm_response.content)
+
+        self.metrics["task_evaluation"]["buyer"] = ratings["buyer"]
+        self.metrics["task_evaluation"]["seller"] = ratings["seller"]
+
+
+    def parse_task_world_evaluation(self, llm_response: str) -> Dict[str, Any]:
+        """
+        Parse the JSON ratings from the LLM response for buyer and seller evaluation.
+        If the response is not a valid JSON, return default scores of -1.
+
+        Args:
+            llm_response (str): The LLM response containing the ratings in JSON format.
+
+        Returns:
+            Dict[str, Any]: A dictionary containing parsed ratings for buyer and seller.
+        """
+        # 设置默认评分
+        default_ratings = {
+            "buyer": {
+                "effectiveness_of_strategies": -1,
+                "progress_and_outcome": -1,
+                "interaction_dynamics": -1
+            },
+            "seller": {
+                "effectiveness_of_strategies": -1,
+                "progress_and_outcome": -1,
+                "interaction_dynamics": -1
+            }
+        }
+
+        try:
+            # 提取 JSON 块
+            match = re.search(r'\{[\s\S]*\}', llm_response)
+            if not match:
+                return default_ratings  # 返回默认评分
+
+            json_str = match.group(0)
+
+            # 解析 JSON
+            ratings = json.loads(json_str)
+
+            # 确保 `buyer` 和 `seller` 至少存在一个
+            if "buyer" not in ratings and "seller" not in ratings:
+                return default_ratings
+
+            # 确保评分为整数，缺失的字段填充 -1
+            parsed_ratings = {
+                "buyer": {
+                    "effectiveness_of_strategies": int(ratings["buyer"].get("effectiveness_of_strategies", -1)),
+                    "progress_and_outcome": int(ratings["buyer"].get("progress_and_outcome", -1)),
+                    "interaction_dynamics": int(ratings["buyer"].get("interaction_dynamics", -1))
+                } if "buyer" in ratings else default_ratings["buyer"],
+                "seller": {
+                    "effectiveness_of_strategies": int(ratings["seller"].get("effectiveness_of_strategies", -1)),
+                    "progress_and_outcome": int(ratings["seller"].get("progress_and_outcome", -1)),
+                    "interaction_dynamics": int(ratings["seller"].get("interaction_dynamics", -1))
+                } if "seller" in ratings else default_ratings["seller"]
+            }
+
+            return parsed_ratings
+
+        except (json.JSONDecodeError, KeyError, ValueError):
+            return default_ratings  # 解析失败则返回默认评分
+
+    def evaluate_task_db(self, task: str, result: str, labels: List[str], pred_num: int, root_causes: List[str]) -> None:
+        """
+        Evaluate the final database idea based on Data Quality, Data Security, and Data Privacy.
+
+        Args:
+            task (str): The task description.
+            result (str): The final root cause analysis.
+            labels (List[str]): The list of root cause labels.
+            pred_num (int): The number of predicted root causes.
+            root_causes (List[str]): The root cause labels.
+        """
+        # Evaluation will take place separately as it might not follow the 
+        # requested format
+        self.metrics["task_evaluation"] = {
+            'root_cause': root_causes,
+            'predicted': result,
+        }
 
     def parse_research_ratings(self, assistant_answer: str) -> Dict[str, int]:
         """
@@ -299,28 +324,15 @@ Your rating:"""
             if json_start >= 0 and json_end > json_start:
                 json_str = content[json_start:json_end]
                 ratings = json.loads(json_str)
-                
-                # 验证所有必需的键都存在且值在有效范围内
-                required_keys = {"innovation", "safety", "feasibility"}
-                if all(key in ratings for key in required_keys):
-                    validated_ratings = {}
-                    for key in required_keys:
-                        try:
-                            score = int(ratings[key])
-                            if 1 <= score <= 5:
-                                validated_ratings[key] = score
-                            else:
-                                validated_ratings[key] = 3  # 默认中等分数
-                        except (ValueError, TypeError):
-                            validated_ratings[key] = 3  # 默认中等分数
-                    return validated_ratings
-                    
-            self.logger.error("Invalid ratings format in response")
-            return {"innovation": 3, "safety": 3, "feasibility": 3}
-            
-        except Exception as e:
-            self.logger.error(f"Error parsing research ratings: {e}")
-            return {"innovation": 3, "safety": 3, "feasibility": 3}
+                # Ensure ratings are integers
+                ratings_dict: Dict[str, int] = {k: int(v) for k, v in ratings.items()}
+                return ratings_dict
+            except json.JSONDecodeError:
+                self.logger.error("Failed to parse JSON from assistant's answer.")
+                return {}
+        else:
+            self.logger.error("No JSON found in assistant's answer.")
+            return {}
 
     def parse_score(self, assistant_answer: str) -> int:
         """
@@ -420,63 +432,23 @@ Your rating:"""
             assistant_answer (str): The assistant's answer containing the milestones.
 
         Returns:
-            List[Dict[str, Any]]: The list of milestones. Returns empty list if parsing fails.
+            List[Dict[str, Any]]: The list of milestones.
         """
+        # Preprocess to handle escaped newlines and unnecessary symbols
         try:
-            # 清理响应内容
-            content = assistant_answer.strip()
-            
-            # 移除可能的 markdown 代码块标记
-            if content.startswith("```json"):
-                content = content[7:]
-            if content.startswith("```"):
-                content = content[3:]
-            if content.endswith("```"):
-                content = content[:-3]
-            content = content.strip()
-            
-            # 尝试提取JSON数组部分
-            array_start = content.find('[')
-            array_end = content.rfind(']') + 1
-            
-            if array_start >= 0 and array_end > array_start:
-                json_str = content[array_start:array_end]
-                try:
-                    milestones = json.loads(json_str)
-                    
-                    # 验证和清理里程碑数据
-                    validated_milestones = []
-                    for milestone in milestones:
-                        if not isinstance(milestone, dict):
-                            continue
-                            
-                        # 检查必需的字段
-                        if "milestone" not in milestone or "agents" not in milestone:
-                            continue
-                            
-                        # 验证agents是列表
-                        if not isinstance(milestone["agents"], list):
-                            continue
-                            
-                        # 清理和验证数据
-                        clean_milestone = {
-                            "milestone_content": str(milestone["milestone"])[:100],  # 限制长度
-                            "contributing_agents": [
-                                str(agent_id) for agent_id in milestone["agents"]
-                                if isinstance(agent_id, (str, int))
-                            ]
-                        }
-                        
-                        if clean_milestone["contributing_agents"]:  # 只添加有贡献者的里程碑
-                            validated_milestones.append(clean_milestone)
-                    
-                    self.logger.debug(f"Successfully parsed {len(validated_milestones)} milestones")
-                    return validated_milestones
-                    
-                except json.JSONDecodeError as e:
-                    self.logger.error(f"Failed to parse milestone JSON: {e}")
-                    
-            self.logger.warning("No valid milestone array found in response")
+            # Remove escaped newlines
+            cleaned_answer = assistant_answer.replace("\\n", "").strip()
+
+            # Remove any leading and trailing backticks and whitespace
+            if cleaned_answer.startswith("```json") and cleaned_answer.endswith("```"):
+                cleaned_answer = cleaned_answer[7:-3].strip()
+
+            # Parse the JSON block
+            milestones = json.loads(cleaned_answer)
+            assert isinstance(milestones, list)
+            return milestones
+        except json.JSONDecodeError:
+            self.logger.error("Failed to parse JSON from assistant's answer.")
             return []
             
         except Exception as e:
@@ -548,8 +520,7 @@ Your rating:"""
         Evaluate the code quality based on stricter criteria.
         """
         try:
-            # 读取配置文件
-            config_path = "/opt/dlami/nvme/zhe/MARBLE/marble/configs/coding_config/coding_config.yaml"
+            config_path = "marble/configs/coding_config/coding_config.yaml"
             if not os.path.exists(config_path):
                 self.logger.error("Config file not found")
                 return
@@ -560,7 +531,6 @@ Your rating:"""
 
             full_task_description = config['task']['content']
             
-            # 提取requirements部分
             requirements_start = "1. Implementation requirements:\n"
             requirements_end = "\n\n2. Project structure:"
             requirements = full_task_description[
@@ -568,8 +538,7 @@ Your rating:"""
                 full_task_description.find(requirements_end)
             ].strip()
 
-            # 读取solution.py
-            solution_path = "/opt/dlami/nvme/zhe/MARBLE/marble/workspace/solution.py"
+            solution_path = "marble/workspace/solution.py"
             solution_content = ""
             if os.path.exists(solution_path):
                 with open(solution_path, 'r', encoding='utf-8') as f:
@@ -633,7 +602,6 @@ Your rating:"""
                 stream=None,
             )[0]
 
-            # 使用新的解析方法替换原来的 parse_research_ratings
             scores = self.parse_code_quality_scores(response.content)
 
             if scores:
@@ -641,7 +609,6 @@ Your rating:"""
                 self.logger.info(f"Code quality evaluated strictly: {scores}")
             else:
                 self.logger.error("Failed to parse code quality scores.")
-                # 设置默认的最低分数
                 self.metrics["code_quality"] = {
                     "instruction_following": 1,
                     "executability": 1,
