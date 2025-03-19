@@ -21,7 +21,7 @@ for config_path in "${CONFIG_PATHS[@]}"; do
     mkdir -p ${CONFIG_OUTPUT_DIR}
 
     echo "Starting experiments with ${method_name}..."
-    
+
     for id in {1..10}; do
         echo "Processing ${method_name} task with ID=$id..."
         rm -rf ${WORKSPACE_DIR}/*
@@ -35,11 +35,11 @@ for config_path in "${CONFIG_PATHS[@]}"; do
         echo "Task with ID=$id completed."
         echo "==============================="
     done
-    
+
     echo "Copying result file for ${method_name}..."
     cp marble/result/development_output.jsonl marble/result/${method_name}_output.jsonl
     rm marble/result/development_output.jsonl
-    
+
     echo "${method_name} experiments completed!"
     echo "==============================="
 done

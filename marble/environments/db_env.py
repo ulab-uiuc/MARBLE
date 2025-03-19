@@ -20,37 +20,47 @@ from marble.environments.db_utils.slow_query import obtain_slow_queries
 
 
 def split_sql_statements(sql: str) -> List[str]:
-    statements = re.split(r';\s*\n', sql)
+    statements = re.split(r";\s*\n", sql)
     return [stmt.strip() for stmt in statements if stmt.strip()]
 
-def get_prometheus_metric_data(metric_name: str, start_time: float, end_time: float, step: int = 1) -> List[List[Any]]:
-    prom_url = 'http://localhost:9090/api/v1/query_range'
+
+def get_prometheus_metric_data(
+    metric_name: str, start_time: float, end_time: float, step: int = 1
+) -> List[List[Any]]:
+    prom_url = "http://localhost:9090/api/v1/query_range"
     params = {
-        'query': metric_name,
-        'start': start_time,
-        'end': end_time,
-        'step': step,
+        "query": metric_name,
+        "start": start_time,
+        "end": end_time,
+        "step": step,
     }
     response = requests.get(prom_url, params=params)
     if response.status_code == 200:
         data = response.json()
-        if data.get('status') == 'success':
+        if data.get("status") == "success":
             try:
-                return data['data']['result'][0]['values']
+                return data["data"]["result"][0]["values"]
             except Exception:
                 return []
         else:
-            raise ValueError(f"Prometheus returned an error: {data.get('error', 'Unknown error')}")
+            raise ValueError(
+                f"Prometheus returned an error: {data.get('error', 'Unknown error')}"
+            )
     else:
-        raise ValueError(f"Failed to query Prometheus. Status code: {response.status_code}")
+        raise ValueError(
+            f"Failed to query Prometheus. Status code: {response.status_code}"
+        )
+
 
 def get_current_time() -> float:
     return time.time()
+
 
 def get_metric_data_for_last_10_minutes(metric_name: str) -> List[List[Any]]:
     end_time = get_current_time()
     start_time = end_time - 600
     return get_prometheus_metric_data(metric_name, start_time, end_time)
+
 
 class DBEnvironment(BaseEnvironment):
     def __init__(self, config: Dict[str, Any], name: str = "DBEnv"):
@@ -66,28 +76,37 @@ class DBEnvironment(BaseEnvironment):
         # print out results from each handler as a test
         print(self.get_alerts_handler())
         print(self.get_alert_metrics_handler())
-        print(self.detect_metric_abnormality_handler('cpu'))
-        print(self.get_rag_handler('WorkloadExpert', 'cpu'))
+        print(self.detect_metric_abnormality_handler("cpu"))
+        print(self.get_rag_handler("WorkloadExpert", "cpu"))
         print(self.get_slow_query_handler())
 
     def start_docker_containers(self):
         print("Starting Docker containers...")
-        subprocess.run(["sudo", "docker", "compose", "down", "-v"], cwd=os.path.join(self.current_dir, "db_env_docker"), shell=False, check=True)
-        subprocess.run(["sudo", "docker", "compose", "up", "-d", "--remove-orphans"], cwd=os.path.join(self.current_dir, "db_env_docker"), check=True)
+        subprocess.run(
+            ["sudo", "docker", "compose", "down", "-v"],
+            cwd=os.path.join(self.current_dir, "db_env_docker"),
+            shell=False,
+            check=True,
+        )
+        subprocess.run(
+            ["sudo", "docker", "compose", "up", "-d", "--remove-orphans"],
+            cwd=os.path.join(self.current_dir, "db_env_docker"),
+            check=True,
+        )
 
     def initialize_database(self, config: Dict[str, Any]):
         while not self.check_db_connection():
             time.sleep(1)
 
-        init_sql = config.get('init_sql', None)
-        test_sql = config.get('test_sql', None)
+        init_sql = config.get("init_sql", None)
+        test_sql = config.get("test_sql", None)
 
         connection = psycopg2.connect(
             user="test",
             password="Test123_456",
             database="sysbench",
             host="localhost",
-            port="5432"
+            port="5432",
         )
         cursor = connection.cursor()
         connection.autocommit = True
@@ -121,14 +140,31 @@ class DBEnvironment(BaseEnvironment):
 
         print("Executing test SQL statements...")
 
-        anomalies = config.get('anomalies', [])
+        anomalies = config.get("anomalies", [])
         if anomalies:
             for anomaly in anomalies:
-                anomaly_type = anomaly['anomaly']
-                threads = anomaly['threads']
-                ncolumn = anomaly['ncolumn']
-                colsize = anomaly['colsize']
-                subprocess.run(["python", "main.py", "--anomaly", anomaly_type, "--threads", f"{threads}", "--ncolumn", f"{ncolumn}", "--colsize", f"{colsize}"], cwd=os.path.join(self.current_dir, "db_env_docker", "anomaly_trigger"), check=True)
+                anomaly_type = anomaly["anomaly"]
+                threads = anomaly["threads"]
+                ncolumn = anomaly["ncolumn"]
+                colsize = anomaly["colsize"]
+                subprocess.run(
+                    [
+                        "python",
+                        "main.py",
+                        "--anomaly",
+                        anomaly_type,
+                        "--threads",
+                        f"{threads}",
+                        "--ncolumn",
+                        f"{ncolumn}",
+                        "--colsize",
+                        f"{colsize}",
+                    ],
+                    cwd=os.path.join(
+                        self.current_dir, "db_env_docker", "anomaly_trigger"
+                    ),
+                    check=True,
+                )
         else:
             print(
                 (
@@ -287,7 +323,7 @@ class DBEnvironment(BaseEnvironment):
         # )
 
         self.register_action(
-            'query_db',
+            "query_db",
             handler=self.query_db_handler,
             description={
                 "type": "function",
@@ -336,14 +372,14 @@ class DBEnvironment(BaseEnvironment):
                                     "It is advised you don't query with limit set "
                                     "way too high, like not more than 100. "
                                     "Only include query statements in this param."
-                                )
+                                ),
                             }
                         },
                         "required": ["sql"],
-                        "additionalProperties": False
-                    }
-                }
-            }
+                        "additionalProperties": False,
+                    },
+                },
+            },
         )
 
     def wait_for_alerts(self) -> None:
@@ -368,25 +404,27 @@ class DBEnvironment(BaseEnvironment):
         # print(f'Alert detected @ {alerts}')
 
     def get_docker_postgresql_error_query_log_handler(self) -> Dict[str, Any]:
-        raise Exception("This function is STILL IN DEVELOPMENT. Please try again later.")
+        raise Exception(
+            "This function is STILL IN DEVELOPMENT. Please try again later."
+        )
         # use a command
         result = os.popen("sudo docker logs -tf db_env_docker-postgres_db-1").read()
         # get last 100 lines and make it string
-        result = '\n'.join(result.split('\n')[-100:])
+        result = "\n".join(result.split("\n")[-100:])
         if result:
             return {
-                'status': 'success',
-                'function_name': 'get_docker_postgresql_error_query_log',
-                'explanation': (
+                "status": "success",
+                "function_name": "get_docker_postgresql_error_query_log",
+                "explanation": (
                     "Here are the last 100 lines of the PostgreSQL query error log: \n"
                     f"{result}"
-                )
+                ),
             }
         else:
             return {
-                'status': 'success',
-                'function_name': 'get_docker_postgresql_error_query_log',
-                'explanation': "No failed queries found in the PostgreSQL query error log."
+                "status": "success",
+                "function_name": "get_docker_postgresql_error_query_log",
+                "explanation": "No failed queries found in the PostgreSQL query error log.",
             }
 
     def get_alerts_handler(self) -> Dict[str, Any]:
@@ -394,83 +432,85 @@ class DBEnvironment(BaseEnvironment):
             alerts = self.get_raw_alerts()
             formatted_alerts = []
 
-            for alert in alerts.get('alerts', []):
+            for alert in alerts.get("alerts", []):
                 formatted_alert = {
-                    'function_name': 'get_alerts',
-                    'name': alert['labels'].get('alertname', 'Unknown'),
-                    'severity': alert['labels'].get('severity', 'Unknown'),
-                    'description': alert['annotations'].get('description', ''),
-                    'state': alert.get('state', ''),
-                    'active_since': alert.get('activeAt', ''),
-                    'value': alert.get('value', '')
+                    "function_name": "get_alerts",
+                    "name": alert["labels"].get("alertname", "Unknown"),
+                    "severity": alert["labels"].get("severity", "Unknown"),
+                    "description": alert["annotations"].get("description", ""),
+                    "state": alert.get("state", ""),
+                    "active_since": alert.get("activeAt", ""),
+                    "value": alert.get("value", ""),
                 }
                 formatted_alerts.append(formatted_alert)
 
-            explanation = ''
+            explanation = ""
             for alert in formatted_alerts:
-                explanation += f"{alert['name']} triggered alert: {alert['description']}. \n"
+                explanation += (
+                    f"{alert['name']} triggered alert: {alert['description']}. \n"
+                )
                 explanation += f"Severity: {alert['severity']}. \n"
                 explanation += f"State: {alert['state']}. \n"
                 explanation += f"Active since: {alert['active_since']}. \n"
                 explanation += f"Value: {alert['value']}. \n\n"
 
             return {
-                'status': 'success',
-                'alert_count': len(formatted_alerts),
+                "status": "success",
+                "alert_count": len(formatted_alerts),
                 # 'alerts': formatted_alerts,
-                'explanation': explanation
+                "explanation": explanation,
             }
         except Exception as e:
             return {
-                'status': 'error',
-                'message': str(e),
+                "status": "error",
+                "message": str(e),
                 # 'alerts': [],
-                'explanation': 'No alerts found now. You can try again later.'
+                "explanation": "No alerts found now. You can try again later.",
             }
 
     def get_alert_metrics_handler(self) -> Dict[str, Any]:
         try:
             alert_metrics_str = self.get_alert_metrics_str()
             return {
-                'status': 'success',
-                'function_name': 'get_alert_metrics',
-                'explanation': alert_metrics_str
+                "status": "success",
+                "function_name": "get_alert_metrics",
+                "explanation": alert_metrics_str,
             }
         except Exception as e:
             return {
-                'status': 'error',
-                'function_name': 'get_alert_metrics',
-                'explanation': str(e)
+                "status": "error",
+                "function_name": "get_alert_metrics",
+                "explanation": str(e),
             }
 
     def detect_metric_abnormality_handler(self, metric_name: str) -> Dict[str, Any]:
         try:
             llm_selected_metric_str = self.detect_metric_abnormality_str(metric_name)
             return {
-                'status': 'success',
-                'function_name': 'detect_metric_abnormality',
-                'explanation': llm_selected_metric_str
+                "status": "success",
+                "function_name": "detect_metric_abnormality",
+                "explanation": llm_selected_metric_str,
             }
         except Exception as e:
             return {
-                'status': 'error',
-                'function_name': 'detect_metric_abnormality',
-                'explanation': str(e)
+                "status": "error",
+                "function_name": "detect_metric_abnormality",
+                "explanation": str(e),
             }
 
     def get_rag_handler(self, expert: str, query_str: str) -> Dict[str, Any]:
         try:
             rag_str = self.get_rag_str(expert, query_str)
             return {
-                'status': 'success',
-                'function_name': 'get_rag',
-                'explanation': rag_str
+                "status": "success",
+                "function_name": "get_rag",
+                "explanation": rag_str,
             }
         except Exception as e:
             return {
-                'status': 'error',
-                'function_name': 'get_rag',
-                'explanation': str(e)
+                "status": "error",
+                "function_name": "get_rag",
+                "explanation": str(e),
             }
 
     def query_db_handler(self, sql: str) -> Dict[str, Any]:
@@ -480,7 +520,7 @@ class DBEnvironment(BaseEnvironment):
                 password="Test123_456",
                 database="sysbench",
                 host="localhost",
-                port="5432"
+                port="5432",
             )
             cursor = connection.cursor()
             sql_queries = split_sql_statements(sql)
@@ -491,47 +531,51 @@ class DBEnvironment(BaseEnvironment):
             connection.close()
 
             return {
-                'status': 'success',
-                'function_name': 'query_db',
-                'explanation': f"Your query on the database was successful{'' if len(result) else ' but no data was returned'}. \nYour query is: {sql_queries} \nResult: {result}"
+                "status": "success",
+                "function_name": "query_db",
+                "explanation": f"Your query on the database was successful{'' if len(result) else ' but no data was returned'}. \nYour query is: {sql_queries} \nResult: {result}",
             }
         except Exception as e:
             return {
-                'status': 'error',
-                'function_name': 'query_db',
-                'explanation': f"An error occurred while you tried to query the database: {str(e)}"
+                "status": "error",
+                "function_name": "query_db",
+                "explanation": f"An error occurred while you tried to query the database: {str(e)}",
             }
 
     def get_slow_query_handler(self) -> Dict[str, Any]:
         try:
             slow_query_str = self.get_slow_query_str()
             return {
-                'status': 'success',
-                'function_name': 'get_slow_query',
-                'explanation': slow_query_str
+                "status": "success",
+                "function_name": "get_slow_query",
+                "explanation": slow_query_str,
             }
         except Exception as e:
             return {
-                'status': 'error',
-                'function_name': 'get_slow_query',
-                'explanation': str(e)
+                "status": "error",
+                "function_name": "get_slow_query",
+                "explanation": str(e),
             }
 
     def get_alert_metrics_str(self) -> Dict[str, Any]:
         alerts = self.get_raw_alerts()
         alert_metrics_str = ""
-        for alert in alerts['alerts']:
-            alert_description = alert['annotations']['description']
-            alert_metric = alert_description.split('[')[0]
-            alert_metrics_str += f"{alert_metric.strip()} triggered alert: {alert_description}. \n"
+        for alert in alerts["alerts"]:
+            alert_description = alert["annotations"]["description"]
+            alert_metric = alert_description.split("[")[0]
+            alert_metrics_str += (
+                f"{alert_metric.strip()} triggered alert: {alert_description}. \n"
+            )
             anomaly_data = get_metric_data_for_last_10_minutes(alert_metric)
             anomaly_data_list = [float(v) for t, v in anomaly_data]
             anomaly_data_features = describe_data_features(anomaly_data_list)
-            alert_metrics_str += f"Data description for {alert_metric}: {anomaly_data_features} \n\n"
+            alert_metrics_str += (
+                f"Data description for {alert_metric}: {anomaly_data_features} \n\n"
+            )
         return {
-            'status': 'success',
-            'function_name': 'get_alert_metrics',
-            'explanation': alert_metrics_str
+            "status": "success",
+            "function_name": "get_alert_metrics",
+            "explanation": alert_metrics_str,
         }
 
     def detect_metric_abnormality_str(self, metric_name: str) -> Dict[str, Any]:
@@ -541,19 +585,21 @@ class DBEnvironment(BaseEnvironment):
             data = get_metric_data_for_last_10_minutes(query)
             data_list = [float(v) for t, v in data]
             if not len(data_list):
-                llm_selected_metric_str += f"No data found for {name} (Query: {query}).\n"
+                llm_selected_metric_str += (
+                    f"No data found for {name} (Query: {query}).\n"
+                )
                 llm_selected_metric_str += "Please wait at least 15s.\n\n"
                 continue
             data_array = np.array(data_list)
             anomaly = detect_anomalies(data_array)
-            if anomaly['anomalies']:
+            if anomaly["anomalies"]:
                 data_features = describe_data_features(data_list)
                 llm_selected_metric_str += f"{name} (Query: {query}) is abnormal.\n"
                 llm_selected_metric_str += f"Data description: {data_features}\n\n"
         return {
-            'status': 'success',
-            'function_name': 'detect_metric_abnormality',
-            'explanation': llm_selected_metric_str
+            "status": "success",
+            "function_name": "detect_metric_abnormality",
+            "explanation": llm_selected_metric_str,
         }
 
     def get_rag_str(self, expert: str, llm_selected_metric_str: str) -> Dict[str, Any]:
@@ -563,26 +609,26 @@ class DBEnvironment(BaseEnvironment):
             rag_str += f"Cause : {result['cause_name']}\n"
             rag_str += f"Metrics: {result['metrics']}\n"
             rag_str += f"Expert : {result['expert']}\n\n"
-        return {
-            'status': 'success',
-            'function_name': 'get_rag',
-            'explanation': rag_str
-        }
+        return {"status": "success", "function_name": "get_rag", "explanation": rag_str}
 
     def get_slow_query_str(self) -> str:
         return f"Here are the commands that took longest time:\n{obtain_slow_queries()}"
 
     def get_raw_alerts(self) -> dict:
-        prom_url = 'http://localhost:9090/api/v1/alerts'
+        prom_url = "http://localhost:9090/api/v1/alerts"
         response = requests.get(prom_url)
         if response.status_code == 200:
             data = response.json()
-            if data.get('status') == 'success':
-                return data['data']
+            if data.get("status") == "success":
+                return data["data"]
             else:
-                raise ValueError(f"Prometheus returned an error: {data.get('error', 'Unknown error')}")
+                raise ValueError(
+                    f"Prometheus returned an error: {data.get('error', 'Unknown error')}"
+                )
         else:
-            raise ValueError(f"Failed to query Prometheus. Status code: {response.status_code}")
+            raise ValueError(
+                f"Failed to query Prometheus. Status code: {response.status_code}"
+            )
 
     def check_db_connection(self) -> bool:
         try:
@@ -591,7 +637,7 @@ class DBEnvironment(BaseEnvironment):
                 password="Test123_456",
                 database="sysbench",
                 host="localhost",
-                port="5432"
+                port="5432",
             )
             print("Database is up!")
             connection.close()
@@ -601,32 +647,41 @@ class DBEnvironment(BaseEnvironment):
             return False
 
     def terminate(self) -> None:
-        subprocess.run(["sudo", "docker", "compose", "down"], cwd=os.path.join(self.current_dir, "db_env_docker"), check=True)
+        subprocess.run(
+            ["sudo", "docker", "compose", "down"],
+            cwd=os.path.join(self.current_dir, "db_env_docker"),
+            check=True,
+        )
+
 
 if __name__ == "__main__":
-    raise NotImplementedError("This demo is obsolete. Please run the experiment directly.")
-    env = DBEnvironment(config={
-        'environment': {
-            'anomalies': [
-                {
-                    'anomaly': 'MISSING_INDEXES',
-                    'threads': 1000,
-                    'ncolumn': 1000,
-                    'colsize': 1000,
-                }
-            ]
+    raise NotImplementedError(
+        "This demo is obsolete. Please run the experiment directly."
+    )
+    env = DBEnvironment(
+        config={
+            "environment": {
+                "anomalies": [
+                    {
+                        "anomaly": "MISSING_INDEXES",
+                        "threads": 1000,
+                        "ncolumn": 1000,
+                        "colsize": 1000,
+                    }
+                ]
+            }
         }
-    })
+    )
     while True:
-        command = input('> ')
-        if command == 'alert':
+        command = input("> ")
+        if command == "alert":
             print(env.get_alerts_handler())
-        elif command == 'cpu':
-            print(env.detect_metric_abnormality_handler('cpu_usage'))
-        elif command == 'analyze':
-            print(env.match_diagnose_knowledge_handler('WorkloadExpert', 'cpu'))
-        elif command == 'slow':
+        elif command == "cpu":
+            print(env.detect_metric_abnormality_handler("cpu_usage"))
+        elif command == "analyze":
+            print(env.match_diagnose_knowledge_handler("WorkloadExpert", "cpu"))
+        elif command == "slow":
             print(obtain_slow_queries())
-        elif command == 'q':
+        elif command == "q":
             env.terminate()
             break

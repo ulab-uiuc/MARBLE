@@ -17,8 +17,10 @@ class BaseEnvironment:
         self.name = name
         self.agents: List[Any] = []
         self.state: Dict[str, Any] = {}
-        self._action_handlers: Dict[str, Callable[..., Dict[str, Any]]] = {} # private to avoid direct calls from outside
-        self.action_handler_descriptions: Dict[str, Any] = {} # in openai format
+        self._action_handlers: Dict[
+            str, Callable[..., Dict[str, Any]]
+        ] = {}  # private to avoid direct calls from outside
+        self.action_handler_descriptions: Dict[str, Any] = {}  # in openai format
         self.done = False
         self.description: str = config.get("description", "")
         self.task_description: str = config.get("task_description", "")
@@ -26,7 +28,7 @@ class BaseEnvironment:
         self.max_iterations: int = config.get("max_iterations", 10)
         self.current_iteration: int = 0
         # Initialize the state with the task description
-        self.state['task_description'] = self.task_description
+        self.state["task_description"] = self.task_description
 
     def is_done(self) -> bool:
         return self.done
@@ -34,7 +36,7 @@ class BaseEnvironment:
     def is_task_completed(self) -> bool:
         # Compare the agent's last action or the state to the ground truth
         # For simplicity, let's assume the state contains 'last_action_result'
-        last_action_result = self.state.get('last_action_result', '')
+        last_action_result = self.state.get("last_action_result", "")
         return self._compare_to_ground_truth(last_action_result, self.ground_truth)
 
     def _compare_to_ground_truth(self, result: str, ground_truth: str) -> bool:
@@ -48,7 +50,12 @@ class BaseEnvironment:
     def get_description(self) -> str:
         return self.description
 
-    def register_action(self, action_name: str, handler: Callable[..., Dict[str, Any]], description: Dict[str, Any]) -> None:
+    def register_action(
+        self,
+        action_name: str,
+        handler: Callable[..., Dict[str, Any]],
+        description: Dict[str, Any],
+    ) -> None:
         """
         Register an action handler for the environment.
 
@@ -60,7 +67,9 @@ class BaseEnvironment:
         self._action_handlers[action_name] = handler
         self.action_handler_descriptions[action_name] = description
 
-    def apply_action(self, agent_id: Union[str, None], action_name: str, arguments: Dict[str, Any]) -> Dict[str, Any]:
+    def apply_action(
+        self, agent_id: Union[str, None], action_name: str, arguments: Dict[str, Any]
+    ) -> Dict[str, Any]:
         """
         Execute an action in the environment.
 
@@ -73,7 +82,7 @@ class BaseEnvironment:
         action_result = self._action_handlers[action_name](**arguments)
 
         # Update the state with the action result
-        self.state['last_action_result'] = action_result
+        self.state["last_action_result"] = action_result
 
         # Increment iteration count
         self.current_iteration += 1

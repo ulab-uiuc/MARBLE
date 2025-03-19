@@ -20,10 +20,10 @@ def parse_args() -> argparse.Namespace:
     """
     parser = argparse.ArgumentParser(description="Run the Marble simulation engine.")
     parser.add_argument(
-        '--config_path',
+        "--config_path",
         type=str,
         required=True,
-        help='Path to the configuration YAML file.'
+        help="Path to the configuration YAML file.",
     )
     return parser.parse_args()
 
@@ -52,10 +52,12 @@ def main() -> None:
         engine = Engine(config)
         engine.start()
     except Exception:
-        logging.exception(f"An error occurred while running the engine with configuration: {args.config_path}")
+        logging.exception(
+            f"An error occurred while running the engine with configuration: {args.config_path}"
+        )
         sys.exit(1)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
     main()

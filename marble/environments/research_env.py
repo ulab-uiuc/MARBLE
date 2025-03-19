@@ -38,16 +38,28 @@ class ResearchEnvironment(BaseEnvironment):
                     "parameters": {
                         "type": "object",
                         "properties": {
-                            "num_results": {"type": "integer", "description": "Number of results to fetch."},
-                            "query": {"type": "string", "description": "Keyword or phrase to search for."},
-                            "domain": {"type": "string", "description": "Specific research domain to search in."},
-                            "author": {"type": "string", "description": "Author to search for."},
+                            "num_results": {
+                                "type": "integer",
+                                "description": "Number of results to fetch.",
+                            },
+                            "query": {
+                                "type": "string",
+                                "description": "Keyword or phrase to search for.",
+                            },
+                            "domain": {
+                                "type": "string",
+                                "description": "Specific research domain to search in.",
+                            },
+                            "author": {
+                                "type": "string",
+                                "description": "Author to search for.",
+                            },
                         },
                         "required": ["num_results"],
-                        "additionalProperties": False
-                    }
-                }
-            }
+                        "additionalProperties": False,
+                    },
+                },
+            },
         )
 
         self.register_action(
@@ -61,14 +73,20 @@ class ResearchEnvironment(BaseEnvironment):
                     "parameters": {
                         "type": "object",
                         "properties": {
-                            "domain": {"type": "string", "description": "Domain to fetch recent papers from."},
-                            "max_results": {"type": "integer", "description": "Maximum number of results to fetch."},
+                            "domain": {
+                                "type": "string",
+                                "description": "Domain to fetch recent papers from.",
+                            },
+                            "max_results": {
+                                "type": "integer",
+                                "description": "Maximum number of results to fetch.",
+                            },
                         },
                         "required": ["max_results"],
-                        "additionalProperties": False
-                    }
-                }
-            }
+                        "additionalProperties": False,
+                    },
+                },
+            },
         )
 
         self.register_action(
@@ -82,20 +100,29 @@ class ResearchEnvironment(BaseEnvironment):
                     "parameters": {
                         "type": "object",
                         "properties": {
-                            "author": {"type": "string", "description": "Author's name."},
+                            "author": {
+                                "type": "string",
+                                "description": "Author's name.",
+                            },
                             "known_paper_titles": {
                                 "type": "array",
                                 "items": {"type": "string"},
-                                "description": "List of known paper titles for author disambiguation."
+                                "description": "List of known paper titles for author disambiguation.",
                             },
-                            "paper_max_num": {"type": "integer", "description": "Maximum number of papers to fetch."},
-                            "exclude_known": {"type": "boolean", "description": "Whether to exclude known papers."},
+                            "paper_max_num": {
+                                "type": "integer",
+                                "description": "Maximum number of papers to fetch.",
+                            },
+                            "exclude_known": {
+                                "type": "boolean",
+                                "description": "Whether to exclude known papers.",
+                            },
                         },
                         "required": ["author"],
-                        "additionalProperties": False
-                    }
-                }
-            }
+                        "additionalProperties": False,
+                    },
+                },
+            },
         )
 
         self.register_action(
@@ -109,14 +136,20 @@ class ResearchEnvironment(BaseEnvironment):
                     "parameters": {
                         "type": "object",
                         "properties": {
-                            "keyword": {"type": "string", "description": "Keyword to search for."},
-                            "max_papers": {"type": "integer", "description": "Maximum number of papers to fetch."},
+                            "keyword": {
+                                "type": "string",
+                                "description": "Keyword to search for.",
+                            },
+                            "max_papers": {
+                                "type": "integer",
+                                "description": "Maximum number of papers to fetch.",
+                            },
                         },
                         "required": ["keyword", "max_papers"],
-                        "additionalProperties": False
-                    }
-                }
-            }
+                        "additionalProperties": False,
+                    },
+                },
+            },
         )
 
         self.register_action(
@@ -130,13 +163,16 @@ class ResearchEnvironment(BaseEnvironment):
                     "parameters": {
                         "type": "object",
                         "properties": {
-                            "arxiv_id": {"type": "string", "description": "arXiv ID of the paper."},
+                            "arxiv_id": {
+                                "type": "string",
+                                "description": "arXiv ID of the paper.",
+                            },
                         },
                         "required": ["arxiv_id"],
-                        "additionalProperties": False
-                    }
-                }
-            }
+                        "additionalProperties": False,
+                    },
+                },
+            },
         )
 
         self.register_action(
@@ -150,13 +186,16 @@ class ResearchEnvironment(BaseEnvironment):
                     "parameters": {
                         "type": "object",
                         "properties": {
-                            "title": {"type": "string", "description": "Title of the paper."},
+                            "title": {
+                                "type": "string",
+                                "description": "Title of the paper.",
+                            },
                         },
                         "required": ["title"],
-                        "additionalProperties": False
-                    }
-                }
-            }
+                        "additionalProperties": False,
+                    },
+                },
+            },
         )
 
         self.register_action(
@@ -172,14 +211,14 @@ class ResearchEnvironment(BaseEnvironment):
                         "properties": {
                             "url": {
                                 "type": "string",
-                                "description": "The URL of the webpage to fetch. Must be a valid HTTP/HTTPS URL."
+                                "description": "The URL of the webpage to fetch. Must be a valid HTTP/HTTPS URL.",
                             }
                         },
                         "required": ["url"],
-                        "additionalProperties": False
-                    }
-                }
-            }
+                        "additionalProperties": False,
+                    },
+                },
+            },
         )
 
     def _get_related_papers_handler(
@@ -202,12 +241,19 @@ class ResearchEnvironment(BaseEnvironment):
             Dict[str, Any]: The result of the action, including related paper details.
         """
         try:
-            papers = get_related_papers(num_results=num_results, query=query, domain=domain, author=author)
-            return {"success": True, "papers": [paper.model_dump(exclude_none=True) for paper in papers]}
+            papers = get_related_papers(
+                num_results=num_results, query=query, domain=domain, author=author
+            )
+            return {
+                "success": True,
+                "papers": [paper.model_dump(exclude_none=True) for paper in papers],
+            }
         except ValueError as e:
             return {"success": False, "error-msg": str(e)}
 
-    def _get_recent_papers_handler(self, domain: Optional[str], max_results: int) -> Dict[str, Any]:
+    def _get_recent_papers_handler(
+        self, domain: Optional[str], max_results: int
+    ) -> Dict[str, Any]:
         """
         Action handler to get recent papers.
 
@@ -220,7 +266,10 @@ class ResearchEnvironment(BaseEnvironment):
         """
         try:
             papers = get_recent_papers(domain=domain, max_results=max_results)
-            return {"success": True, "papers": [paper.model_dump(exclude_none=True) for paper in papers]}
+            return {
+                "success": True,
+                "papers": [paper.model_dump(exclude_none=True) for paper in papers],
+            }
         except ValueError as e:
             return {"success": False, "error-msg": str(e)}
 
@@ -244,7 +293,11 @@ class ResearchEnvironment(BaseEnvironment):
             Dict[str, Any]: The result of the action, including publication and co-author details.
         """
         try:
-            paper_abstracts, paper_titles, co_authors = collect_publications_and_coauthors(
+            (
+                paper_abstracts,
+                paper_titles,
+                co_authors,
+            ) = collect_publications_and_coauthors(
                 author,
                 known_paper_titles=known_paper_titles,
                 paper_max_num=paper_max_num,
@@ -259,7 +312,9 @@ class ResearchEnvironment(BaseEnvironment):
         except ValueError as e:
             return {"success": False, "error-msg": str(e)}
 
-    def _get_paper_by_keyword_handler(self, keyword: str, max_papers: int) -> Dict[str, Any]:
+    def _get_paper_by_keyword_handler(
+        self, keyword: str, max_papers: int
+    ) -> Dict[str, Any]:
         """
         Action handler to get papers by keyword.
 
@@ -271,8 +326,13 @@ class ResearchEnvironment(BaseEnvironment):
             Dict[str, Any]: The result of the action, including paper details.
         """
         try:
-            papers = get_paper_by_keyword(keyword=keyword, existing_arxiv_ids=set(), max_papers=max_papers)
-            return {"success": True, "papers": [paper.model_dump(exclude_none=True) for paper in papers]}
+            papers = get_paper_by_keyword(
+                keyword=keyword, existing_arxiv_ids=set(), max_papers=max_papers
+            )
+            return {
+                "success": True,
+                "papers": [paper.model_dump(exclude_none=True) for paper in papers],
+            }
         except ValueError as e:
             return {"success": False, "error-msg": str(e)}
 
@@ -327,24 +387,20 @@ class ResearchEnvironment(BaseEnvironment):
         try:
             # Set up a browser-like User-Agent
             headers = {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36 Edg/114.0.0.0'
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36 Edg/114.0.0.0"
             }
 
             # Rate limiting to avoid excessive requests
             while time.time() - getattr(self, "last_visited_timestamp", 0) < 1:
                 time.sleep(0.5)
 
-            response = requests.get(url, headers=headers, timeout=5.0)  # 5 second timeout
+            response = requests.get(
+                url, headers=headers, timeout=5.0
+            )  # 5 second timeout
             response.raise_for_status()  # Raise an error for bad responses
             content = response.text
             self.last_visited_timestamp = time.time()
 
-            return {
-                "success": True,
-                "content": content
-            }
+            return {"success": True, "content": content}
         except requests.RequestException as e:
-            return {
-                "success": False,
-                "error-msg": str(e)
-            }
+            return {"success": False, "error-msg": str(e)}

@@ -8,21 +8,28 @@ import colorlog
 sys.path.append(os.getcwd())
 
 
-def init_logger(name:str, level=logging.INFO, dump = False, silent = False):
+def init_logger(name: str, level=logging.INFO, dump=False, silent=False):
     if silent:
-        class empty_logger():
+
+        class empty_logger:
             def __init__(self):
                 pass
+
             def info(self, *args, **kwargs):
                 pass
+
             def debug(self, *args, **kwargs):
                 pass
+
             def warning(self, *args, **kwargs):
                 pass
+
             def error(self, *args, **kwargs):
                 pass
+
             def critical(self, *args, **kwargs):
                 pass
+
         return empty_logger()
     # 创建一个logger
     logger = logging.getLogger(name)
@@ -30,16 +37,18 @@ def init_logger(name:str, level=logging.INFO, dump = False, silent = False):
     logger.setLevel(level)  # 设置日志级别
 
     # 定义handler的输出格式
-    log_formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    log_formatter = logging.Formatter(
+        "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    )
     color_formatter = colorlog.ColoredFormatter(
-        '%(log_color)s%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+        "%(log_color)s%(asctime)s - %(name)s - %(levelname)s - %(message)s",
         log_colors={
-            'DEBUG': 'green',
-            'INFO': 'cyan',
-            'WARNING': 'yellow',
-            'ERROR': 'red',
-            'CRITICAL': 'red,bg_white',
-        }
+            "DEBUG": "green",
+            "INFO": "cyan",
+            "WARNING": "yellow",
+            "ERROR": "red",
+            "CRITICAL": "red,bg_white",
+        },
     )
 
     # 创建一个handler，用于输出到控制台
@@ -61,10 +70,11 @@ def init_logger(name:str, level=logging.INFO, dump = False, silent = False):
     return logger
 
 
-def building_material_load(path,bot,dig_needed=False):
+def building_material_load(path, bot, dig_needed=False):
     # 返回需要挖掘的方块数量
     import json
-    with open(path, 'r') as f:
+
+    with open(path, "r") as f:
         map = json.load(f)
     material_pair = {}
     material_pair["dirt"] = 128
@@ -80,34 +90,42 @@ def building_material_load(path,bot,dig_needed=False):
             material_pair[block["name"]] = 1
 
     slot = 0
-    #[DEBUG] print(material_pair)
+    # [DEBUG] print(material_pair)
     unStackable_items = ["bed"]
-    for k,v in material_pair.items():
+    for k, v in material_pair.items():
         name = k
         amount = v
         while amount > 0:
             # print(k,v)
-            time.sleep(.1)
+            time.sleep(0.1)
             hit = False
             if "potted" in name:
-                name = name.replace("potted_","")
-                bot.chat(f'/item replace block -4 -60 0 container.{slot} with minecraft:{name} {64}')
-                #[DEBUG] 
+                name = name.replace("potted_", "")
+                bot.chat(
+                    f"/item replace block -4 -60 0 container.{slot} with minecraft:{name} {64}"
+                )
+                # [DEBUG]
                 # print(f'/item replace block -4 -60 0 container.{slot} with minecraft:{name} {64}')
                 slot += 1
                 name = "flower_pot"
-                bot.chat(f'/item replace block -4 -60 0 container.{slot} with minecraft:{name} {64}')
-                #[DEBUG] print(f'/item replace block -4 -60 0 container.{slot} with minecraft:{name} {64}')
+                bot.chat(
+                    f"/item replace block -4 -60 0 container.{slot} with minecraft:{name} {64}"
+                )
+                # [DEBUG] print(f'/item replace block -4 -60 0 container.{slot} with minecraft:{name} {64}')
                 amount -= 64
             elif "_wall_" in name:
-                name = name.replace("_wall_","_")
+                name = name.replace("_wall_", "_")
                 if "banner" in name:
-                    bot.chat(f'/item replace block -4 -60 0 container.{slot} with minecraft:{name} {16}')
-                    #[DEBUG] print(f'/item replace block -4 -60 0 container.{slot} with minecraft:{name} {16}')
+                    bot.chat(
+                        f"/item replace block -4 -60 0 container.{slot} with minecraft:{name} {16}"
+                    )
+                    # [DEBUG] print(f'/item replace block -4 -60 0 container.{slot} with minecraft:{name} {16}')
                     amount -= 16
                 else:
-                    bot.chat(f'/item replace block -4 -60 0 container.{slot} with minecraft:{name} {64}')
-                    #[DEBUG] print(f'/item replace block -4 -60 0 container.{slot} with minecraft:{name} {64}')
+                    bot.chat(
+                        f"/item replace block -4 -60 0 container.{slot} with minecraft:{name} {64}"
+                    )
+                    # [DEBUG] print(f'/item replace block -4 -60 0 container.{slot} with minecraft:{name} {64}')
                     amount -= 64
             else:
                 for tag in unStackable_items:
@@ -115,96 +133,149 @@ def building_material_load(path,bot,dig_needed=False):
                         hit = True
                         break
                 if hit:
-                    bot.chat(f'/item replace block -4 -60 0 container.{slot} with minecraft:{name} {1}')
-                    #[DEBUG] print(f'/item replace block -4 -60 0 container.{slot} with minecraft:{name} {1}')
+                    bot.chat(
+                        f"/item replace block -4 -60 0 container.{slot} with minecraft:{name} {1}"
+                    )
+                    # [DEBUG] print(f'/item replace block -4 -60 0 container.{slot} with minecraft:{name} {1}')
                     amount -= 1
                 elif "banner" in name:
-                    bot.chat(f'/item replace block -4 -60 0 container.{slot} with minecraft:{name} {16}')
-                    #[DEBUG] print(f'/item replace block -4 -60 0 container.{slot} with minecraft:{name} {16}')
+                    bot.chat(
+                        f"/item replace block -4 -60 0 container.{slot} with minecraft:{name} {16}"
+                    )
+                    # [DEBUG] print(f'/item replace block -4 -60 0 container.{slot} with minecraft:{name} {16}')
                     amount -= 16
                 else:
-                    bot.chat(f'/item replace block -4 -60 0 container.{slot} with minecraft:{name} {64}')
-                    #[DEBUG] 
+                    bot.chat(
+                        f"/item replace block -4 -60 0 container.{slot} with minecraft:{name} {64}"
+                    )
+                    # [DEBUG]
                     # print(f'/item replace block -4 -60 0 container.{slot} with minecraft:{name} {64}')
                     amount -= 64
             slot += 1
             if slot >= 27:
-                bot.chat('chest is full')
-                
+                bot.chat("chest is full")
+
     # bot.chat(f'building material loaded to chest at -4 -60 0')
 
-def material_factory_load(path,bot,envs_info,mcData,center_pos=[0,-60,0],rate = 0.5):
+
+def material_factory_load(
+    path, bot, envs_info, mcData, center_pos=[0, -60, 0], rate=0.5
+):
     import json
-    with open(path, 'r') as f:
+
+    with open(path, "r") as f:
         map = json.load(f)
-    
+
     material_pairs = []
     for block in map["blocks"]:
         if "log" not in block["name"] and "stone" not in block["name"]:
             continue
         material_pairs.append(block)
-    
+
     # 计算一个金子塔形状的H
     h_ = 0
     volume = 0
-    for i in range(1,100,2):
+    for i in range(1, 100, 2):
         height = i
         width = int(rate * i)
-        for j in range(-width//2,width//2):
-            for k in range(-height//2,height//2):
+        for j in range(-width // 2, width // 2):
+            for k in range(-height // 2, height // 2):
                 volume += 1
         h_ += 1
         if volume >= len(material_pairs):
             break
     size = h_ * 2
-    
+
     # place the material
     idx = 0
-    for i in range(1,100,2):
+    for i in range(1, 100, 2):
         h_ -= 1
         height = i
         width = int(rate * i)
-        for j in range(-width//2,width//2):
-            for k in range(-height//2,height//2):
+        for j in range(-width // 2, width // 2):
+            for k in range(-height // 2, height // 2):
                 if idx >= len(material_pairs):
-                    pos = (center_pos[0]+j,center_pos[1]+h_,center_pos[2]+k)
-                    bot.chat(f'/setblock {pos[0]} {pos[1]} {pos[2]} {material_pairs[-1]["name"]}')
+                    pos = (center_pos[0] + j, center_pos[1] + h_, center_pos[2] + k)
+                    bot.chat(
+                        f'/setblock {pos[0]} {pos[1]} {pos[2]} {material_pairs[-1]["name"]}'
+                    )
                 else:
-                    pos = (center_pos[0]+j,center_pos[1]+h_,center_pos[2]+k)
-                    bot.chat(f'/setblock {pos[0]} {pos[1]} {pos[2]} {material_pairs[idx]["name"]}')
+                    pos = (center_pos[0] + j, center_pos[1] + h_, center_pos[2] + k)
+                    bot.chat(
+                        f'/setblock {pos[0]} {pos[1]} {pos[2]} {material_pairs[idx]["name"]}'
+                    )
                 idx += 1
         if idx >= len(material_pairs):
             break
     # set area dirt ground
-    bot.chat(f'/fill {center_pos[0]-size//2} {center_pos[1]-1} {center_pos[2]-size//2} {center_pos[0]+size//2} {center_pos[1]-1} {center_pos[2]+size//2} podzol')
+    bot.chat(
+        f"/fill {center_pos[0]-size//2} {center_pos[1]-1} {center_pos[2]-size//2} {center_pos[0]+size//2} {center_pos[1]-1} {center_pos[2]+size//2} podzol"
+    )
 
     # set fence and chest
-    bot.chat(f'/fill {center_pos[0]-size//2} {center_pos[1]} {center_pos[2]-size//2} {center_pos[0]-size//2} {center_pos[1]+1} {center_pos[2]+size//2} oak_fence')
-    bot.chat(f'/fill {center_pos[0]+size//2} {center_pos[1]} {center_pos[2]-size//2} {center_pos[0]+size//2} {center_pos[1]+1} {center_pos[2]+size//2} oak_fence')
-    bot.chat(f'/fill {center_pos[0]-size//2} {center_pos[1]} {center_pos[2]-size//2} {center_pos[0]+size//2} {center_pos[1]+1} {center_pos[2]-size//2} oak_fence')
-    bot.chat(f'/fill {center_pos[0]-size//2} {center_pos[1]} {center_pos[2]+size//2} {center_pos[0]+size//2} {center_pos[1]+1} {center_pos[2]+size//2} oak_fence')
-    
+    bot.chat(
+        f"/fill {center_pos[0]-size//2} {center_pos[1]} {center_pos[2]-size//2} {center_pos[0]-size//2} {center_pos[1]+1} {center_pos[2]+size//2} oak_fence"
+    )
+    bot.chat(
+        f"/fill {center_pos[0]+size//2} {center_pos[1]} {center_pos[2]-size//2} {center_pos[0]+size//2} {center_pos[1]+1} {center_pos[2]+size//2} oak_fence"
+    )
+    bot.chat(
+        f"/fill {center_pos[0]-size//2} {center_pos[1]} {center_pos[2]-size//2} {center_pos[0]+size//2} {center_pos[1]+1} {center_pos[2]-size//2} oak_fence"
+    )
+    bot.chat(
+        f"/fill {center_pos[0]-size//2} {center_pos[1]} {center_pos[2]+size//2} {center_pos[0]+size//2} {center_pos[1]+1} {center_pos[2]+size//2} oak_fence"
+    )
+
     # set chest
-    bot.chat(f'/setblock {center_pos[0] + size//2 - 1} {center_pos[1]} {center_pos[2] - size//2 + 1} chest')
+    bot.chat(
+        f"/setblock {center_pos[0] + size//2 - 1} {center_pos[1]} {center_pos[2] - size//2 + 1} chest"
+    )
     # set tools and cloth in chest
-    bot.chat(f'/item replace block {center_pos[0] + size//2 - 1} {center_pos[1]} {center_pos[2] - size//2 + 1} container.1 with minecraft:iron_axe 1')
-    bot.chat(f'/item replace block {center_pos[0] + size//2 - 1} {center_pos[1]} {center_pos[2] - size//2 + 1} container.2 with minecraft:iron_shovel 1')
-    bot.chat(f'/item replace block {center_pos[0] + size//2 - 1} {center_pos[1]} {center_pos[2] - size//2 + 1} container.0 with minecraft:iron_pickaxe 1')
-    bot.chat(f'/item replace block {center_pos[0] + size//2 - 1} {center_pos[1]} {center_pos[2] - size//2 + 1} container.3 with minecraft:iron_hoe 1')
-    bot.chat(f'/item replace block {center_pos[0] + size//2 - 1} {center_pos[1]} {center_pos[2] - size//2 + 1} container.4 with minecraft:iron_sword 1')
-    bot.chat(f'/item replace block {center_pos[0] + size//2 - 1} {center_pos[1]} {center_pos[2] - size//2 + 1} container.5 with minecraft:shield 1')
-    bot.chat(f'/item replace block {center_pos[0] + size//2 - 1} {center_pos[1]} {center_pos[2] - size//2 + 1} container.6 with minecraft:leather_helmet 1')
-    bot.chat(f'/item replace block {center_pos[0] + size//2 - 1} {center_pos[1]} {center_pos[2] - size//2 + 1} container.7 with minecraft:leather_chestplate 1')
-    bot.chat(f'/item replace block {center_pos[0] + size//2 - 1} {center_pos[1]} {center_pos[2] - size//2 + 1} container.8 with minecraft:leather_leggings 1')
+    bot.chat(
+        f"/item replace block {center_pos[0] + size//2 - 1} {center_pos[1]} {center_pos[2] - size//2 + 1} container.1 with minecraft:iron_axe 1"
+    )
+    bot.chat(
+        f"/item replace block {center_pos[0] + size//2 - 1} {center_pos[1]} {center_pos[2] - size//2 + 1} container.2 with minecraft:iron_shovel 1"
+    )
+    bot.chat(
+        f"/item replace block {center_pos[0] + size//2 - 1} {center_pos[1]} {center_pos[2] - size//2 + 1} container.0 with minecraft:iron_pickaxe 1"
+    )
+    bot.chat(
+        f"/item replace block {center_pos[0] + size//2 - 1} {center_pos[1]} {center_pos[2] - size//2 + 1} container.3 with minecraft:iron_hoe 1"
+    )
+    bot.chat(
+        f"/item replace block {center_pos[0] + size//2 - 1} {center_pos[1]} {center_pos[2] - size//2 + 1} container.4 with minecraft:iron_sword 1"
+    )
+    bot.chat(
+        f"/item replace block {center_pos[0] + size//2 - 1} {center_pos[1]} {center_pos[2] - size//2 + 1} container.5 with minecraft:shield 1"
+    )
+    bot.chat(
+        f"/item replace block {center_pos[0] + size//2 - 1} {center_pos[1]} {center_pos[2] - size//2 + 1} container.6 with minecraft:leather_helmet 1"
+    )
+    bot.chat(
+        f"/item replace block {center_pos[0] + size//2 - 1} {center_pos[1]} {center_pos[2] - size//2 + 1} container.7 with minecraft:leather_chestplate 1"
+    )
+    bot.chat(
+        f"/item replace block {center_pos[0] + size//2 - 1} {center_pos[1]} {center_pos[2] - size//2 + 1} container.8 with minecraft:leather_leggings 1"
+    )
 
     # set door
-    bot.chat(f'/setblock {center_pos[0]} {center_pos[1]} {center_pos[2] + size//2} minecraft:air')
-    bot.chat(f'/setblock {center_pos[0]} {center_pos[1]+1} {center_pos[2] + size//2} minecraft:air')
+    bot.chat(
+        f"/setblock {center_pos[0]} {center_pos[1]} {center_pos[2] + size//2} minecraft:air"
+    )
+    bot.chat(
+        f"/setblock {center_pos[0]} {center_pos[1]+1} {center_pos[2] + size//2} minecraft:air"
+    )
 
     # set sign
-    bot.chat(f'/setblock {center_pos[0]} {center_pos[1]} {center_pos[2] + size//2 + 1} minecraft:oak_wall_sign[facing=south]')
-    bot.chat(f"/data merge block {center_pos[0]} {center_pos[1]} {center_pos[2] + size//2 + 1} {{Text1:'{{\"text\":\"Material Factory\"}}',Text2:'{{\"text\":\"Get materials from here\"}}',Text3:'{{\"text\":\"\"}}',Text4:'{{\"text\":\"\"}}'}}")
+    bot.chat(
+        f"/setblock {center_pos[0]} {center_pos[1]} {center_pos[2] + size//2 + 1} minecraft:oak_wall_sign[facing=south]"
+    )
+    bot.chat(
+        f'/data merge block {center_pos[0]} {center_pos[1]} {center_pos[2] + size//2 + 1} {{Text1:\'{{"text":"Material Factory"}}\',Text2:\'{{"text":"Get materials from here"}}\',Text3:\'{{"text":""}}\',Text4:\'{{"text":""}}\'}}'
+    )
     return material_pairs
+
 
 # def split_structure(building):
 #     print("Loading model...")
@@ -327,7 +398,7 @@ def material_factory_load(path,bot,envs_info,mcData,center_pos=[0,-60,0],rate = 
 #         # 如果 y 坐标相同，则根据到中心点的距离排序
 #         min((item["position"][0] - center_x) ** 2 + (item["position"][1] - center_y) ** 2 + (item["position"][2] - center_z) ** 2 for item in cluster)
 #     ))
-    
+
 #     # 构建排序后的聚簇数据
 #     save_data = []
 #     for cluster in clusters:

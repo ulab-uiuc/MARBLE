@@ -20,7 +20,7 @@ def detect_anomalies(data, significance_level=0.2):
     expected_cdf = np.arange(1, n + 1) / n
 
     # Calculate the empirical CDF
-    empirical_cdf = np.searchsorted(sorted_data, sorted_data, side='right') / n
+    empirical_cdf = np.searchsorted(sorted_data, sorted_data, side="right") / n
 
     # Calculate the maximum absolute difference between the expected and empirical CDFs
     ks_statistic = np.max(np.abs(empirical_cdf - expected_cdf))
@@ -31,22 +31,23 @@ def detect_anomalies(data, significance_level=0.2):
     # Compare the KS statistic with the critical value
     anomalies = np.where(ks_statistic > critical_value, True, False)
 
-    explanation = ''
+    explanation = ""
     if np.any(anomalies):
         explanation = (
-            'Anomalies detected. We use the Kolmogorov-Smirnov (KS) test to compare '
-            'the empirical CDF of the data with the expected CDF of a normal distribution. '
-            'The KS statistic is the maximum absolute difference between the two CDFs. '
-            'If the KS statistic is greater than the critical value, we consider the data point an anomaly. '
-            'In this case, the KS statistic is {:.2f} and the critical value is {:.2f}.'
+            "Anomalies detected. We use the Kolmogorov-Smirnov (KS) test to compare "
+            "the empirical CDF of the data with the expected CDF of a normal distribution. "
+            "The KS statistic is the maximum absolute difference between the two CDFs. "
+            "If the KS statistic is greater than the critical value, we consider the data point an anomaly. "
+            "In this case, the KS statistic is {:.2f} and the critical value is {:.2f}."
         ).format(ks_statistic, critical_value)
 
     return {
-        'ks_statistic': ks_statistic,
-        'critical_value': critical_value,
-        'anomalies': anomalies,
-        'explanation': explanation
+        "ks_statistic": ks_statistic,
+        "critical_value": critical_value,
+        "anomalies": anomalies,
+        "explanation": explanation,
     }
+
 
 def describe_data_features(data):
     """Describe the features of a given data in natural language."""
@@ -63,7 +64,9 @@ def describe_data_features(data):
     # deviation
     deviation_value = round(np.std(np.array(data)), 2)
     # evenly sampled 10 values (reserve two decimal places)
-    evenly_sampled_values = [round(data[i], 2) for i in range(0, len(data), len(data) // 10)]
+    evenly_sampled_values = [
+        round(data[i], 2) for i in range(0, len(data), len(data) // 10)
+    ]
 
     # describe the above five values in a string
     return f"the max value is {max_value}, the min value is {min_value}, the mean value is {mean_value}, the deviation value is {deviation_value}, and the evenly_sampled_values are {evenly_sampled_values}."

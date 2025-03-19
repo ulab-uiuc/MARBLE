@@ -2,19 +2,21 @@ import psycopg2
 from psycopg2.extras import RealDictCursor
 
 
-def obtain_slow_queries(server_address="localhost",
-                        username="test",
-                        password="Test123_456",
-                        database="sysbench",
-                        port="5432",
-                        top_k=10):
+def obtain_slow_queries(
+    server_address="localhost",
+    username="test",
+    password="Test123_456",
+    database="sysbench",
+    port="5432",
+    top_k=10,
+):
     try:
         connection = psycopg2.connect(
             user=username,
             password=password,
             database=database,
             host=server_address,
-            port=port
+            port=port,
         )
 
         cursor = connection.cursor(cursor_factory=RealDictCursor)
@@ -35,7 +37,9 @@ def obtain_slow_queries(server_address="localhost",
 
         for idx, record in enumerate(slow_queries, start=1):
             slow_queries_str += f"{idx}. Query: {record['query']}\n"
-            slow_queries_str += f"   Total Execution Time: {record['total_exec_time']}\n"
+            slow_queries_str += (
+                f"   Total Execution Time: {record['total_exec_time']}\n"
+            )
             slow_queries_str += "-" * 10
             slow_queries_str += "\n"
 
@@ -46,6 +50,7 @@ def obtain_slow_queries(server_address="localhost",
 
     except Exception as e:
         print(f"Error: {e}")
+
 
 if __name__ == "__main__":
     obtain_slow_queries()

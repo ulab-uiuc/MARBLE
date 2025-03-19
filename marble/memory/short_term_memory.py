@@ -35,17 +35,15 @@ class ShortTermMemory(BaseMemory):
                 oldest_event = self.storage.pop(0)
                 sec_oldest_event = self.storage.pop(0)
                 summary = self.summarize([oldest_event, sec_oldest_event])
-                self.storage.insert(0, {
-                    "type": "old_memory_summary",
-                    "result": summary
-                })
+                self.storage.insert(
+                    0, {"type": "old_memory_summary", "result": summary}
+                )
             elif len(self.storage) == 1:
                 oldest_event = self.storage.pop(0)
                 summary = self.summarize([oldest_event])
-                self.storage.insert(0, {
-                    "type": "old_memory_summary",
-                    "result": summary
-                })
+                self.storage.insert(
+                    0, {"type": "old_memory_summary", "result": summary}
+                )
         self.storage.append(information)
 
     def summarize(self, memory: List[Dict[str, Union[str, Message]]]) -> Message:
@@ -61,9 +59,7 @@ class ShortTermMemory(BaseMemory):
         if not memory:
             memory = self.storage
 
-        prompt = (
-            "You are a helpful assistant that can concisely summarize the following json format content which is listed in temporally sequential order:\n"
-        )
+        prompt = "You are a helpful assistant that can concisely summarize the following json format content which is listed in temporally sequential order:\n"
         for idx, information in enumerate(memory):
             prompt += f"{idx}. {str(information)}\n"
 
@@ -74,7 +70,7 @@ class ShortTermMemory(BaseMemory):
             max_token_num=512,
             temperature=0.0,
             top_p=None,
-            stream=None
+            stream=None,
         )[0]
         return summary
 

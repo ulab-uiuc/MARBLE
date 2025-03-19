@@ -20,7 +20,7 @@ full_metrics_full_names = {
         "pg_settings_random_page_cost": "pg_settings_random_page_cost",
         "pg_settings_max_worker_processes": "pg_settings_max_worker_processes",
         "pg_settings_max_parallel_workers": "pg_settings_max_parallel_workers",
-        "pg_active_connection_count": "pg_stat_activity_count{state='active'} != 0"
+        "pg_active_connection_count": "pg_stat_activity_count{state='active'} != 0",
     },
     "memory": {
         "memory_usage": "node_memory_MemTotal_bytes - (node_memory_Cached_bytes + node_memory_Buffers_bytes + node_memory_MemFree_bytes)",
@@ -42,7 +42,7 @@ full_metrics_full_names = {
         "pg_stat_bgwriter_buffers_checkpoint_rate": "irate(pg_stat_bgwriter_buffers_checkpoint[5m])",
         "pg_stat_bgwriter_buffers_clean_rate": "irate(pg_stat_bgwriter_buffers_clean[5m])",
         "pg_stat_database_conflicts_rate": "irate(pg_stat_database_conflicts[5m])",
-        "pg_stat_database_deadlocks_rate": "irate(pg_stat_database_deadlocks[5m])"
+        "pg_stat_database_deadlocks_rate": "irate(pg_stat_database_deadlocks[5m])",
     },
     "network": {
         "node_sockstat_tcp_time_wait": "node_sockstat_TCP_tw",
@@ -50,7 +50,7 @@ full_metrics_full_names = {
         "node_sockstat_tcp_alloc": "node_sockstat_TCP_alloc",
         "node_sockstat_tcp_inuse": "node_sockstat_TCP_inuse",
         "node_netstat_tcp_passive_opens_rate": "irate(node_netstat_Tcp_PassiveOpens[1m])",
-        "pg_stat_activity_active_connections": "pg_stat_activity_count{state='active'} != 0"
+        "pg_stat_activity_active_connections": "pg_stat_activity_count{state='active'} != 0",
     },
     "io": {
         "pg_stat_database_tup_fetched_total": "SUM(pg_stat_database_tup_fetched)",
@@ -77,5 +77,5 @@ full_metrics_full_names = {
         "node_disk_read_time_seconds_rate": "irate(node_disk_read_time_seconds_total[1m])",
         "node_disk_write_time_seconds_rate": "irate(node_disk_write_time_seconds_total[1m])",
         # "node_disk_io_time_seconds_rate": "irate(node_disk_io_time_seconds_total[1m])"
-    }
+    },
 }

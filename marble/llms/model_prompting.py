@@ -1,12 +1,10 @@
 import litellm
-
-import os
-from openai import OpenAI
 from beartype import beartype
 from beartype.typing import Any, Dict, List, Optional
 from litellm.types.utils import Message
 
 from marble.llms.error_handler import api_calling_error_exponential_backoff
+
 
 @beartype
 @api_calling_error_exponential_backoff(retries=5, base_wait_time=1)

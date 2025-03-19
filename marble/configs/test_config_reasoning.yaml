@@ -1,4 +1,4 @@
-llm: "gpt-3.5-turbo"  
+llm: "gpt-3.5-turbo"
 
 metrics:
   evaluate_llm:

@@ -1,9 +1,10 @@
-import os
 import json
+import os
 import time
-from tqdm import tqdm
+
 import litellm
 from litellm.utils import trim_messages
+from tqdm import tqdm
 
 # Initialize error counter
 error_count = 0
@@ -25,7 +26,7 @@ for folder in folder_list:
 
         # Load JSON data
         try:
-            with open(file_path, 'r', encoding='utf-8') as file:
+            with open(file_path, "r", encoding="utf-8") as file:
                 data = json.load(file)
         except json.JSONDecodeError:
             print(f"Error decoding JSON in file: {file_name}")
@@ -75,10 +76,12 @@ for folder in folder_list:
         # Call the LLM for completion
         try:
             completion = litellm.completion(
-                model='gpt-4o-mini',
-                messages=trim_messages(messages, model='gpt-4o-mini', max_tokens=int(16384 * 0.6)),
+                model="gpt-4o-mini",
+                messages=trim_messages(
+                    messages, model="gpt-4o-mini", max_tokens=int(16384 * 0.6)
+                ),
                 max_tokens=512,
-                temperature=0.0
+                temperature=0.0,
             )
 
             response = completion.choices[0].message.content.strip()
@@ -102,7 +105,9 @@ for folder in folder_list:
     # Calculate averages
     if collaboration_scores:
         avg_collaboration_score = sum(collaboration_scores) / len(collaboration_scores)
-        print(f"Average collaboration score for {folder}: {avg_collaboration_score:.6f}")
+        print(
+            f"Average collaboration score for {folder}: {avg_collaboration_score:.6f}"
+        )
     else:
         print(f"No collaboration scores for {folder}.")
 

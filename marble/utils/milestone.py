@@ -17,24 +17,24 @@ def generate_task_milestones(task_description, client):
 
     # Load the prompt data from YAML file
     try:
-        with open("marble/utils/milestone_prompt.yaml", 'r') as file:
+        with open("marble/utils/milestone_prompt.yaml", "r") as file:
             prompt_data = yaml.safe_load(file)
     except FileNotFoundError:
         print("Error: milestone_prompt.yaml file not found.")
         return None
 
     # Extract system and user prompts and tool configuration
-    system_prompt = prompt_data['prompts']['task_breakdown']['sys_prompt']
-    user_template = prompt_data['prompts']['task_breakdown']['user']
-    tool = prompt_data['tools'][0]
+    system_prompt = prompt_data["prompts"]["task_breakdown"]["sys_prompt"]
+    user_template = prompt_data["prompts"]["task_breakdown"]["user"]
+    tool = prompt_data["tools"][0]
 
     # Format the user prompt with the task description
     user_prompt = user_template.replace("<<task_description>>", task_description)
 
     # Prepare the messages for the GPT tool call
     messages = [
-        {'role': 'system', 'content': system_prompt},
-        {'role': 'user', 'content': user_prompt}
+        {"role": "system", "content": system_prompt},
+        {"role": "user", "content": user_prompt},
     ]
 
     # Define the tool call function with retry mechanism

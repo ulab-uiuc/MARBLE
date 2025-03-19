@@ -3,9 +3,10 @@ Evaluator module for tracking metrics and evaluating agent performance.
 """
 
 import json
-import re
 import os
+import re
 from typing import Any, Dict, List
+
 from ruamel.yaml import YAML
 
 from marble.agent import BaseAgent
@@ -135,7 +136,7 @@ class Evaluator:
             agent_results (str): The results from the agents.
         """
         # Get the KPI prompt
-        MAX_LENGTH = 7200 
+        MAX_LENGTH = 7200
 
         if len(agent_results) > MAX_LENGTH:
             agent_results = agent_results[:MAX_LENGTH] + "..."
@@ -296,7 +297,7 @@ class Evaluator:
             pred_num (int): The number of predicted root causes.
             root_causes (List[str]): The root cause labels.
         """
-        # Evaluation will take place separately as it might not follow the 
+        # Evaluation will take place separately as it might not follow the
         # requested format
         self.metrics["task_evaluation"] = {
             'root_cause': root_causes,
@@ -316,11 +317,11 @@ class Evaluator:
         try:
             # 清理响应内容
             content = assistant_answer.strip()
-            
+
             # 尝试提取JSON部分
             json_start = content.find('{')
             json_end = content.rfind('}') + 1
-            
+
             if json_start >= 0 and json_end > json_start:
                 json_str = content[json_start:json_end]
                 ratings = json.loads(json_str)
@@ -347,7 +348,7 @@ class Evaluator:
         try:
             # Clean the response content
             content = assistant_answer.strip()
-            
+
             # Remove any markdown code block markers if present
             if content.startswith("```json"):
                 content = content[7:]
@@ -356,11 +357,11 @@ class Evaluator:
             if content.endswith("```"):
                 content = content[:-3]
             content = content.strip()
-            
+
             # Find the JSON object
             json_start = content.find('{')
             json_end = content.rfind('}') + 1
-            
+
             if json_start >= 0 and json_end > json_start:
                 json_str = content[json_start:json_end]
                 try:
@@ -378,18 +379,18 @@ class Evaluator:
                     self.logger.warning("Invalid score format in JSON")
                 except KeyError:
                     self.logger.warning("Missing 'rating' key in JSON response")
-            
+
             # If JSON parsing fails, try to find a single digit between 1-5
             numbers = re.findall(r'\b[1-5]\b', content)
             if numbers:
                 score = int(numbers[0])
                 self.logger.debug(f"Found score using regex: {score}")
                 return score
-            
+
             # If all parsing attempts fail, return default score
             self.logger.warning("No valid score found, using default score (3)")
             return 3
-            
+
         except Exception as e:
             self.logger.error(f"Unexpected error parsing score: {e}")
             return 3
@@ -450,7 +451,7 @@ class Evaluator:
         except json.JSONDecodeError:
             self.logger.error("Failed to parse JSON from assistant's answer.")
             return []
-            
+
         except Exception as e:
             self.logger.error(f"Error processing milestones: {e}")
             return []
@@ -468,15 +469,15 @@ class Evaluator:
         try:
             # 清理响应内容
             content = assistant_answer.strip()
-            
+
             # 尝试提取JSON部分
             json_start = content.find('{')
             json_end = content.rfind('}') + 1
-            
+
             if json_start >= 0 and json_end > json_start:
                 json_str = content[json_start:json_end]
                 scores = json.loads(json_str)
-                
+
                 # 验证所有必需的键都存在且值在有效范围内
                 required_keys = {
                     "instruction_following",
@@ -484,7 +485,7 @@ class Evaluator:
                     "consistency",
                     "quality"
                 }
-                
+
                 if all(key in scores for key in required_keys):
                     validated_scores = {}
                     for key in required_keys:
@@ -497,7 +498,7 @@ class Evaluator:
                         except (ValueError, TypeError):
                             validated_scores[key] = 1  # 默认最低分
                     return validated_scores
-                    
+
             self.logger.error("Invalid code quality scores format in response")
             return {
                 "instruction_following": 1,
@@ -505,7 +506,7 @@ class Evaluator:
                 "consistency": 1,
                 "quality": 1
             }
-            
+
         except Exception as e:
             self.logger.error(f"Error parsing code quality scores: {e}")
             return {
@@ -530,7 +531,7 @@ class Evaluator:
                 config = yaml.load(f)
 
             full_task_description = config['task']['content']
-            
+
             requirements_start = "1. Implementation requirements:\n"
             requirements_end = "\n\n2. Project structure:"
             requirements = full_task_description[
@@ -556,13 +557,13 @@ class Evaluator:
                     {solution}
 
                     [System]
-                    This evaluation requires strict scoring and deduction. The scores should not be generous, and deductions should be applied for every issue found. 
+                    This evaluation requires strict scoring and deduction. The scores should not be generous, and deductions should be applied for every issue found.
 
                     ### **Evaluation Criteria**
-                    1. **Instruction-Following:** Does the code fulfill all the requirements of the task? Deduct points for unmet or partially met requirement from the task instructions. 
-                    2. **Executability:** Is the code syntactically correct and executable? Deduct points for any syntax errors, missing imports, or runtime errors. 
-                    3. **Consistency:** Is the code consistent in variable naming, formatting, and logic? Deduct points for inconsistent variable naming, formatting issues, or contradictory logic. 
-                    4. **Quality:** Is the code well-documented, clear, and modular? Deduct points for poor documentation, unclear logic, or lack of modular design. 
+                    1. **Instruction-Following:** Does the code fulfill all the requirements of the task? Deduct points for unmet or partially met requirement from the task instructions.
+                    2. **Executability:** Is the code syntactically correct and executable? Deduct points for any syntax errors, missing imports, or runtime errors.
+                    3. **Consistency:** Is the code consistent in variable naming, formatting, and logic? Deduct points for inconsistent variable naming, formatting issues, or contradictory logic.
+                    4. **Quality:** Is the code well-documented, clear, and modular? Deduct points for poor documentation, unclear logic, or lack of modular design.
 
                     ### **Scoring**
                     - **1 point:** Below Average - Significant issues that need addressing.
@@ -616,7 +617,7 @@ class Evaluator:
                     "quality": 1
                 }
             self.logger.debug(f"LLM Response: {response.content}")
-            
+
         except Exception as e:
             self.logger.error(f"Error in code quality evaluation: {e}")
             self.metrics["code_quality"] = {
@@ -625,5 +626,3 @@ class Evaluator:
                 "consistency": 1,
                 "quality": 1
             }
-
-

@@ -1,29 +1,26 @@
-import datetime
 import json
 import os
-import random
 import subprocess
 import threading
 import time
-from functools import wraps
 from typing import List
 
 import requests
 
 
 class MinecraftClient:
-    '''
+    """
     Agent is the basic class for the agent in the Minecraft environment.
     Agent supports high-level and low-level functions for the agent to interact with the Minecraft environment.
     It works as a bridge between the Minecraft environment and the AI model.
-    '''
-    headers = {'Content-Type': 'application/json'}
+    """
+
+    headers = {"Content-Type": "application/json"}
     verbose = True
 
     name2port = {}
     agent_process = {}
     url_prefix = {}
-
 
     @staticmethod
     def get_url_prefix() -> dict:
@@ -38,30 +35,74 @@ class MinecraftClient:
         self.name = name
         self.local_port = local_port
         self.basic_tools = [
-            MinecraftClient.scanNearbyEntities, MinecraftClient.navigateTo, MinecraftClient.attackTarget,
-            MinecraftClient.UseItemOnEntity, MinecraftClient.sleep, MinecraftClient.wake,
-            MinecraftClient.MineBlock, MinecraftClient.placeBlock, MinecraftClient.equipItem,
-            MinecraftClient.handoverBlock, MinecraftClient.SmeltingCooking,
-            MinecraftClient.withdrawItem, MinecraftClient.storeItem, MinecraftClient.craftBlock,
-            MinecraftClient.enchantItem, MinecraftClient.trade, MinecraftClient.repairItem, MinecraftClient.eat,
-            MinecraftClient.fetchContainerContents, MinecraftClient.toggleAction
+            MinecraftClient.scanNearbyEntities,
+            MinecraftClient.navigateTo,
+            MinecraftClient.attackTarget,
+            MinecraftClient.UseItemOnEntity,
+            MinecraftClient.sleep,
+            MinecraftClient.wake,
+            MinecraftClient.MineBlock,
+            MinecraftClient.placeBlock,
+            MinecraftClient.equipItem,
+            MinecraftClient.handoverBlock,
+            MinecraftClient.SmeltingCooking,
+            MinecraftClient.withdrawItem,
+            MinecraftClient.storeItem,
+            MinecraftClient.craftBlock,
+            MinecraftClient.enchantItem,
+            MinecraftClient.trade,
+            MinecraftClient.repairItem,
+            MinecraftClient.eat,
+            MinecraftClient.fetchContainerContents,
+            MinecraftClient.toggleAction,
         ]
         self.all_tools = [
-            MinecraftClient.scanNearbyEntities, MinecraftClient.navigateTo, MinecraftClient.attackTarget,
-            MinecraftClient.navigateToBuilding, MinecraftClient.navigateToAnimal, MinecraftClient.navigateToPlayer,
-            MinecraftClient.UseItemOnEntity, MinecraftClient.sleep, MinecraftClient.wake,
-            MinecraftClient.MineBlock, MinecraftClient.placeBlock, MinecraftClient.equipItem,
-            MinecraftClient.tossItem, MinecraftClient.talkTo, MinecraftClient.handoverBlock,
-            MinecraftClient.withdrawItem, MinecraftClient.storeItem, MinecraftClient.craftBlock,
-            MinecraftClient.SmeltingCooking, MinecraftClient.erectDirtLadder, MinecraftClient.dismantleDirtLadder,
-            MinecraftClient.enchantItem, MinecraftClient.trade, MinecraftClient.repairItem, MinecraftClient.eat,
-            MinecraftClient.drink, MinecraftClient.wear, MinecraftClient.layDirtBeam, MinecraftClient.removeDirtBeam,
-            MinecraftClient.openContainer, MinecraftClient.closeContainer,
-            MinecraftClient.fetchContainerContents, MinecraftClient.toggleAction,
-            MinecraftClient.get_entity_info, MinecraftClient.get_environment_info, 
-            MinecraftClient.performMovement, MinecraftClient.lookAt, MinecraftClient.startFishing,
-            MinecraftClient.stopFishing, MinecraftClient.read, MinecraftClient.readPage, MinecraftClient.write,
-            MinecraftClient.mountEntity, MinecraftClient.dismountEntity, MinecraftClient.rideEntity, MinecraftClient.disrideEntity,
+            MinecraftClient.scanNearbyEntities,
+            MinecraftClient.navigateTo,
+            MinecraftClient.attackTarget,
+            MinecraftClient.navigateToBuilding,
+            MinecraftClient.navigateToAnimal,
+            MinecraftClient.navigateToPlayer,
+            MinecraftClient.UseItemOnEntity,
+            MinecraftClient.sleep,
+            MinecraftClient.wake,
+            MinecraftClient.MineBlock,
+            MinecraftClient.placeBlock,
+            MinecraftClient.equipItem,
+            MinecraftClient.tossItem,
+            MinecraftClient.talkTo,
+            MinecraftClient.handoverBlock,
+            MinecraftClient.withdrawItem,
+            MinecraftClient.storeItem,
+            MinecraftClient.craftBlock,
+            MinecraftClient.SmeltingCooking,
+            MinecraftClient.erectDirtLadder,
+            MinecraftClient.dismantleDirtLadder,
+            MinecraftClient.enchantItem,
+            MinecraftClient.trade,
+            MinecraftClient.repairItem,
+            MinecraftClient.eat,
+            MinecraftClient.drink,
+            MinecraftClient.wear,
+            MinecraftClient.layDirtBeam,
+            MinecraftClient.removeDirtBeam,
+            MinecraftClient.openContainer,
+            MinecraftClient.closeContainer,
+            MinecraftClient.fetchContainerContents,
+            MinecraftClient.toggleAction,
+            MinecraftClient.get_entity_info,
+            MinecraftClient.get_environment_info,
+            MinecraftClient.performMovement,
+            MinecraftClient.lookAt,
+            MinecraftClient.startFishing,
+            MinecraftClient.stopFishing,
+            MinecraftClient.read,
+            MinecraftClient.readPage,
+            MinecraftClient.write,
+            MinecraftClient.mountEntity,
+            MinecraftClient.dismountEntity,
+            MinecraftClient.rideEntity,
+            MinecraftClient.disrideEntity,
         ]
 
         if name == "nobody":
@@ -79,7 +120,9 @@ class MinecraftClient:
             "id": structure_idx,
             "center_pos": center_pos,
         }
-        response = requests.post(url, data=json.dumps(data), headers=MinecraftClient.headers)
+        response = requests.post(
+            url, data=json.dumps(data), headers=MinecraftClient.headers
+        )
         return response.json()
 
     def env(self):
@@ -89,7 +132,14 @@ class MinecraftClient:
         return str(response.json())
 
     @staticmethod
-    def launch(host="localhost", port=25565, world="world", verbose=False, ignore_name=[], debug=False):
+    def launch(
+        host="localhost",
+        port=25565,
+        world="world",
+        verbose=False,
+        ignore_name=[],
+        debug=False,
+    ):
         MinecraftClient.port = port
         if verbose:
             print("launch ...")
@@ -97,9 +147,27 @@ class MinecraftClient:
             if key in ignore_name:
                 continue
             MinecraftClient.agent_process[key] = subprocess.Popen(
-                ["python", "environments/minecraft_utils/minecraft_server.py", "-H", host, "-P", str(port), "-LP", str(value), "-U", key, "-W",
-                world, "-D", str(debug)], shell=False)
-            print(f"python environments/minecraft_utils/minecraft_server.py -H \"{host}\" -P {port} -LP {value} -U \"{key}\" -W \"{world}\" -D {debug}")
+                [
+                    "python",
+                    "environments/minecraft_utils/minecraft_server.py",
+                    "-H",
+                    host,
+                    "-P",
+                    str(port),
+                    "-LP",
+                    str(value),
+                    "-U",
+                    key,
+                    "-W",
+                    world,
+                    "-D",
+                    str(debug),
+                ],
+                shell=False,
+            )
+            print(
+                f'python environments/minecraft_utils/minecraft_server.py -H "{host}" -P {port} -LP {value} -U "{key}" -W "{world}" -D {debug}'
+            )
             time.sleep(3)
         if verbose:
             print("launch done.")
@@ -125,9 +193,11 @@ class MinecraftClient:
             "top_y": top_y,
             "top_z": top_z,
         }
-        response = requests.post(url, data=json.dumps(data), headers=MinecraftClient.headers)
+        response = requests.post(
+            url, data=json.dumps(data), headers=MinecraftClient.headers
+        )
         return response.json()
-    
+
     @staticmethod
     def dismantleDirtLadder(player_name: str, top_x: int, top_y: int, top_z: int):
         """Dismantle a Dirt Ladder Structure from ground to top at Specific Position x y z"""
@@ -137,11 +207,15 @@ class MinecraftClient:
             "top_y": top_y,
             "top_z": top_z,
         }
-        response = requests.post(url, data=json.dumps(data), headers=MinecraftClient.headers)
+        response = requests.post(
+            url, data=json.dumps(data), headers=MinecraftClient.headers
+        )
         return response.json()
 
     @staticmethod
-    def layDirtBeam(player_name: str, x_1: int, y_1: int, z_1: int, x_2: int, y_2: int, z_2: int):
+    def layDirtBeam(
+        player_name: str, x_1: int, y_1: int, z_1: int, x_2: int, y_2: int, z_2: int
+    ):
         """Lay a Dirt Beam from Position x1 y1 z1 to Position x2 y2 z2"""
         url = MinecraftClient.get_url_prefix()[player_name] + "/post_lay"
         data = {
@@ -152,11 +226,15 @@ class MinecraftClient:
             "y_2": y_2,
             "z_2": z_2,
         }
-        response = requests.post(url, data=json.dumps(data), headers=MinecraftClient.headers)
+        response = requests.post(
+            url, data=json.dumps(data), headers=MinecraftClient.headers
+        )
         return response.json()
-    
+
     @staticmethod
-    def removeDirtBeam(player_name: str, x_1: int, y_1: int, z_1: int, x_2: int, y_2: int, z_2: int):
+    def removeDirtBeam(
+        player_name: str, x_1: int, y_1: int, z_1: int, x_2: int, y_2: int, z_2: int
+    ):
         """Remove a Dirt Beam from Position x1 y1 z1 to Position x2 y2 z2"""
         url = MinecraftClient.get_url_prefix()[player_name] + "/post_remove"
         data = {
@@ -167,12 +245,15 @@ class MinecraftClient:
             "y_2": y_2,
             "z_2": z_2,
         }
-        response = requests.post(url, data=json.dumps(data), headers=MinecraftClient.headers)
+        response = requests.post(
+            url, data=json.dumps(data), headers=MinecraftClient.headers
+        )
         return response.json()
 
-
     @staticmethod
-    def scanNearbyEntities(player_name: str, item_name: str, radius: int = 10, item_num: int = -1):
+    def scanNearbyEntities(
+        player_name: str, item_name: str, radius: int = 10, item_num: int = -1
+    ):
         """Find minecraft item blocks creatures in a radius, return ('message': msg, 'status': True/False, 'data':[('x':x,'y':y,'z':z),...]) This function can not find items in the chest, container,or player's inventory."""
         url = MinecraftClient.get_url_prefix()[player_name] + "/post_find"
         data = {
@@ -180,20 +261,26 @@ class MinecraftClient:
             "distance": radius,
             "count": item_num,
         }
-        response = requests.post(url, data=json.dumps(data), headers=MinecraftClient.headers)
+        response = requests.post(
+            url, data=json.dumps(data), headers=MinecraftClient.headers
+        )
         return response.json()
 
     @staticmethod
-    def handoverBlock(player_name: str, target_player_name: str, item_name: str, item_count: int):
+    def handoverBlock(
+        player_name: str, target_player_name: str, item_name: str, item_count: int
+    ):
         """Hand Item to a target player you work with, return ('message': msg, 'status': True/False), item num will be automatically checked and player will automatically move to the target player"""
         url = MinecraftClient.get_url_prefix()[player_name] + "/post_hand"
         data = {
             "item_name": item_name.lower().replace(" ", "_"),
-            "from_name": player_name, 
+            "from_name": player_name,
             "target_name": target_player_name,
             "item_count": item_count,
         }
-        response = requests.post(url, data=json.dumps(data), headers=MinecraftClient.headers)
+        response = requests.post(
+            url, data=json.dumps(data), headers=MinecraftClient.headers
+        )
         return response.json()
 
     @staticmethod
@@ -203,7 +290,9 @@ class MinecraftClient:
         data = {
             "name": target_name,
         }
-        response = requests.post(url, data=json.dumps(data), headers=MinecraftClient.headers)
+        response = requests.post(
+            url, data=json.dumps(data), headers=MinecraftClient.headers
+        )
         return response.json()
 
     @staticmethod
@@ -213,7 +302,9 @@ class MinecraftClient:
         data = {
             "name": building_name,
         }
-        response = requests.post(url, data=json.dumps(data), headers=MinecraftClient.headers)
+        response = requests.post(
+            url, data=json.dumps(data), headers=MinecraftClient.headers
+        )
         return response.json()
 
     @staticmethod
@@ -223,7 +314,9 @@ class MinecraftClient:
         data = {
             "name": animal_name,
         }
-        response = requests.post(url, data=json.dumps(data), headers=MinecraftClient.headers)
+        response = requests.post(
+            url, data=json.dumps(data), headers=MinecraftClient.headers
+        )
         return response.json()
 
     @staticmethod
@@ -235,7 +328,9 @@ class MinecraftClient:
             "y": y,
             "z": z,
         }
-        response = requests.post(url, data=json.dumps(data), headers=MinecraftClient.headers)
+        response = requests.post(
+            url, data=json.dumps(data), headers=MinecraftClient.headers
+        )
         return response.json()
 
     @staticmethod
@@ -246,7 +341,9 @@ class MinecraftClient:
             "item_name": item_name.lower().replace(" ", "_"),
             "entity_name": entity_name,
         }
-        response = requests.post(url, data=json.dumps(data), headers=MinecraftClient.headers)
+        response = requests.post(
+            url, data=json.dumps(data), headers=MinecraftClient.headers
+        )
         return response.json()
 
     @staticmethod
@@ -272,11 +369,15 @@ class MinecraftClient:
             "y": y,
             "z": z,
         }
-        response = requests.post(url, data=json.dumps(data), headers=MinecraftClient.headers)
+        response = requests.post(
+            url, data=json.dumps(data), headers=MinecraftClient.headers
+        )
         return response.json()
 
     @staticmethod
-    def placeBlock(player_name: str, item_name: str, x: int, y: int, z: int, facing: str):
+    def placeBlock(
+        player_name: str, item_name: str, x: int, y: int, z: int, facing: str
+    ):
         """Place a Specific Item at Specific Position x y z with Specific facing in one of [W, E, S, N, x, y, z, A] default is 'A'., return ('message': msg, 'status': True/False)"""
         url = MinecraftClient.get_url_prefix()[player_name] + "/post_place"
         data = {
@@ -286,7 +387,9 @@ class MinecraftClient:
             "z": z,
             "facing": facing,
         }
-        response = requests.post(url, data=json.dumps(data), headers=MinecraftClient.headers)
+        response = requests.post(
+            url, data=json.dumps(data), headers=MinecraftClient.headers
+        )
         return response.json()
 
     @staticmethod
@@ -296,7 +399,9 @@ class MinecraftClient:
         data = {
             "name": target_name.lower().replace(" ", "_"),
         }
-        response = requests.post(url, data=json.dumps(data), headers=MinecraftClient.headers)
+        response = requests.post(
+            url, data=json.dumps(data), headers=MinecraftClient.headers
+        )
         return response.json()
 
     @staticmethod
@@ -307,7 +412,9 @@ class MinecraftClient:
             "slot": slot,
             "item_name": item_name.lower().replace(" ", "_"),
         }
-        response = requests.post(url, data=json.dumps(data), headers=MinecraftClient.headers)
+        response = requests.post(
+            url, data=json.dumps(data), headers=MinecraftClient.headers
+        )
         return response.json()
 
     @staticmethod
@@ -318,7 +425,9 @@ class MinecraftClient:
             "item_name": item_name.lower().replace(" ", "_"),
             "count": count,
         }
-        response = requests.post(url, data=json.dumps(data), headers=MinecraftClient.headers)
+        response = requests.post(
+            url, data=json.dumps(data), headers=MinecraftClient.headers
+        )
         return response.json()
 
     @staticmethod
@@ -327,7 +436,7 @@ class MinecraftClient:
         url = MinecraftClient.get_url_prefix()[player_name] + "/post_environment"
         response = requests.post(url, headers=MinecraftClient.headers)
         return response.json()
-    
+
     @staticmethod
     def get_environment_dict_info(player_name: str):
         """Get the Environment Information, return string contains time of day, weather"""
@@ -342,7 +451,9 @@ class MinecraftClient:
         data = {
             "name": target_name.lower().replace(" ", "_"),
         }
-        response = requests.post(url, data=json.dumps(data), headers=MinecraftClient.headers)
+        response = requests.post(
+            url, data=json.dumps(data), headers=MinecraftClient.headers
+        )
         return response.json()
 
     @staticmethod
@@ -354,7 +465,9 @@ class MinecraftClient:
             "from_name": from_name.lower().replace(" ", "_"),
             "item_count": item_count,
         }
-        response = requests.post(url, data=json.dumps(data), headers=MinecraftClient.headers)
+        response = requests.post(
+            url, data=json.dumps(data), headers=MinecraftClient.headers
+        )
         return response.json()
 
     @staticmethod
@@ -366,11 +479,15 @@ class MinecraftClient:
             "to_name": to_name.lower().replace(" ", "_"),
             "item_count": item_count,
         }
-        response = requests.post(url, data=json.dumps(data), headers=MinecraftClient.headers)
+        response = requests.post(
+            url, data=json.dumps(data), headers=MinecraftClient.headers
+        )
         return response.json()
 
     @staticmethod
-    def SmeltingCooking(player_name: str, item_name: str, item_count: int, fuel_item_name: str):
+    def SmeltingCooking(
+        player_name: str, item_name: str, item_count: int, fuel_item_name: str
+    ):
         """Smelt or Cook Item in the Furnace"""
         url = MinecraftClient.get_url_prefix()[player_name] + "/post_smelt"
         data = {
@@ -378,7 +495,9 @@ class MinecraftClient:
             "item_count": item_count,
             "fuel_item_name": fuel_item_name,
         }
-        response = requests.post(url, data=json.dumps(data), headers=MinecraftClient.headers)
+        response = requests.post(
+            url, data=json.dumps(data), headers=MinecraftClient.headers
+        )
         return response.json()
 
     @staticmethod
@@ -389,7 +508,9 @@ class MinecraftClient:
             "item_name": item_name.lower().replace(" ", "_"),
             "count": count,
         }
-        response = requests.post(url, data=json.dumps(data), headers=MinecraftClient.headers)
+        response = requests.post(
+            url, data=json.dumps(data), headers=MinecraftClient.headers
+        )
         return response.json()
 
     @staticmethod
@@ -400,7 +521,9 @@ class MinecraftClient:
             "item_name": item_name.lower().replace(" ", "_"),
             "count": count,
         }
-        response = requests.post(url, data=json.dumps(data), headers=MinecraftClient.headers)
+        response = requests.post(
+            url, data=json.dumps(data), headers=MinecraftClient.headers
+        )
         return response.json()
 
     @staticmethod
@@ -412,7 +535,9 @@ class MinecraftClient:
             "with_name": with_name,
             "count": count,
         }
-        response = requests.post(url, data=json.dumps(data), headers=MinecraftClient.headers)
+        response = requests.post(
+            url, data=json.dumps(data), headers=MinecraftClient.headers
+        )
         return response.json()
 
     @staticmethod
@@ -423,7 +548,9 @@ class MinecraftClient:
             "item_name": item_name.lower().replace(" ", "_"),
             "material": material.lower().replace(" ", "_"),
         }
-        response = requests.post(url, data=json.dumps(data), headers=MinecraftClient.headers)
+        response = requests.post(
+            url, data=json.dumps(data), headers=MinecraftClient.headers
+        )
         return response.json()
 
     @staticmethod
@@ -433,7 +560,9 @@ class MinecraftClient:
         data = {
             "item_name": item_name.lower().replace(" ", "_"),
         }
-        response = requests.post(url, data=json.dumps(data), headers=MinecraftClient.headers)
+        response = requests.post(
+            url, data=json.dumps(data), headers=MinecraftClient.headers
+        )
         return response.json()
 
     @staticmethod
@@ -444,7 +573,9 @@ class MinecraftClient:
             "item_name": item_name.lower().replace(" ", "_"),
             "count": count,
         }
-        response = requests.post(url, data=json.dumps(data), headers=MinecraftClient.headers)
+        response = requests.post(
+            url, data=json.dumps(data), headers=MinecraftClient.headers
+        )
         return response.json()
 
     @staticmethod
@@ -455,58 +586,82 @@ class MinecraftClient:
             "slot": slot,
             "item_name": item_name.lower().replace(" ", "_"),
         }
-        response = requests.post(url, data=json.dumps(data), headers=MinecraftClient.headers)
+        response = requests.post(
+            url, data=json.dumps(data), headers=MinecraftClient.headers
+        )
         return response.json()
 
     @staticmethod
-    def openContainer(player_name: str, container_name: str, position: List[int] = [0, 0, 0]):
+    def openContainer(
+        player_name: str, container_name: str, position: List[int] = [0, 0, 0]
+    ):
         """Open the nearest but might not the correct 'chest' | 'container' | 'furnace' position is optional, return ('message': msg, 'status': True/False, 'data':[('name':name, 'count':count),...])"""
         if position != [0, 0, 0]:
-            response = MinecraftClient.navigateTo(player_name, position[0], position[1], position[2])
+            response = MinecraftClient.navigateTo(
+                player_name, position[0], position[1], position[2]
+            )
             if response["status"] == False:
                 return response
         url = MinecraftClient.get_url_prefix()[player_name] + "/post_open"
         data = {
             "item_name": container_name,
         }
-        response = requests.post(url, data=json.dumps(data), headers=MinecraftClient.headers)
+        response = requests.post(
+            url, data=json.dumps(data), headers=MinecraftClient.headers
+        )
         return response.json()
 
     @staticmethod
-    def fetchContainerContents(player_name: str, item_name: str, position: List[int] = [0, 0, 0]):
+    def fetchContainerContents(
+        player_name: str, item_name: str, position: List[int] = [0, 0, 0]
+    ):
         """Get the details of item_name 'chest' | 'container' | 'furnace' position is optional, return ('message': msg, 'status': True/False, 'data':[('name':name, 'count':count),...])"""
         if item_name not in ["chest", "inventory", "furnace", "container"]:
-            return {'data': [], 'message': 'Failed item name not in ["chest", "inventory", "furnace", "container"]', 'status': False}
+            return {
+                "data": [],
+                "message": 'Failed item name not in ["chest", "inventory", "furnace", "container"]',
+                "status": False,
+            }
         if position != [0, 0, 0]:
-            response = MinecraftClient.navigateTo(player_name, position[0], position[1], position[2])
+            response = MinecraftClient.navigateTo(
+                player_name, position[0], position[1], position[2]
+            )
             if response["status"] == False:
                 return response
         url = MinecraftClient.get_url_prefix()[player_name] + "/post_open"
         data = {
             "item_name": item_name,
         }
-        response = requests.post(url, data=json.dumps(data), headers=MinecraftClient.headers)
+        response = requests.post(
+            url, data=json.dumps(data), headers=MinecraftClient.headers
+        )
         return response.json()
 
     @staticmethod
-    def closeContainer(player_name: str, item_name: str, position: List[int] = [0, 0, 0]):
+    def closeContainer(
+        player_name: str, item_name: str, position: List[int] = [0, 0, 0]
+    ):
         """Close 'chest' | 'container' | 'furnace' position is optional."""
         if position != [0, 0, 0]:
-            response = MinecraftClient.navigateTo(player_name, position[0], position[1], position[2])
+            response = MinecraftClient.navigateTo(
+                player_name, position[0], position[1], position[2]
+            )
             if response["status"] == False:
                 return response
         url = MinecraftClient.get_url_prefix()[player_name] + "/post_close"
         data = {
             "item_name": item_name,
         }
-        response = requests.post(url, data=json.dumps(data), headers=MinecraftClient.headers)
+        response = requests.post(
+            url, data=json.dumps(data), headers=MinecraftClient.headers
+        )
         return response.json()
 
     @staticmethod
     def toggleAction(player_name: str, item_name: str, x: int, y: int, z: int):
         """open/close Gate, Lever, Press Button (pressure_plate need to stand on it, iron door need to be powered, they are not included), at Specific Position x y z"""
         if "plate" in item_name:
-            return {'message': "pressure_plate need to stand on it", 'status': False}
+            return {"message": "pressure_plate need to stand on it", "status": False}
         url = MinecraftClient.get_url_prefix()[player_name] + "/post_activate"
         data = {
             "item_name": item_name.lower().replace(" ", "_"),
@@ -514,7 +669,9 @@ class MinecraftClient:
             "y": y,
             "z": z,
         }
-        response = requests.post(url, data=json.dumps(data), headers=MinecraftClient.headers)
+        response = requests.post(
+            url, data=json.dumps(data), headers=MinecraftClient.headers
+        )
         return response.json()
 
     @staticmethod
@@ -524,7 +681,9 @@ class MinecraftClient:
         data = {
             "entity_name": entity_name,
         }
-        response = requests.post(url, data=json.dumps(data), headers=MinecraftClient.headers)
+        response = requests.post(
+            url, data=json.dumps(data), headers=MinecraftClient.headers
+        )
         return response.json()
 
     @staticmethod
@@ -541,7 +700,9 @@ class MinecraftClient:
         data = {
             "entity_name": entity_name,
         }
-        response = requests.post(url, data=json.dumps(data), headers=MinecraftClient.headers)
+        response = requests.post(
+            url, data=json.dumps(data), headers=MinecraftClient.headers
+        )
         return response.json()
 
     @staticmethod
@@ -559,7 +720,9 @@ class MinecraftClient:
             "entity_name": entity_name,
             "message": message,
         }
-        response = requests.post(url, data=json.dumps(data), headers=MinecraftClient.headers)
+        response = requests.post(
+            url, data=json.dumps(data), headers=MinecraftClient.headers
+        )
         return response.json()
 
     @staticmethod
@@ -570,7 +733,9 @@ class MinecraftClient:
             "action_name": action_name,
             "seconds": seconds,
         }
-        response = requests.post(url, data=json.dumps(data), headers=MinecraftClient.headers)
+        response = requests.post(
+            url, data=json.dumps(data), headers=MinecraftClient.headers
+        )
         return response.json()
 
     @staticmethod
@@ -580,7 +745,9 @@ class MinecraftClient:
         data = {
             "name": name,
         }
-        response = requests.post(url, data=json.dumps(data), headers=MinecraftClient.headers)
+        response = requests.post(
+            url, data=json.dumps(data), headers=MinecraftClient.headers
+        )
         return response.json()
 
     @staticmethod
@@ -604,7 +771,9 @@ class MinecraftClient:
         data = {
             "name": item_name,
         }
-        response = requests.post(url, data=json.dumps(data), headers=MinecraftClient.headers)
+        response = requests.post(
+            url, data=json.dumps(data), headers=MinecraftClient.headers
+        )
         return response.json()
 
     @staticmethod
@@ -615,7 +784,9 @@ class MinecraftClient:
             "name": item_name,
             "page": page,
         }
-        response = requests.post(url, data=json.dumps(data), headers=MinecraftClient.headers)
+        response = requests.post(
+            url, data=json.dumps(data), headers=MinecraftClient.headers
+        )
         return response.json()
 
     @staticmethod
@@ -626,7 +797,9 @@ class MinecraftClient:
             "name": item_name,
             "content": content,
         }
-        response = requests.post(url, data=json.dumps(data), headers=MinecraftClient.headers)
+        response = requests.post(
+            url, data=json.dumps(data), headers=MinecraftClient.headers
+        )
         return response.json()
 
     def chat(self, msg, async_tag=False):
@@ -635,12 +808,17 @@ class MinecraftClient:
             "msg": msg,
         }
         if async_tag:
-            threading.Thread(target=requests.post, args=(url,),
-                             kwargs={"data": json.dumps(data), "headers": MinecraftClient.headers}).start()
+            threading.Thread(
+                target=requests.post,
+                args=(url,),
+                kwargs={"data": json.dumps(data), "headers": MinecraftClient.headers},
+            ).start()
             return {}
         else:
-            time.sleep(.05)
-            response = requests.post(url, data=json.dumps(data), headers=MinecraftClient.headers)
+            time.sleep(0.05)
+            response = requests.post(
+                url, data=json.dumps(data), headers=MinecraftClient.headers
+            )
             return response.json()
 
 

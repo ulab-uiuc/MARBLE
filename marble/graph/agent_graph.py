@@ -37,7 +37,9 @@ class AgentGraph:
         self.adjacency_list: Dict[str, List[str]] = {}  # Initialize adjacency_list
         self.relationships: List[Tuple[str, str, str]] = []
         self.coordination_mode = structure_config.coordination_mode
-        self.logger.info(f"AgentGraph initialized with execution mode '{self.coordination_mode}'.")
+        self.logger.info(
+            f"AgentGraph initialized with execution mode '{self.coordination_mode}'."
+        )
 
         # Build the adjacency list from the structure
         # self._build_graph(structure_config.structure)
@@ -46,14 +48,15 @@ class AgentGraph:
         relationships = structure_config.relationships
         for rel in relationships:
             if len(rel) != 3:
-                raise ValueError(f"Invalid relationship format: {rel}. Expected 3 elements.")
+                raise ValueError(
+                    f"Invalid relationship format: {rel}. Expected 3 elements."
+                )
             node1, node2, relationship = rel  # Correctly unpacking the list
             self.add_relationship(node1, node2, relationship)
-            if structure_config.coordination_mode == 'tree':
-                if relationship == 'parent':
+            if structure_config.coordination_mode == "tree":
+                if relationship == "parent":
                     self.agents[node2].parent = self.agents[node1]
                     self.agents[node1].children.append(self.agents[node2])
-
 
     # def _build_graph(self, structure: Dict[str, List[str]]) -> None:
     #     """
@@ -114,7 +117,11 @@ class AgentGraph:
             if agent_id in children:
                 children.remove(agent_id)
         # Remove relationships
-        self.relationships = [rel for rel in self.relationships if rel[0] != agent_id and rel[1] != agent_id]
+        self.relationships = [
+            rel
+            for rel in self.relationships
+            if rel[0] != agent_id and rel[1] != agent_id
+        ]
         # Remove relationships from agents
         for agent in self.agents.values():
             agent.relationships.pop(agent_id, None)
@@ -139,7 +146,9 @@ class AgentGraph:
         for key, value in kwargs.items():
             if hasattr(agent, key):
                 setattr(agent, key, value)
-                self.logger.debug(f"Agent '{agent_id}' attribute '{key}' updated to '{value}'.")
+                self.logger.debug(
+                    f"Agent '{agent_id}' attribute '{key}' updated to '{value}'."
+                )
             else:
                 self.logger.warning(f"Agent '{agent_id}' has no attribute '{key}'.")
 
@@ -160,7 +169,9 @@ class AgentGraph:
             raise ValueError(f"Agent '{agent_id}' does not exist.")
         return self.agents[agent_id]
 
-    def add_relationship(self, source: str, target: str, rel_type: str = 'related_to') -> None:
+    def add_relationship(
+        self, source: str, target: str, rel_type: str = "related_to"
+    ) -> None:
         """
         Add a relationship between two agents.
 
@@ -178,13 +189,12 @@ class AgentGraph:
             raise ValueError(f"Target agent '{target}' does not exist.")
         self.relationships.append((source, target, rel_type))
         self.agents[source].relationships[target] = rel_type
-        if rel_type == 'parent':
+        if rel_type == "parent":
             parent_agent = self.agents[source]
             child_agent = self.agents[target]
             parent_agent.children.append(child_agent)
             child_agent.parent = parent_agent
         self.logger.info(f"Relationship added: {source} --[{rel_type}]--> {target}")
-
 
     def remove_relationship(self, source: str, target: str) -> None:
         """
@@ -203,7 +213,9 @@ class AgentGraph:
                 rel_to_remove = rel
                 break
         if not rel_to_remove:
-            raise ValueError(f"Relationship from '{source}' to '{target}' does not exist.")
+            raise ValueError(
+                f"Relationship from '{source}' to '{target}' does not exist."
+            )
         self.relationships.remove(rel_to_remove)
         del self.agents[source].relationships[target]
         self.logger.info(f"Relationship removed: {source} --> {target}")
@@ -224,7 +236,9 @@ class AgentGraph:
             if rel[0] == source and rel[1] == target:
                 self.relationships[idx] = (source, target, new_type)
                 self.agents[source].relationships[target] = new_type
-                self.logger.info(f"Relationship updated: {source} --[{new_type}]--> {target}")
+                self.logger.info(
+                    f"Relationship updated: {source} --[{new_type}]--> {target}"
+                )
                 return
         raise ValueError(f"Relationship from '{source}' to '{target}' does not exist.")
 
@@ -307,5 +321,7 @@ class AgentGraph:
             self.logger.error("No root agents found in the graph.")
             return None
         else:
-            self.logger.error("Multiple root agents found in the graph. return the first one.")
+            self.logger.error(
+                "Multiple root agents found in the graph. return the first one."
+            )
             return roots[0]

@@ -9,13 +9,14 @@ from typing import Any, Dict, List, Optional, Tuple, TypeVar, Union
 
 from litellm.utils import token_counter
 
-from marble.environments import BaseEnvironment, WebEnvironment, CodingEnvironment
+from marble.environments import BaseEnvironment, CodingEnvironment, WebEnvironment
 from marble.llms.model_prompting import model_prompting
 from marble.memory import BaseMemory, SharedMemory
 from marble.utils.logger import get_logger
 
 EnvType = Union[BaseEnvironment, WebEnvironment, CodingEnvironment]
-AgentType = TypeVar('AgentType', bound='BaseAgent')
+AgentType = TypeVar("AgentType", bound="BaseAgent")
+
 
 def convert_to_str(result: Any) -> str:
     if isinstance(result, bool):
@@ -25,12 +26,19 @@ def convert_to_str(result: Any) -> str:
     else:
         return str(result)  # handle other types
 
+
 class BaseAgent:
     """
     Base class for all agents.
     """
 
-    def __init__(self, config: Dict[str, Union[Any, Dict[str, Any]]], env: EnvType, shared_memory: Union[SharedMemory, None] = None, model: str = "gpt-3.5-turbo"):
+    def __init__(
+        self,
+        config: Dict[str, Union[Any, Dict[str, Any]]],
+        env: EnvType,
+        shared_memory: Union[SharedMemory, None] = None,
+        model: str = "gpt-3.5-turbo",
+    ):
         """
         Initialize the agent.
 
@@ -50,9 +58,9 @@ class BaseAgent:
         self.actions: List[str] = []
         self.agent_id: str = agent_id
         self.agent_graph = None
-        self.profile = config.get("profile", '')
+        self.profile = config.get("profile", "")
         self.system_message = (
-            f"You are \"{self.agent_id}\": \"{self.profile}\"\n"
+            f'You are "{self.agent_id}": "{self.profile}"\n'
             f"As a role-playing agent, you embody a dynamic character with unique traits, motivations, and skills. "
             f"Your goal is to engage not only with users but also with other agents in the environment. "
             f"Collaborate, compete, or form alliances as you navigate through immersive storytelling and challenges. "
@@ -68,12 +76,14 @@ class BaseAgent:
         self.logger.info(f"Agent '{self.agent_id}' initialized.")
         self.token_usage = 0
         self.task_history: List[str] = []
-        self.msg_box: Dict[str, Dict[str, List[Tuple[int, str]]]] = defaultdict(lambda: defaultdict(list))
+        self.msg_box: Dict[str, Dict[str, List[Tuple[int, str]]]] = defaultdict(
+            lambda: defaultdict(list)
+        )
         self.children: List[BaseAgent] = []
         self.parent: Optional[BaseAgent] = None
         self.FORWARD_TO = 0
         self.RECV_FROM = 1
-        self.session_id: str = ''
+        self.session_id: str = ""
         self.strategy = config.get("strategy", "default")
         self.reasoning_prompts = {
             "default": "",
@@ -97,7 +107,7 @@ class BaseAgent:
                 "Thought: What are my considerations?\n"
                 "Action: What specific action should I take?\n"
                 "Result: What do I expect to achieve?\n"
-            )
+            ),
         }
 
     def set_agent_graph(self, agent_graph: Any) -> None:
@@ -113,7 +123,7 @@ class BaseAgent:
         Returns:
             Any: Processed perception data.
         """
-        return state.get('task_description', '')
+        return state.get("task_description", "")
 
     def act(self, task: str) -> Any:
         """
@@ -127,9 +137,14 @@ class BaseAgent:
         """
         self.task_history.append(task)
         self.logger.info(f"Agent '{self.agent_id}' acting on task '{task}'.")
-        tools = [self.env.action_handler_descriptions[name] for name in self.env.action_handler_descriptions]
+        tools = [
+            self.env.action_handler_descriptions[name]
+            for name in self.env.action_handler_descriptions
+        ]
         available_agents: Dict[str, Any] = {}
-        assert self.agent_graph is not None, "Agent graph is not set. Please set the agent graph using the set_agent_graph method first."
+        assert (
+            self.agent_graph is not None
+        ), "Agent graph is not set. Please set the agent graph using the set_agent_graph method first."
         for agent_id_1, agent_id_2, relationship in self.agent_graph.relationships:
             if agent_id_1 != self.agent_id and agent_id_2 != self.agent_id:
                 continue
@@ -142,7 +157,7 @@ class BaseAgent:
                     agent_id = agent_id_1
                 available_agents[agent_id] = {
                     "profile": profile,
-                    "role": f"{agent_id_1} {relationship} {agent_id_2}"
+                    "role": f"{agent_id_1} {relationship} {agent_id_2}",
                 }
         self.available_agents = available_agents
         # Create the enum description with detailed information about each agent
@@ -161,22 +176,27 @@ class BaseAgent:
                     "properties": {
                         "target_agent_id": {
                             "type": "string",
-                            "description": "The ID of the target agent to communicate with. Available agents:\n" + "\n".join([f"- {desc}" for desc in agent_descriptions]),
-                            "enum": list(self.relationships.keys())  # Dynamically list available target agents
+                            "description": "The ID of the target agent to communicate with. Available agents:\n"
+                            + "\n".join([f"- {desc}" for desc in agent_descriptions]),
+                            "enum": list(
+                                self.relationships.keys()
+                            ),  # Dynamically list available target agents
                         },
                         "message": {
                             "type": "string",
-                            "description": "The initial message to send to the target agent"
+                            "description": "The initial message to send to the target agent",
                         },
                     },
                     "required": ["target_agent_id", "message"],
-                    "additionalProperties": False
-                }
-            }
+                    "additionalProperties": False,
+                },
+            },
         }
         tools.append(new_communication_session_description)
-        reasoning_prompt = self.reasoning_prompts.get(self.strategy, '')
-        self.logger.info(f"Agent {self.agent_id} using {self.strategy} strategy with prompt:\n{reasoning_prompt}")
+        reasoning_prompt = self.reasoning_prompts.get(self.strategy, "")
+        self.logger.info(
+            f"Agent {self.agent_id} using {self.strategy} strategy with prompt:\n{reasoning_prompt}"
+        )
 
         act_task = (
             f"You are {self.agent_id}: {self.profile}\n"
@@ -193,7 +213,7 @@ class BaseAgent:
         if len(tools) == 0:
             result = model_prompting(
                 llm_model=self.llm,
-                messages=[{"role":"user", "content": act_task}],
+                messages=[{"role": "user", "content": act_task}],
                 return_num=1,
                 max_token_num=512,
                 temperature=0.0,
@@ -203,17 +223,20 @@ class BaseAgent:
         else:
             result = model_prompting(
                 llm_model=self.llm,
-                messages=[{"role":"user", "content": act_task}],
+                messages=[{"role": "user", "content": act_task}],
                 return_num=1,
                 max_token_num=512,
                 temperature=0.0,
                 top_p=None,
                 stream=None,
                 tools=tools,
-                tool_choice="auto"
+                tool_choice="auto",
             )[0]
-        messages = [{'role':'usr', 'content': act_task}, {'role':'sys', 'content': result.content}]
-        self.token_usage += token_counter(model=self.llm,messages=messages)
+        messages = [
+            {"role": "usr", "content": act_task},
+            {"role": "sys", "content": result.content},
+        ]
+        self.token_usage += token_counter(model=self.llm, messages=messages)
         communication = None
         result_from_function_str = None
         if result.tool_calls:
@@ -222,31 +245,45 @@ class BaseAgent:
             assert function_name is not None
             function_args = json.loads(function_call.function.arguments)
             if function_name != "new_communication_session":
-                result_from_function = self.env.apply_action(agent_id=self.agent_id, action_name=function_name, arguments=function_args)
+                result_from_function = self.env.apply_action(
+                    agent_id=self.agent_id,
+                    action_name=function_name,
+                    arguments=function_args,
+                )
                 result_from_function_str = convert_to_str(result_from_function)
-            else: # function_name == "new_communication_session"
-                self.session_id = uuid.uuid4() # new session id
+            else:  # function_name == "new_communication_session"
+                self.session_id = uuid.uuid4()  # new session id
                 target_agent_id = function_args["target_agent_id"]
                 message = function_args["message"]
-                result_from_function = self._handle_new_communication_session(target_agent_id=target_agent_id, message=message, session_id=self.session_id, task=task, turns=5)
+                result_from_function = self._handle_new_communication_session(
+                    target_agent_id=target_agent_id,
+                    message=message,
+                    session_id=self.session_id,
+                    task=task,
+                    turns=5,
+                )
                 result_from_function_str = convert_to_str(result_from_function)
                 communication = result_from_function.get("full_chat_history", None)
-            self.memory.update(self.agent_id, {
+            self.memory.update(
+                self.agent_id,
+                {
                     "type": "action_function_call",
                     "action_name": function_name,
                     "args": function_args,
-                    "result": result_from_function
-                }
+                    "result": result_from_function,
+                },
             )
 
-            self.logger.info(f"Agent '{self.agent_id}' called '{function_name}' with args '{function_args}'.")
-            self.logger.info(f"Agent '{self.agent_id}' obtained result '{result_from_function}'.")
+            self.logger.info(
+                f"Agent '{self.agent_id}' called '{function_name}' with args '{function_args}'."
+            )
+            self.logger.info(
+                f"Agent '{self.agent_id}' obtained result '{result_from_function}'."
+            )
 
         else:
-            self.memory.update(self.agent_id, {
-                    "type": "action_response",
-                    "result": result.content
-                }
+            self.memory.update(
+                self.agent_id, {"type": "action_response", "result": result.content}
             )
             self.logger.info(f"Agent '{self.agent_id}' acted with result '{result}'.")
         result_content = result.content if result.content else ""
@@ -255,7 +292,6 @@ class BaseAgent:
         if result_from_function_str:
             output += "Result from the function:" + result_from_function_str
         return output, communication
-
 
     def _calculate_token_usage(self, task: str, result: str) -> int:
         """
@@ -280,7 +316,9 @@ class BaseAgent:
         """
         return self.token_usage
 
-    def send_message(self, session_id: str, target_agent: AgentType, message: str) -> None:
+    def send_message(
+        self, session_id: str, target_agent: AgentType, message: str
+    ) -> None:
         """Send a message to the target agent within the specified session.
 
         Args:
@@ -288,13 +326,19 @@ class BaseAgent:
             target_agent (BaseAgent): The agent to whom the message is being sent.
             message (str): The message content to be sent.
         """
-        self.msg_box[session_id][target_agent.agent_id].append((self.FORWARD_TO, message))
+        self.msg_box[session_id][target_agent.agent_id].append(
+            (self.FORWARD_TO, message)
+        )
 
-        self.logger.info(f"Agent {self.agent_id} sent message to {target_agent.agent_id}: {message}")
+        self.logger.info(
+            f"Agent {self.agent_id} sent message to {target_agent.agent_id}: {message}"
+        )
 
         target_agent.receive_message(session_id, self, message)
 
-    def receive_message(self, session_id: str, from_agent: AgentType, message: str) -> None:
+    def receive_message(
+        self, session_id: str, from_agent: AgentType, message: str
+    ) -> None:
         """Receive a message from another agent within the specified session.
 
         Args:
@@ -306,7 +350,9 @@ class BaseAgent:
 
         # Store the received message in the message box for the sending agent.
         self.msg_box[session_id][from_agent.agent_id].append((self.RECV_FROM, message))
-        self.logger.info(f"Agent {self.agent_id} received message from {from_agent.agent_id}: {message[:10]}...")
+        self.logger.info(
+            f"Agent {self.agent_id} received message from {from_agent.agent_id}: {message[:10]}..."
+        )
 
     def seralize_message(self, session_id: str = "") -> str:
         seralized_msg = ""
@@ -334,7 +380,6 @@ class BaseAgent:
 
         return seralized_msg
 
-
     def get_profile(self) -> Union[str, Any]:
         """
         Get the agent's profile.
@@ -344,7 +389,14 @@ class BaseAgent:
         """
         return self.profile
 
-    def _handle_new_communication_session(self, target_agent_id: str, message: str, session_id: str, task: str, turns: int = 5) -> Dict[str, Any]:
+    def _handle_new_communication_session(
+        self,
+        target_agent_id: str,
+        message: str,
+        session_id: str,
+        task: str,
+        turns: int = 5,
+    ) -> Dict[str, Any]:
         """
         Handler for the new communication function. This will start a session using a random uuid
         and arrage communication between two agents until matter is resolved.
@@ -359,10 +411,14 @@ class BaseAgent:
         Returns:
             Dict[str, Any]: Result of the communication attempt
         """
-        initial_communication = self._handle_communicate_to(target_agent_id, message, session_id)
+        initial_communication = self._handle_communicate_to(
+            target_agent_id, message, session_id
+        )
         if not initial_communication["success"]:
             return initial_communication
-        assert self.agent_graph is not None, "Agent graph is not set. Please set the agent graph using the set_agent_graph method first."
+        assert (
+            self.agent_graph is not None
+        ), "Agent graph is not set. Please set the agent graph using the set_agent_graph method first."
         agents = [self.agent_graph.agents.get(target_agent_id), self]
         for t in range(turns):
             session_current_agent = agents[t % 2]
@@ -377,19 +433,20 @@ class BaseAgent:
                 "type": "function",
                 "function": {
                     "name": "communicate_to",
-                    "description": "Send a message to a specific target agent:" + "\n".join([f"- {desc}" for desc in agent_descriptions]),
+                    "description": "Send a message to a specific target agent:"
+                    + "\n".join([f"- {desc}" for desc in agent_descriptions]),
                     "parameters": {
                         "type": "object",
                         "properties": {
                             "message": {
                                 "type": "string",
-                                "description": "The initial message to send to the target agent"
+                                "description": "The initial message to send to the target agent",
                             },
                         },
                         "required": ["target_agent_id", "message"],
-                        "additionalProperties": False
-                    }
-                }
+                        "additionalProperties": False,
+                    },
+                },
             }
 
             communicate_task = (
@@ -404,16 +461,23 @@ class BaseAgent:
             )
             result = model_prompting(
                 llm_model=self.llm,
-                messages=[{"role": "system", "content": session_current_agent.system_message}, {"role":"user", "content": communicate_task}],
+                messages=[
+                    {"role": "system", "content": session_current_agent.system_message},
+                    {"role": "user", "content": communicate_task},
+                ],
                 return_num=1,
                 max_token_num=512,
                 temperature=0.0,
                 top_p=None,
                 stream=None,
                 tools=[communicate_to_description],
-                tool_choice="required"
+                tool_choice="required",
             )[0]
-            messages = [{"role": "system", "content": session_current_agent.system_message}, {"role":"user", "content": communicate_task}, {'role':'system', 'content': result.content}]
+            messages = [
+                {"role": "system", "content": session_current_agent.system_message},
+                {"role": "user", "content": communicate_task},
+                {"role": "system", "content": result.content},
+            ]
             self.token_usage += token_counter(model=self.llm, messages=messages)
             if result.tool_calls:
                 function_call = result.tool_calls[0]
@@ -423,7 +487,11 @@ class BaseAgent:
                 if function_name == "communicate_to":
                     message = function_args["message"]
                     print(message)
-                    session_current_agent._handle_communicate_to(target_agent_id=session_other_agent_id, message=message, session_id=session_current_agent.session_id)
+                    session_current_agent._handle_communicate_to(
+                        target_agent_id=session_other_agent_id,
+                        message=message,
+                        session_id=session_current_agent.session_id,
+                    )
                     if "<end-of-session>" in message:
                         break
 
@@ -445,30 +513,43 @@ class BaseAgent:
         )
         result = model_prompting(
             llm_model=self.llm,
-            messages=[{"role": "system", "content": system_message_summary}, {"role":"user", "content": summary_task}],
+            messages=[
+                {"role": "system", "content": system_message_summary},
+                {"role": "user", "content": summary_task},
+            ],
             return_num=1,
             max_token_num=512,
             temperature=0.0,
             top_p=None,
             stream=None,
         )[0]
-        messages = [{"role": "system", "content": system_message_summary}, {"role":"user", "content": summary_task}, {'role':'system', 'content': result.content}]
+        messages = [
+            {"role": "system", "content": system_message_summary},
+            {"role": "user", "content": summary_task},
+            {"role": "system", "content": result.content},
+        ]
         self.token_usage += token_counter(model=self.llm, messages=messages)
-        self.memory.update(self.agent_id, {
+        self.memory.update(
+            self.agent_id,
+            {
                 "type": "action_communicate",
                 "action_name": "communicate_to",
                 # "args": function_args,
-                "result": result.content if result.content else ""
-            }
+                "result": result.content if result.content else "",
+            },
         )
         return {
             "success": True,
             "message": f"Successfully completed session {session_id}",
-            "full_chat_history": session_current_agent.seralize_message(session_id=self.session_id),
-            "session_id": result.content if result.content else ""
+            "full_chat_history": session_current_agent.seralize_message(
+                session_id=self.session_id
+            ),
+            "session_id": result.content if result.content else "",
         }
 
-    def _handle_communicate_to(self, target_agent_id: str, message: str, session_id: str) -> Dict[str, Any]:
+    def _handle_communicate_to(
+        self, target_agent_id: str, message: str, session_id: str
+    ) -> Dict[str, Any]:
         """
         Handler for the communicate_to function.
 
@@ -484,7 +565,9 @@ class BaseAgent:
         try:
             self.session_id = session_id
             linked_by_graph = False
-            assert self.agent_graph is not None, "Agent graph is not set. Please set the agent graph using the set_agent_graph method first."
+            assert (
+                self.agent_graph is not None
+            ), "Agent graph is not set. Please set the agent graph using the set_agent_graph method first."
             for a1_id, a2_id, rel in self.agent_graph.relationships:
                 if a1_id == self.agent_id or a2_id == self.agent_id:
                     linked_by_graph = True
@@ -493,14 +576,14 @@ class BaseAgent:
             if not self.agent_graph or not linked_by_graph:
                 return {
                     "success": False,
-                    "error": f"No relationship found with agent {target_agent_id}"
+                    "error": f"No relationship found with agent {target_agent_id}",
                 }
 
             target_agent = self.agent_graph.agents.get(target_agent_id)
             if not target_agent:
                 return {
                     "success": False,
-                    "error": f"Target agent {target_agent_id} not found in agent graph"
+                    "error": f"Target agent {target_agent_id} not found in agent graph",
                 }
 
             # Send the message using the existing send_message method
@@ -509,15 +592,12 @@ class BaseAgent:
             return {
                 "success": True,
                 "message": f"Successfully sent message to agent {target_agent_id}",
-                "session_id": session_id
+                "session_id": session_id,
             }
 
         except Exception as e:
             self.session_id = old_session_id
-            return {
-                "success": False,
-                "error": f"Error sending message: {str(e)}"
-            }
+            return {"success": False, "error": f"Error sending message: {str(e)}"}
 
     def plan_task(self) -> Optional[str]:
         """
@@ -538,19 +618,31 @@ class BaseAgent:
         # Use memory entries, persona, and task history to determine the next task
         next_task = model_prompting(
             llm_model=self.llm,
-            messages=[{"role": "user", "content": f"Agent '{self.agent_id}' should prioritize tasks that align with their role: {persona}. Based on the task history: {task_history_str}, and memory: {memory_str}, what should be the next task?"}],
+            messages=[
+                {
+                    "role": "user",
+                    "content": f"Agent '{self.agent_id}' should prioritize tasks that align with their role: {persona}. Based on the task history: {task_history_str}, and memory: {memory_str}, what should be the next task?",
+                }
+            ],
             return_num=1,
             max_token_num=512,
             temperature=0.0,
             top_p=None,
             stream=None,
         )[0].content
-        messages = [{"role": "user", "content": f"Agent '{self.agent_id}' should prioritize tasks that align with their role: {persona}. Based on the task history: {task_history_str}, and memory: {memory_str}, what should be the next task?"}, {'role':'system', 'content': next_task}]
+        messages = [
+            {
+                "role": "user",
+                "content": f"Agent '{self.agent_id}' should prioritize tasks that align with their role: {persona}. Based on the task history: {task_history_str}, and memory: {memory_str}, what should be the next task?",
+            },
+            {"role": "system", "content": next_task},
+        ]
         self.token_usage += token_counter(model=self.llm, messages=messages)
-        self.logger.info(f"Agent '{self.agent_id}' plans next task based on persona: {next_task}")
+        self.logger.info(
+            f"Agent '{self.agent_id}' plans next task based on persona: {next_task}"
+        )
 
         return next_task
-
 
     def _is_task_completed(self, result: Any) -> bool:
         """
@@ -623,7 +715,9 @@ class BaseAgent:
         Plan tasks for children agents based on the given task and children's profiles.
         """
         self.logger.info(f"Agent '{self.agent_id}' is planning tasks for children.")
-        children_profiles = {child.agent_id: child.get_profile() for child in self.children}
+        children_profiles = {
+            child.agent_id: child.get_profile() for child in self.children
+        }
         prompt = (
             f"You are agent '{self.agent_id}'. Based on the overall task:\n{task}\n\n"
             f"And your children's profiles:\n"
@@ -641,19 +735,28 @@ class BaseAgent:
             return_num=1,
             max_token_num=512,
             temperature=0.7,
-            top_p=1.0
+            top_p=1.0,
         )[0]
-        messages = [{"role": "system", "content": prompt}, {'role':'system', 'content': response.content}]
+        messages = [
+            {"role": "system", "content": prompt},
+            {"role": "system", "content": response.content},
+        ]
         self.token_usage += token_counter(model=self.llm, messages=messages)
         try:
-            tasks_for_children:Dict[str, Any] = json.loads(response.content if response.content else "{}")
-            self.logger.info(f"Agent '{self.agent_id}' assigned tasks to children: {tasks_for_children}")
+            tasks_for_children: Dict[str, Any] = json.loads(
+                response.content if response.content else "{}"
+            )
+            self.logger.info(
+                f"Agent '{self.agent_id}' assigned tasks to children: {tasks_for_children}"
+            )
             return tasks_for_children
         except json.JSONDecodeError as e:
             self.logger.error(f"Failed to parse tasks for children: {e}")
             return {}
 
-    def summarize_results(self, children_results: Dict[str, Any], own_result: Any) -> Any:
+    def summarize_results(
+        self, children_results: Dict[str, Any], own_result: Any
+    ) -> Any:
         """
         Summarize the results from children agents and own result.
         """
@@ -675,15 +778,19 @@ class BaseAgent:
             return_num=1,
             max_token_num=512,
             temperature=0.7,
-            top_p=1.0
+            top_p=1.0,
         )[0]
         summary = response.content if response.content else ""
-        messages = [{"role": "system", "content": prompt}, {'role':'system', 'content': summary}]
+        messages = [
+            {"role": "system", "content": prompt},
+            {"role": "system", "content": summary},
+        ]
         self.token_usage += token_counter(model=self.llm, messages=messages)
         return summary
 
-
-    def plan_next_agent(self, result: Any, agent_profiles: Dict[str, Dict[str, Any]]) -> Tuple[Optional[str], Optional[str]]:
+    def plan_next_agent(
+        self, result: Any, agent_profiles: Dict[str, Dict[str, Any]]
+    ) -> Tuple[Optional[str], Optional[str]]:
         """
         Choose the next agent to pass the task to and provide a planning task, based on the result and profiles of other agents.
 
@@ -709,7 +816,7 @@ class BaseAgent:
         prompt += (
             "\nBased on the result and the agent profiles provided, select the most suitable agent to continue the task and provide a brief plan for the next agent to execute. "
             "Respond in the following format:\n"
-            "{\"agent_id\": \"<next_agent_id>\", \"planning_task\": \"<description of the next planning task>\"}\n"
+            '{"agent_id": "<next_agent_id>", "planning_task": "<description of the next planning task>"}\n'
             "You must follow the json format or the system will crash as we fail to interpret the response."
         )
 
@@ -720,9 +827,15 @@ class BaseAgent:
             return_num=1,
             max_token_num=256,
             temperature=0.7,
-            top_p=1.0
+            top_p=1.0,
         )[0].content
-        self.token_usage += token_counter(model=self.llm, messages=[{"role": "system", "content": prompt}, {"role": "system", "content": response}])
+        self.token_usage += token_counter(
+            model=self.llm,
+            messages=[
+                {"role": "system", "content": prompt},
+                {"role": "system", "content": response},
+            ],
+        )
         # Parse the response to extract the agent ID and planning task
         next_agent_id: Optional[str] = None
         planning_task: Optional[str] = None
@@ -730,19 +843,27 @@ class BaseAgent:
         try:
             assert isinstance(response, str)
             # check if response is a json, or is a text + json
-            if response[0] == '{':
+            if response[0] == "{":
                 response_data: Dict[str, Any] = json.loads(response)
             else:
-                response_data: Dict[str, Any] = json.loads(response[response.find('{'):response.rfind('}')+1])
+                response_data: Dict[str, Any] = json.loads(
+                    response[response.find("{") : response.rfind("}") + 1]
+                )
             response_data: Dict[str, Any] = json.loads(response)
             next_agent_id = response_data.get("agent_id")
             planning_task = response_data.get("planning_task")
         except (json.JSONDecodeError, KeyError):
-            self.logger.warning(f"Agent '{self.agent_id}' received an invalid response format from the LLM.")
+            self.logger.warning(
+                f"Agent '{self.agent_id}' received an invalid response format from the LLM."
+            )
 
         if next_agent_id in agent_profiles and next_agent_id != self.agent_id:
-            self.logger.info(f"Agent '{self.agent_id}' selected '{next_agent_id}' as the next agent with plan: '{planning_task}'.")
+            self.logger.info(
+                f"Agent '{self.agent_id}' selected '{next_agent_id}' as the next agent with plan: '{planning_task}'."
+            )
             return next_agent_id, planning_task
         else:
-            self.logger.warning(f"Agent '{self.agent_id}' did not select a valid next agent.")
+            self.logger.warning(
+                f"Agent '{self.agent_id}' did not select a valid next agent."
+            )
             return None, None

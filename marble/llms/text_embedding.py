@@ -7,8 +7,6 @@ from .error_handler import api_calling_error_exponential_backoff
 
 @beartype
 @api_calling_error_exponential_backoff(retries=5, base_wait_time=1)
-
-
 def text_embedding(
     model: str,
     input: str,

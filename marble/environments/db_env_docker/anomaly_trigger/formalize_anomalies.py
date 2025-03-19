@@ -1,9 +1,9 @@
 import datetime
 
-#from alert import filter_alerts_by_time
+# from alert import filter_alerts_by_time
 import json
 
-'''
+"""
 def dataset_statistics():
     max_column = 0
     min_column = 100000000000000
@@ -97,15 +97,16 @@ def dataset_statistics():
     print('num of ,:',count1)
     print("max_column: ", max_column)
     print("min_column: ", min_column)
-'''
-def time_stamps():
+"""
 
+
+def time_stamps():
     splitting_token = """
 
 
 import"""
 
-    #dir_name = "up_to_date_dataset/"
+    # dir_name = "up_to_date_dataset/"
 
     # target_datetime = datetime.datetime(2023, 10, 10, 3, 0, 0)
 
@@ -118,29 +119,34 @@ import"""
         "VACUUM": ["highly deletes"],
         "REDUNDANT_INDEX": ["too many indexes"],
         "MISSING_INDEXES": ["missing indexes"],
-        "INSERT_LARGE_DATA,IO_CONTENTION": ["INSERT_LARGE_DATA","IO_CONTENTION"],
-        "FETCH_LARGE_DATA,CORRELATED_SUBQUERY": ["FETCH_LARGE_DATA","CORRELATED SUBQUERY"],
-        "POOR_JOIN_PERFORMANCE,CPU_CONTENTION": ["POOR JOIN PERFORMANCE","CPU CONTENTION"],
+        "INSERT_LARGE_DATA,IO_CONTENTION": ["INSERT_LARGE_DATA", "IO_CONTENTION"],
+        "FETCH_LARGE_DATA,CORRELATED_SUBQUERY": [
+            "FETCH_LARGE_DATA",
+            "CORRELATED SUBQUERY",
+        ],
+        "POOR_JOIN_PERFORMANCE,CPU_CONTENTION": [
+            "POOR JOIN PERFORMANCE",
+            "CPU CONTENTION",
+        ],
     }
 
-
-    with open('m_i_naturallanguage.txt', 'r') as f:
+    with open("m_i_naturallanguage.txt", "r") as f:
         # read f content into nlps in list
         desc_blocks = f.readlines()
 
-    with open('m_i_code.txt', 'r') as f:
+    with open("m_i_code.txt", "r") as f:
         # read all the f content into nlps in a text
         nlps = f.read()
         code_blocks = nlps.split(splitting_token)
         new_code_blocks = []
         for code_block in code_blocks:
-            new_code_blocks.append('import ' + code_block)
+            new_code_blocks.append("import " + code_block)
         code_blocks = new_code_blocks
 
     anomaly_jsons = []
 
-    with open('missingindex_with_timestamp.txt', 'r') as f:
-        #print("lines:",len(f.readlines()))
+    with open("missingindex_with_timestamp.txt", "r") as f:
+        # print("lines:",len(f.readlines()))
 
         while True:
             line1 = f.readline()
@@ -149,13 +155,23 @@ import"""
             if not line1:
                 break
 
-            content = {"start_time": "111233","end_time": "111433", "start_timestamp": "111233","end_timestamp": "111433", "alerts": [], "labels":[], "command": "", "script": "", "description": ""}
+            content = {
+                "start_time": "111233",
+                "end_time": "111433",
+                "start_timestamp": "111233",
+                "end_timestamp": "111433",
+                "alerts": [],
+                "labels": [],
+                "command": "",
+                "script": "",
+                "description": "",
+            }
 
-            #import pdb; pdb.set_trace()
+            # import pdb; pdb.set_trace()
 
             timestamp = line1.split()[-1]
             command = line1.split()[0:4]
-            command_str= ' '.join(command)
+            command_str = " ".join(command)
             if command_str not in commands:
                 commands.append(command_str)
 
@@ -180,11 +196,11 @@ import"""
                 content["end_timestamp"] = formatted_time
 
             # alerts
-            '''alerts = filter_alerts_by_time("alert.txt", content["start_time"], content["end_time"])
+            """alerts = filter_alerts_by_time("alert.txt", content["start_time"], content["end_time"])
             content["alerts"] = alerts
             if alerts!=[]:
                 print(alert_cnt, alerts)
-                alert_cnt = alert_cnt + 1'''
+                alert_cnt = alert_cnt + 1"""
 
             # labels
             for cause in root_causes:
@@ -202,13 +218,13 @@ import"""
 
             anomaly_jsons.append(content)
 
-
             # record the content in well-formatted json into a file
-            with open('anomaly_jsons.txt', 'a') as f2:
-                f2.write(json.dumps(content, indent=4) + '\n')
+            with open("anomaly_jsons.txt", "a") as f2:
+                f2.write(json.dumps(content, indent=4) + "\n")
 
     print("alert_cnt:", alert_cnt)
 
     return anomaly_jsons
+
 
 anomaly_jsons = time_stamps()

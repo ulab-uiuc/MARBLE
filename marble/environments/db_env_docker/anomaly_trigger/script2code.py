@@ -1,27 +1,27 @@
 import re
 
-with open('missingindex2.txt', 'r') as file:
+with open("missingindex2.txt", "r") as file:
     # 逐行读取文件并将每一行作为字符串添加到列表中
     lines = [line.strip() for line in file]
 # 输入的字符串
 for line in lines:
     input_string = f"{line}"
-    anomaly_match = re.search(r'--anomaly\s+([^\s]+)', input_string)
+    anomaly_match = re.search(r"--anomaly\s+([^\s]+)", input_string)
     anomaly = str(anomaly_match.group(1)) if anomaly_match else None
-    threads_match = re.search(r'--threads (\d+)', input_string)
-    ncolumn_match = re.search(r'--ncolumn (\d+)', input_string)
-    colsize_match = re.search(r'--colsize (\d+)', input_string)
-    nrow_match = re.search(r'--nrow (\d+)', input_string)
-    duration_match=re.search(r'--duration (\d+)', input_string)
-        # 提取的数字存入变量
+    threads_match = re.search(r"--threads (\d+)", input_string)
+    ncolumn_match = re.search(r"--ncolumn (\d+)", input_string)
+    colsize_match = re.search(r"--colsize (\d+)", input_string)
+    nrow_match = re.search(r"--nrow (\d+)", input_string)
+    duration_match = re.search(r"--duration (\d+)", input_string)
+    # 提取的数字存入变量
     threads = int(threads_match.group(1)) if threads_match else None
     ncolumn = int(ncolumn_match.group(1)) if ncolumn_match else None
     colsize = int(colsize_match.group(1)) if colsize_match else None
     nrow = int(nrow_match.group(1)) if nrow_match else None
-    duration=int(duration_match.group(1)) if duration_match else None
-    if anomaly == 'INSERT_LARGE_DATA':
+    duration = int(duration_match.group(1)) if duration_match else None
+    if anomaly == "INSERT_LARGE_DATA":
         # 打印提取的数字
-        code=f'''import psycopg2
+        code = f"""import psycopg2
 import sys
 sys.path.append('/root/DB-GPT/')
 import time
@@ -171,9 +171,9 @@ if __name__ == "__main__":
     table_name = 'table1'
 
     # Call the insert_large_data function
-    insert_large_data(num_threads, insert_duration, num_columns, num_rows, column_size, table_name)\n\n\n\n'''
-    if anomaly == 'MISSING_INDEXES':
-        code=f'''import psycopg2
+    insert_large_data(num_threads, insert_duration, num_columns, num_rows, column_size, table_name)\n\n\n\n"""
+    if anomaly == "MISSING_INDEXES":
+        code = f"""import psycopg2
 import sys
 sys.path.append('/root/DB-GPT/')
 import time
@@ -327,10 +327,10 @@ if __name__ == "__main__":
     table_name = 'table1'
 
     # Call the insert_large_data function
-    missing_index(num_threads, insert_duration, num_columns, num_rows, column_size, table_name)\n\n\n\n'''
+    missing_index(num_threads, insert_duration, num_columns, num_rows, column_size, table_name)\n\n\n\n"""
 
-    if anomaly == 'VACUUM':
-        code=f'''import psycopg2
+    if anomaly == "VACUUM":
+        code = f"""import psycopg2
 import sys
 sys.path.append('/root/DB-GPT/')
 import time
@@ -489,10 +489,10 @@ if __name__ == "__main__":
     table_name = 'table1'
 
     # Call the insert_large_data function
-    vacuum(num_threads, insert_duration, num_columns, num_rows, column_size, table_name)\n\n\n\n'''
+    vacuum(num_threads, insert_duration, num_columns, num_rows, column_size, table_name)\n\n\n\n"""
 
-    if anomaly == 'LOCK_CONTENTION':
-        code=f'''import psycopg2
+    if anomaly == "LOCK_CONTENTION":
+        code = f"""import psycopg2
 import sys
 sys.path.append('/root/DB-GPT/')
 import time
@@ -663,10 +663,10 @@ if __name__ == "__main__":
     table_name = 'table1'
 
     # Call the insert_large_data function
-    lock_contention(num_threads, insert_duration, num_columns, num_rows, column_size, table_name)\n\n\n\n'''
+    lock_contention(num_threads, insert_duration, num_columns, num_rows, column_size, table_name)\n\n\n\n"""
 
-    if anomaly == 'REDUNDANT_INDEX':
-        code=f'''import psycopg2
+    if anomaly == "REDUNDANT_INDEX":
+        code = f"""import psycopg2
 import sys
 sys.path.append('/root/DB-GPT/')
 import time
@@ -881,10 +881,10 @@ if __name__ == "__main__":
     nindex=6
 
     # Call the insert_large_data function
-    redundent_index(num_threads, insert_duration, num_columns, num_rows, column_size, nindex,table_name)\n\n\n\n'''
+    redundent_index(num_threads, insert_duration, num_columns, num_rows, column_size, nindex,table_name)\n\n\n\n"""
 
-    if anomaly == 'INSERT_LARGE_DATA,IO_CONTENTION':
-        code='''import os
+    if anomaly == "INSERT_LARGE_DATA,IO_CONTENTION":
+        code = """import os
 import datetime
 
 #print the current time
@@ -903,10 +903,10 @@ if __name__ == "__main__":
     )
 
     os.system(command)
-    print_time()\n\n\n\n'''
-    if anomaly == 'FETCH_LARGE_DATA,CORRELATED_SUBQUERY':
+    print_time()\n\n\n\n"""
+    if anomaly == "FETCH_LARGE_DATA,CORRELATED_SUBQUERY":
         # 打印提取的数字
-        code='''import os
+        code = """import os
 import re
 import time
 
@@ -1021,10 +1021,10 @@ if __name__ == '__main__':
         TIMELOG.write(str(int(time.time()))+"\n")
         TIMELOG.flush()
 
-    TIMELOG.close()\n\n\n\n'''
-    if anomaly == 'POOR_JOIN_PERFORMANCE,CPU_CONTENTION':
+    TIMELOG.close()\n\n\n\n"""
+    if anomaly == "POOR_JOIN_PERFORMANCE,CPU_CONTENTION":
         # 打印提取的数字
-        code='''import os
+        code = """import os
 import re
 import time
 
@@ -1173,6 +1173,6 @@ if __name__ == '__main__':
 
     TIMELOG.close()
 
-)\n\n\n\n'''
-    with open('m_i_code.txt', 'a') as file:
+)\n\n\n\n"""
+    with open("m_i_code.txt", "a") as file:
         file.write(code)

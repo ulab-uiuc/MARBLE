@@ -1,17 +1,13 @@
 import json
 import logging
-import logging
 import os
 import time
 from typing import Any, Dict
 
-from typing import Any, Dict
-
 import yaml
-import logging
-from typing import Any, Dict
-from marble.utils.eventbus import EventBus # 假设 BaseAgent 在 base_agent_module 中
 from openai import OpenAI
+
+from marble.utils.eventbus import EventBus  # 假设 BaseAgent 在 base_agent_module 中
 
 
 class WerewolfAgent:
@@ -19,8 +15,18 @@ class WerewolfAgent:
     WerewolfAgent class without calling BaseAgent's __init__.
     """
 
-    def __init__(self, config: Dict[str, Any], role: str, log_path: str, event_bus: EventBus, 
-                shared_memory: Dict[str, Any], env: any, number: int, is_villager: bool, strategy="independent",):
+    def __init__(
+        self,
+        config: Dict[str, Any],
+        role: str,
+        log_path: str,
+        event_bus: EventBus,
+        shared_memory: Dict[str, Any],
+        env: any,
+        number: int,
+        is_villager: bool,
+        strategy="independent",
+    ):
         """
         Custom initialization for WerewolfAgent without calling BaseAgent's __init__.
 
@@ -39,8 +45,12 @@ class WerewolfAgent:
         model_config = config.get(config_key, {})
         self.config = config
         # Get and save API configuration details as attributes
-        self.base_url = model_config.get("base_url", "https://api.openai.com/v1")  # Default to OpenAI API
-        self.api_key = model_config.get("api_key", config.get("openai_api_key"))  # Default to using general OpenAI API key
+        self.base_url = model_config.get(
+            "base_url", "https://api.openai.com/v1"
+        )  # Default to OpenAI API
+        self.api_key = model_config.get(
+            "api_key", config.get("openai_api_key")
+        )  # Default to using general OpenAI API key
         self.model_name = model_config.get("model_name", "gpt-4o")  # Default to GPT-4
         self.strategy = strategy
         # Initialize the API client
@@ -48,7 +58,7 @@ class WerewolfAgent:
             base_url=self.base_url,
             api_key=self.api_key,
         )
-        
+
         self.agent_id = config.get("agent_id")
         self.id = self.agent_id
         assert isinstance(self.agent_id, str), "agent_id must be a string"
@@ -56,17 +66,19 @@ class WerewolfAgent:
         self.role = role  # Set the role
         self.agent_number = number
         self.is_villager = is_villager  # Save whether the agent is a villager
-        
+
         # Save the environment instance
         self.env = env
         # Shared memory file path
         self.shared_memory = shared_memory
-        
+
         # Create an independent logger
         self.logger = self._create_logger(self.agent_id)
 
         # Set the log file path
-        self.log_file_path = os.path.join(log_path, f"{self.agent_number}-{self.role}-{self.agent_id}_log.txt")
+        self.log_file_path = os.path.join(
+            log_path, f"{self.agent_number}-{self.role}-{self.agent_id}_log.txt"
+        )
         self._initialize_log_file()
 
         # Print to terminal and write to log file
@@ -93,16 +105,16 @@ class WerewolfAgent:
             "number": self.agent_number,
             "config": self.config,
         }
-    
+
     @classmethod
     def from_dict(
-        cls, 
+        cls,
         agent_data: Dict[str, Any],
         log_path: str,
         event_bus: EventBus,
         shared_memory: Dict[str, Any],
         env: Any,
-        strategy="independent"
+        strategy="independent",
     ) -> "WerewolfAgent":
         """
         Given serialized data (agent_data), along with new event_bus / shared_memory / env,
@@ -113,7 +125,7 @@ class WerewolfAgent:
         number = agent_data["number"]
         # Directly extract the original config
         config = agent_data["config"]
-        
+
         new_agent = cls(
             config=config,
             role=role,
@@ -123,10 +135,10 @@ class WerewolfAgent:
             env=env,
             number=number,
             is_villager=is_villager,
-            strategy=strategy
+            strategy=strategy,
         )
         return new_agent
-    
+
     def _create_logger(self, agent_id: str):
         """
         Creates and returns an independent logger for each instance.
@@ -142,7 +154,9 @@ class WerewolfAgent:
 
         # Set handlers and formatter
         handler = logging.StreamHandler()  # Output to terminal
-        formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+        formatter = logging.Formatter(
+            "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+        )
         handler.setFormatter(formatter)
 
         # Add handler if not already added
@@ -156,7 +170,7 @@ class WerewolfAgent:
         Initializes the log file. If the file does not exist, it creates one without writing any content.
         """
         if not os.path.exists(self.log_file_path):
-            with open(self.log_file_path, 'w', encoding='utf-8') as log_file:
+            with open(self.log_file_path, "w", encoding="utf-8") as log_file:
                 pass  # Create an empty log file without writing anything
 
     def _log_and_save(self, log_entry: str) -> None:
@@ -170,7 +184,7 @@ class WerewolfAgent:
         self.logger.info(log_entry)
 
         # Write the log entry to the log file
-        with open(self.log_file_path, 'a', encoding='utf-8') as log_file:
+        with open(self.log_file_path, "a", encoding="utf-8") as log_file:
             log_file.write(log_entry + "\n")
 
     def _write_log_entry(self, log_entry: str) -> None:
@@ -181,9 +195,8 @@ class WerewolfAgent:
             log_entry (str): The log message to be saved.
         """
         # Write the log entry to the log file without outputting to the terminal
-        with open(self.log_file_path, 'a', encoding='utf-8') as log_file:
+        with open(self.log_file_path, "a", encoding="utf-8") as log_file:
             log_file.write(log_entry + "\n")
-
 
     def act(self, event: Dict[str, Any]) -> Dict[str, Any]:
         """
@@ -197,12 +210,19 @@ class WerewolfAgent:
         """
 
         event_type = event.get("event_type", "")
-        reply_event_type = f"reply_{event_type}"  # Format the event type as reply_<event_type>
+        reply_event_type = (
+            f"reply_{event_type}"  # Format the event type as reply_<event_type>
+        )
 
         # Initialize result as no_action in expected event format
-        result = {"event_type": "reply_no_action", "sender": self.agent_id, "recipients": [], "content": {}}
+        result = {
+            "event_type": "reply_no_action",
+            "sender": self.agent_id,
+            "recipients": [],
+            "content": {},
+        }
         result_content = {}
-        
+
         # Special processing for werewolf-related events
         if event_type in ["werewolf_action", "werewolf_discussion"]:
             try:
@@ -211,7 +231,9 @@ class WerewolfAgent:
                     "event_type": "reply_werewolf_action",  # Formatted event type
                     "sender": self.agent_id,
                     "recipients": [self.env],  # The recipient is the system
-                    "content": result_content.get("action", "no action")  # Event content is inside the content field
+                    "content": result_content.get(
+                        "action", "no action"
+                    ),  # Event content is inside the content field
                 }
             except Exception as e:
                 self.logger.error(f"Error while performing action {event_type}: {e}")
@@ -224,7 +246,7 @@ class WerewolfAgent:
                     "event_type": reply_event_type,  # Formatted event type
                     "sender": self.agent_id,
                     "recipients": [self.env],
-                    "content": result_content.get("action", "no action")
+                    "content": result_content.get("action", "no action"),
                 }
             except Exception as e:
                 self.logger.error(f"Error while performing action {event_type}: {e}")
@@ -249,38 +271,54 @@ class WerewolfAgent:
         recipients = event.get("recipients", [])
         if self not in recipients:
             if debug:
-                self.logger.info(f"Agent {self.agent_id} ignored event '{event.get('event_type')}' as it is not a recipient.")
+                self.logger.info(
+                    f"Agent {self.agent_id} ignored event '{event.get('event_type')}' as it is not a recipient."
+                )
             return  # Event is not for this agent, no need to process
 
         # Log event processing
         if debug:
-            self.logger.info(f"Agent {self.agent_id} processing event '{event.get('event_type')}'. Recipients: {recipients}")
+            self.logger.info(
+                f"Agent {self.agent_id} processing event '{event.get('event_type')}'. Recipients: {recipients}"
+            )
 
         # Check if the agent is in the list of alive players
         alive_players = self.shared_memory["public_state"].get("alive_players", [])
         if self.agent_id not in alive_players:
             if debug:
-                self.logger.info(f"Agent {self.agent_id} ignored event '{event.get('event_type')}' as it is not in the alive players list.")
+                self.logger.info(
+                    f"Agent {self.agent_id} ignored event '{event.get('event_type')}' as it is not in the alive players list."
+                )
             return  # If agent is not in the alive players list, do not process
 
         # Log alive status
         if debug:
-            self.logger.info(f"Agent {self.agent_id} is in the alive players list: {alive_players}")
+            self.logger.info(
+                f"Agent {self.agent_id} is in the alive players list: {alive_players}"
+            )
 
         # Check if the event type requires special conditions
         event_type = event.get("event_type")
         if event_type in ["decide_speech_order", "decide_badge_flow"]:
-            badge_count = self.shared_memory["private_state"]["players"][self.agent_id]["status"].get("badge_count", 0)
+            badge_count = self.shared_memory["private_state"]["players"][self.agent_id][
+                "status"
+            ].get("badge_count", 0)
             if badge_count != 1:
                 if debug:
-                    self.logger.info(f"Agent {self.agent_id} ignored event '{event_type}' as it does not have the badge (badge_count: {badge_count}).")
+                    self.logger.info(
+                        f"Agent {self.agent_id} ignored event '{event_type}' as it does not have the badge (badge_count: {badge_count})."
+                    )
                 return
             if debug:
-                self.logger.info(f"Agent {self.agent_id} processing special event '{event_type}' with badge_count: {badge_count}.")
+                self.logger.info(
+                    f"Agent {self.agent_id} processing special event '{event_type}' with badge_count: {badge_count}."
+                )
 
         # Perform the action and return the action
         if debug:
-            self.logger.info(f"Agent {self.agent_id} preparing to act on event '{event_type}'.")
+            self.logger.info(
+                f"Agent {self.agent_id} preparing to act on event '{event_type}'."
+            )
         action = self.act(event)
         if debug:
             self.logger.info(f"Agent {self.agent_id} generated action: {action}")
@@ -302,11 +340,11 @@ class WerewolfAgent:
     def gpt_tool_call(self, messages, tools):
         """
         Calls the GPT model using the specified messages and tools.
-        
+
         Args:
             messages (list): A list of message dictionaries to send to the model.
             tools (list): A list of tool definitions to provide to the model.
-            
+
         Returns:
             list: Tool calls generated by the model.
         """
@@ -343,7 +381,7 @@ class WerewolfAgent:
         # Step 2: Define YAML template path
         yaml_paths = {
             "werewolf_action": r"marble\agent\werewolf_prompts\werewolf_action.yaml",
-            "werewolf_discussion": r"marble\agent\werewolf_prompts\werewolf_discussion.yaml"
+            "werewolf_discussion": r"marble\agent\werewolf_prompts\werewolf_discussion.yaml",
         }
         yaml_path = yaml_paths.get(event_type, None)
         if not yaml_path:
@@ -352,10 +390,10 @@ class WerewolfAgent:
 
         # Step 3: Load YAML template
         try:
-            with open(yaml_path, 'r', encoding='utf-8') as f:
+            with open(yaml_path, "r", encoding="utf-8") as f:
                 action_template = yaml.safe_load(f)
-            prompt_template = action_template.get('user', '')
-            tools = action_template.get('tools', [])
+            prompt_template = action_template.get("user", "")
+            tools = action_template.get("tools", [])
         except Exception as e:
             self.logger.error(f"Failed to load prompt template for {event_type}: {e}")
             return {"action": "no_action", "target": None}
@@ -363,7 +401,11 @@ class WerewolfAgent:
         # Step 4: Retrieve game state from shared memory
         try:
             public_state = self.shared_memory.get("public_state", {})
-            private_state = self.shared_memory.get("private_state", {}).get("players", {}).get(self.agent_id, {})
+            private_state = (
+                self.shared_memory.get("private_state", {})
+                .get("players", {})
+                .get(self.agent_id, {})
+            )
             personal_event_log = private_state.get("personal_event_log", "")
 
             # Build game state (from public_state)
@@ -371,13 +413,15 @@ class WerewolfAgent:
                 "days": public_state.get("days", 0),
                 "day/night": public_state.get("day/night", "night"),
                 "alive_players": public_state.get("alive_players", []),
-                "sheriff": public_state.get("sheriff", None)
+                "sheriff": public_state.get("sheriff", None),
             }
 
             # Use personal event log as the base for werewolf discussion
             public_chat = personal_event_log
         except Exception as e:
-            self.logger.error(f"Error retrieving game state or personal event log from shared memory: {e}")
+            self.logger.error(
+                f"Error retrieving game state or personal event log from shared memory: {e}"
+            )
             return {"action": "no_action", "target": None}
 
         # Step 5: Fill in the prompt for werewolf_action and werewolf_discussion
@@ -392,8 +436,13 @@ class WerewolfAgent:
 
             # Fill in the specific information for werewolf action
             filled_prompt = prompt_template.replace("<<public_chat>>", public_chat)
-            filled_prompt = filled_prompt.replace("<<game_state>>", json.dumps(game_state, indent=2))
-            filled_prompt = prompt_template.replace("<<player info>>", f"Alive players: {alive_players_str}\nAlive werewolves: {alive_werewolves_str}")
+            filled_prompt = filled_prompt.replace(
+                "<<game_state>>", json.dumps(game_state, indent=2)
+            )
+            filled_prompt = prompt_template.replace(
+                "<<player info>>",
+                f"Alive players: {alive_players_str}\nAlive werewolves: {alive_werewolves_str}",
+            )
 
         # Werewolf Discussion: Unified target
         elif event_type == "werewolf_discussion":
@@ -404,23 +453,34 @@ class WerewolfAgent:
             last_round_targets = player_info.get("last_round_targets", {})
             rounds_remaining = event.get("content", {}).get("rounds_remaining")
             # Format the last_round_targets string
-            last_round_targets_str = "\n".join(f"{wolf_id}: {target}" for wolf_id, target in last_round_targets.items())
+            last_round_targets_str = "\n".join(
+                f"{wolf_id}: {target}" for wolf_id, target in last_round_targets.items()
+            )
 
             # Fill in the specific information for werewolf discussion
             filled_prompt = prompt_template.replace("<<public_chat>>", public_chat)
-            filled_prompt = filled_prompt.replace("<<game_state>>", json.dumps(game_state, indent=2))
-            filled_prompt = filled_prompt.replace("<<player info>>", f"Alive players: {alive_players_str}\nAlive werewolves: {alive_werewolves_str}\nLast round targets:\n{last_round_targets_str}")
-            filled_prompt = filled_prompt.replace("<<rounds_remaining>>", str(rounds_remaining))
+            filled_prompt = filled_prompt.replace(
+                "<<game_state>>", json.dumps(game_state, indent=2)
+            )
+            filled_prompt = filled_prompt.replace(
+                "<<player info>>",
+                f"Alive players: {alive_players_str}\nAlive werewolves: {alive_werewolves_str}\nLast round targets:\n{last_round_targets_str}",
+            )
+            filled_prompt = filled_prompt.replace(
+                "<<rounds_remaining>>", str(rounds_remaining)
+            )
 
         # Step 6: Prepare the message content to pass to the tool
         messages = [
-            {'role': 'system', 'content': action_template.get('system', '')},
-            {'role': 'user', 'content': filled_prompt}
+            {"role": "system", "content": action_template.get("system", "")},
+            {"role": "user", "content": filled_prompt},
         ]
 
         # Step 7: Call GPT tool to decide the action
         try:
-            tool_calls = json.loads(self.gpt_tool_call(messages, tools)[0].function.arguments)
+            tool_calls = json.loads(
+                self.gpt_tool_call(messages, tools)[0].function.arguments
+            )
             return tool_calls
         except Exception as e:
             self.logger.error(f"Error during {event_type}'s tool call: {e}")
@@ -441,7 +501,6 @@ class WerewolfAgent:
         # Step 1: Get the event type from the action dictionary
         event_type = action.get("event_type", "")
 
-
         # Step 2: Define YAML path based on the action type
         yaml_paths = {
             "witch_action": r"marble\agent\werewolf_prompts\witch_prompt.yaml",
@@ -454,7 +513,7 @@ class WerewolfAgent:
             "player_speech": r"marble\agent\werewolf_prompts\speech_prompt.yaml",
             "vote_action": r"marble\agent\werewolf_prompts\vote_prompt.yaml",
             "last_words": r"marble\agent\werewolf_prompts\last_word_prompt.yaml",
-            "badge_flow": r"marble\agent\werewolf_prompts\badge_flow.yaml"
+            "badge_flow": r"marble\agent\werewolf_prompts\badge_flow.yaml",
         }
         yaml_path = yaml_paths.get(event_type, None)
 
@@ -464,19 +523,24 @@ class WerewolfAgent:
 
         # Step 3: Load the prompt template and tools for the given action from YAML
         try:
-            with open(yaml_path, 'r', encoding='utf-8') as f:
+            with open(yaml_path, "r", encoding="utf-8") as f:
                 action_template = yaml.safe_load(f)
-            prompt_template = action_template.get('user', '')
-            tools = action_template.get('tools', [])
+            prompt_template = action_template.get("user", "")
+            tools = action_template.get("tools", [])
         except Exception as e:
-            self.logger.error(f"Failed to load prompt template for event {event_type}: {e}")
+            self.logger.error(
+                f"Failed to load prompt template for event {event_type}: {e}"
+            )
             return {"action": "no_action", "target": None}
 
         # Step 4: Read from shared memory (public and private)
         try:
-                    
             public_state = self.shared_memory.get("public_state", {})
-            private_state = self.shared_memory.get("private_state", {}).get("players", {}).get(self.agent_id, {})
+            private_state = (
+                self.shared_memory.get("private_state", {})
+                .get("players", {})
+                .get(self.agent_id, {})
+            )
             personal_event_log = private_state.get("personal_event_log", "")
 
             # Build game state (from public_state)
@@ -484,13 +548,15 @@ class WerewolfAgent:
                 "days": public_state.get("days", 0),
                 "day/night": public_state.get("day/night", "night"),
                 "alive_players": public_state.get("alive_players", []),
-                "sheriff": public_state.get("sheriff", None)
+                "sheriff": public_state.get("sheriff", None),
             }
 
             # Use personal event log for private chat
             public_chat = personal_event_log
         except Exception as e:
-            self.logger.error(f"Error retrieving game state or personal event log from shared memory: {e}")
+            self.logger.error(
+                f"Error retrieving game state or personal event log from shared memory: {e}"
+            )
             return {"action": "no_action", "target": None}
 
         # Step 5: Handle specific event types
@@ -498,14 +564,18 @@ class WerewolfAgent:
         # For Witch Action
         if event_type == "witch_action":
             # Fetch night info (who was killed) from the action content
-            night_info = f"Tonight, {action['content'].get('night_info', 'nobody')} was killed."
+            night_info = (
+                f"Tonight, {action['content'].get('night_info', 'nobody')} was killed."
+            )
 
             # Get alive players
             alive_players = public_state.get("alive_players", [])
             alive_players_str = ", ".join(alive_players)
 
             # Get witch status for poison and antidote info
-            status = self.shared_memory["private_state"]["players"][self.agent_id]["status"]
+            status = self.shared_memory["private_state"]["players"][self.agent_id][
+                "status"
+            ]
             poison_count = status.get("poison_count", 0)
             antidote_count = status.get("antidote_count", 0)
 
@@ -515,11 +585,15 @@ class WerewolfAgent:
 
             # Fill in specific placeholders for witch_action
             filled_prompt = prompt_template.replace("<<public_chat>>", public_chat)
-            filled_prompt = filled_prompt.replace("<<game_state>>", json.dumps(game_state, indent=2))
+            filled_prompt = filled_prompt.replace(
+                "<<game_state>>", json.dumps(game_state, indent=2)
+            )
             filled_prompt = filled_prompt.replace("<<night info>>", night_info)
             filled_prompt = filled_prompt.replace("<<poison info>>", poison_info)
             filled_prompt = filled_prompt.replace("<<antidote info>>", antidote_info)
-            filled_prompt = filled_prompt.replace("<<Player alive info>>", alive_players_str)
+            filled_prompt = filled_prompt.replace(
+                "<<Player alive info>>", alive_players_str
+            )
 
         # For Guard Action
         elif event_type == "guard_action":
@@ -535,15 +609,23 @@ class WerewolfAgent:
 
             # Fill in specific placeholders for guard_action
             filled_prompt = prompt_template.replace("<<public_chat>>", public_chat)
-            filled_prompt = filled_prompt.replace("<<game_state>>", json.dumps(game_state, indent=2))
+            filled_prompt = filled_prompt.replace(
+                "<<game_state>>", json.dumps(game_state, indent=2)
+            )
             filled_prompt = filled_prompt.replace("<<night info>>", night_info)
-            filled_prompt = filled_prompt.replace("<<player_alive_info>>", alive_players_str)
+            filled_prompt = filled_prompt.replace(
+                "<<player_alive_info>>", alive_players_str
+            )
 
         # For Seer Action
         elif event_type == "seer_action":
             # Fetch previous night info (who was checked and the result)
-            night_info = "\n".join([f"Night {n}: Checked {info['player']} - {info['result']}"
-                                    for n, info in enumerate(action['content'].get('night_info', []), 1)])
+            night_info = "\n".join(
+                [
+                    f"Night {n}: Checked {info['player']} - {info['result']}"
+                    for n, info in enumerate(action["content"].get("night_info", []), 1)
+                ]
+            )
 
             # Get alive players
             alive_players = public_state.get("alive_players", [])
@@ -551,47 +633,63 @@ class WerewolfAgent:
 
             # Fill in specific placeholders for seer_action
             filled_prompt = prompt_template.replace("<<public_chat>>", public_chat)
-            filled_prompt = filled_prompt.replace("<<game_state>>", json.dumps(game_state, indent=2))
+            filled_prompt = filled_prompt.replace(
+                "<<game_state>>", json.dumps(game_state, indent=2)
+            )
             filled_prompt = filled_prompt.replace("<<night info>>", night_info)
-            filled_prompt = filled_prompt.replace("<<player_alive_info>>", alive_players_str)
+            filled_prompt = filled_prompt.replace(
+                "<<player_alive_info>>", alive_players_str
+            )
 
         # For Run for Sheriff Action
         elif event_type == "run_for_sheriff":
             # Fill in specific placeholders for run_for_sheriff
             filled_prompt = prompt_template.replace("<<public_chat>>", public_chat)
-            filled_prompt = filled_prompt.replace("<<game_state>>", json.dumps(game_state, indent=2))
+            filled_prompt = filled_prompt.replace(
+                "<<game_state>>", json.dumps(game_state, indent=2)
+            )
 
         # For Sheriff Speech Action
         elif event_type == "sheriff_speech":
             # Fetch election info (who spoke before and their content)
-            election_info = action['content'].get('election_info', "No speeches available yet. You are the first one.")
+            election_info = action["content"].get(
+                "election_info", "No speeches available yet. You are the first one."
+            )
 
             # Get speech position
-            speech_position = action['content'].get('speech_position', 'unknown')
-            speech_sequence = action['content'].get('speech_sequence', 'unknown')
+            speech_position = action["content"].get("speech_position", "unknown")
+            speech_sequence = action["content"].get("speech_sequence", "unknown")
             # Fill in specific placeholders for sheriff_speech
             filled_prompt = prompt_template.replace("<<public_chat>>", public_chat)
-            filled_prompt = filled_prompt.replace("<<game_state>>", json.dumps(game_state, indent=2))
+            filled_prompt = filled_prompt.replace(
+                "<<game_state>>", json.dumps(game_state, indent=2)
+            )
             filled_prompt = filled_prompt.replace("<<election_info>>", election_info)
-            filled_prompt = filled_prompt.replace("<<speech_sequence>>", speech_sequence)
-            filled_prompt = filled_prompt.replace("<<speech_position>>", speech_position)
+            filled_prompt = filled_prompt.replace(
+                "<<speech_sequence>>", speech_sequence
+            )
+            filled_prompt = filled_prompt.replace(
+                "<<speech_position>>", speech_position
+            )
 
         # For Vote for Sheriff Action
         elif event_type == "vote_for_sheriff":
             # Fetch election log and candidate list
-            election_log = action['content'].get('election_log', "None")
-            candidate_list = action['content'].get('candidate_list', "None")
+            election_log = action["content"].get("election_log", "None")
+            candidate_list = action["content"].get("candidate_list", "None")
 
             # Fill in specific placeholders for vote_for_sheriff
             filled_prompt = prompt_template.replace("<<public_chat>>", public_chat)
-            filled_prompt = filled_prompt.replace("<<game_state>>", json.dumps(game_state, indent=2))
+            filled_prompt = filled_prompt.replace(
+                "<<game_state>>", json.dumps(game_state, indent=2)
+            )
             filled_prompt = filled_prompt.replace("<<election_log>>", election_log)
             filled_prompt = filled_prompt.replace("<<candidate_list>>", candidate_list)
 
         # For Decide Speech Sequence Action
         if event_type == "decide_speech_sequence":
             # Fetch dead player and alive player info
-            dead_players = action['content'].get('dead_player_list', [])
+            dead_players = action["content"].get("dead_player_list", [])
             dead_players_str = ", ".join(dead_players)
 
             # Include the sheriff's own ID (self.agent_id) in the candidates list
@@ -600,56 +698,82 @@ class WerewolfAgent:
 
             # Fill in specific placeholders for decide_speech_sequence
             filled_prompt = prompt_template.replace("<<public_chat>>", public_chat)
-            filled_prompt = filled_prompt.replace("<<game_state>>", json.dumps(game_state, indent=2))
-            filled_prompt = filled_prompt.replace("<<dead player_list>>", dead_players_str)
-            filled_prompt = filled_prompt.replace("<<beginning candidates list>>", beginning_candidates_str)
+            filled_prompt = filled_prompt.replace(
+                "<<game_state>>", json.dumps(game_state, indent=2)
+            )
+            filled_prompt = filled_prompt.replace(
+                "<<dead player_list>>", dead_players_str
+            )
+            filled_prompt = filled_prompt.replace(
+                "<<beginning candidates list>>", beginning_candidates_str
+            )
 
             # Continue with further processing of the filled prompt
 
         elif event_type == "player_speech":
             # Fetch previous speech info (who spoke before and what they said)
-            speech_info = action['content'].get("speech_history", 'unknown')
+            speech_info = action["content"].get("speech_history", "unknown")
 
             # Get speech position
-            speech_position = str(action['content'].get('speech_position', 'unknown'))
+            speech_position = str(action["content"].get("speech_position", "unknown"))
 
             # Fill in specific placeholders for speech_action
             filled_prompt = prompt_template.replace("<<public_chat>>", public_chat)
-            filled_prompt = filled_prompt.replace("<<game_state>>", json.dumps(game_state, indent=2))
+            filled_prompt = filled_prompt.replace(
+                "<<game_state>>", json.dumps(game_state, indent=2)
+            )
             filled_prompt = filled_prompt.replace("<<speech_info>>", speech_info)
-            filled_prompt = filled_prompt.replace("<<speech_position>>", speech_position)
+            filled_prompt = filled_prompt.replace(
+                "<<speech_position>>", speech_position
+            )
 
         elif event_type == "vote_action":
-
             filled_prompt = prompt_template.replace("<<public_chat>>", public_chat)
-            filled_prompt = filled_prompt.replace("<<game_state>>", json.dumps(game_state, indent=2))       
- 
+            filled_prompt = filled_prompt.replace(
+                "<<game_state>>", json.dumps(game_state, indent=2)
+            )
+
         elif event_type == "last_words":
-
             filled_prompt = prompt_template.replace("<<public_chat>>", public_chat)
-            filled_prompt = filled_prompt.replace("<<game_state>>", json.dumps(game_state, indent=2))
-        
+            filled_prompt = filled_prompt.replace(
+                "<<game_state>>", json.dumps(game_state, indent=2)
+            )
+
         elif event_type == "badge_flow":
-
             filled_prompt = prompt_template.replace("<<public_chat>>", public_chat)
-            filled_prompt = filled_prompt.replace("<<game_state>>", json.dumps(game_state, indent=2))
-        
+            filled_prompt = filled_prompt.replace(
+                "<<game_state>>", json.dumps(game_state, indent=2)
+            )
+
         else:
-
             filled_prompt = prompt_template.replace("<<public_chat>>", public_chat)
-            filled_prompt = filled_prompt.replace("<<game_state>>", json.dumps(game_state, indent=2))
+            filled_prompt = filled_prompt.replace(
+                "<<game_state>>", json.dumps(game_state, indent=2)
+            )
 
         if self.env.config.get("use_daily_tasks", False):
             if self.env.daily_tasks:
                 tasks_from_env = self.env.daily_tasks.get("public", [])
                 if self.role == "witch":
                     # use all tasks that appear in tasks_from_env
-                    tasks_considered = [t for t in ["protect_seer", "rescue_villager", "run_for_sheriff", "exile_werewolf", "poison_werewolf"]
-                                        if t in tasks_from_env]
+                    tasks_considered = [
+                        t
+                        for t in [
+                            "protect_seer",
+                            "rescue_villager",
+                            "run_for_sheriff",
+                            "exile_werewolf",
+                            "poison_werewolf",
+                        ]
+                        if t in tasks_from_env
+                    ]
                 else:
                     # not witch => only 3 tasks
-                    tasks_considered = [t for t in ["protect_seer", "run_for_sheriff", "exile_werewolf"]
-                                        if t in tasks_from_env]
+                    tasks_considered = [
+                        t
+                        for t in ["protect_seer", "run_for_sheriff", "exile_werewolf"]
+                        if t in tasks_from_env
+                    ]
                 if tasks_considered:
                     # A dictionary mapping task name -> brief description
                     task_descriptions = {
@@ -657,7 +781,7 @@ class WerewolfAgent:
                         "rescue_villager": "Use antidote or supportive actions to save a villager.",
                         "run_for_sheriff": "Attempt to become the elected sheriff for additional influence.",
                         "exile_werewolf": "Coordinate with others to vote out a suspected werewolf.",
-                        "poison_werewolf": "Use poison to eliminate a werewolf during the night phase."
+                        "poison_werewolf": "Use poison to eliminate a werewolf during the night phase.",
                     }
 
                     # Build a multi-line string, one line per task
@@ -682,22 +806,28 @@ class WerewolfAgent:
         if self.is_villager:
             if self.strategy == "cooperative":
                 # Append text or instructions that emphasize cooperation
-                filled_prompt += "\n\nRemember, you are using a cooperative strategy. " \
-                                "In your decisions, prioritize teamwork and collaboration " \
-                                "with other villagers to increase your chances of success."
+                filled_prompt += (
+                    "\n\nRemember, you are using a cooperative strategy. "
+                    "In your decisions, prioritize teamwork and collaboration "
+                    "with other villagers to increase your chances of success."
+                )
             else:
                 # The default or "independent" approach
-                filled_prompt += "\n\nRemember, you are using an independent strategy. " \
-                                "Make decisions based on your own judgment, with less reliance " \
-                                "on others' input."
+                filled_prompt += (
+                    "\n\nRemember, you are using an independent strategy. "
+                    "Make decisions based on your own judgment, with less reliance "
+                    "on others' input."
+                )
         messages = [
-            {'role': 'system', 'content': action_template.get('system', '')},
-            {'role': 'user', 'content': filled_prompt}
+            {"role": "system", "content": action_template.get("system", "")},
+            {"role": "user", "content": filled_prompt},
         ]
 
         # Step 7: Call the GPT tool to decide the action
         try:
-            tool_calls = json.loads(self.gpt_tool_call(messages, tools)[0].function.arguments)
+            tool_calls = json.loads(
+                self.gpt_tool_call(messages, tools)[0].function.arguments
+            )
             return tool_calls
         except Exception as e:
             self.logger.error(f"Error during {event_type}'s tool call: {e}")

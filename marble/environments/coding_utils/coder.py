@@ -1,13 +1,18 @@
 import os
 import re
-from typing import Any, Dict, Optional
-from marble.llms.model_prompting import model_prompting
+from typing import Any, Dict
+
 from ruamel.yaml import YAML
 
-def create_solution_handler(env, task_description: str, model_name: str, file_path: str = "solution.py") -> Dict[str, Any]:
+from marble.llms.model_prompting import model_prompting
+
+
+def create_solution_handler(
+    env, task_description: str, model_name: str, file_path: str = "solution.py"
+) -> Dict[str, Any]:
     """
     Creates solution.py file and generates content based on task description.
-    
+
     The generated code will include inline comments explaining the file,
     and the final output will be enclosed in a Markdown code block with the language
     specified as python. Only the code within the code block (without the markdown markers)
@@ -25,31 +30,31 @@ def create_solution_handler(env, task_description: str, model_name: str, file_pa
     try:
         file_path = "solution.py"
         full_path = os.path.join(env.workspace_dir, file_path)
-        
+
         if os.path.exists(full_path):
             return {
                 "success": False,
-                "error-msg": f"Solution file already exists at {full_path}. Operation aborted."
+                "error-msg": f"Solution file already exists at {full_path}. Operation aborted.",
             }
-            
+
         config_path = "marble/configs/coding_config/coding_config.yaml"
         if not os.path.exists(config_path):
             return {
                 "success": False,
-                "error-msg": f"Config file not found at {config_path}"
+                "error-msg": f"Config file not found at {config_path}",
             }
-            
+
         yaml = YAML()
-        with open(config_path, 'r', encoding='utf-8') as f:
+        with open(config_path, "r", encoding="utf-8") as f:
             config = yaml.load(f)
-        
-        full_task_description = config['task']['content']
-        
+
+        full_task_description = config["task"]["content"]
+
         requirements_start = "1. Implementation requirements:\n"
         requirements_end = "\n\n2. Project structure:"
         requirements = full_task_description[
-            full_task_description.find(requirements_start) + len(requirements_start):
-            full_task_description.find(requirements_end)
+            full_task_description.find(requirements_start)
+            + len(requirements_start) : full_task_description.find(requirements_end)
         ].strip()
 
         os.makedirs(env.workspace_dir, exist_ok=True)
@@ -70,11 +75,11 @@ def create_solution_handler(env, task_description: str, model_name: str, file_pa
             model_name,
             messages=[
                 {"role": "system", "content": system_prompt},
-                {"role": "user", "content": user_prompt}
+                {"role": "user", "content": user_prompt},
             ],
             return_num=1,
             max_token_num=4096,
-            temperature=0.0
+            temperature=0.0,
         )[0]
 
         code_content = response.content
@@ -85,18 +90,18 @@ def create_solution_handler(env, task_description: str, model_name: str, file_pa
         else:
             code_content = code_content.strip()
 
-
-        with open(full_path, 'w') as file:
+        with open(full_path, "w") as file:
             file.write(code_content)
 
         return {
             "success": True,
             "message": f"Solution file created at {full_path}",
-            "code": code_content
+            "code": code_content,
         }
 
     except Exception as e:
         return {"success": False, "error-msg": str(e)}
+
 
 # 以下 revise_solution_handler 函数也可以做类似的修改以确保输出纯代码，
 # 这里只是作为参考，现已注释掉：
@@ -118,7 +123,7 @@ def create_solution_handler(env, task_description: str, model_name: str, file_pa
 #     try:
 #         full_path = os.path.join(env.workspace_dir, os.path.basename(file_path))
 #         advice_path = os.path.join(env.workspace_dir, "advices.json")
-#         
+#
 #         # Create workspace directory if it doesn't exist
 #         os.makedirs(env.workspace_dir, exist_ok=True)
 #
@@ -199,6 +204,7 @@ def create_solution_handler(env, task_description: str, model_name: str, file_pa
 #     except Exception as e:
 #         return {"success": False, "error-msg": str(e)}
 
+
 def register_coder_actions(env):
     """
     Register coding-related actions in the environment.
@@ -216,19 +222,19 @@ def register_coder_actions(env):
                     "properties": {
                         "task_description": {
                             "type": "string",
-                            "description": "Description of the task (will be read from config file)"
+                            "description": "Description of the task (will be read from config file)",
                         },
                         "model_name": {
                             "type": "string",
                             "description": "Name of the LLM model to use",
-                            "default": "gpt-3.5-turbo"
-                        }
+                            "default": "gpt-3.5-turbo",
+                        },
                     },
                     "required": ["task_description", "model_name"],
-                    "additionalProperties": False
-                }
-            }
-        }
+                    "additionalProperties": False,
+                },
+            },
+        },
     )
 
     # 如果需要，也可以类似地注册 revise_solution 动作（目前该函数为注释状态）
@@ -244,11 +250,11 @@ def register_coder_actions(env):
     #                 "type": "object",
     #                 "properties": {
     #                     "task_description": {
-    #                         "type": "string", 
+    #                         "type": "string",
     #                         "description": "Description of the task to implement"
     #                     },
     #                     "model_name": {
-    #                         "type": "string", 
+    #                         "type": "string",
     #                         "description": "Name of the LLM model to use"
     #                     },
     #                     "file_path": {

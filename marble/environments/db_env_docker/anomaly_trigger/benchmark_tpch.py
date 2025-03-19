@@ -6,18 +6,19 @@ import psycopg2
 
 REPEATCOUNT = 1
 TIMELOGPATH = str(int(time.time())) + "_tpch_trigger_time_log.txt"
-TIMELOG = open(TIMELOGPATH, 'w+')
+TIMELOG = open(TIMELOGPATH, "w+")
 
 
-class Database():
-
+class Database:
     def __init__(self):
         self.conn = None
-        self.conn = psycopg2.connect(database='sysbench',
-                                     user='test',
-                                     password='Test123_456',
-                                     host='localhost',
-                                     port=5432)
+        self.conn = psycopg2.connect(
+            database="sysbench",
+            user="test",
+            password="Test123_456",
+            host="localhost",
+            port=5432,
+        )
 
     def execute_sql(self, sql):
         fail = 1
@@ -37,18 +38,16 @@ class Database():
             i = i + 1
         if fail == 1:
             # print("SQL Execution Fatal!!", sql)
-            return 0, ''
+            return 0, ""
         elif fail == 0:
             return 1, res
 
 
 def all_sql_files():
-    res_path = "{}/tpch-queries/".format(
-        os.path.dirname(os.path.abspath(__file__)))
+    res_path = "{}/tpch-queries/".format(os.path.dirname(os.path.abspath(__file__)))
     # all_file_list = list(filter(file_filter, os.listdir(res_path)))
     # all_file_list = sorted(all_file_list, key=custom_sort)
-    all_file_list = [
-        '4.explain.sql']
+    all_file_list = ["4.explain.sql"]
 
     print(all_file_list)
     files_list = []
@@ -59,7 +58,7 @@ def all_sql_files():
 
 def custom_sort(item):
     # 提取数字和字母部分
-    match = re.match(r'(\d+)(\D+)', item)
+    match = re.match(r"(\d+)(\D+)", item)
     # 将数字部分转换为整数以进行比较
     num_part = int(match.group(1))
     # 返回元组以按数字和字母排序
@@ -67,7 +66,7 @@ def custom_sort(item):
 
 
 def file_filter(f):
-    if f[-4:] == '.sql' and 'schema' not in f and 'fkindexes' not in f:
+    if f[-4:] == ".sql" and "schema" not in f and "fkindexes" not in f:
         return True
     else:
         return False
@@ -76,10 +75,10 @@ def file_filter(f):
 def get_sql_from_file(file_name):
     file = open(file_name)
     lines = file.readlines().copy()
-    sql = ''
+    sql = ""
     for line in lines:
         sql += line
-    sql = sql.replace('\n', ' ').replace('   ', ' ').replace('  ', ' ')
+    sql = sql.replace("\n", " ").replace("   ", " ").replace("  ", " ")
     file.close()
     return sql
 
@@ -100,16 +99,15 @@ def test_all():
 
 
 def test_one():
-    res_path = "{}/tpch-queries/".format(
-        os.path.dirname(os.path.abspath(__file__)))
-    test_hint_from_file(res_path + '1.explain.sql')
+    res_path = "{}/tpch-queries/".format(os.path.dirname(os.path.abspath(__file__)))
+    test_hint_from_file(res_path + "1.explain.sql")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     for i in range(0, REPEATCOUNT):
-        TIMELOG.write(str(int(time.time()))+";")
+        TIMELOG.write(str(int(time.time())) + ";")
         test_all()
-        TIMELOG.write(str(int(time.time()))+"\n")
+        TIMELOG.write(str(int(time.time())) + "\n")
         TIMELOG.flush()
 
     TIMELOG.close()

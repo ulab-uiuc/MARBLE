@@ -16,7 +16,6 @@ class LongTermMemory(BaseMemory):
     Long term momery class that implements memory retrieval.
     """
 
-
     def __init__(self) -> None:
         """
         Initialize the memory module.
@@ -36,7 +35,7 @@ class LongTermMemory(BaseMemory):
             model="text-embedding-3-small",
             input=str(information),
         )
-        embedding_array:NDArray[Any] = np.array(embedding)
+        embedding_array: NDArray[Any] = np.array(embedding)
         self.storage.append((information, embedding_array))
 
     def retrieve_latest(self) -> Any:
@@ -48,7 +47,12 @@ class LongTermMemory(BaseMemory):
         """
         return self.storage[-1][0] if self.storage else None
 
-    def retrieve_most_relevant(self, information: Dict[str, Union[str, Message]], n: int = 1, summarize: bool = False) -> Any:
+    def retrieve_most_relevant(
+        self,
+        information: Dict[str, Union[str, Message]],
+        n: int = 1,
+        summarize: bool = False,
+    ) -> Any:
         """
         Retrieve the most relevant information from memory.
 
@@ -66,14 +70,20 @@ class LongTermMemory(BaseMemory):
             model="text-embedding-3-small",
             input=str(information),
         )
-        embedding_array:NDArray[Any] = np.array(embedding)
+        embedding_array: NDArray[Any] = np.array(embedding)
         retrieval_scores = []
         for stored_information in self.storage:
-            similarity = cosine_similarity(stored_information[1].reshape((1, -1)), embedding_array.reshape((1, -1)))[0][0]
+            similarity = cosine_similarity(
+                stored_information[1].reshape((1, -1)), embedding_array.reshape((1, -1))
+            )[0][0]
             retrieval_scores.append((stored_information[0], similarity))
-        retrieval_scores = sorted(retrieval_scores, key=lambda score: score[1], reverse=True)[:n]
+        retrieval_scores = sorted(
+            retrieval_scores, key=lambda score: score[1], reverse=True
+        )[:n]
         if summarize:
-            summary = self.summarize([scored_information[0] for scored_information in retrieval_scores])
+            summary = self.summarize(
+                [scored_information[0] for scored_information in retrieval_scores]
+            )
             return summary
         else:
             return [information[0] for information in retrieval_scores]
@@ -89,23 +99,23 @@ class LongTermMemory(BaseMemory):
             Message: Summary of the input memory.
         """
         if not memory:
-            warnings.warn("You are tring to summarize a long-term memory! This may cost a lot of tokens!")
+            warnings.warn(
+                "You are tring to summarize a long-term memory! This may cost a lot of tokens!"
+            )
             memory = [information[0] for information in self.storage]
 
-        prompt = (
-            "You are a helpful assistant that can concisely summarize the following json format content which is listed in temporally sequential order:\n"
-        )
+        prompt = "You are a helpful assistant that can concisely summarize the following json format content which is listed in temporally sequential order:\n"
         for idx, information in enumerate(memory):
             prompt += f"{idx}. {str(information)}\n"
 
         summary = model_prompting(
             llm_model="gpt-3.5-turbo",
-            messages=[{"role":"system", "content": prompt}],
+            messages=[{"role": "system", "content": prompt}],
             return_num=1,
             max_token_num=512,
             temperature=0.0,
             top_p=None,
-            stream=None
+            stream=None,
         )[0]
         return summary
 

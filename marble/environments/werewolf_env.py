@@ -1,21 +1,21 @@
+import argparse
 import json
 import os
+import random
 import re
 import sys
-import random
 import time
+from threading import Condition, Lock
+from typing import Any, Dict, List
+
 import names
 import yaml
-import argparse
-from typing import Any, Dict, List
-from threading import Condition, Lock
+
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../../")))
-from marble.agent.werewolf_agent import WerewolfAgent
-from marble.utils.eventbus import EventBus
 from colorama import Fore, Style, init
 
-
-
+from marble.agent.werewolf_agent import WerewolfAgent
+from marble.utils.eventbus import EventBus
 
 
 class WerewolfEnv:
@@ -33,16 +33,18 @@ class WerewolfEnv:
         self.agents = []
 
         # Load the configuration file
-        with open(config_path, 'r', encoding='utf-8') as f:
+        with open(config_path, "r", encoding="utf-8") as f:
             config = yaml.safe_load(f)
         self.config = config
 
         # Load the system_prompt.yaml file
         system_prompt_path = self.config.get("system_prompt_path")
         if not system_prompt_path or not os.path.exists(system_prompt_path):
-            raise FileNotFoundError(f"System prompt file '{system_prompt_path}' not found.")
+            raise FileNotFoundError(
+                f"System prompt file '{system_prompt_path}' not found."
+            )
 
-        with open(system_prompt_path, 'r', encoding='utf-8') as f:
+        with open(system_prompt_path, "r", encoding="utf-8") as f:
             system_prompt = yaml.safe_load(f)
 
         game_introduction = system_prompt.get("game_introduction", "")
@@ -56,7 +58,7 @@ class WerewolfEnv:
             "villager": system_prompt.get("villager_introduction", ""),
             "seer": system_prompt.get("seer_introduction", ""),
             "witch": system_prompt.get("witch_introduction", ""),
-            "guard": system_prompt.get("guard_introduction", "")
+            "guard": system_prompt.get("guard_introduction", ""),
         }
 
         self.scores = {
@@ -81,7 +83,20 @@ class WerewolfEnv:
         self.shared_memory_path = os.path.join(game_log_dir, "shared_memory.json")
 
         # Load roles and configuration options
-        roles = self.config.get("roles", ['wolf', 'wolf', 'wolf', 'villager', 'villager', 'villager', 'seer', 'witch', 'guard'])
+        roles = self.config.get(
+            "roles",
+            [
+                "wolf",
+                "wolf",
+                "wolf",
+                "villager",
+                "villager",
+                "villager",
+                "seer",
+                "witch",
+                "guard",
+            ],
+        )
         randomize_roles = self.config.get("randomize_roles", True)
         if randomize_roles:
             random.shuffle(roles)
@@ -98,7 +113,7 @@ class WerewolfEnv:
                 "sheriff": None,
                 "event_log": game_introduction,
                 "speech_order": {},
-                "day_cache": []
+                "day_cache": [],
             },
             "private_state": {
                 "players": {},
@@ -107,22 +122,24 @@ class WerewolfEnv:
                     "rounds_remaining": 5,
                     "alive_werewolves": [],
                     "round_targets": [],
-                    "final_target": None
+                    "final_target": None,
                 },
-                "night_cache": []
+                "night_cache": [],
             },
             "public_event_log": game_introduction,
-            "private_event_log": game_introduction
+            "private_event_log": game_introduction,
         }
 
         used_names = set()  # To record the names that have already been used
         for i in range(num_players):
             # Ensure that the generated name is unique
             while True:
-                agent_id = names.get_first_name() if use_random_names else f"agent_{i + 1}"
+                agent_id = (
+                    names.get_first_name() if use_random_names else f"agent_{i + 1}"
+                )
                 if agent_id not in used_names:
                     used_names.add(agent_id)
-                    break 
+                    break
             role = roles[i]
 
             # Check if it is a villager configuration
@@ -132,7 +149,7 @@ class WerewolfEnv:
             agent_config = {
                 "agent_id": agent_id,
                 "villager_config": self.config.get("villager_config", {}),
-                "werewolf_config": self.config.get("werewolf_config", {})
+                "werewolf_config": self.config.get("werewolf_config", {}),
             }
 
             agent = WerewolfAgent(
@@ -143,7 +160,7 @@ class WerewolfEnv:
                 shared_memory=self.shared_memory,
                 env=self,
                 number=i + 1,
-                is_villager=is_villager
+                is_villager=is_villager,
             )
             self.agents.append(agent)
             self.shared_memory["public_state"]["alive_players"].append(agent_id)
@@ -165,7 +182,7 @@ class WerewolfEnv:
                 "protection_count": 0,
                 "poison_count": 1 if role == "witch" else 0,
                 "antidote_count": 1 if role == "witch" else 0,
-                "badge_count": 0
+                "badge_count": 0,
             }
 
             if role == "seer":
@@ -174,15 +191,17 @@ class WerewolfEnv:
             self.shared_memory["private_state"]["players"][agent_id] = {
                 "role": role,
                 "status": status,
-                "personal_event_log": personal_event_log
+                "personal_event_log": personal_event_log,
             }
 
         # Write the shared memory to a JSON file
-        with open(self.shared_memory_path, 'w', encoding='utf-8') as f:
+        with open(self.shared_memory_path, "w", encoding="utf-8") as f:
             json.dump(self.shared_memory, f, indent=4)
 
         # Print initialization log
-        self._log_system(f"Werewolf environment '{self.name}' initialized with {num_players} agents and shared memory.")
+        self._log_system(
+            f"Werewolf environment '{self.name}' initialized with {num_players} agents and shared memory."
+        )
         self._log_system(f"Game data stored in: {game_log_dir}")
 
     def to_dict(self, day_night_info: str = "") -> Dict[str, Any]:
@@ -196,13 +215,15 @@ class WerewolfEnv:
                                   It will be appended to the env_name.
         """
         # If day_night_info is empty, use the original name; otherwise, append it
-        combined_name = self.name if not day_night_info else f"{self.name}_{day_night_info}"
+        combined_name = (
+            self.name if not day_night_info else f"{self.name}_{day_night_info}"
+        )
 
         env_dict = {
-            "config": self.config,          # Game initialization configuration
-            "shared_memory": self.shared_memory,   # Main game state
-            "scores": self.scores,          # Current scores for villagers/werewolves
-            "env_name": combined_name,       # Append "DayX"/"NightY" to the original name
+            "config": self.config,  # Game initialization configuration
+            "shared_memory": self.shared_memory,  # Main game state
+            "scores": self.scores,  # Current scores for villagers/werewolves
+            "env_name": combined_name,  # Append "DayX"/"NightY" to the original name
             "agents": [agent.to_dict() for agent in self.agents],
             "shared_memory_path": self.shared_memory_path,
             # Additional fields like log directories can be added here if necessary
@@ -210,9 +231,11 @@ class WerewolfEnv:
         }
 
         return env_dict
-    
+
     @classmethod
-    def load_from_file(cls, file_path: str, log_dir="werewolf_log", override_config_path=None) -> "WerewolfEnv":
+    def load_from_file(
+        cls, file_path: str, log_dir="werewolf_log", override_config_path=None
+    ) -> "WerewolfEnv":
         """
         Load WerewolfEnv from an existing snapshot (JSON). If override_config_path is provided,
         the env.config and each agent_data's villager_config / werewolf_config will be overridden or merged.
@@ -269,7 +292,6 @@ class WerewolfEnv:
 
         # ========== Core: Merge config for each agent_data ==========
         for agent_data in agents_data:
-
             agent_config = agent_data.get("config", {})
             # 1) Retain other fields (e.g., agent_id, other keys),
             #    only merge "villager_config"/"werewolf_config"
@@ -291,14 +313,16 @@ class WerewolfEnv:
                 event_bus=env.event_bus,
                 shared_memory=env.shared_memory,
                 env=env,
-                strategy=cooperation_mode
+                strategy=cooperation_mode,
             )
             env.agents.append(new_agent)
 
         # 8. Complete instantiation
         env.id = "SYSTEM"
         env._log_system(f"Successfully loaded WerewolfEnv from '{file_path}'.")
-        env._log_system(f"Logs for this recovered game will be stored in: {game_log_dir}")
+        env._log_system(
+            f"Logs for this recovered game will be stored in: {game_log_dir}"
+        )
         return env
 
     def _log_system(self, message: str):
@@ -327,7 +351,9 @@ class WerewolfEnv:
             player_id (str): The player ID.
             message (str): The player's speech content.
         """
-        print(f"{Fore.BLUE}[{player_id} ({self.get_player_role(player_id)})]: {message}{Style.RESET_ALL}")
+        print(
+            f"{Fore.BLUE}[{player_id} ({self.get_player_role(player_id)})]: {message}{Style.RESET_ALL}"
+        )
 
     def publish_event(self, event: dict):
         """
@@ -336,7 +362,7 @@ class WerewolfEnv:
         self.current_event = event["event_type"]
         self.event_completed = False  # Reset completion flag
         self.event_bus.publish(event)  # Publish event
-        
+
         while not self.event_completed:
             time.sleep(0.01)  # Avoid excessive CPU usage
 
@@ -353,10 +379,12 @@ class WerewolfEnv:
                 f"Attempted to mark event '{event_type}' as complete, "
                 f"but current event is '{self.current_event}'. No action taken."
             )
-            
+
     def save_checkpoint(self, snapshot: Dict[str, Any], filename: str) -> None:
         # Decide a directory to save these checkpoint JSONs, maybe in the same game_log_dir
-        checkpoint_path = os.path.join(os.path.dirname(self.shared_memory_path), filename)
+        checkpoint_path = os.path.join(
+            os.path.dirname(self.shared_memory_path), filename
+        )
         with open(checkpoint_path, "w", encoding="utf-8") as f:
             json.dump(snapshot, f, indent=4, ensure_ascii=False)
         self._log_system(f"Checkpoint saved to {checkpoint_path}")
@@ -374,39 +402,53 @@ class WerewolfEnv:
                 # Start a new day-night cycle
                 self.shared_memory["public_state"]["days"] += 1
                 current_day = self.shared_memory["public_state"]["days"]
-                day_start_message = f"SYSTEM: Starting day-night cycle for Day {current_day}"
-                self.log_event(is_private=False, agent_id="system", content=day_start_message)
+                day_start_message = (
+                    f"SYSTEM: Starting day-night cycle for Day {current_day}"
+                )
+                self.log_event(
+                    is_private=False, agent_id="system", content=day_start_message
+                )
 
                 # Night Phase
                 self.shared_memory["public_state"]["day/night"] = "night"
                 night_start_message = f"SYSTEM: Night {current_day} begins. Werewolves and special roles take actions."
-                self.log_event(is_private=False, agent_id="system", content=night_start_message)
+                self.log_event(
+                    is_private=False, agent_id="system", content=night_start_message
+                )
                 self.night()
 
                 night_info_str = f"Night{current_day}"
                 snapshot_night = self.to_dict(day_night_info=night_info_str)
-                self.save_checkpoint(snapshot_night, f"checkpoint_{night_info_str}.json")
+                self.save_checkpoint(
+                    snapshot_night, f"checkpoint_{night_info_str}.json"
+                )
 
                 # Check termination condition after night phase
                 if self.should_terminate()["terminated"]:
                     try:
-                        with open(self.shared_memory_path, 'w', encoding='utf-8') as f:
+                        with open(self.shared_memory_path, "w", encoding="utf-8") as f:
                             json.dump(self.shared_memory, f, indent=4)
-                        self._log_system(f"Shared memory successfully written to {self.shared_memory_path}")
+                        self._log_system(
+                            f"Shared memory successfully written to {self.shared_memory_path}"
+                        )
                     except Exception as e:
-                        self._log_system(f"Failed to write shared memory to {self.shared_memory_path}: {e}")
+                        self._log_system(
+                            f"Failed to write shared memory to {self.shared_memory_path}: {e}"
+                        )
                     break
 
                 # Day Phase
                 self.shared_memory["public_state"]["day/night"] = "day"
                 day_start_message = f"SYSTEM: Day {current_day} begins. Players discuss and vote on potential suspects."
                 self._log_event(day_start_message)
-                self.log_event(is_private=False, agent_id="system", content=day_start_message)
+                self.log_event(
+                    is_private=False, agent_id="system", content=day_start_message
+                )
                 if self.config.get("use_daily_tasks", False):
                     private_tasks, public_tasks = self.generate_daily_tasks()
                     self.daily_tasks = {
                         "private": private_tasks,
-                        "public": public_tasks
+                        "public": public_tasks,
                     }
                     # Optionally, log a private system message indicating tasks have been generated
                     self.log_event(
@@ -415,7 +457,7 @@ class WerewolfEnv:
                         content=(
                             f"[start] Daily tasks for Day {current_day}: "
                             f"private={private_tasks}, public={public_tasks}"
-                        )
+                        ),
                     )
                 self.day()
 
@@ -426,25 +468,35 @@ class WerewolfEnv:
                 # Check termination condition after day phase
                 game_result = self.should_terminate()
                 if game_result["terminated"]:
-                    termination_message = "SYSTEM: Game termination condition met after day phase."
+                    termination_message = (
+                        "SYSTEM: Game termination condition met after day phase."
+                    )
                     self._log_system(termination_message)
                     try:
-                        with open(self.shared_memory_path, 'w', encoding='utf-8') as f:
+                        with open(self.shared_memory_path, "w", encoding="utf-8") as f:
                             json.dump(self.shared_memory, f, indent=4)
-                        self._log_system(f"Shared memory successfully written to {self.shared_memory_path}")
+                        self._log_system(
+                            f"Shared memory successfully written to {self.shared_memory_path}"
+                        )
                     except Exception as e:
-                        self._log_system(f"Failed to write shared memory to {self.shared_memory_path}: {e}")
+                        self._log_system(
+                            f"Failed to write shared memory to {self.shared_memory_path}: {e}"
+                        )
                     return game_result
 
         except Exception as e:
             error_message = f"An error occurred during the game cycle: {e}"
             self._log_system(error_message)
             try:
-                with open(self.shared_memory_path, 'w', encoding='utf-8') as f:
+                with open(self.shared_memory_path, "w", encoding="utf-8") as f:
                     json.dump(self.shared_memory, f, indent=4)
-                self._log_system(f"Shared memory successfully written to {self.shared_memory_path}")
+                self._log_system(
+                    f"Shared memory successfully written to {self.shared_memory_path}"
+                )
             except Exception as e:
-                self._log_system(f"Failed to write shared memory to {self.shared_memory_path}: {e}")
+                self._log_system(
+                    f"Failed to write shared memory to {self.shared_memory_path}: {e}"
+                )
             raise
 
     def night(self) -> None:
@@ -454,7 +506,9 @@ class WerewolfEnv:
         """
         try:
             # Record the current night number
-            current_night = self.shared_memory["public_state"]["days"]  # Which night (game round + 1)
+            current_night = self.shared_memory["public_state"][
+                "days"
+            ]  # Which night (game round + 1)
             self.reset_guard_protection()
             # Add a new dictionary to night_cache to record the current night
             night_event = {}
@@ -463,36 +517,58 @@ class WerewolfEnv:
             # Guard action
             self._log_event("Guard action starts.")
             self.guard_action()
-            self.log_event(is_private=False, agent_id="system", content="Guard has chosen to protect a player.")
+            self.log_event(
+                is_private=False,
+                agent_id="system",
+                content="Guard has chosen to protect a player.",
+            )
 
             # Werewolf action
             self._log_event("Werewolves are selecting a target.")
             self.werewolf_action()
-            self.log_event(is_private=False, agent_id="system", content="Werewolves have chosen their target.")
+            self.log_event(
+                is_private=False,
+                agent_id="system",
+                content="Werewolves have chosen their target.",
+            )
 
             # Seer action
             self._log_event("Seer is performing their action.")
             self.seer_action()
-            self.log_event(is_private=False, agent_id="system", content="Seer has checked a player's identity.")
+            self.log_event(
+                is_private=False,
+                agent_id="system",
+                content="Seer has checked a player's identity.",
+            )
 
             # Witch action
             self._log_event("Witch is deciding on antidote and poison usage.")
             self.witch_action()
-            self.log_event(is_private=False, agent_id="system", content="Witch has made her decision on potion use.")
+            self.log_event(
+                is_private=False,
+                agent_id="system",
+                content="Witch has made her decision on potion use.",
+            )
 
             self._log_system("Night phase actions are completed.")
 
             # Save shared memory to file
-            with open(self.shared_memory_path, 'w', encoding='utf-8') as f:
+            with open(self.shared_memory_path, "w", encoding="utf-8") as f:
                 json.dump(self.shared_memory, f, indent=4)
-            self._log_system(f"Shared memory successfully written to {self.shared_memory_path}")
+            self._log_system(
+                f"Shared memory successfully written to {self.shared_memory_path}"
+            )
 
         except Exception as e:
             # Capture all exceptions and write shared memory to a JSON file
             self._log_system(f"An error occurred during the night phase: {e}")
-            with open(f"{self.shared_memory_path}_error_dump.json", 'w', encoding='utf-8') as f:
+            with open(
+                f"{self.shared_memory_path}_error_dump.json", "w", encoding="utf-8"
+            ) as f:
                 json.dump(self.shared_memory, f, indent=4)
-            self._log_system(f"Shared memory dumped to {self.shared_memory_path}_error_dump.json for debugging.")
+            self._log_system(
+                f"Shared memory dumped to {self.shared_memory_path}_error_dump.json for debugging."
+            )
             raise
 
     def day(self) -> None:
@@ -500,7 +576,9 @@ class WerewolfEnv:
         Executes the day phase of the game. Players discuss and vote on a player to eliminate.
         """
         try:
-            self._log_system("Day phase begins. Players discuss and vote on potential suspects.")
+            self._log_system(
+                "Day phase begins. Players discuss and vote on potential suspects."
+            )
 
             # Get the current day
             current_day = self.shared_memory["public_state"]["days"]
@@ -527,23 +605,37 @@ class WerewolfEnv:
                     self._log_event("Sheriff is deciding the speech order.")
                     speech_order = self.sheriff_decide_speech_order()
                     if speech_order is None:
-                        speech_order = self.shared_memory["public_state"]["day_cache"].get(current_day - 1, {}).get("speech_order_decision", None)
-                        self._log_system(f"Speech order retrieval failed. Current speech order: {speech_order}")
+                        speech_order = (
+                            self.shared_memory["public_state"]["day_cache"]
+                            .get(current_day - 1, {})
+                            .get("speech_order_decision", None)
+                        )
+                        self._log_system(
+                            f"Speech order retrieval failed. Current speech order: {speech_order}"
+                        )
                         day_cache["speech_order_decision"] = speech_order
                     if speech_order is None:
-                        alive_players = self.shared_memory["public_state"]["alive_players"]
+                        alive_players = self.shared_memory["public_state"][
+                            "alive_players"
+                        ]
                         speech_order = sorted(alive_players)
-                        self._log_system(f"Speech order retrieval failed again. Current speech order: {speech_order}")
+                        self._log_system(
+                            f"Speech order retrieval failed again. Current speech order: {speech_order}"
+                        )
                         day_cache["speech_order_decision"] = speech_order
                 else:
                     alive_players = self.shared_memory["public_state"]["alive_players"]
                     speech_order = sorted(alive_players)
                     day_cache["speech_order_decision"] = speech_order
-                self._log_system(f"Speech sequence: {speech_order}")    
-                self.shared_memory["public_state"]["speech_order"][current_day] = speech_order
+                self._log_system(f"Speech sequence: {speech_order}")
+                self.shared_memory["public_state"]["speech_order"][
+                    current_day
+                ] = speech_order
                 # Step 4: Day speeches
                 self._log_event("Players begin speeches.")
-                speech_order = self.shared_memory["public_state"]["speech_order"].get(current_day, [])
+                speech_order = self.shared_memory["public_state"]["speech_order"].get(
+                    current_day, []
+                )
                 self.player_speeches(speech_order[0])
 
                 # Step 5: Vote to exile a player
@@ -553,7 +645,9 @@ class WerewolfEnv:
             else:
                 deceased = self.get_night_deceased()
                 if deceased:
-                    self._log_event("Announcing deceased from the night. No last words will be given.")
+                    self._log_event(
+                        "Announcing deceased from the night. No last words will be given."
+                    )
                 self.update_alive_players()
                 seer_id = self.get_player_id("seer")[0]
                 if seer_id in self.shared_memory["public_state"]["alive_players"]:
@@ -565,14 +659,24 @@ class WerewolfEnv:
                     self._log_event("Sheriff is deciding the speech order.")
                     speech_order = self.sheriff_decide_speech_order()
                     if speech_order is None:
-                        speech_order = self.shared_memory["public_state"]["day_cache"].get(current_day - 1, {}).get("speech_order_decision", None)
-                        self._log_system(f"Speech order retrieval failed. Current speech order: {speech_order}")
+                        speech_order = (
+                            self.shared_memory["public_state"]["day_cache"]
+                            .get(current_day - 1, {})
+                            .get("speech_order_decision", None)
+                        )
+                        self._log_system(
+                            f"Speech order retrieval failed. Current speech order: {speech_order}"
+                        )
                         day_cache["speech_order_decision"] = speech_order
                     if speech_order is None:
-                        alive_players = self.shared_memory["public_state"]["alive_players"]
+                        alive_players = self.shared_memory["public_state"][
+                            "alive_players"
+                        ]
                         speech_order = sorted(alive_players)
                         day_cache["speech_order_decision"] = speech_order
-                        self._log_system(f"Speech order retrieval failed again. Current speech order: {speech_order}")
+                        self._log_system(
+                            f"Speech order retrieval failed again. Current speech order: {speech_order}"
+                        )
                 else:
                     alive_players = self.shared_memory["public_state"]["alive_players"]
                     speech_order = sorted(alive_players)
@@ -591,16 +695,22 @@ class WerewolfEnv:
             self.update_alive_players()
 
             # Save shared memory to file
-            with open(self.shared_memory_path, 'w', encoding='utf-8') as f:
+            with open(self.shared_memory_path, "w", encoding="utf-8") as f:
                 json.dump(self.shared_memory, f, indent=4)
-            self._log_system(f"Shared memory successfully written to {self.shared_memory_path}")
+            self._log_system(
+                f"Shared memory successfully written to {self.shared_memory_path}"
+            )
 
         except Exception as e:
             # Capture all exceptions and write shared memory to a JSON file
             self._log_system(f"An error occurred during the day phase: {e}")
-            with open(f"{self.shared_memory_path}_error_dump.json", 'w', encoding='utf-8') as f:
+            with open(
+                f"{self.shared_memory_path}_error_dump.json", "w", encoding="utf-8"
+            ) as f:
                 json.dump(self.shared_memory, f, indent=4)
-            self._log_system(f"Shared memory dumped to {self.shared_memory_path}_error_dump.json for debugging.")
+            self._log_system(
+                f"Shared memory dumped to {self.shared_memory_path}_error_dump.json for debugging."
+            )
             raise
 
     def should_terminate(self) -> dict:
@@ -640,11 +750,7 @@ class WerewolfEnv:
         self._log_system(f"Number of non-werewolves: {non_werewolf_count}")
 
         # Define the return result
-        result = {
-            "terminated": False,
-            "result": None,
-            "details": None
-        }
+        result = {"terminated": False, "result": None, "details": None}
 
         # Check if game termination conditions are met
         if werewolf_count > 0 and non_werewolf_count == 0:
@@ -655,7 +761,7 @@ class WerewolfEnv:
                 "winner": "Werewolves",
                 "alive_players": alive_players,
                 "werewolf_count": werewolf_count,
-                "non_werewolf_count": non_werewolf_count
+                "non_werewolf_count": non_werewolf_count,
             }
             self.shared_memory["public_state"]["game_result"] = result["result"]
 
@@ -667,7 +773,7 @@ class WerewolfEnv:
                 "winner": "Villagers",
                 "alive_players": alive_players,
                 "werewolf_count": werewolf_count,
-                "non_werewolf_count": non_werewolf_count
+                "non_werewolf_count": non_werewolf_count,
             }
             self.shared_memory["public_state"]["game_result"] = result["result"]
 
@@ -679,29 +785,35 @@ class WerewolfEnv:
             result_score = surviving_good - surviving_wolves
             result["scores"] = {
                 "process_scores": self.scores,  # Process scores
-                "result_score": result_score,   # Result score                
+                "result_score": result_score,  # Result score
             }
             # Update the final result JSON file content
             final_result = {
                 "config": self.config,  # Game initialization configuration
                 "process_scores": self.scores,  # Process scores
-                "result_score": result_score,   # Result score
+                "result_score": result_score,  # Result score
                 "surviving_players": surviving_players,  # List of surviving players
-                "game_result": result["result"],  # Game result (Villagers win or Werewolves win)
+                "game_result": result[
+                    "result"
+                ],  # Game result (Villagers win or Werewolves win)
             }
 
             # Write the result to a JSON file
-            result_path = self.shared_memory_path.replace("shared_memory.json", "result.json")
+            result_path = self.shared_memory_path.replace(
+                "shared_memory.json", "result.json"
+            )
             with open(result_path, "w", encoding="utf-8") as result_file:
                 json.dump(final_result, result_file, indent=4)
 
             self._log_system(f"Final result saved to {result_path}")
 
             # Construct the game end message
-            survivor_info = "\n".join([
-                f"{player['player_id']} ({player['role']})"
-                for player in surviving_players
-            ])
+            survivor_info = "\n".join(
+                [
+                    f"{player['player_id']} ({player['role']})"
+                    for player in surviving_players
+                ]
+            )
             final_message = (
                 f"\n======================================================\n"
                 f"GAME END! {result['result']}\n\n"
@@ -725,18 +837,17 @@ class WerewolfEnv:
 
         return result
 
-    
     def continue_game(self, simulate_one_cycle: bool = False) -> dict:
         """
         Continue the game after loading from an external save.
         This method supports a full "day->night" or "night->day" cycle.
 
-        If 'simulate_one_cycle' is True, the environment will only execute 
+        If 'simulate_one_cycle' is True, the environment will only execute
         one full cycle (which involves running both day and night) and then stop.
         Otherwise, it will keep alternating day/night until the game ends.
 
         Returns:
-            dict: A combined result containing the final game state plus 
+            dict: A combined result containing the final game state plus
                   the daily stage task analysis result.
         """
 
@@ -748,13 +859,14 @@ class WerewolfEnv:
                 f"has already ended. Result: {game_result['result']}"
             )
             self._log_system(termination_message)
-            self.log_event(is_private=False, agent_id="system", content=termination_message)
+            self.log_event(
+                is_private=False, agent_id="system", content=termination_message
+            )
             return game_result
 
         # Step 1: Retrieve the current day and phase
         current_day = self.shared_memory["public_state"]["days"]
         current_phase = self.shared_memory["public_state"]["day/night"]
-
 
         self._log_system(
             f"[continue_game] Resuming from save. The environment was at Day {current_day}, "
@@ -768,7 +880,7 @@ class WerewolfEnv:
                 " Proceeding to the next phase..."
             ),
         )
-        
+
         while True:
             # Check termination before starting a new phase
             game_result = self.should_terminate()
@@ -782,14 +894,14 @@ class WerewolfEnv:
                 self.log_event(
                     is_private=False,
                     agent_id="system",
-                    content=f"[continue_game] Entering Night of Day {current_day}."
+                    content=f"[continue_game] Entering Night of Day {current_day}.",
                 )
                 if self.config.get("use_daily_tasks", True):
                     # If use_daily_tasks = True, generate tasks via generate_daily_tasks()
                     private_tasks, public_tasks = self.generate_daily_tasks()
                     self.daily_tasks = {
                         "private": private_tasks,
-                        "public": public_tasks
+                        "public": public_tasks,
                     }
                     # For final evaluation, we might use public tasks
                     tasks_for_evaluation = private_tasks
@@ -798,7 +910,9 @@ class WerewolfEnv:
                 # Save checkpoint after night
                 night_info_str = f"Night{current_day}"
                 snapshot_night = self.to_dict(day_night_info=night_info_str)
-                self.save_checkpoint(snapshot_night, f"checkpoint_{night_info_str}.json")
+                self.save_checkpoint(
+                    snapshot_night, f"checkpoint_{night_info_str}.json"
+                )
 
                 if self.should_terminate()["terminated"]:
                     break
@@ -811,7 +925,7 @@ class WerewolfEnv:
                 self.log_event(
                     is_private=False,
                     agent_id="system",
-                    content=f"[continue_game] Entering Day {current_day}."
+                    content=f"[continue_game] Entering Day {current_day}.",
                 )
                 self.day()
 
@@ -822,7 +936,9 @@ class WerewolfEnv:
 
                 current_phase = "day"
                 if simulate_one_cycle:
-                    self._log_system("[continue_game] Finished one 'night->day' cycle. Stopping as requested.")
+                    self._log_system(
+                        "[continue_game] Finished one 'night->day' cycle. Stopping as requested."
+                    )
                     break
 
             else:
@@ -835,14 +951,14 @@ class WerewolfEnv:
                     private_tasks, public_tasks = self.generate_daily_tasks()
                     self.daily_tasks = {
                         "private": private_tasks,
-                        "public": public_tasks
+                        "public": public_tasks,
                     }
                     # For final evaluation, we might use public tasks
                     tasks_for_evaluation = private_tasks
                 self.log_event(
                     is_private=False,
                     agent_id="system",
-                    content=f"[continue_game] Entering Day {current_day}."
+                    content=f"[continue_game] Entering Day {current_day}.",
                 )
                 self.day()
 
@@ -858,7 +974,7 @@ class WerewolfEnv:
                 self.log_event(
                     is_private=False,
                     agent_id="system",
-                    content=f"[continue_game] Entering Night of Day {current_day}."
+                    content=f"[continue_game] Entering Night of Day {current_day}.",
                 )
                 self.shared_memory["public_state"]["days"] += 1
                 if self.config.get("use_daily_tasks", True):
@@ -866,7 +982,7 @@ class WerewolfEnv:
                     private_tasks, public_tasks = self.generate_daily_tasks()
                     self.daily_tasks = {
                         "private": private_tasks,
-                        "public": public_tasks
+                        "public": public_tasks,
                     }
                     # For final evaluation, we might use public tasks
                     tasks_for_evaluation = private_tasks
@@ -874,32 +990,41 @@ class WerewolfEnv:
 
                 night_info_str = f"Night{current_day}"
                 snapshot_night = self.to_dict(day_night_info=night_info_str)
-                self.save_checkpoint(snapshot_night, f"checkpoint_{night_info_str}.json")
+                self.save_checkpoint(
+                    snapshot_night, f"checkpoint_{night_info_str}.json"
+                )
 
                 current_phase = "night"
 
                 if simulate_one_cycle:
-                    self._log_system("[continue_game] Finished one 'day->night' cycle. Stopping as requested.")
+                    self._log_system(
+                        "[continue_game] Finished one 'day->night' cycle. Stopping as requested."
+                    )
                     break
-
 
         # Now call the daily stage tasks function, e.g. for Day <current_day>
         # You can customize the tasks or day_label as needed
         day_label_str = f"Day{current_day}"
         if self.config.get("use_daily_tasks", True):
-            stage_result = self.evaluate_daily_stage_tasks(day_label=day_label_str, tasks=tasks_for_evaluation)
+            stage_result = self.evaluate_daily_stage_tasks(
+                day_label=day_label_str, tasks=tasks_for_evaluation
+            )
 
         # Return both results
         if self.config.get("use_daily_tasks", True):
-            combined_result = {
-                "game_result": game_result,
-                "stage_result": stage_result
-            }
+            combined_result = {"game_result": game_result, "stage_result": stage_result}
         else:
             combined_result = game_result
         return combined_result
 
-    def log_event(self, is_private: bool, agent_id: str, content: str, log_to_system: bool = True, print_to_system: bool = True) -> None:
+    def log_event(
+        self,
+        is_private: bool,
+        agent_id: str,
+        content: str,
+        log_to_system: bool = True,
+        print_to_system: bool = True,
+    ) -> None:
         """
         Logs events for the game and synchronizes the logs to each agent's corresponding file.
 
@@ -910,9 +1035,12 @@ class WerewolfEnv:
             content (str): The content to be logged.
             log_to_system (bool): If True, the event will also be logged in the system log. Defaults to True.
         """
+
         def write_to_agent_log(agent_id: str, message: str):
             """Write a log message to the corresponding agent's file using _write_log_entry."""
-            agent_instance = next((agent for agent in self.agents if agent.agent_id == agent_id), None)
+            agent_instance = next(
+                (agent for agent in self.agents if agent.agent_id == agent_id), None
+            )
             if agent_instance:
                 agent_instance._write_log_entry(message)
 
@@ -920,15 +1048,21 @@ class WerewolfEnv:
         if agent_id != "system":
             if agent_id in self.shared_memory["private_state"]["players"]:
                 # Update the agent's personal log in shared memory
-                player_log = self.shared_memory["private_state"]["players"][agent_id]["personal_event_log"]
-                self.shared_memory["private_state"]["players"][agent_id]["personal_event_log"] = f"{player_log}\n{content}"
+                player_log = self.shared_memory["private_state"]["players"][agent_id][
+                    "personal_event_log"
+                ]
+                self.shared_memory["private_state"]["players"][agent_id][
+                    "personal_event_log"
+                ] = f"{player_log}\n{content}"
                 write_to_agent_log(agent_id, content)  # Sync to agent's file
 
             if is_private:
                 # Private messages go only to private logs and corresponding agent file
                 if log_to_system:
                     private_log = self.shared_memory["private_event_log"]
-                    self.shared_memory["private_event_log"] = f"{private_log}\n{content}"
+                    self.shared_memory[
+                        "private_event_log"
+                    ] = f"{private_log}\n{content}"
                 if print_to_system:
                     self._log_player(agent_id, f"{agent_id}: {content}")
             else:
@@ -937,12 +1071,18 @@ class WerewolfEnv:
                     public_log = self.shared_memory["public_event_log"]
                     private_log = self.shared_memory["private_event_log"]
                     self.shared_memory["public_event_log"] = f"{public_log}\n{content}"
-                    self.shared_memory["private_event_log"] = f"{private_log}\n{content}"
+                    self.shared_memory[
+                        "private_event_log"
+                    ] = f"{private_log}\n{content}"
 
                 # Write to every agent's log
                 for agent in self.shared_memory["private_state"]["players"]:
-                    personal_log = self.shared_memory["private_state"]["players"][agent]["personal_event_log"]
-                    self.shared_memory["private_state"]["players"][agent]["personal_event_log"] = f"{personal_log}\n{content}"
+                    personal_log = self.shared_memory["private_state"]["players"][
+                        agent
+                    ]["personal_event_log"]
+                    self.shared_memory["private_state"]["players"][agent][
+                        "personal_event_log"
+                    ] = f"{personal_log}\n{content}"
                     write_to_agent_log(agent, content)  # Sync to agent's file
                 if print_to_system:
                     self._log_player(agent_id, f"{agent_id}: {content}")
@@ -953,7 +1093,9 @@ class WerewolfEnv:
                 # Private system messages go to private logs
                 if log_to_system:
                     private_log = self.shared_memory["private_event_log"]
-                    self.shared_memory["private_event_log"] = f"{private_log}\n{content}"
+                    self.shared_memory[
+                        "private_event_log"
+                    ] = f"{private_log}\n{content}"
                 if print_to_system:
                     self._log_event(f"SYSTEM: {content}")
             else:
@@ -962,17 +1104,25 @@ class WerewolfEnv:
                     public_log = self.shared_memory["public_event_log"]
                     private_log = self.shared_memory["private_event_log"]
                     self.shared_memory["public_event_log"] = f"{public_log}\n{content}"
-                    self.shared_memory["private_event_log"] = f"{private_log}\n{content}"
+                    self.shared_memory[
+                        "private_event_log"
+                    ] = f"{private_log}\n{content}"
 
                 # Write to every agent's log
                 for agent in self.shared_memory["private_state"]["players"]:
-                    personal_log = self.shared_memory["private_state"]["players"][agent]["personal_event_log"]
-                    self.shared_memory["private_state"]["players"][agent]["personal_event_log"] = f"{personal_log}\n{content}"
+                    personal_log = self.shared_memory["private_state"]["players"][
+                        agent
+                    ]["personal_event_log"]
+                    self.shared_memory["private_state"]["players"][agent][
+                        "personal_event_log"
+                    ] = f"{personal_log}\n{content}"
                     write_to_agent_log(agent, content)  # Sync to agent's file
                 if print_to_system:
                     self._log_event(f"SYSTEM: {content}")
-                    
-    def evaluate_daily_stage_tasks(self, day_label: str, tasks: List[str]) -> Dict[str, Any]:
+
+    def evaluate_daily_stage_tasks(
+        self, day_label: str, tasks: List[str]
+    ) -> Dict[str, Any]:
         """
         Evaluate daily stage tasks after a single day-night cycle, then print the final
         results in a multi-line style. This includes the outcome of each task in the tasks list.
@@ -986,28 +1136,29 @@ class WerewolfEnv:
             dict: Summarized daily result, with final multi-line console printout.
         """
 
-
         # 1) Retrieve original and current scores
         original_scores = self.original_data.get("scores", {})
         current_scores = self.scores
 
         # 2) Identify newly added lines for villager
-        villager_original_details = original_scores.get("villager", {}).get("details", [])
+        villager_original_details = original_scores.get("villager", {}).get(
+            "details", []
+        )
         villager_current_details = current_scores.get("villager", {}).get("details", [])
         old_len_v = len(villager_original_details)
         new_villager_entries = villager_current_details[old_len_v:]
 
         # 3) Compute daily decimal score for villager and werewolf
         villager_original_total = original_scores.get("villager", {}).get("total", 0.0)
-        villager_current_total  = current_scores.get("villager", {}).get("total", 0.0)
+        villager_current_total = current_scores.get("villager", {}).get("total", 0.0)
         daily_score_villager = villager_current_total - villager_original_total
 
         werewolf_original_total = original_scores.get("werewolf", {}).get("total", 0.0)
-        werewolf_current_total  = current_scores.get("werewolf", {}).get("total", 0.0)
+        werewolf_current_total = current_scores.get("werewolf", {}).get("total", 0.0)
         daily_score_werewolf = werewolf_current_total - werewolf_original_total
 
         # 4) Use regex to detect major-scoring lines (≥1 point)
-        pattern = re.compile(r'.*([\+\-]\d+(?:\.\d+)?)\s*points?\.$')
+        pattern = re.compile(r".*([\+\-]\d+(?:\.\d+)?)\s*points?\.$")
         major_score_events = []
         for entry in new_villager_entries:
             match = pattern.match(entry.strip())
@@ -1025,7 +1176,7 @@ class WerewolfEnv:
             "rescue_villager": False,
             "run_for_sheriff": False,
             "exile_werewolf": False,
-            "poison_werewolf": False
+            "poison_werewolf": False,
         }
 
         # Example logic for protect_seer if seer is alive
@@ -1033,16 +1184,26 @@ class WerewolfEnv:
             seer_ids = self.get_player_id("seer")
             if seer_ids:
                 seer_id = seer_ids[0]
-                alive_players = self.shared_memory["public_state"].get("alive_players", [])
+                alive_players = self.shared_memory["public_state"].get(
+                    "alive_players", []
+                )
                 if seer_id in alive_players:
                     completed_tasks["protect_seer"] = True
 
         # Additional pattern-based logic for rescue_villager, run_for_sheriff,
         # exile_werewolf, poison_werewolf
-        rescue_pattern = re.compile(r'Witch\s+saved\s+(.+)\s+from\s+werewolf\s+attack\.\s*\+2\s+points?\.')
-        sheriff_pattern = re.compile(r'Villager-aligned\s+sheriff\s+(.+)\s+elected\.\s*\+2\s+points?\.')
-        exile_pattern   = re.compile(r'Werewolf\s+(.+)\s+was\s+banished\.\s*\+2\s+points?\.')
-        poison_pattern  = re.compile(r'Witch\s+killed\s+werewolf\s+(.+)\s+with\s+poison\.\s*\+2\s+points?\.')
+        rescue_pattern = re.compile(
+            r"Witch\s+saved\s+(.+)\s+from\s+werewolf\s+attack\.\s*\+2\s+points?\."
+        )
+        sheriff_pattern = re.compile(
+            r"Villager-aligned\s+sheriff\s+(.+)\s+elected\.\s*\+2\s+points?\."
+        )
+        exile_pattern = re.compile(
+            r"Werewolf\s+(.+)\s+was\s+banished\.\s*\+2\s+points?\."
+        )
+        poison_pattern = re.compile(
+            r"Witch\s+killed\s+werewolf\s+(.+)\s+with\s+poison\.\s*\+2\s+points?\."
+        )
 
         for evt in major_score_events:
             evt_str = evt.strip()
@@ -1100,7 +1261,7 @@ class WerewolfEnv:
             "daily_theoretical_max": daily_theoretical,
             "daily_actual_major_score": daily_major_score,
             "surviving_players": surviving_players,
-            "config": self.config
+            "config": self.config,
         }
 
         # 10) File saving logic
@@ -1113,34 +1274,45 @@ class WerewolfEnv:
             except ValueError:
                 day_number = 0
         day_result_filename = f"Day_{day_number}_to_Day_{day_number + 1}_result.json"
-        result_path = self.shared_memory_path.replace("shared_memory.json", day_result_filename)
+        result_path = self.shared_memory_path.replace(
+            "shared_memory.json", day_result_filename
+        )
 
         try:
             with open(result_path, "w", encoding="utf-8") as f:
                 json.dump(result, f, indent=4, ensure_ascii=False)
         except (FileNotFoundError, OSError) as e:
-            self._log_system(f"Failed to write final result to {result_path}: {e}. "
-                            f"Attempting to rename file with game outcome...")
+            self._log_system(
+                f"Failed to write final result to {result_path}: {e}. "
+                f"Attempting to rename file with game outcome..."
+            )
             fallback_path = result_path.replace(".json", "_Villagers_win.json")
             try:
                 with open(fallback_path, "w", encoding="utf-8") as f:
                     json.dump(result, f, indent=4, ensure_ascii=False)
-                self._log_system(f"Final result successfully written to fallback file {fallback_path}")
+                self._log_system(
+                    f"Final result successfully written to fallback file {fallback_path}"
+                )
             except Exception as e2:
-                self._log_system(f"Failed to write final result to {result_path}: {e2}. "
-                            f"Attempting to rename file with game outcome...")
+                self._log_system(
+                    f"Failed to write final result to {result_path}: {e2}. "
+                    f"Attempting to rename file with game outcome..."
+                )
                 fallback_path = result_path.replace(".json", "_werewolves_win.json")
                 try:
                     with open(fallback_path, "w", encoding="utf-8") as f:
                         json.dump(result, f, indent=4, ensure_ascii=False)
-                    self._log_system(f"Final result successfully written to fallback file {fallback_path}")
+                    self._log_system(
+                        f"Final result successfully written to fallback file {fallback_path}"
+                    )
                 except Exception as e3:
-                    self._log_system(f"Failed to write final result to {result_path}: {e3}. ")
+                    self._log_system(
+                        f"Failed to write final result to {result_path}: {e3}. "
+                    )
         # 11) Build the final_message string in a multi-line format, including each task's result
         #     in the style of "GAME END!" separation lines
         survivor_info = "\n".join(
-            f"{player['player_id']} ({player['role']})"
-            for player in surviving_players
+            f"{player['player_id']} ({player['role']})" for player in surviving_players
         )
 
         # We'll also list each task's completion
@@ -1266,10 +1438,10 @@ class WerewolfEnv:
                 f"{private_tasks}\n"
                 "[generate_daily_tasks] Public tasks: "
                 f"{public_tasks}"
-            )
+            ),
         )
         return private_tasks, public_tasks
-    
+
     def update_alive_players(self):
         """
         Updates the list of alive players based on their health status in private_state.
@@ -1280,7 +1452,8 @@ class WerewolfEnv:
 
         # Get the current list of alive players
         alive_players = [
-            player_id for player_id, player_info in players.items()
+            player_id
+            for player_id, player_info in players.items()
             if player_info["status"].get("health", 0) == 1
         ]
 
@@ -1292,17 +1465,14 @@ class WerewolfEnv:
         # For the dead players, log the event and update their personal log file
         for player_id in newly_dead:
             death_message = f"Player {player_id} has been eliminated from the game."
-            self.log_event(
-                is_private=False, 
-                agent_id="system", 
-                content=death_message)
+            self.log_event(is_private=False, agent_id="system", content=death_message)
 
         # Update to public_state
         self.shared_memory["public_state"]["alive_players"] = alive_players
 
         # Log the updated list of alive players
         self._log_system(f"Updated alive_players list: {alive_players}")
-        
+
     def get_player_role(self, player_id: str) -> str:
         """
         Returns the role of the specified player.
@@ -1315,13 +1485,15 @@ class WerewolfEnv:
                 Returns "Unknown" if the player ID is not found.
         """
         # Get player information from private state
-        player_info = self.shared_memory["private_state"]["players"].get(player_id, None)
+        player_info = self.shared_memory["private_state"]["players"].get(
+            player_id, None
+        )
         if player_info is None:
             return "Unknown"  # Return "Unknown" if player does not exist
 
         # Return the player's role
         return player_info.get("role", "Unknown")
-    
+
     def get_player_id(self, role: str) -> list:
         """
         Returns a list of player IDs who have the specified role.
@@ -1333,12 +1505,13 @@ class WerewolfEnv:
             list: A list of player IDs who have the specified role.
         """
         players = self.shared_memory["private_state"]["players"]
-        
+
         players_with_role = [
-            player_id for player_id, player_info in players.items()
+            player_id
+            for player_id, player_info in players.items()
             if player_info.get("role") == role
         ]
-        
+
         return players_with_role
 
     def guard_action(self) -> None:
@@ -1349,13 +1522,19 @@ class WerewolfEnv:
         guard_player_instance = None
         for agent in self.agents:
             agent_id = agent.agent_id
-            player_info = self.shared_memory["private_state"]["players"].get(agent_id, {})
-            if player_info["role"] == "guard" and agent.agent_id in self.shared_memory["public_state"].get("alive_players", []):
+            player_info = self.shared_memory["private_state"]["players"].get(
+                agent_id, {}
+            )
+            if player_info["role"] == "guard" and agent.agent_id in self.shared_memory[
+                "public_state"
+            ].get("alive_players", []):
                 guard_player_instance = agent
                 break
 
         if guard_player_instance:
-            last_protected = self.shared_memory["private_state"].get("guard_last_night_protect", None)
+            last_protected = self.shared_memory["private_state"].get(
+                "guard_last_night_protect", None
+            )
 
             event = {
                 "event_type": "guard_action",
@@ -1363,7 +1542,7 @@ class WerewolfEnv:
                 "recipients": [guard_player_instance],
                 "content": {
                     "night_info": last_protected,
-                }
+                },
             }
             self._log_event("Guard action event published.")
             self.publish_event(event)
@@ -1372,7 +1551,7 @@ class WerewolfEnv:
             self.log_event(
                 is_private=True,
                 agent_id="system",
-                content="No guard player found. Skip guard action."
+                content="No guard player found. Skip guard action.",
             )
 
     def process_guard_action(self, event: dict) -> None:
@@ -1383,7 +1562,9 @@ class WerewolfEnv:
             event (dict): The event data containing 'protect_target' information.
         """
         try:
-            last_protected = self.shared_memory["private_state"].get("guard_last_night_protect", None)
+            last_protected = self.shared_memory["private_state"].get(
+                "guard_last_night_protect", None
+            )
             guard_id = event.get("sender")
             if isinstance(event.get("content", {}), dict):
                 protect_target = event.get("content", {}).get("protect_target")
@@ -1395,32 +1576,42 @@ class WerewolfEnv:
             if protect_target in self.shared_memory["private_state"]["players"]:
                 if protect_target == last_protected:
                     self.log_event(
-                        is_private=True, 
+                        is_private=True,
                         agent_id=guard_id,
-                        content=f"Guard action failed. {protect_target} was protected last night and cannot be protected again tonight."
+                        content=f"Guard action failed. {protect_target} was protected last night and cannot be protected again tonight.",
                     )
                 else:
                     # Update protection count and log success
-                    self.shared_memory["private_state"]["players"][protect_target]["status"]["protection_count"] = 1
-                    self.shared_memory["private_state"]["guard_last_night_protect"] = protect_target
+                    self.shared_memory["private_state"]["players"][protect_target][
+                        "status"
+                    ]["protection_count"] = 1
+                    self.shared_memory["private_state"][
+                        "guard_last_night_protect"
+                    ] = protect_target
                     self.log_event(
-                        is_private=True, 
+                        is_private=True,
                         agent_id=guard_id,
-                        content=f"Guard action processed. {protect_target} is protected this night."
+                        content=f"Guard action processed. {protect_target} is protected this night.",
                     )
 
                     # Check and update night cache
                     if "night_cache" in self.shared_memory["private_state"]:
                         if self.shared_memory["private_state"]["night_cache"]:
-                            current_night_log = self.shared_memory["private_state"]["night_cache"][-1]
+                            current_night_log = self.shared_memory["private_state"][
+                                "night_cache"
+                            ][-1]
                             current_night_log["guard_action"] = protect_target
                     else:
-                        self._log_event("Night cache key does not exist in private state.")
+                        self._log_event(
+                            "Night cache key does not exist in private state."
+                        )
             else:
-                self._log_event(f"Guard action failed. Invalid protect target: {protect_target}")
+                self._log_event(
+                    f"Guard action failed. Invalid protect target: {protect_target}"
+                )
             # Mark event complete
             self.mark_event_complete(event_type="guard_action")
-        
+
         except Exception as e:
             self._log_event(f"Error processing guard action: {str(e)}")
 
@@ -1428,7 +1619,9 @@ class WerewolfEnv:
         """
         Resets the protection_count for all players at the beginning of each night.
         """
-        for player_id, player_info in self.shared_memory["private_state"]["players"].items():
+        for player_id, player_info in self.shared_memory["private_state"][
+            "players"
+        ].items():
             player_info["status"]["protection_count"] = 0
 
         # Clear the last protected target
@@ -1446,16 +1639,26 @@ class WerewolfEnv:
             alive_players = self.shared_memory["public_state"].get("alive_players", [])
 
             for agent in self.agents:
-                player_info = self.shared_memory["private_state"]["players"].get(agent.agent_id, {})
-                    
-                if player_info.get("role") == "wolf" and agent.agent_id in self.shared_memory["public_state"].get("alive_players", []):
+                player_info = self.shared_memory["private_state"]["players"].get(
+                    agent.agent_id, {}
+                )
+
+                if player_info.get(
+                    "role"
+                ) == "wolf" and agent.agent_id in self.shared_memory[
+                    "public_state"
+                ].get(
+                    "alive_players", []
+                ):
                     alive_werewolves.append((agent, agent.agent_id))
             if len(alive_werewolves) != 0:
                 alive_werewolves_instances = [agent for agent, _ in alive_werewolves]
                 alive_werewolves_ids = [agent_id for _, agent_id in alive_werewolves]
 
                 new_round_target = {wolf_id: None for wolf_id in alive_werewolves_ids}
-                self.shared_memory["private_state"]["werewolf_action"]["round_targets"].append(new_round_target)
+                self.shared_memory["private_state"]["werewolf_action"][
+                    "round_targets"
+                ].append(new_round_target)
 
                 alive_players_str = ", ".join(alive_players)
                 alive_werewolves_ids_str = ", ".join(map(str, alive_werewolves_ids))
@@ -1466,17 +1669,17 @@ class WerewolfEnv:
                     "recipients": alive_werewolves_instances,
                     "content": {
                         "player_info": {
-                            "alive_players": alive_players_str, 
-                            "alive_werewolves": alive_werewolves_ids_str 
+                            "alive_players": alive_players_str,
+                            "alive_werewolves": alive_werewolves_ids_str,
                         }
-                    }
+                    },
                 }
                 self.publish_event(event)
             else:
                 self.log_event(
                     is_private=True,
                     agent_id="system",
-                    content="No werewolf players found. Skip guard action."
+                    content="No werewolf players found. Skip guard action.",
                 )
         except Exception as e:
             self._log_event(f"Error in werewolf_action: {str(e)}")
@@ -1491,17 +1694,29 @@ class WerewolfEnv:
 
         alive_werewolves = []
         for agent in self.agents:
-                player_info = self.shared_memory["private_state"]["players"].get(agent.agent_id, {})
-                    
-                if player_info.get("role") == "wolf" and agent.agent_id in self.shared_memory["public_state"].get("alive_players", []):
-                    alive_werewolves.append((agent, agent.agent_id))
+            player_info = self.shared_memory["private_state"]["players"].get(
+                agent.agent_id, {}
+            )
+
+            if player_info.get(
+                "role"
+            ) == "wolf" and agent.agent_id in self.shared_memory["public_state"].get(
+                "alive_players", []
+            ):
+                alive_werewolves.append((agent, agent.agent_id))
         alive_werewolves_instances = [agent for agent, _ in alive_werewolves]
         alive_werewolves_ids = [agent_id for _, agent_id in alive_werewolves]
 
-        last_round_targets = self.shared_memory["private_state"]["werewolf_action"]["round_targets"][-2]
-        allies_target_info = {wolf_id: target for wolf_id, target in last_round_targets.items()}
+        last_round_targets = self.shared_memory["private_state"]["werewolf_action"][
+            "round_targets"
+        ][-2]
+        allies_target_info = {
+            wolf_id: target for wolf_id, target in last_round_targets.items()
+        }
 
-        rounds_remaining = self.shared_memory["private_state"]["werewolf_action"]["rounds_remaining"]
+        rounds_remaining = self.shared_memory["private_state"]["werewolf_action"][
+            "rounds_remaining"
+        ]
 
         alive_players_str = ", ".join(alive_players)
         alive_werewolves_ids_str = ", ".join(alive_werewolves_ids)
@@ -1510,16 +1725,16 @@ class WerewolfEnv:
             "allies_info": {
                 "alive_players": alive_players_str,
                 "alive_werewolves": alive_werewolves_ids_str,
-                "last_round_targets": allies_target_info
+                "last_round_targets": allies_target_info,
             },
-            "rounds_remaining": rounds_remaining
+            "rounds_remaining": rounds_remaining,
         }
 
         event = {
             "event_type": "werewolf_discussion",
             "sender": self,
             "recipients": alive_werewolves_instances,
-            "content": event_content
+            "content": event_content,
         }
         self.event_bus.publish(event)
 
@@ -1538,7 +1753,9 @@ class WerewolfEnv:
         else:
             attack = False
             target = None
-        current_round_targets = self.shared_memory["private_state"]["werewolf_action"]["round_targets"][-1]
+        current_round_targets = self.shared_memory["private_state"]["werewolf_action"][
+            "round_targets"
+        ][-1]
 
         if werewolf_id not in current_round_targets:
             self._log_event(f"Invalid werewolf ID: {werewolf_id}.")
@@ -1560,10 +1777,16 @@ class WerewolfEnv:
             if choice != "false":
                 target_counts[choice] = target_counts.get(choice, 0) + 1
 
-        alive_werewolves_count = len([
-            agent_id for agent_id, player_info in self.shared_memory["private_state"]["players"].items()
-            if player_info["role"] == "wolf" and player_info["status"].get("health", 0) == 1
-        ])
+        alive_werewolves_count = len(
+            [
+                agent_id
+                for agent_id, player_info in self.shared_memory["private_state"][
+                    "players"
+                ].items()
+                if player_info["role"] == "wolf"
+                and player_info["status"].get("health", 0) == 1
+            ]
+        )
         majority_target = None
         for target, count in target_counts.items():
             if count > alive_werewolves_count / 2:
@@ -1571,11 +1794,15 @@ class WerewolfEnv:
                 break
 
         if majority_target:
-            self.shared_memory["private_state"]["werewolf_action"]["final_target"] = majority_target
-            target_status = self.shared_memory["private_state"]["players"][majority_target]["status"]
+            self.shared_memory["private_state"]["werewolf_action"][
+                "final_target"
+            ] = majority_target
+            target_status = self.shared_memory["private_state"]["players"][
+                majority_target
+            ]["status"]
             self.scores["werewolf"]["total"] += 1
             self.scores["werewolf"]["details"].append(
-                f"Werewolves has unified their goal. Werewolf +1 point."
+                "Werewolves has unified their goal. Werewolf +1 point."
             )
             if target_status["protection_count"] == 0:
                 target_status["health"] = 0
@@ -1583,17 +1810,22 @@ class WerewolfEnv:
                 kill_result = f"Target {majority_target} attacked by werewolves and health reduced."
             else:
                 success = False
-                kill_result = f"Target {majority_target} protected, no health reduction."
+                kill_result = (
+                    f"Target {majority_target} protected, no health reduction."
+                )
                 self.scores["villager"]["total"] += 2
-                self.scores["villager"]["details"].append({
-                    "event": "guard_protection",
-                    "target": majority_target,
-                    "description": f"Guard successfully protected {majority_target} from werewolf attack."
-                })
-
+                self.scores["villager"]["details"].append(
+                    {
+                        "event": "guard_protection",
+                        "target": majority_target,
+                        "description": f"Guard successfully protected {majority_target} from werewolf attack.",
+                    }
+                )
 
             if self.shared_memory["private_state"]["night_cache"]:
-                current_night_log = self.shared_memory["private_state"]["night_cache"][-1]
+                current_night_log = self.shared_memory["private_state"]["night_cache"][
+                    -1
+                ]
                 current_night_log["werewolf_action"] = {
                     "final_target": majority_target,
                     "attack_successful": success,
@@ -1607,16 +1839,23 @@ class WerewolfEnv:
 
             alive_werewolves = []
             for agent in self.agents:
-                    player_info = self.shared_memory["private_state"]["players"].get(agent.agent_id, {})
-                        
-                    if player_info.get("role") == "wolf" and player_info.get("status", {}).get("health", 0) == 1:
-                        alive_werewolves.append(agent.agent_id)
+                player_info = self.shared_memory["private_state"]["players"].get(
+                    agent.agent_id, {}
+                )
+
+                if (
+                    player_info.get("role") == "wolf"
+                    and player_info.get("status", {}).get("health", 0) == 1
+                ):
+                    alive_werewolves.append(agent.agent_id)
             round_details = {
                 "round_targets": current_round_targets,
                 "remaining_werewolves": alive_werewolves,
-                "discussion_rounds_left": self.shared_memory["private_state"]["werewolf_action"]["rounds_remaining"],
+                "discussion_rounds_left": self.shared_memory["private_state"][
+                    "werewolf_action"
+                ]["rounds_remaining"],
                 "final_target": majority_target,
-                "attack_successful": success
+                "attack_successful": success,
             }
             detailed_kill_result_system = (
                 f"Round Details:\n"
@@ -1641,55 +1880,77 @@ class WerewolfEnv:
                     agent_id=wolf_id,
                     content=detailed_kill_result_player,
                     log_to_system=False,
-                    print_to_system=False
+                    print_to_system=False,
                 )
             self.log_event(
-                is_private=True,
-                agent_id="system",
-                content=detailed_kill_result_system
+                is_private=True, agent_id="system", content=detailed_kill_result_system
             )
             self.mark_event_complete(event_type="werewolf_action")
         else:
-            self._log_event("Werewolf attack failed due to lack of a clear majority target.")
-            self.shared_memory["private_state"]["werewolf_action"]["rounds_remaining"] -= 1
+            self._log_event(
+                "Werewolf attack failed due to lack of a clear majority target."
+            )
+            self.shared_memory["private_state"]["werewolf_action"][
+                "rounds_remaining"
+            ] -= 1
 
-            if self.shared_memory["private_state"]["werewolf_action"]["rounds_remaining"] > 0:
-
+            if (
+                self.shared_memory["private_state"]["werewolf_action"][
+                    "rounds_remaining"
+                ]
+                > 0
+            ):
                 alive_werewolves_ids = []
                 for agent in self.agents:
-                    player_info = self.shared_memory["private_state"]["players"].get(agent.agent_id, {})
+                    player_info = self.shared_memory["private_state"]["players"].get(
+                        agent.agent_id, {}
+                    )
 
-                    if player_info.get("role") == "wolf" and player_info.get("status", {}).get("health", 0) == 1:
+                    if (
+                        player_info.get("role") == "wolf"
+                        and player_info.get("status", {}).get("health", 0) == 1
+                    ):
                         alive_werewolves_ids.append(agent.agent_id)
-                
-         
+
                 new_round_target = {wolf_id: None for wolf_id in alive_werewolves_ids}
 
-         
-                if isinstance(self.shared_memory["private_state"]["werewolf_action"].get("round_targets"), list):
-                    self.shared_memory["private_state"]["werewolf_action"]["round_targets"].append(new_round_target)
+                if isinstance(
+                    self.shared_memory["private_state"]["werewolf_action"].get(
+                        "round_targets"
+                    ),
+                    list,
+                ):
+                    self.shared_memory["private_state"]["werewolf_action"][
+                        "round_targets"
+                    ].append(new_round_target)
                 else:
-                    self._log_event("Error: round_targets is not a list. Resetting it to a new list.")
-                    self.shared_memory["private_state"]["werewolf_action"]["round_targets"] = [new_round_target]
-                
-          
+                    self._log_event(
+                        "Error: round_targets is not a list. Resetting it to a new list."
+                    )
+                    self.shared_memory["private_state"]["werewolf_action"][
+                        "round_targets"
+                    ] = [new_round_target]
+
                 self.werewolf_discussion()
             else:
-               
                 alive_werewolves = []
                 for agent in self.agents:
-                    player_info = self.shared_memory["private_state"]["players"].get(agent.agent_id, {})
+                    player_info = self.shared_memory["private_state"]["players"].get(
+                        agent.agent_id, {}
+                    )
 
-                    if player_info.get("role") == "wolf" and player_info.get("status", {}).get("health", 0) == 1:
-                            alive_werewolves.append(agent.agent_id)
-                
-             
+                    if (
+                        player_info.get("role") == "wolf"
+                        and player_info.get("status", {}).get("health", 0) == 1
+                    ):
+                        alive_werewolves.append(agent.agent_id)
+
                 round_details = {
                     "round_targets": current_round_targets,
                     "remaining_werewolves": alive_werewolves,
                     "discussion_rounds_left": 0,
                     "final_target": "None",
-                    "attack_successful": False
+                    "attack_successful": False,
                 }
                 detailed_fail_result = (
                     f"Round Details:\n"
@@ -1707,26 +1968,27 @@ class WerewolfEnv:
                         agent_id=wolf_id,
                         content=detailed_fail_result,
                         log_to_system=False,
-                        print_to_system=False
+                        print_to_system=False,
                     )
-                
+
                 self.log_event(
-                    is_private=True,
-                    agent_id="system",
-                    content=detailed_fail_result
+                    is_private=True, agent_id="system", content=detailed_fail_result
                 )
 
-                if isinstance(self.shared_memory["private_state"].get("night_cache"), list):
-                    current_night_log = self.shared_memory["private_state"]["night_cache"][-1]
+                if isinstance(
+                    self.shared_memory["private_state"].get("night_cache"), list
+                ):
+                    current_night_log = self.shared_memory["private_state"][
+                        "night_cache"
+                    ][-1]
                     current_night_log["werewolf_action"] = {
                         "final_target": "None",
                         "attack_successful": False,
-                        "reason": "Failed due to lack of consensus"
+                        "reason": "Failed due to lack of consensus",
                     }
                 else:
                     self._log_event("Night cache is not initialized.")
-                
-               
+
                 self.mark_event_complete(event_type="werewolf_action")
 
     def seer_action(self) -> None:
@@ -1737,28 +1999,32 @@ class WerewolfEnv:
         seer_player_instance = None
         for agent in self.agents:
             agent_id = agent.agent_id
-            player_info = self.shared_memory["private_state"]["players"].get(agent_id, {})
-            if player_info["role"] == "seer" and agent.agent_id in self.shared_memory["public_state"].get("alive_players", []):
+            player_info = self.shared_memory["private_state"]["players"].get(
+                agent_id, {}
+            )
+            if player_info["role"] == "seer" and agent.agent_id in self.shared_memory[
+                "public_state"
+            ].get("alive_players", []):
                 seer_player_instance = agent
                 break
 
         if seer_player_instance:
             event = {
                 "event_type": "seer_action",
-                "sender": self, 
+                "sender": self,
                 "recipients": [seer_player_instance],
-                "content": {} 
+                "content": {},
             }
-            
-            self._log_event(f"Seer action event published.")
+
+            self._log_event("Seer action event published.")
             self.publish_event(event)
         else:
             self.log_event(
                 is_private=True,
                 agent_id="system",
-                content="No seer player found. Skip guard action."
+                content="No seer player found. Skip guard action.",
             )
-            self._log_event(f"Seer action event published.")
+            self._log_event("Seer action event published.")
 
     def process_seer_action(self, event: dict) -> None:
         """
@@ -1774,13 +2040,15 @@ class WerewolfEnv:
                 check_target = action_content.get("check_target", None)
             else:
                 check_target = None
-          
-            alive_players = self.shared_memory.get("public_state", {}).get("alive_players", [])
+
+            alive_players = self.shared_memory.get("public_state", {}).get(
+                "alive_players", []
+            )
             if not alive_players:
                 self.log_event(
                     is_private=True,
                     agent_id="system",
-                    content="Error: Unable to retrieve alive players list from public state."
+                    content="Error: Unable to retrieve alive players list from public state.",
                 )
                 self.mark_event_complete(event_type="seer_action")
                 return
@@ -1790,31 +2058,34 @@ class WerewolfEnv:
                     is_private=True,
                     agent_id=seer_id,
                     content=f"<<Private>> Seer action failed. Invalid check target: {check_target}. Not in alive players: {alive_players}.",
-                    log_to_system=False
+                    log_to_system=False,
                 )
                 self.mark_event_complete(event_type="seer_action")
                 return
 
-            seer_status = self.shared_memory["private_state"]["players"][seer_id]["status"]
+            seer_status = self.shared_memory["private_state"]["players"][seer_id][
+                "status"
+            ]
             if "check_history" not in seer_status:
                 seer_status["check_history"] = {}
 
             current_night = self.shared_memory["public_state"]["days"]
 
-            is_werewolf = self.shared_memory["private_state"]["players"][check_target]["role"] == "wolf"
+            is_werewolf = (
+                self.shared_memory["private_state"]["players"][check_target]["role"]
+                == "wolf"
+            )
             check_result = "werewolf" if is_werewolf else "not a werewolf"
 
             check_history_entry = {"player": check_target, "result": check_result}
             seer_status["check_history"][f"Night {current_night}"] = check_history_entry
 
-            seer_log_content = (
-                f"At Night {current_night}, You have checked {check_target}, the result is: {check_result}."
-            )
+            seer_log_content = f"At Night {current_night}, You have checked {check_target}, the result is: {check_result}."
             self.log_event(
                 is_private=True,
                 agent_id=seer_id,
                 content=seer_log_content,
-                log_to_system=False
+                log_to_system=False,
             )
 
             system_log_content = (
@@ -1823,16 +2094,14 @@ class WerewolfEnv:
                 f" - Night {current_night}: Checked {check_target} - Result: {check_result}"
             )
             self.log_event(
-                is_private=True,
-                agent_id="system",
-                content=system_log_content
+                is_private=True, agent_id="system", content=system_log_content
             )
             self.mark_event_complete(event_type="seer_action")
         except Exception as e:
             self.log_event(
                 is_private=True,
                 agent_id="system",
-                content=f"Error processing seer action: {str(e)}"
+                content=f"Error processing seer action: {str(e)}",
             )
             self.mark_event_complete(event_type="seer_action")
 
@@ -1844,30 +2113,33 @@ class WerewolfEnv:
         witch_player_instance = None
         for agent in self.agents:
             agent_id = agent.agent_id
-            player_info = self.shared_memory["private_state"]["players"].get(agent_id, {})
-            if player_info["role"] == "witch" and agent.agent_id in self.shared_memory["public_state"].get("alive_players", []):
+            player_info = self.shared_memory["private_state"]["players"].get(
+                agent_id, {}
+            )
+            if player_info["role"] == "witch" and agent.agent_id in self.shared_memory[
+                "public_state"
+            ].get("alive_players", []):
                 witch_player_instance = agent
                 break
 
         if witch_player_instance:
-            final_target = self.shared_memory["private_state"]["werewolf_action"].get("final_target", "nobody")
-
+            final_target = self.shared_memory["private_state"]["werewolf_action"].get(
+                "final_target", "nobody"
+            )
 
             event = {
                 "event_type": "witch_action",
-                "sender": self,  
+                "sender": self,
                 "recipients": [witch_player_instance],
-                "content": {
-                    "night_info": final_target
-                }
+                "content": {"night_info": final_target},
             }
             self.publish_event(event)
-            self._log_event(f"Witch action event published.")
+            self._log_event("Witch action event published.")
         else:
             self.log_event(
                 is_private=True,
                 agent_id="system",
-                content="No witch player found. Skip guard action."
+                content="No witch player found. Skip guard action.",
             )
             self._log_event("Witch action event published.")
 
@@ -1890,51 +2162,62 @@ class WerewolfEnv:
             poison_target = None
             self.mark_event_complete(event_type="witch_action")
             return
-    
+
         witch_id = event["sender"]
-        witch_status = self.shared_memory["private_state"]["players"][witch_id]["status"]
+        witch_status = self.shared_memory["private_state"]["players"][witch_id][
+            "status"
+        ]
 
-        final_target = self.shared_memory["private_state"]["werewolf_action"].get("final_target")
+        final_target = self.shared_memory["private_state"]["werewolf_action"].get(
+            "final_target"
+        )
 
-        current_night_log = self.shared_memory["private_state"].get("night_cache", [])[-1]
+        current_night_log = self.shared_memory["private_state"].get("night_cache", [])[
+            -1
+        ]
 
         if use_antidote and final_target and witch_status["antidote_count"] > 0:
-            
             player_deaths = current_night_log.get("player_dead_tonight", [])
             if final_target in player_deaths:
-                
-                self.shared_memory["private_state"]["players"][final_target]["status"]["health"] = 1
+                self.shared_memory["private_state"]["players"][final_target]["status"][
+                    "health"
+                ] = 1
                 witch_status["antidote_count"] = 0
                 player_deaths.remove(final_target)
 
                 self.log_event(
                     is_private=True,
                     agent_id=witch_id,
-                    content=f"Witch used antidote to save {final_target}."
+                    content=f"Witch used antidote to save {final_target}.",
                 )
                 self.log_event(
                     is_private=True,
                     agent_id="system",
-                    content=f"Witch used antidote to save {final_target}."
+                    content=f"Witch used antidote to save {final_target}.",
                 )
 
                 current_night_log["witch_action"] = {
                     "action": "antidote",
-                    "target": final_target
+                    "target": final_target,
                 }
                 self.mark_event_complete(event_type="witch_action")
             else:
                 self.log_event(
                     is_private=True,
                     agent_id=witch_id,
-                    content=f"Witch tried to use antidote on {final_target}, but that player was not in the werewolf's kill list."
+                    content=f"Witch tried to use antidote on {final_target}, but that player was not in the werewolf's kill list.",
                 )
                 self.mark_event_complete(event_type="witch_action")
                 return
 
-        elif use_poison and poison_target in self.shared_memory["public_state"]["alive_players"] and witch_status["poison_count"] > 0:
-          
-            self.shared_memory["private_state"]["players"][poison_target]["status"]["health"] = 0
+        elif (
+            use_poison
+            and poison_target in self.shared_memory["public_state"]["alive_players"]
+            and witch_status["poison_count"] > 0
+        ):
+            self.shared_memory["private_state"]["players"][poison_target]["status"][
+                "health"
+            ] = 0
             witch_status["poison_count"] = 0
 
             current_night_log["player_dead_tonight"].append(poison_target)
@@ -1942,49 +2225,45 @@ class WerewolfEnv:
             self.log_event(
                 is_private=True,
                 agent_id=witch_id,
-                content=f"Witch used poison on {poison_target}."
+                content=f"Witch used poison on {poison_target}.",
             )
             self.log_event(
                 is_private=True,
                 agent_id="system",
-                content=f"Witch used poison on {poison_target}."
+                content=f"Witch used poison on {poison_target}.",
             )
 
             poison_target_role = self.get_player_role(poison_target)
             if poison_target_role == "wolf":
-             
                 self.scores["villager"]["total"] += 2
-                self.scores["villager"]["details"].append(f"Witch killed werewolf {poison_target} with poison. +2 points.")
+                self.scores["villager"]["details"].append(
+                    f"Witch killed werewolf {poison_target} with poison. +2 points."
+                )
             else:
-               
                 self.scores["villager"]["total"] -= 2
-                self.scores["villager"]["details"].append(f"Witch killed non-werewolf {poison_target} with poison. -2 points.")
+                self.scores["villager"]["details"].append(
+                    f"Witch killed non-werewolf {poison_target} with poison. -2 points."
+                )
 
-            
             current_night_log["witch_action"] = {
                 "action": "poison",
-                "target": poison_target
+                "target": poison_target,
             }
             self.mark_event_complete(event_type="witch_action")
 
-        
         elif not use_antidote and not use_poison:
             self.log_event(
                 is_private=True,
                 agent_id=witch_id,
-                content="Witch chose not to use antidote or poison tonight."
+                content="Witch chose not to use antidote or poison tonight.",
             )
             self.log_event(
                 is_private=True,
                 agent_id="system",
-                content="Witch chose not to use antidote or poison tonight."
+                content="Witch chose not to use antidote or poison tonight.",
             )
 
-            
-            current_night_log["witch_action"] = {
-                "action": "none",
-                "target": None
-            }
+            current_night_log["witch_action"] = {"action": "none", "target": None}
             self.mark_event_complete(event_type="witch_action")
         else:
             self.mark_event_complete(event_type="witch_action")
@@ -1997,27 +2276,30 @@ class WerewolfEnv:
         players with a 'health' status of 1, allowing them to decide if they want to run for sheriff.
         """
         if "sheriff_election" not in self.shared_memory["private_state"]:
-           
             self.shared_memory["private_state"]["sheriff_election"] = {
                 "candidates": {agent.agent_id: None for agent in self.agents}
             }
 
         alive_players = [
-            agent for agent in self.agents
-            if agent.agent_id in self.shared_memory["public_state"].get("alive_players", [])
+            agent
+            for agent in self.agents
+            if agent.agent_id
+            in self.shared_memory["public_state"].get("alive_players", [])
         ]
 
         if alive_players:
             event = {
                 "event_type": "run_for_sheriff",
                 "sender": self,
-                "recipients": alive_players, 
-                "content": {}  
+                "recipients": alive_players,
+                "content": {},
             }
             self._log_event("Run for sheriff event published for all living players.")
             self.publish_event(event)
         else:
-            self._log_event("No living players found to participate in sheriff election.")
+            self._log_event(
+                "No living players found to participate in sheriff election."
+            )
 
     def process_run_for_sheriff(self, event: dict) -> None:
         """
@@ -2035,10 +2317,19 @@ class WerewolfEnv:
             run_for_sheriff = event.get("content", {}).get("run_for_sheriff", False)
         else:
             run_for_sheriff = False
-        self.shared_memory["private_state"]["sheriff_election"]["candidates"][player_id] = run_for_sheriff
+        self.shared_memory["private_state"]["sheriff_election"]["candidates"][
+            player_id
+        ] = run_for_sheriff
 
-        if any(choice is None for choice in self.shared_memory["private_state"]["sheriff_election"]["candidates"].values()):
-            self._log_system(f"current decision:{self.shared_memory['private_state']['sheriff_election']['candidates']}")
+        if any(
+            choice is None
+            for choice in self.shared_memory["private_state"]["sheriff_election"][
+                "candidates"
+            ].values()
+        ):
+            self._log_system(
+                f"current decision:{self.shared_memory['private_state']['sheriff_election']['candidates']}"
+            )
             self._log_event("Waiting for all players to decide on running for sheriff.")
             return
 
@@ -2048,42 +2339,50 @@ class WerewolfEnv:
         if "sheriff_candidates" not in day_cache:
             day_cache["sheriff_candidates"] = []
 
-        candidate_ids = sorted([
-            agent_id for agent_id, wants_to_run in self.shared_memory["private_state"]["sheriff_election"]["candidates"].items()
-            if wants_to_run
-        ])
+        candidate_ids = sorted(
+            [
+                agent_id
+                for agent_id, wants_to_run in self.shared_memory["private_state"][
+                    "sheriff_election"
+                ]["candidates"].items()
+                if wants_to_run
+            ]
+        )
 
         if candidate_ids:
             candidate_list_str = ", ".join(candidate_ids)
             self.log_event(
                 is_private=False,
                 agent_id="system",
-                content=f"Sheriff election candidates: {candidate_list_str}"
+                content=f"Sheriff election candidates: {candidate_list_str}",
             )
 
             day_cache["sheriff_candidates"] = candidate_ids
 
-            self.shared_memory["private_state"]["sheriff_election"]["sheriff_speech"] = {candidate_id: None for candidate_id in candidate_ids}
-            self.shared_memory["private_state"]["sheriff_election"]["final_candidate"] = []
-
+            self.shared_memory["private_state"]["sheriff_election"][
+                "sheriff_speech"
+            ] = {candidate_id: None for candidate_id in candidate_ids}
+            self.shared_memory["private_state"]["sheriff_election"][
+                "final_candidate"
+            ] = []
 
             first_candidate_id = candidate_ids[0]
             self.mark_event_complete(event_type="run_for_sheriff")
             self.sheriff_speech(candidate_ids, first_candidate_id)
-            
-            
 
         else:
             self.log_event(
                 is_private=False,
                 agent_id="system",
                 content="No candidates decided to run for sheriff. No sheriff in this game anymore.",
-                )
+            )
 
             self.mark_event_complete(event_type="run_for_sheriff")
             return
 
-    def sheriff_speech(self, candidate_ids: list, candidate_id: str, first=True) -> None:
+    def sheriff_speech(
+        self, candidate_ids: list, candidate_id: str, first=True
+    ) -> None:
         """
         Publishes a 'sheriff_speech' event for a given candidate, allowing them to make their speech for the election.
 
@@ -2101,11 +2400,16 @@ class WerewolfEnv:
 
         speech_position = candidate_ids.index(candidate_id) + 1
 
-        if day_cache.get("sheriff_speech") and any(speech is not None for speech in day_cache["sheriff_speech"].values()):
-            election_info = "\n".join([
-                f"{cid}: {speech}" for cid, speech in day_cache["sheriff_speech"].items()
-                if speech is not None
-            ])
+        if day_cache.get("sheriff_speech") and any(
+            speech is not None for speech in day_cache["sheriff_speech"].values()
+        ):
+            election_info = "\n".join(
+                [
+                    f"{cid}: {speech}"
+                    for cid, speech in day_cache["sheriff_speech"].items()
+                    if speech is not None
+                ]
+            )
         else:
             election_info = "No speeches available yet. You are the first one."
 
@@ -2116,7 +2420,7 @@ class WerewolfEnv:
                 break
         if candidate_instance is None:
             self._log_system(f"Error: Candidate instance for {candidate_id} not found.")
-            return            
+            return
         event = {
             "event_type": "sheriff_speech",
             "sender": self,
@@ -2124,16 +2428,18 @@ class WerewolfEnv:
             "content": {
                 "election_info": election_info,
                 "speech_sequence": speech_sequence,
-                "speech_position": str(speech_position)
-            }
+                "speech_position": str(speech_position),
+            },
         }
-        
-        self._log_system(f"Sheriff speech event published for candidate {candidate_id}.")
+
+        self._log_system(
+            f"Sheriff speech event published for candidate {candidate_id}."
+        )
         if first:
             self.publish_event(event)
         else:
             self.event_bus.publish(event)
-        
+
     def process_sheriff_speech(self, event: dict) -> None:
         """
         Processes each candidate's sheriff speech, recording their decision to continue in the election
@@ -2149,7 +2455,10 @@ class WerewolfEnv:
             action_content = event.get("content", {})
             if isinstance(action_content, dict):
                 continue_running = action_content.get("continue_running", False)
-                speech_content = action_content.get("speech_content", f"Error during generation for player {candidate_id}.")
+                speech_content = action_content.get(
+                    "speech_content",
+                    f"Error during generation for player {candidate_id}.",
+                )
             else:
                 speech_content = f"Error during generation for player {candidate_id}."
                 continue_running = False
@@ -2161,37 +2470,37 @@ class WerewolfEnv:
             self.log_event(
                 is_private=False,
                 agent_id=candidate_id,
-                content=f"{candidate_id}'s speech: {speech_content}"
+                content=f"{candidate_id}'s speech: {speech_content}",
             )
 
-           
             if continue_running:
-                
                 day_cache["final_candidate"].append(candidate_id)
             else:
-                
                 self.log_event(
                     is_private=False,
                     agent_id="system",
-                    content=f"{candidate_id} has withdrawn from the sheriff election."
+                    content=f"{candidate_id} has withdrawn from the sheriff election.",
                 )
 
-            
             candidate_ids = list(day_cache["sheriff_speech"].keys())
-            remaining_candidates = [cid for cid in candidate_ids if day_cache["sheriff_speech"].get(cid) is None]
+            remaining_candidates = [
+                cid
+                for cid in candidate_ids
+                if day_cache["sheriff_speech"].get(cid) is None
+            ]
 
             if remaining_candidates:
                 next_candidate_id = remaining_candidates[0]
                 self.sheriff_speech(candidate_ids, next_candidate_id, first=False)
 
         except Exception as e:
-            
             self._log_event(f"Error processing sheriff speech: {e}")
 
         finally:
-            
             if not remaining_candidates:
-                self._log_event(f"All candidates finish their speech. Now, remaining players will vote for sheriff.")
+                self._log_event(
+                    "All candidates finish their speech. Now, remaining players will vote for sheriff."
+                )
                 self.mark_event_complete(event_type="sheriff_speech")
                 self.vote_for_sheriff()
 
@@ -2201,26 +2510,41 @@ class WerewolfEnv:
         to all eligible players. Eligible players are those who are alive and have not participated in the sheriff election.
         """
         # Step 1: Get the election log and list of candidates
-        election_log = self.shared_memory["private_state"]["sheriff_election"].get("sheriff_speech", {})
-        final_candidates = self.shared_memory["private_state"]["sheriff_election"].get("final_candidate", [])
+        election_log = self.shared_memory["private_state"]["sheriff_election"].get(
+            "sheriff_speech", {}
+        )
+        final_candidates = self.shared_memory["private_state"]["sheriff_election"].get(
+            "final_candidate", []
+        )
 
         # Convert election log to a formatted string
-        election_log_str = "\n".join([f"{candidate}: {speech}" for candidate, speech in election_log.items()])
+        election_log_str = "\n".join(
+            [f"{candidate}: {speech}" for candidate, speech in election_log.items()]
+        )
         # Convert candidate list to a comma-separated string
         candidate_list_str = ", ".join(final_candidates)
 
         # Step 2: Determine the voters (alive players who have not run for sheriff)
         all_players = self.shared_memory["public_state"]["alive_players"]
         never_ran_for_sheriff = [
-            player_id for player_id in all_players
-            if not self.shared_memory["private_state"]["sheriff_election"]["candidates"].get(player_id)
+            player_id
+            for player_id in all_players
+            if not self.shared_memory["private_state"]["sheriff_election"][
+                "candidates"
+            ].get(player_id)
         ]
-        
+
         # Get player references by their player IDs
-        voter_refs = [agent for agent in self.agents if agent.agent_id in never_ran_for_sheriff]
+        voter_refs = [
+            agent for agent in self.agents if agent.agent_id in never_ran_for_sheriff
+        ]
         if not voter_refs:
-            self._log_event("All players have run for sheriff (or none are eligible to vote). Skipping sheriff vote.")
-            self.mark_event_complete(event_type="run_for_sheriff")  # or "vote_for_sheriff" depending on your event naming
+            self._log_event(
+                "All players have run for sheriff (or none are eligible to vote). Skipping sheriff vote."
+            )
+            self.mark_event_complete(
+                event_type="run_for_sheriff"
+            )  # or "vote_for_sheriff" depending on your event naming
             return
 
         # Step 3: Build the voting event
@@ -2230,15 +2554,16 @@ class WerewolfEnv:
             "recipients": voter_refs,  # Send player references, not IDs
             "content": {
                 "election_log": election_log_str,
-                "candidate_list": candidate_list_str
-            }
+                "candidate_list": candidate_list_str,
+            },
         }
 
         # Step 4: Publish the voting event
-        self._log_event(f"Vote for sheriff event published to eligible voters {never_ran_for_sheriff}.")
+        self._log_event(
+            f"Vote for sheriff event published to eligible voters {never_ran_for_sheriff}."
+        )
         self.publish_event(event)
 
-        
     def process_vote_for_sheriff(self, event):
         """
         Process each sheriff election vote after receiving a vote event.
@@ -2271,14 +2596,21 @@ class WerewolfEnv:
 
         # Step 2: Check if all eligible players have voted
         eligible_voters = [
-            player_id for player_id in self.shared_memory["public_state"]["alive_players"]
-            if not self.shared_memory["private_state"]["sheriff_election"]["candidates"].get(player_id)
+            player_id
+            for player_id in self.shared_memory["public_state"]["alive_players"]
+            if not self.shared_memory["private_state"]["sheriff_election"][
+                "candidates"
+            ].get(player_id)
         ]
-        all_votes_cast = all(voter in day_cache["sheriff_votes"] for voter in eligible_voters)
+        all_votes_cast = all(
+            voter in day_cache["sheriff_votes"] for voter in eligible_voters
+        )
 
         if not all_votes_cast:
             # If votes are still pending, log and wait for further events
-            self._log_event("Waiting for remaining players to cast their votes for sheriff.")
+            self._log_event(
+                "Waiting for remaining players to cast their votes for sheriff."
+            )
             return
 
         # Step 3: Tally the votes
@@ -2290,13 +2622,17 @@ class WerewolfEnv:
 
         # Step 4: Determine the player with the highest vote count
         max_votes = max(vote_counts.values(), default=0)
-        candidates_with_max_votes = [candidate for candidate, count in vote_counts.items() if count == max_votes]
+        candidates_with_max_votes = [
+            candidate for candidate, count in vote_counts.items() if count == max_votes
+        ]
 
         if len(candidates_with_max_votes) == 1:
             # A single player has the most votes, they become the sheriff
             sheriff_id = candidates_with_max_votes[0]
             self.shared_memory["public_state"]["sheriff"] = sheriff_id
-            self.shared_memory["private_state"]["players"][sheriff_id]["status"]["badge_count"] = 1
+            self.shared_memory["private_state"]["players"][sheriff_id]["status"][
+                "badge_count"
+            ] = 1
 
             # Record the sheriff result in day cache
             day_cache["sheriff_result"] = sheriff_id
@@ -2304,19 +2640,19 @@ class WerewolfEnv:
             if sheriff_role != "wolf":
                 # Villager-aligned sheriff
                 self.scores["villager"]["total"] += 2
-                self.scores["villager"]["details"].append(f"Villager-aligned sheriff {sheriff_id} elected. +2 points.")
+                self.scores["villager"]["details"].append(
+                    f"Villager-aligned sheriff {sheriff_id} elected. +2 points."
+                )
             else:
                 # Werewolf sheriff
                 self.scores["werewolf"]["total"] += 2
-                self.scores["werewolf"]["details"].append(f"Werewolf sheriff {sheriff_id} elected. +2 points.")
+                self.scores["werewolf"]["details"].append(
+                    f"Werewolf sheriff {sheriff_id} elected. +2 points."
+                )
             # Announce the sheriff result
             announcement = f"{sheriff_id} has been elected as the sheriff."
-            self.log_event(
-                is_private=False, 
-                agent_id="system", 
-                content=announcement
-                )
-                
+            self.log_event(is_private=False, agent_id="system", content=announcement)
+
         else:
             # If there's a tie or no votes, no sheriff is chosen
             self.shared_memory["public_state"]["sheriff"] = None
@@ -2324,18 +2660,16 @@ class WerewolfEnv:
 
             # Announce the tie result
             announcement = "No sheriff was elected due to a tie."
-            self.log_event(
-                is_private=False, 
-                agent_id="system", 
-                content=announcement
-                )
+            self.log_event(is_private=False, agent_id="system", content=announcement)
 
         # Step 5: Publish all votes publicly with the sheriff announcement
-        vote_summary = "\n".join([f"{voter} voted for {choice}" for voter, choice in votes.items()])
+        vote_summary = "\n".join(
+            [f"{voter} voted for {choice}" for voter, choice in votes.items()]
+        )
         self.log_event(
-            is_private=False, 
-            agent_id="system", 
-            content=f"Sheriff election votes:\n{vote_summary}\n(Note: The voting order reflects only the system's query sequence and does not imply any strategic alignment or motive.)"
+            is_private=False,
+            agent_id="system",
+            content=f"Sheriff election votes:\n{vote_summary}\n(Note: The voting order reflects only the system's query sequence and does not imply any strategic alignment or motive.)",
         )
 
         # Update day cache with vote summary
@@ -2346,29 +2680,43 @@ class WerewolfEnv:
         """
         Retrieves the list of players who died during the night from the night_cache.
         Logs the deceased players publicly and returns the list of deceased players.
-        
+
         Returns:
             list: A list of player IDs who died during the night.
         """
         # Access the most recent night log from the night_cache
-        current_night_log = self.shared_memory["private_state"].get("night_cache", [])[-1]
+        current_night_log = self.shared_memory["private_state"].get("night_cache", [])[
+            -1
+        ]
         deceased_players = current_night_log.get("player_dead_tonight", [])
 
         # Log deceased players publicly
         if deceased_players:
             deceased_names = ", ".join(deceased_players)
-            self.log_event(is_private=False, agent_id="system", content=f"Players deceased during the night: {deceased_names}")
+            self.log_event(
+                is_private=False,
+                agent_id="system",
+                content=f"Players deceased during the night: {deceased_names}",
+            )
         else:
-            self.log_event(is_private=False, agent_id="system", content="No players deceased during the night.")
+            self.log_event(
+                is_private=False,
+                agent_id="system",
+                content="No players deceased during the night.",
+            )
 
         # Check if the sheriff is among the deceased players
         sheriff_id = self.shared_memory["public_state"].get("sheriff")
         if sheriff_id in deceased_players:
-            self.log_event(is_private=False, agent_id="system", content=f"The deceased player {sheriff_id} was the sheriff. Processing badge flow.")
+            self.log_event(
+                is_private=False,
+                agent_id="system",
+                content=f"The deceased player {sheriff_id} was the sheriff. Processing badge flow.",
+            )
             self.badge_flow(sheriff_id=sheriff_id)
-        
+
         return deceased_players
-    
+
     def sheriff_decide_speech_order(self) -> None:
         """
         Publishes an event to the sheriff, allowing them to decide the speech order.
@@ -2379,15 +2727,21 @@ class WerewolfEnv:
         """
         # Step 1: Get the current sheriff's ID and reference
         sheriff_id = self.shared_memory["public_state"]["sheriff"]
-        if not sheriff_id or sheriff_id not in self.shared_memory["public_state"].get("alive_players", []):
+        if not sheriff_id or sheriff_id not in self.shared_memory["public_state"].get(
+            "alive_players", []
+        ):
             self._log_event("No sheriff present to decide the speech order.")
             return []
 
-        sheriff_ref = next((agent for agent in self.agents if agent.agent_id == sheriff_id), None)
+        sheriff_ref = next(
+            (agent for agent in self.agents if agent.agent_id == sheriff_id), None
+        )
         if not sheriff_ref:
-            self._log_event(f"Could not find a valid reference for the sheriff: {sheriff_id}")
+            self._log_event(
+                f"Could not find a valid reference for the sheriff: {sheriff_id}"
+            )
             return []
-        
+
         # Step 2: Get the list of deceased players from the previous night
         deceased = self.get_night_deceased()
 
@@ -2396,9 +2750,7 @@ class WerewolfEnv:
             "event_type": "decide_speech_sequence",
             "sender": self,  # The environment is the sender
             "recipients": [sheriff_ref],  # Reference to the sheriff's agent
-            "content": {
-                "dead_player_list": deceased  # Provide the deceased players
-            }
+            "content": {"dead_player_list": deceased},  # Provide the deceased players
         }
 
         # Step 4: Publish the event to the sheriff
@@ -2413,11 +2765,15 @@ class WerewolfEnv:
         Start from the specified player and direction, remove deceased players before finalizing the order.
         """
         # Step 1: Get all players and sheriff's choices
-        all_players = sorted(self.shared_memory["private_state"]["players"].keys())  # Sort by player ID
+        all_players = sorted(
+            self.shared_memory["private_state"]["players"].keys()
+        )  # Sort by player ID
         alive_players = self.shared_memory["public_state"].get("alive_players", [])
         sheriff_id = self.shared_memory["public_state"].get("sheriff", None)
         if isinstance(event.get("content", {}), dict):
-            starting_player = event.get("content", {}).get("starting_player", sheriff_id)
+            starting_player = event.get("content", {}).get(
+                "starting_player", sheriff_id
+            )
             from_left = event.get("content", {}).get("from_left", True)
         else:
             starting_player = sheriff_id
@@ -2440,7 +2796,9 @@ class WerewolfEnv:
         if from_left:  # Start from left (decreasing order)
             speech_order = all_players[starting_index:] + all_players[:starting_index]
         else:  # Start from right (increasing order)
-            speech_order = all_players[starting_index::-1] + all_players[:starting_index:-1]
+            speech_order = (
+                all_players[starting_index::-1] + all_players[:starting_index:-1]
+            )
 
         # The sheriff always speaks last
         if sheriff_id in speech_order:
@@ -2458,7 +2816,7 @@ class WerewolfEnv:
         self.log_event(
             is_private=False,
             agent_id="system",
-            content=f"The speaking sequence for this round is: {order_string}"
+            content=f"The speaking sequence for this round is: {order_string}",
         )
         self.mark_event_complete(event_type="decide_speech_sequence")
 
@@ -2484,12 +2842,24 @@ class WerewolfEnv:
             current_speaker_id = speech_order[0]
 
         # Skip deceased players
-        while current_speaker_id and self.shared_memory["private_state"]["players"][current_speaker_id]["status"]["health"] == 0:
-            next_index = (speech_order.index(current_speaker_id) + 1) % len(speech_order)
+        while (
+            current_speaker_id
+            and self.shared_memory["private_state"]["players"][current_speaker_id][
+                "status"
+            ]["health"]
+            == 0
+        ):
+            next_index = (speech_order.index(current_speaker_id) + 1) % len(
+                speech_order
+            )
             current_speaker_id = speech_order[next_index]
 
         if not current_speaker_id:
-            self.log_event(is_private=False, agent_id="system", content="All players eligible to speak are dead.")
+            self.log_event(
+                is_private=False,
+                agent_id="system",
+                content="All players eligible to speak are dead.",
+            )
             return
 
         if "speech_log" not in day_cache:
@@ -2497,10 +2867,14 @@ class WerewolfEnv:
 
         # Build the speech content history
         speech_log = day_cache["speech_log"]
-        speech_history = "\n".join([f"{pid}: {content}" for pid, content in speech_log.items()])
+        speech_history = "\n".join(
+            [f"{pid}: {content}" for pid, content in speech_log.items()]
+        )
 
         # Get player instance
-        player_instance = next(agent for agent in self.agents if agent.agent_id == current_speaker_id)
+        player_instance = next(
+            agent for agent in self.agents if agent.agent_id == current_speaker_id
+        )
 
         # Create and publish the speech event
         event = {
@@ -2510,8 +2884,8 @@ class WerewolfEnv:
             "content": {
                 "speech_history": speech_history,
                 "current_speaker": current_speaker_id,
-                "speech_position": speech_order.index(current_speaker_id) + 1
-            }
+                "speech_position": speech_order.index(current_speaker_id) + 1,
+            },
         }
         self.publish_event(event)
 
@@ -2528,8 +2902,10 @@ class WerewolfEnv:
         action_content = event.get("content", {})
 
         # Check if action_content is "no_action"
-        if isinstance(action_content, dict): 
-            speech_content = action_content.get("speech_content", f"Error during generation for player {player_id}.")
+        if isinstance(action_content, dict):
+            speech_content = action_content.get(
+                "speech_content", f"Error during generation for player {player_id}."
+            )
         else:
             speech_content = f"Error during generation for player {player_id}."
 
@@ -2547,12 +2923,13 @@ class WerewolfEnv:
         self.log_event(
             is_private=False,
             agent_id=player_id,
-            content=f"{player_id}'s speech: {speech_content}"
+            content=f"{player_id}'s speech: {speech_content}",
         )
 
         speech_order = day_cache.get("speech_order_decision", None)
         remaining_speakers = [
-            pid for pid in speech_order
+            pid
+            for pid in speech_order
             if pid not in day_cache["speech_log"]
             and pid in self.shared_memory["public_state"]["alive_players"]
         ]
@@ -2564,7 +2941,11 @@ class WerewolfEnv:
         else:
             # All players have finished speaking
             self.mark_event_complete(event_type="player_speech")
-            self.log_event(is_private=False, agent_id="system", content="All players have completed their speeches for today.")
+            self.log_event(
+                is_private=False,
+                agent_id="system",
+                content="All players have completed their speeches for today.",
+            )
 
     def vote_action(self) -> None:
         """
@@ -2573,7 +2954,7 @@ class WerewolfEnv:
         """
         # Step 1: Determine the voters (all alive players)
         all_players = self.shared_memory["public_state"]["alive_players"]
-        
+
         # Get player references by their player ID
         voter_refs = [agent for agent in self.agents if agent.agent_id in all_players]
 
@@ -2582,13 +2963,12 @@ class WerewolfEnv:
             "event_type": "vote_action",
             "sender": self,  # Environment instance
             "recipients": voter_refs,  # Send player references, not IDs
-            "content": {}  # Exile voting does not require additional content
+            "content": {},  # Exile voting does not require additional content
         }
 
         # Step 3: Publish the voting event
         self.publish_event(event)
         self._log_event("Vote to exile event published to all alive players.")
-
 
     def process_vote_action(self, event: dict) -> None:
         """
@@ -2621,9 +3001,12 @@ class WerewolfEnv:
 
         # Step 2: Check if all eligible players have voted
         eligible_voters = [
-            player_id for player_id in self.shared_memory["public_state"]["alive_players"]
+            player_id
+            for player_id in self.shared_memory["public_state"]["alive_players"]
         ]
-        all_votes_cast = all(voter in day_cache["banishment_votes"] for voter in eligible_voters)
+        all_votes_cast = all(
+            voter in day_cache["banishment_votes"] for voter in eligible_voters
+        )
 
         if not all_votes_cast:
             # If votes are still pending, log and wait for further events
@@ -2642,12 +3025,16 @@ class WerewolfEnv:
 
         # Step 4: Determine the player with the highest vote count
         max_votes = max(vote_counts.values(), default=0)
-        candidates_with_max_votes = [candidate for candidate, count in vote_counts.items() if count == max_votes]
+        candidates_with_max_votes = [
+            candidate for candidate, count in vote_counts.items() if count == max_votes
+        ]
 
         if len(candidates_with_max_votes) == 1:
             # A single player has the most votes, they are banished
             banished_player_id = candidates_with_max_votes[0]
-            self.shared_memory["private_state"]["players"][banished_player_id]["status"]["health"] = 0
+            self.shared_memory["private_state"]["players"][banished_player_id][
+                "status"
+            ]["health"] = 0
 
             # Record the banishment result in day cache
             day_cache["banishment_result"] = banished_player_id
@@ -2655,34 +3042,32 @@ class WerewolfEnv:
             banished_role = self.get_player_role(banished_player_id)
             if banished_role == "wolf":
                 self.scores["villager"]["total"] += 2
-                self.scores["villager"]["details"].append(f"Werewolf {banished_player_id} was banished. +2 points.")
+                self.scores["villager"]["details"].append(
+                    f"Werewolf {banished_player_id} was banished. +2 points."
+                )
             else:
                 self.scores["werewolf"]["total"] += 1
-                self.scores["werewolf"]["details"].append(f"Non-werewolf {banished_player_id} was banished. Werewolves +1 point.")
+                self.scores["werewolf"]["details"].append(
+                    f"Non-werewolf {banished_player_id} was banished. Werewolves +1 point."
+                )
 
             # Check if the banished player is the sheriff
             if banished_player_id == sheriff_id:
-                self._log_event(f"The banished player {banished_player_id} was the sheriff. Processing badge flow.")
+                self._log_event(
+                    f"The banished player {banished_player_id} was the sheriff. Processing badge flow."
+                )
                 self.badge_flow(sheriff_id=banished_player_id)
 
             # Announce the banishment result
             announcement = f"{banished_player_id} has been banished from the game."
-            self.log_event(
-                is_private=False,
-                agent_id="system",
-                content=announcement
-            )
+            self.log_event(is_private=False, agent_id="system", content=announcement)
         else:
             # If there's a tie, no player is banished
             day_cache["banishment_result"] = "No player banished due to tie"
 
             # Announce the tie result
             announcement = "No player was banished due to a tie."
-            self.log_event(
-                is_private=False,
-                agent_id="system",
-                content=announcement
-            )
+            self.log_event(is_private=False, agent_id="system", content=announcement)
 
         for voter, choice in votes.items():
             voter_role = self.get_player_role(voter)
@@ -2690,18 +3075,23 @@ class WerewolfEnv:
 
             if voter_role != "wolf" and choice_role == "wolf":
                 self.scores["villager"]["total"] += 0.2
-                self.scores["villager"]["details"].append(f"Villager {voter} voted for werewolf {choice}. +0.2 points.")
+                self.scores["villager"]["details"].append(
+                    f"Villager {voter} voted for werewolf {choice}. +0.2 points."
+                )
             elif voter_role != "wolf" and choice_role != "wolf" and choice != "abstain":
-                
                 self.scores["villager"]["total"] -= 0.1
-                self.scores["villager"]["details"].append(f"Villager {voter} voted for villager {choice}. -0.1 points.")
+                self.scores["villager"]["details"].append(
+                    f"Villager {voter} voted for villager {choice}. -0.1 points."
+                )
 
         # Step 6: Publish all votes publicly with the banishment announcement
-        vote_summary = "\n".join([f"{voter} voted for {choice}" for voter, choice in votes.items()])
+        vote_summary = "\n".join(
+            [f"{voter} voted for {choice}" for voter, choice in votes.items()]
+        )
         self.log_event(
             is_private=False,
             agent_id="system",
-            content=f"Banishment votes:\n{vote_summary}\n(Note: The voting order reflects only the system's query sequence and does not imply any strategic alignment or motive.)"
+            content=f"Banishment votes:\n{vote_summary}\n(Note: The voting order reflects only the system's query sequence and does not imply any strategic alignment or motive.)",
         )
 
         # Update day cache with vote summary
@@ -2711,15 +3101,19 @@ class WerewolfEnv:
     def last_words(self, agent_id: str) -> None:
         """
         Publishes a 'last_word' event for the specified agent.
-        
+
         Args:
             agent_id (str): The ID of the agent who is giving their last word.
         """
         # Retrieve the agent instance based on the agent ID
-        agent_instance = next((agent for agent in self.agents if agent.agent_id == agent_id), None)
+        agent_instance = next(
+            (agent for agent in self.agents if agent.agent_id == agent_id), None
+        )
 
         if not agent_instance:
-            self._log_event(f"Agent {agent_id} not found. Cannot publish last word event.")
+            self._log_event(
+                f"Agent {agent_id} not found. Cannot publish last word event."
+            )
             return
 
         # Construct and publish the last word event
@@ -2727,7 +3121,7 @@ class WerewolfEnv:
             "event_type": "last_words",
             "sender": self,  # The environment instance
             "recipients": [agent_instance],  # The specified agent
-            "content": {}
+            "content": {},
         }
 
         self.publish_event(event)
@@ -2736,15 +3130,17 @@ class WerewolfEnv:
     def process_last_words(self, event: dict) -> None:
         """
         Processes the last words from an eliminated player and records their final message in the public log.
-        
+
         Args:
             event (dict): The event data containing the player's last words content.
         """
         # Step 1: Retrieve the player ID and their final words content
         player_id = event["sender"]
         action_content = event.get("content", {})
-        if isinstance(action_content, dict): 
-            speech_content = action_content.get("speech_content", f"Error during generation for player {player_id}.")
+        if isinstance(action_content, dict):
+            speech_content = action_content.get(
+                "speech_content", f"Error during generation for player {player_id}."
+            )
         else:
             speech_content = f"Error during generation for player {player_id}."
         # Get the current day and the day cache
@@ -2762,30 +3158,34 @@ class WerewolfEnv:
         self.log_event(
             is_private=False,
             agent_id=player_id,
-            content=f"Last words from {player_id}: {speech_content}"
+            content=f"Last words from {player_id}: {speech_content}",
         )
 
         # Log a system message to indicate the player's last words have been recorded
-        self._log_event(f"Last words from {player_id} recorded and shared with all players.")
+        self._log_event(
+            f"Last words from {player_id} recorded and shared with all players."
+        )
         self.mark_event_complete(event_type="last_words")
 
     def badge_flow(self, sheriff_id: str) -> None:
         """
-        Publishes a badge_flow event to the sheriff who is about to be eliminated, 
+        Publishes a badge_flow event to the sheriff who is about to be eliminated,
         allowing them to decide what to do with the sheriff's badge.
 
         Args:
             sheriff_id (str): The ID of the sheriff who is about to be eliminated.
         """
         # Retrieve the sheriff's agent instance
-        sheriff_instance = next(agent for agent in self.agents if agent.agent_id == sheriff_id)
+        sheriff_instance = next(
+            agent for agent in self.agents if agent.agent_id == sheriff_id
+        )
 
         # Create and publish the badge_flow event
         event = {
             "event_type": "badge_flow",
             "sender": self,
             "recipients": [sheriff_instance],
-            "content": {}
+            "content": {},
         }
 
         # Publish the event to the event bus
@@ -2818,64 +3218,76 @@ class WerewolfEnv:
 
         if pass_badge:
             # If the sheriff decides to pass the badge
-            if badge_receiver and badge_receiver in self.shared_memory["public_state"]["alive_players"]:
+            if (
+                badge_receiver
+                and badge_receiver
+                in self.shared_memory["public_state"]["alive_players"]
+            ):
                 # Update badge status
-                self.shared_memory["private_state"]["players"][sheriff_id]["status"]["badge_count"] = 0
+                self.shared_memory["private_state"]["players"][sheriff_id]["status"][
+                    "badge_count"
+                ] = 0
                 self.shared_memory["public_state"]["sheriff"] = badge_receiver
-                self.shared_memory["private_state"]["players"][badge_receiver]["status"]["badge_count"] = 1
+                self.shared_memory["private_state"]["players"][badge_receiver][
+                    "status"
+                ]["badge_count"] = 1
 
                 # Record the badge flow result in the day cache
                 day_cache["badge_flow_result"] = {
                     "previous_sheriff": sheriff_id,
                     "new_sheriff": badge_receiver,
-                    "action": "badge_passed"
+                    "action": "badge_passed",
                 }
 
                 # Log the result
                 self.log_event(
                     is_private=False,
                     agent_id="system",
-                    content=f"{sheriff_id} has passed the badge to {badge_receiver}."
+                    content=f"{sheriff_id} has passed the badge to {badge_receiver}.",
                 )
             else:
                 # If the badge receiver is invalid, destroy the badge instead
-                self.shared_memory["private_state"]["players"][sheriff_id]["status"]["badge_count"] = 0
+                self.shared_memory["private_state"]["players"][sheriff_id]["status"][
+                    "badge_count"
+                ] = 0
                 self.shared_memory["public_state"]["sheriff"] = None
 
                 # Record the badge destruction in the day cache
                 day_cache["badge_flow_result"] = {
                     "previous_sheriff": sheriff_id,
                     "new_sheriff": None,
-                    "action": "badge_destroyed"
+                    "action": "badge_destroyed",
                 }
 
                 # Log the result
                 self.log_event(
                     is_private=False,
                     agent_id="system",
-                    content=f"{sheriff_id} attempted to pass the badge, but it was destroyed instead."
+                    content=f"{sheriff_id} attempted to pass the badge, but it was destroyed instead.",
                 )
             self.mark_event_complete(event_type="badge_flow")
         else:
             # If the sheriff decides to destroy the badge
-            self.shared_memory["private_state"]["players"][sheriff_id]["status"]["badge_count"] = 0
+            self.shared_memory["private_state"]["players"][sheriff_id]["status"][
+                "badge_count"
+            ] = 0
             self.shared_memory["public_state"]["sheriff"] = None
 
             # Record the badge destruction in the day cache
             day_cache["badge_flow_result"] = {
                 "previous_sheriff": sheriff_id,
                 "new_sheriff": None,
-                "action": "badge_destroyed"
+                "action": "badge_destroyed",
             }
 
             # Log the result
             self.log_event(
                 is_private=False,
                 agent_id="system",
-                content=f"{sheriff_id} has destroyed the badge."
+                content=f"{sheriff_id} has destroyed the badge.",
             )
             self.mark_event_complete(event_type="badge_flow")
-        
+
     def receive_action(self, event: dict) -> None:
         """
         Processes an action event received from the EventBus.
@@ -2889,8 +3301,8 @@ class WerewolfEnv:
         event_type = event.get("event_type", "unknown")
         if event_type != "reply_sheriff_speech" and event_type != "reply_player_speech":
             self._log_player(
-                event.get("sender", ""), 
-                f"Received action event of type '{event_type}'. Event content: {event.get('content', 'Error when retrieving content')}"
+                event.get("sender", ""),
+                f"Received action event of type '{event_type}'. Event content: {event.get('content', 'Error when retrieving content')}",
             )
 
         if event_type == "reply_guard_action":
@@ -2930,7 +3342,10 @@ class WerewolfEnv:
             self._log_system("Processing reply_badge_flow.")
             self.process_badge_flow(event)
         else:
-            self._log_system(f"Unknown event type '{event_type}' received. No action taken.")
+            self._log_system(
+                f"Unknown event type '{event_type}' received. No action taken."
+            )
+
 
 def start_game(name, config_path):
     if not os.path.exists(config_path):
@@ -2945,12 +3360,21 @@ def start_game(name, config_path):
     except Exception as e:
         print(f"An error occurred while starting the game: {e}")
 
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Start werewolf simulation")
-    parser.add_argument('--rounds', type=int, default=10, help="Simulation round")
-    parser.add_argument('--name', type=str, default="werewolf_engine_demo", help="Game name")
-    parser.add_argument('--config_path', type=str, default=os.path.join("marble", "configs", "test_config", "werewolf_config_4o.yaml"),
-                        help="Config path")
+    parser.add_argument("--rounds", type=int, default=10, help="Simulation round")
+    parser.add_argument(
+        "--name", type=str, default="werewolf_engine_demo", help="Game name"
+    )
+    parser.add_argument(
+        "--config_path",
+        type=str,
+        default=os.path.join(
+            "marble", "configs", "test_config", "werewolf_config_4o.yaml"
+        ),
+        help="Config path",
+    )
 
     args = parser.parse_args()
 
