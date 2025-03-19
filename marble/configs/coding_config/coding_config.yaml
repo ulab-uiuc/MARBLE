@@ -94,7 +94,7 @@ memory:
   type: SharedMemory
 
 metrics:
-  evaluate_llm: "gpt-4o-mini"
+  evaluate_llm: "gpt-4o"
   code_quality: true
   test_coverage: true
   collaboration_effectiveness: true
