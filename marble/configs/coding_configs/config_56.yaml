@@ -1,0 +1,106 @@
+coordinate_mode: graph
+
+relationships:
+  - [agent1, agent2, "collaborates with"]
+  - [agent2, agent1, "collaborates with"]
+  - [agent1, agent3, "collaborates with"]
+  - [agent3, agent1, "collaborates with"]
+  # - [agent1, agent3, "supervises"]
+  # - [agent1, agent4, "supervises"]
+  # - [agent2, agent3, "collaborates with"]
+  - [agent2, agent3, "collaborates with"]
+  - [agent3, agent2, "collaborates with"]
+  # - [agent3, agent4, "collaborates with"]
+
+llm: "together_ai/meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo"
+
+environment:
+  type: Coding
+  name: "Coding Environment"
+  workspace_dir: "workspace"
+  max_iterations: 5
+
+task:
+  content: |-
+    Software Development Task:
+
+    Please write a racing game system called MultiTrackRacers that enables multiple AI agents to collaboratively design and race on custom-built tracks. MultiTrackRacers is a multiplayer racing game system that allows AI agents to work together to create unique race tracks, compete against each other, and improve their vehicles through strategic upgrades and modifications.
+    1. Implementation requirements:
+       - 1. Track Design Module: Develop a track design module that allows AI agents to collaboratively design custom race tracks. This module must support the creation of different track elements such as straight paths, curves, jumps, and obstacles. The track design module must be completed before the AI agents can race on the tracks.
+       - 2. Vehicle Customization Module: Implement a vehicle customization module that enables AI agents to modify and upgrade their vehicles. This includes selecting vehicle types, adjusting performance parameters (speed, acceleration, handling), and adding special abilities (boosts, shields). The vehicle customization module should be completed after the track design module to ensure that vehicles are optimized for the specific tracks.
+       - 3. Racing Engine: Develop a racing engine that simulates the races on the custom tracks. The racing engine should handle real-time physics, collision detection, and scoring. AI agents must race against each other, and the engine should provide real-time feedback and performance metrics. The racing engine can only be fully functional once the track design and vehicle customization modules are complete.
+       - 4. Collaboration and Communication System: Implement a system that facilitates collaboration and communication among AI agents. This system should allow agents to share track designs, vehicle configurations, and race strategies. The collaboration system should be integrated into the track design and vehicle customization modules to enhance the cooperative aspects of the game.
+       - 5. Multiplayer and AI Integration: Ensure that the game supports multiplayer modes and integrates AI agents that can compete against human players. The AI agents should be capable of learning and adapting their strategies based on the performance data from previous races. The multiplayer and AI integration should be the final component to be completed, as it relies on the functionality of the track design, vehicle customization, and racing engine modules.
+
+
+    2. Project structure:
+       - solution.py (main implementation)
+
+    3. Development process:
+       - Developer: Create the code.
+       - Developer: Revise the code.
+       - Developer: Optimize the code.
+
+    If there are multiple files, please put them all in solution.py, but remember to add the file name in the following format:
+    ```python
+    # file_name_1.py
+    # your code here
+
+    # file_name_2.py
+    # your code here
+
+    # file_name_3.py
+    # your code here
+    ```
+
+    Please work together to complete this task following software engineering best practices.
+
+  output_format: |
+    The final deliverable should include:
+    solution.py
+
+agents:
+  - type: CodingAgent
+    agent_id: agent1
+    profile: |
+      I am a Senior Software Developer specialized in Python development.
+      I am good at creating the code framework from scratch based on the task description and requirements.
+      So I **have to** call "create_code" action to create the code in the first iteration at first.
+      I am **very terrible** at do further modifications since I am not so creative or careful so I **have to** let agent 2 or agent 3 revise the code after I create the code and I **can't** call "give_advice_and_revise_code" action.
+      Agent 2 is better at adding missing functions so it's better to let agent 2 revise the code at first.
+      Agent 3 is better at fixing existing issues and optimizing the code so it's better to let agent 3 revise the code after agent 2 has revised the code so that the code is more optimized.
+
+
+  - type: CodingAgent
+    agent_id: agent2
+    profile: |
+      I am a Senior Software Developer specialized in Python development.
+      I am better at adding missing functionality based on my decent understanding and compliance to the task description and requirements.
+      I **have to** call "give_advice_and_revise_code" action to give advice to the code and revise the code.
+      I **can't** call "create_code" action since I am not good at creating the code framework from scratch.
+      I can let agent 3 to make the code more optimized after I have added the missing functionality.
+
+  - type: CodingAgent
+    agent_id: agent3
+    profile: |
+      I am a Senior Software Developer specialized in Python development.
+      I am better at fixing existing issues and optimizing the code based on my innovation and creativity.
+      I **have to** call "give_advice_and_revise_code" action to give advice to the code and revise the code.
+      I **can't** call "create_code" action since I am not good at creating the code framework from scratch.
+      I can let agent 2 to add the missing functionality after I have fixed the existing issues and optimized the code.
+
+memory:
+  type: SharedMemory
+
+metrics:
+  evaluate_llm: "gpt-4o-mini"
+  code_quality: true
+  test_coverage: true
+  collaboration_effectiveness: true
+
+engine_planner:
+  initial_progress: "Starting the software development project with team coordination."
+
+output:
+  format: jsonl
+  file_path: "result/development_output.jsonl"
