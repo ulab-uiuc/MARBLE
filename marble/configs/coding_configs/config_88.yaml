@@ -1,0 +1,112 @@
+coordinate_mode: graph
+
+relationships:
+  - [agent1, agent2, "collaborates with"]
+  - [agent2, agent1, "collaborates with"]
+  - [agent1, agent3, "collaborates with"]
+  - [agent3, agent1, "collaborates with"]
+  # - [agent1, agent3, "supervises"]
+  # - [agent1, agent4, "supervises"]
+  # - [agent2, agent3, "collaborates with"]
+  - [agent2, agent3, "collaborates with"]
+  - [agent3, agent2, "collaborates with"]
+  # - [agent3, agent4, "collaborates with"]
+
+llm: "together_ai/meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo"
+
+environment:
+  type: Coding
+  name: "Coding Environment"
+  workspace_dir: "workspace"
+  max_iterations: 5
+
+task:
+  content: |-
+    Software Development Task:
+
+    Please write a system called SportsTeamCollaborator that facilitates the collaborative analysis of sports match data among multiple agents (coaches, analysts, and players). SportsTeamCollaborator is a web-based platform that allows users to upload and analyze sports match data, track player performance, and share insights in real-time. The system supports the creation of detailed reports, performance metrics, and interactive visualizations, and it enables multiple users to collaborate on the analysis and provide feedback.
+    1. Implementation requirements:
+       - The system should allow users to upload various types of sports match data, including video files, CSV files with performance metrics, and live data streams.
+       - Implement a user role system with different permissions for coaches, analysts, and players. Coaches should have full access to all features, analysts should be able to perform data analysis and share reports, and players should be able to view their performance metrics and receive feedback.
+       - The system should provide real-time collaboration features, such as shared notes, comments, and chat functionality, to facilitate communication among users during the analysis process.
+       - Develop a comprehensive suite of test cases to validate the system's functionality, including: 
+    - Uploading different file types and data formats 
+    - User role management and permission verification 
+    - Real-time collaboration features (e.g., shared notes, comments, and chat) 
+    - Performance metric calculations and report generation 
+    - Handling edge cases such as large file uploads, concurrent user edits, and network disruptions
+       - Ensure the system can handle large datasets efficiently and provide real-time updates without significant latency.
+       - The system should be scalable to support multiple teams and a large number of users, and it should include robust security measures to protect user data and privacy.
+
+
+    2. Project structure:
+       - solution.py (main implementation)
+
+    3. Development process:
+       - Developer: Create the code.
+       - Developer: Revise the code.
+       - Developer: Optimize the code.
+
+    If there are multiple files, please put them all in solution.py, but remember to add the file name in the following format:
+    ```python
+    # file_name_1.py
+    # your code here
+
+    # file_name_2.py
+    # your code here
+
+    # file_name_3.py
+    # your code here
+    ```
+
+    Please work together to complete this task following software engineering best practices.
+
+  output_format: |
+    The final deliverable should include:
+    solution.py
+
+agents:
+  - type: CodingAgent
+    agent_id: agent1
+    profile: |
+      I am a Senior Software Developer specialized in Python development.
+      I am good at creating the code framework from scratch based on the task description and requirements.
+      So I **have to** call "create_code" action to create the code in the first iteration at first.
+      I am **very terrible** at do further modifications since I am not so creative or careful so I **have to** let agent 2 or agent 3 revise the code after I create the code and I **can't** call "give_advice_and_revise_code" action.
+      Agent 2 is better at adding missing functions so it's better to let agent 2 revise the code at first.
+      Agent 3 is better at fixing existing issues and optimizing the code so it's better to let agent 3 revise the code after agent 2 has revised the code so that the code is more optimized.
+
+
+  - type: CodingAgent
+    agent_id: agent2
+    profile: |
+      I am a Senior Software Developer specialized in Python development.
+      I am better at adding missing functionality based on my decent understanding and compliance to the task description and requirements.
+      I **have to** call "give_advice_and_revise_code" action to give advice to the code and revise the code.
+      I **can't** call "create_code" action since I am not good at creating the code framework from scratch.
+      I can let agent 3 to make the code more optimized after I have added the missing functionality.
+
+  - type: CodingAgent
+    agent_id: agent3
+    profile: |
+      I am a Senior Software Developer specialized in Python development.
+      I am better at fixing existing issues and optimizing the code based on my innovation and creativity.
+      I **have to** call "give_advice_and_revise_code" action to give advice to the code and revise the code.
+      I **can't** call "create_code" action since I am not good at creating the code framework from scratch.
+      I can let agent 2 to add the missing functionality after I have fixed the existing issues and optimized the code.
+
+memory:
+  type: SharedMemory
+
+metrics:
+  evaluate_llm: "gpt-4o-mini"
+  code_quality: true
+  test_coverage: true
+  collaboration_effectiveness: true
+
+engine_planner:
+  initial_progress: "Starting the software development project with team coordination."
+
+output:
+  format: jsonl
+  file_path: "result/development_output.jsonl"

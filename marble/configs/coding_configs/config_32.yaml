@@ -1,0 +1,105 @@
+coordinate_mode: graph
+
+relationships:
+  - [agent1, agent2, "collaborates with"]
+  - [agent2, agent1, "collaborates with"]
+  - [agent1, agent3, "collaborates with"]
+  - [agent3, agent1, "collaborates with"]
+  # - [agent1, agent3, "supervises"]
+  # - [agent1, agent4, "supervises"]
+  # - [agent2, agent3, "collaborates with"]
+  - [agent2, agent3, "collaborates with"]
+  - [agent3, agent2, "collaborates with"]
+  # - [agent3, agent4, "collaborates with"]
+
+llm: "together_ai/meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo"
+
+environment:
+  type: Coding
+  name: "Coding Environment"
+  workspace_dir: "workspace"
+  max_iterations: 5
+
+task:
+  content: |-
+    Software Development Task:
+
+    Please write a collaborative learning platform called Language_Learning_Hub. Language_Learning_Hub is a comprehensive software application that integrates language conversation, vocabulary enhancement, and grammar correction to provide a holistic learning experience for language learners. It connects learners with native speakers, offers interactive vocabulary games, and provides grammar correction tools, all within a single platform.
+    1. Implementation requirements:
+       - Frontend Development: Develop a user-friendly interface that supports multiple user roles (learners, native speakers, and administrators). The interface should include sections for language exchange conversations, vocabulary games, and grammar correction exercises. Implement real-time chat and voice communication features for language exchange sessions.
+       - Backend Development: Design a robust backend system that manages user accounts, session data, and game scores. Implement APIs for real-time data exchange between the frontend and backend, ensuring smooth communication and data integrity. Integrate a database to store user information, conversation logs, game progress, and grammar correction data.
+       - Database Management: Create a scalable database schema to efficiently store and manage user data, conversation records, game scores, and grammar correction feedback. Ensure data security and privacy compliance. Implement backup and recovery mechanisms to protect user data.
+       - Cross-Domain Collaboration: Ensure seamless integration and communication between the frontend and backend components. Coordinate the development of real-time communication features, data synchronization, and user authentication processes. Implement a feedback loop where users can report issues or suggest improvements, which can be managed through the backend and reflected in the frontend.
+
+
+    2. Project structure:
+       - solution.py (main implementation)
+
+    3. Development process:
+       - Developer: Create the code.
+       - Developer: Revise the code.
+       - Developer: Optimize the code.
+
+    If there are multiple files, please put them all in solution.py, but remember to add the file name in the following format:
+    ```python
+    # file_name_1.py
+    # your code here
+
+    # file_name_2.py
+    # your code here
+
+    # file_name_3.py
+    # your code here
+    ```
+
+    Please work together to complete this task following software engineering best practices.
+
+  output_format: |
+    The final deliverable should include:
+    solution.py
+
+agents:
+  - type: CodingAgent
+    agent_id: agent1
+    profile: |
+      I am a Senior Software Developer specialized in Python development.
+      I am good at creating the code framework from scratch based on the task description and requirements.
+      So I **have to** call "create_code" action to create the code in the first iteration at first.
+      I am **very terrible** at do further modifications since I am not so creative or careful so I **have to** let agent 2 or agent 3 revise the code after I create the code and I **can't** call "give_advice_and_revise_code" action.
+      Agent 2 is better at adding missing functions so it's better to let agent 2 revise the code at first.
+      Agent 3 is better at fixing existing issues and optimizing the code so it's better to let agent 3 revise the code after agent 2 has revised the code so that the code is more optimized.
+
+
+  - type: CodingAgent
+    agent_id: agent2
+    profile: |
+      I am a Senior Software Developer specialized in Python development.
+      I am better at adding missing functionality based on my decent understanding and compliance to the task description and requirements.
+      I **have to** call "give_advice_and_revise_code" action to give advice to the code and revise the code.
+      I **can't** call "create_code" action since I am not good at creating the code framework from scratch.
+      I can let agent 3 to make the code more optimized after I have added the missing functionality.
+
+  - type: CodingAgent
+    agent_id: agent3
+    profile: |
+      I am a Senior Software Developer specialized in Python development.
+      I am better at fixing existing issues and optimizing the code based on my innovation and creativity.
+      I **have to** call "give_advice_and_revise_code" action to give advice to the code and revise the code.
+      I **can't** call "create_code" action since I am not good at creating the code framework from scratch.
+      I can let agent 2 to add the missing functionality after I have fixed the existing issues and optimized the code.
+
+memory:
+  type: SharedMemory
+
+metrics:
+  evaluate_llm: "gpt-4o-mini"
+  code_quality: true
+  test_coverage: true
+  collaboration_effectiveness: true
+
+engine_planner:
+  initial_progress: "Starting the software development project with team coordination."
+
+output:
+  format: jsonl
+  file_path: "result/development_output.jsonl"

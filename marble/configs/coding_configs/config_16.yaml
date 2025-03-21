@@ -1,0 +1,107 @@
+coordinate_mode: graph
+
+relationships:
+  - [agent1, agent2, "collaborates with"]
+  - [agent2, agent1, "collaborates with"]
+  - [agent1, agent3, "collaborates with"]
+  - [agent3, agent1, "collaborates with"]
+  # - [agent1, agent3, "supervises"]
+  # - [agent1, agent4, "supervises"]
+  # - [agent2, agent3, "collaborates with"]
+  - [agent2, agent3, "collaborates with"]
+  - [agent3, agent2, "collaborates with"]
+  # - [agent3, agent4, "collaborates with"]
+
+llm: "together_ai/meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo"
+
+environment:
+  type: Coding
+  name: "Coding Environment"
+  workspace_dir: "workspace"
+  max_iterations: 5
+
+task:
+  content: |-
+    Software Development Task:
+
+    Please write a collaborative system called CodeSquad that facilitates real-time code review and debugging among multiple developers. CodeSquad is a web-based application that enables developers to share code snippets, review each other's code, and collaboratively debug issues. It supports real-time communication, code annotation, and version control integration.
+    1. Implementation requirements:
+       - Implement real-time code sharing and annotation features, allowing multiple developers to simultaneously view and comment on code snippets.
+       - Integrate with popular version control systems (e.g., Git) to pull and push code changes, and to track the history of code reviews and debugging sessions.
+       - Provide a chat interface for real-time communication and collaboration among developers, including the ability to send code snippets and error logs directly within the chat.
+       - Support adaptive task management, where the system can dynamically adjust to different stages of the code review and debugging process, such as marking issues as resolved, re-opening them based on feedback, or escalating them to higher levels of review.
+       - Include a dashboard that provides an overview of ongoing code reviews, debugging sessions, and the status of each task, with filters to sort and search for specific issues.
+       - Ensure the system is scalable and can handle multiple concurrent sessions, with user authentication and role-based access control to manage permissions and data privacy.
+
+
+    2. Project structure:
+       - solution.py (main implementation)
+
+    3. Development process:
+       - Developer: Create the code.
+       - Developer: Revise the code.
+       - Developer: Optimize the code.
+
+    If there are multiple files, please put them all in solution.py, but remember to add the file name in the following format:
+    ```python
+    # file_name_1.py
+    # your code here
+
+    # file_name_2.py
+    # your code here
+
+    # file_name_3.py
+    # your code here
+    ```
+
+    Please work together to complete this task following software engineering best practices.
+
+  output_format: |
+    The final deliverable should include:
+    solution.py
+
+agents:
+  - type: CodingAgent
+    agent_id: agent1
+    profile: |
+      I am a Senior Software Developer specialized in Python development.
+      I am good at creating the code framework from scratch based on the task description and requirements.
+      So I **have to** call "create_code" action to create the code in the first iteration at first.
+      I am **very terrible** at do further modifications since I am not so creative or careful so I **have to** let agent 2 or agent 3 revise the code after I create the code and I **can't** call "give_advice_and_revise_code" action.
+      Agent 2 is better at adding missing functions so it's better to let agent 2 revise the code at first.
+      Agent 3 is better at fixing existing issues and optimizing the code so it's better to let agent 3 revise the code after agent 2 has revised the code so that the code is more optimized.
+
+
+  - type: CodingAgent
+    agent_id: agent2
+    profile: |
+      I am a Senior Software Developer specialized in Python development.
+      I am better at adding missing functionality based on my decent understanding and compliance to the task description and requirements.
+      I **have to** call "give_advice_and_revise_code" action to give advice to the code and revise the code.
+      I **can't** call "create_code" action since I am not good at creating the code framework from scratch.
+      I can let agent 3 to make the code more optimized after I have added the missing functionality.
+
+  - type: CodingAgent
+    agent_id: agent3
+    profile: |
+      I am a Senior Software Developer specialized in Python development.
+      I am better at fixing existing issues and optimizing the code based on my innovation and creativity.
+      I **have to** call "give_advice_and_revise_code" action to give advice to the code and revise the code.
+      I **can't** call "create_code" action since I am not good at creating the code framework from scratch.
+      I can let agent 2 to add the missing functionality after I have fixed the existing issues and optimized the code.
+
+memory:
+  type: SharedMemory
+
+metrics:
+  evaluate_llm: "gpt-4o-mini"
+  code_quality: true
+  test_coverage: true
+  collaboration_effectiveness: true
+
+engine_planner:
+  initial_progress: "Starting the software development project with team coordination."
+
+output:
+  format: jsonl
+  file_path: "result/development_output.jsonl"
