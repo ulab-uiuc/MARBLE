@@ -1,13 +1,15 @@
+import argparse
+import json
 import os
 import re
 import sys
 import time
-import json
-import argparse
-from typing import List, Dict, Any, Optional
+from typing import Any, Dict, List, Optional
+
 import openai
-from openai import OpenAI
 import yaml
+from openai import OpenAI
+
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../../")))
 from marble.environments.werewolf_env import WerewolfEnv
 
@@ -15,17 +17,19 @@ from marble.environments.werewolf_env import WerewolfEnv
 class WerewolfEvaluator:
     """
     A class to evaluate a single game snapshot directory.
-    1) It loads every night checkpoint (e.g., checkpoint_Night1.json) 
+    1) It loads every night checkpoint (e.g., checkpoint_Night1.json)
        and simulates exactly one cycle per checkpoint (simulate_one_cycle=True).
-    2) After finishing all 'per-night' simulations, it performs a full-run 
+    2) After finishing all 'per-night' simulations, it performs a full-run
        from the earliest night checkpoint to the end (simulate_one_cycle=False).
     3) Stores logs in subfolders under 'werewolf_log' as needed.
     """
 
-    def __init__(self, snapshot_folder: str, config_dir: str, base_log_dir: str = "werewolf_log"):
+    def __init__(
+        self, snapshot_folder: str, config_dir: str, base_log_dir: str = "werewolf_log"
+    ):
         """
         Args:
-            snapshot_folder (str): The folder that contains multiple checkpoint_NightX.json 
+            snapshot_folder (str): The folder that contains multiple checkpoint_NightX.json
                                    (or DayX) files from the same game snapshot.
             config_dir (str): The YAML config file path that contains 'eval_config' etc.
             base_log_dir (str): The top-level directory under which new logs will be created.
@@ -64,14 +68,16 @@ class WerewolfEvaluator:
 
     def find_checkpoint_files(self, pattern="night") -> List[str]:
         """
-        Search for and return all files matching 'checkpoint_Night(\d+).json' 
+        Search for and return all files matching 'checkpoint_Night(\d+).json'
         or 'checkpoint_Day(\d+).json' in self.snapshot_folder, sorted numerically.
         """
         if not os.path.isdir(self.snapshot_folder):
-            raise NotADirectoryError(f"Snapshot folder not found: {self.snapshot_folder}")
+            raise NotADirectoryError(
+                f"Snapshot folder not found: {self.snapshot_folder}"
+            )
 
-        pattern_night = re.compile(r'^checkpoint_Night(\d+)\.json$', re.IGNORECASE)
-        pattern_day = re.compile(r'^checkpoint_Day(\d+)\.json$', re.IGNORECASE)
+        pattern_night = re.compile(r"^checkpoint_Night(\d+)\.json$", re.IGNORECASE)
+        pattern_day = re.compile(r"^checkpoint_Day(\d+)\.json$", re.IGNORECASE)
 
         all_files = os.listdir(self.snapshot_folder)
         matched = []
@@ -104,10 +110,14 @@ class WerewolfEvaluator:
         """
         checkpoint_files = self.find_checkpoint_files()
         if not checkpoint_files:
-            print(f"[SnapshotEvaluator] No checkpoint files found in {self.snapshot_folder}.")
+            print(
+                f"[SnapshotEvaluator] No checkpoint files found in {self.snapshot_folder}."
+            )
             return
 
-        print(f"[SnapshotEvaluator] Found {len(checkpoint_files)} checkpoint(s). Now evaluating per-night cycles...")
+        print(
+            f"[SnapshotEvaluator] Found {len(checkpoint_files)} checkpoint(s). Now evaluating per-night cycles..."
+        )
 
         # Simulate each checkpoint file one by one
         for ckpt_file in checkpoint_files:
@@ -129,21 +139,27 @@ class WerewolfEvaluator:
 
             # After the full run ends, use env to evaluate the performance of the Villagers
             if final_env is not None:
-                performance_scores = self.evaluate_villager_merged_performance(final_env)
+                performance_scores = self.evaluate_villager_merged_performance(
+                    final_env
+                )
                 self.full_run_result["villagers_performance"] = performance_scores
         else:
-            print("[SnapshotEvaluator] No 'Night1' checkpoint found, skip full-run simulation.")
+            print(
+                "[SnapshotEvaluator] No 'Night1' checkpoint found, skip full-run simulation."
+            )
 
         # Combine final results and write to final_result.json
         final_info = {
             "per_cycle_results": self.night_cycle_results,
-            "full_run_result": self.full_run_result
+            "full_run_result": self.full_run_result,
         }
         final_json_path = os.path.join(self.evaluator_dir, "final_result.json")
         with open(final_json_path, "w", encoding="utf-8") as f:
             json.dump(final_info, f, indent=4, ensure_ascii=False)
 
-        print(f"[SnapshotEvaluator] Evaluation done. final_result.json saved at {final_json_path}")
+        print(
+            f"[SnapshotEvaluator] Evaluation done. final_result.json saved at {final_json_path}"
+        )
 
     def evaluate_single_checkpoint(self, ckpt_path: str) -> Optional[Dict[str, Any]]:
         """
@@ -163,9 +179,11 @@ class WerewolfEvaluator:
             env = WerewolfEnv.load_from_file(
                 file_path=ckpt_path,
                 log_dir=run_dir,
-                override_config_path=self.config_dir  # <-- Added this
+                override_config_path=self.config_dir,  # <-- Added this
             )
-            print(f"[evaluate_single_checkpoint] Loaded env from {ckpt_path}, logs in {run_dir}")
+            print(
+                f"[evaluate_single_checkpoint] Loaded env from {ckpt_path}, logs in {run_dir}"
+            )
         except Exception as e:
             print(f"[evaluate_single_checkpoint] Error loading env: {e}")
             return None
@@ -176,7 +194,7 @@ class WerewolfEvaluator:
                 "ckpt_path": ckpt_path,
                 "logs_folder": run_dir,
                 "simulate_one_cycle": True,
-                "result": game_result
+                "result": game_result,
             }
         except Exception as e:
             print(f"[evaluate_single_checkpoint] Error in continue_game: {e}")
@@ -197,9 +215,11 @@ class WerewolfEvaluator:
             env = WerewolfEnv.load_from_file(
                 file_path=ckpt_path,
                 log_dir=run_dir,
-                override_config_path=self.config_dir  # <-- Added this
+                override_config_path=self.config_dir,  # <-- Added this
             )
-            print(f"[simulate_full_game_run] Loaded env from {ckpt_path}, logs in {run_dir}")
+            print(
+                f"[simulate_full_game_run] Loaded env from {ckpt_path}, logs in {run_dir}"
+            )
         except Exception as e:
             print(f"[simulate_full_game_run] Error loading env: {e}")
             return ({"error": str(e)}, None)
@@ -212,9 +232,9 @@ class WerewolfEvaluator:
                     "start_ckpt": ckpt_path,
                     "logs_folder": run_dir,
                     "simulate_one_cycle": False,
-                    "result": game_result
+                    "result": game_result,
                 },
-                env
+                env,
             )
         except Exception as e:
             print(f"[simulate_full_game_run] Error in continue_game: {e}")
@@ -270,7 +290,9 @@ class WerewolfEvaluator:
         #    containing "system", "user", "tools", and function: "villager_combined_evaluation"
         combined_yaml_file = "prompts/villager_combined_evaluation.yaml"
         if not os.path.exists(combined_yaml_file):
-            print(f"[evaluate_villager_merged_performance] YAML not found: {combined_yaml_file}")
+            print(
+                f"[evaluate_villager_merged_performance] YAML not found: {combined_yaml_file}"
+            )
             return {}
 
         with open(combined_yaml_file, "r", encoding="utf-8") as f:
@@ -320,13 +342,13 @@ class WerewolfEvaluator:
 
         # 6) Calculate the weighted overall score
         weighted_overall = (
-            info_score * 0.10 +
-            collab_limiting_score * 0.20 +
-            logic_score * 0.10 +
-            leader_sheriff_score * 0.20 +
-            voting_score * 0.10 +
-            protect_score * 0.10 +
-            result_score * 0.20
+            info_score * 0.10
+            + collab_limiting_score * 0.20
+            + logic_score * 0.10
+            + leader_sheriff_score * 0.20
+            + voting_score * 0.10
+            + protect_score * 0.10
+            + result_score * 0.20
         )
 
         # 7) Return the merged performance with detailed explanation
@@ -339,36 +361,35 @@ class WerewolfEvaluator:
             "voting_eliminations_score": voting_score,
             "protect_key_players_score": protect_score,
             "result_orientation_score": result_score,
-            
             # Detailed explanation for each dimension (GPT might return long texts)
             "info_effectiveness_detail": eval_result.get("info_effectiveness", ""),
-            "collaboration_limiting_detail": eval_result.get("collaboration_limiting", ""),
+            "collaboration_limiting_detail": eval_result.get(
+                "collaboration_limiting", ""
+            ),
             "logic_and_reasoning_detail": eval_result.get("logic_and_reasoning", ""),
-            "leadership_and_sheriff_detail": eval_result.get("leadership_and_sheriff", ""),
+            "leadership_and_sheriff_detail": eval_result.get(
+                "leadership_and_sheriff", ""
+            ),
             "voting_eliminations_detail": eval_result.get("voting_eliminations", ""),
             "protect_key_players_detail": eval_result.get("protect_key_players", ""),
             "result_orientation_detail": eval_result.get("result_orientation", ""),
-
             # Weighted overall score
-            "weighted_overall_score": weighted_overall
+            "weighted_overall_score": weighted_overall,
         }
 
         return merged_performance
 
-    
-
-    
     def evaluate_multiple_snapshots(self, top_level_dir: str):
         """
         Traverse all subfolders in top_level_dir (each subfolder corresponds to a game snapshot),
         and call evaluate_all_nights() for each subfolder to evaluate.
-        
-        After completing the evaluation for each subfolder, append the seven detailed scores and 
-        total score for that game to self.batch_evaluation_results, and save progress to 
+
+        After completing the evaluation for each subfolder, append the seven detailed scores and
+        total score for that game to self.batch_evaluation_results, and save progress to
         "batch_evaluation_progress.json" to prevent data loss in case of crashes.
 
-        After all subfolders have been evaluated, output the score distributions and average scores 
-        for each dimension, as well as the total score distribution and average, 
+        After all subfolders have been evaluated, output the score distributions and average scores
+        for each dimension, as well as the total score distribution and average,
         and write them to "batch_evaluation_summary.json".
         """
 
@@ -392,24 +413,31 @@ class WerewolfEvaluator:
 
         # Find all subfolders under top_level_dir, assuming each subfolder corresponds to a "snapshot archive"
         subfolders = [
-            d for d in os.listdir(top_level_dir)
+            d
+            for d in os.listdir(top_level_dir)
             if os.path.isdir(os.path.join(top_level_dir, d))
         ]
         if not subfolders:
-            print(f"[evaluate_multiple_snapshots] No subfolders found in {top_level_dir}.")
+            print(
+                f"[evaluate_multiple_snapshots] No subfolders found in {top_level_dir}."
+            )
             return
 
         # Evaluate each subfolder
         for idx, folder_name in enumerate(subfolders, start=1):
             snapshot_path = os.path.join(top_level_dir, folder_name)
-            print(f"\n=== Evaluating folder {idx}/{len(subfolders)}: {snapshot_path} ===")
+            print(
+                f"\n=== Evaluating folder {idx}/{len(subfolders)}: {snapshot_path} ==="
+            )
 
             # You can either create a new WerewolfEvaluator instance for each subfolder,
             # or reuse the same object by switching snapshot_folder, but make sure to adjust paths and configurations.
             sub_evaluator = WerewolfEvaluator(
                 snapshot_folder=snapshot_path,
-                config_dir=os.path.join(os.path.dirname(self.snapshot_folder), self.config_dir),
-                base_log_dir=self.base_log_dir
+                config_dir=os.path.join(
+                    os.path.dirname(self.snapshot_folder), self.config_dir
+                ),
+                base_log_dir=self.base_log_dir,
             )
 
             # Call evaluate_all_nights(), which generates final_result.json and stores results in sub_evaluator.full_run_result
@@ -423,21 +451,39 @@ class WerewolfEvaluator:
             # Here, you can place all seven dimensions and the overall_score into a dictionary
             record = {
                 "folder": folder_name,  # For traceability
-                "info_effectiveness_score": merged_perf.get("info_effectiveness_score", 0),
-                "collaboration_limiting_score": merged_perf.get("collaboration_limiting_score", 0),
-                "logic_and_reasoning_score": merged_perf.get("logic_and_reasoning_score", 0),
-                "leadership_and_sheriff_score": merged_perf.get("leadership_and_sheriff_score", 0),
-                "voting_eliminations_score": merged_perf.get("voting_eliminations_score", 0),
-                "protect_key_players_score": merged_perf.get("protect_key_players_score", 0),
-                "result_orientation_score": merged_perf.get("result_orientation_score", 0),
+                "info_effectiveness_score": merged_perf.get(
+                    "info_effectiveness_score", 0
+                ),
+                "collaboration_limiting_score": merged_perf.get(
+                    "collaboration_limiting_score", 0
+                ),
+                "logic_and_reasoning_score": merged_perf.get(
+                    "logic_and_reasoning_score", 0
+                ),
+                "leadership_and_sheriff_score": merged_perf.get(
+                    "leadership_and_sheriff_score", 0
+                ),
+                "voting_eliminations_score": merged_perf.get(
+                    "voting_eliminations_score", 0
+                ),
+                "protect_key_players_score": merged_perf.get(
+                    "protect_key_players_score", 0
+                ),
+                "result_orientation_score": merged_perf.get(
+                    "result_orientation_score", 0
+                ),
                 "weighted_overall_score": merged_perf.get("weighted_overall_score", 0),
             }
             self.batch_evaluation_results.append(record)
 
             # To prevent data loss due to crash, immediately save progress to a file
-            progress_path = os.path.join(self.evaluator_dir, "batch_evaluation_progress.json")
+            progress_path = os.path.join(
+                self.evaluator_dir, "batch_evaluation_progress.json"
+            )
             with open(progress_path, "w", encoding="utf-8") as f:
-                json.dump(self.batch_evaluation_results, f, indent=4, ensure_ascii=False)
+                json.dump(
+                    self.batch_evaluation_results, f, indent=4, ensure_ascii=False
+                )
 
         # After all subfolders have been evaluated, calculate score distributions and averages for each dimension
         dimension_keys = [
@@ -471,7 +517,7 @@ class WerewolfEvaluator:
         summary = {
             "count_of_snapshots": len(self.batch_evaluation_results),
             "dimension_distributions": dimension_distributions,
-            "dimension_averages": dimension_averages
+            "dimension_averages": dimension_averages,
         }
 
         summary_path = os.path.join(self.evaluator_dir, "batch_evaluation_summary.json")
@@ -482,17 +528,47 @@ class WerewolfEvaluator:
         print(f"Batch summary saved to: {summary_path}")
         print(f"Progress details saved to: {progress_path}")
 
+
 def evaluate(top_level_dir, config_path, snapshot_folder, base_log_dir):
-    evaluator = WerewolfEvaluator(snapshot_folder=snapshot_folder, config_dir=config_path, base_log_dir=base_log_dir)
+    evaluator = WerewolfEvaluator(
+        snapshot_folder=snapshot_folder,
+        config_dir=config_path,
+        base_log_dir=base_log_dir,
+    )
     evaluator.evaluate_multiple_snapshots(top_level_dir)
 
+
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Start the Werewolf evaluation environment")
-    parser.add_argument('--top_level_dir', type=str, default="werewolf_log", help="Top-level log directory")
-    parser.add_argument('--config_path', type=str, default=r"marble\configs\test_config\werewolf_config.yaml", help="Path to the configuration file")
-    parser.add_argument('--snapshot_folder', type=str, default="placeholder", help="Snapshot folder placeholder, will be replaced by evaluate_multiple_snapshots")
-    parser.add_argument('--base_log_dir', type=str, default="werewolf_eval/4omini", help="Base log directory")
+    parser = argparse.ArgumentParser(
+        description="Start the Werewolf evaluation environment"
+    )
+    parser.add_argument(
+        "--top_level_dir",
+        type=str,
+        default="werewolf_log",
+        help="Top-level log directory",
+    )
+    parser.add_argument(
+        "--config_path",
+        type=str,
+        default=r"marble\configs\test_config\werewolf_config.yaml",
+        help="Path to the configuration file",
+    )
+    parser.add_argument(
+        "--snapshot_folder",
+        type=str,
+        default="placeholder",
+        help="Snapshot folder placeholder, will be replaced by evaluate_multiple_snapshots",
+    )
+    parser.add_argument(
+        "--base_log_dir",
+        type=str,
+        default="werewolf_eval/4omini",
+        help="Base log directory",
+    )
 
     args = parser.parse_args()
 
-    evaluate(args.top_level_dir, args.config_path, args.snapshot_folder, args.base_log_dir)
+    evaluate(
+        args.top_level_dir, args.config_path, args.snapshot_folder, args.base_log_dir
+    )

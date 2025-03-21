@@ -3,19 +3,19 @@ system: |
 
   Below are the five dimensions and their detailed scoring guidelines:
 
-  1. **Information Effectiveness (info_effectiveness)**  
+  1. **Information Effectiveness (info_effectiveness)**
 
-  2. **Collaboration** 
+  2. **Collaboration**
 
-  3. **Logic and Reasoning (logic_and_reasoning)**  
+  3. **Logic and Reasoning (logic_and_reasoning)**
 
   4. **Leadership & key player's leadership performance**
 
-  5. **Result Orientation (result_orientation)**  
+  5. **Result Orientation (result_orientation)**
 
 user: |
   <<game_log>>
-  
+
   Evaluate the villagers' competitive performance against the werewolf team in this game based on the criteria provided. Write detailed reasoning for each category and assign scores accordingly.
 
 tools:

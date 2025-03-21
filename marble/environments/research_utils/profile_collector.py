@@ -12,8 +12,8 @@ def coauthor_frequency(
     author_id: str, author_list: List[Dict[str, str]], co_authors: Dict[str, int]
 ) -> Dict[str, int]:
     for author in author_list:
-        co_author_id = author.get('authorId')
-        co_author_name = author.get('name')
+        co_author_id = author.get("authorId")
+        co_author_name = author.get("name")
         if not co_author_id or not co_author_name or co_author_id == author_id:
             continue
         co_authors[co_author_name] = co_authors.get(co_author_name, 0) + 1
@@ -32,29 +32,29 @@ def match_author_ids(
     semantic_client = SemanticScholar()
     search_results = semantic_client.search_author(
         author_name,
-        fields=['authorId', 'papers.title'],
+        fields=["authorId", "papers.title"],
         limit=100,
     )
 
     author_ids = set()
     if known_paper_titles is None:
         for result in search_results:
-            author_id = result['authorId']
+            author_id = result["authorId"]
             author_ids.add(author_id)
     else:
         known_titles_lower = {title.lower() for title in known_paper_titles}
         for result in search_results:
-            author_id = result['authorId']
-            papers = result['papers']
+            author_id = result["authorId"]
+            papers = result["papers"]
             for paper in papers:
-                if paper.get('title', '').lower() in known_titles_lower:
+                if paper.get("title", "").lower() in known_titles_lower:
                     author_ids.add(author_id)
                     break
 
     if not author_ids:
-        raise ValueError('No authors found with matching paper titles or name.')
+        raise ValueError("No authors found with matching paper titles or name.")
     elif len(author_ids) > 1 and known_paper_titles:
-        raise ValueError('Multiple authors found with matching paper titles.')
+        raise ValueError("Multiple authors found with matching paper titles.")
 
     return author_ids
 
@@ -67,12 +67,12 @@ def get_papers_from_author_id(
     author_data: Dict[str, Any] = semantic_client.get_author(
         author_id,
         fields=[
-            'papers.title',
-            'papers.abstract',
-            'papers.authors',
+            "papers.title",
+            "papers.abstract",
+            "papers.authors",
         ],
     )
-    papers = author_data['papers']
+    papers = author_data["papers"]
     return papers[:paper_max_num] if isinstance(papers, list) else []
 
 
@@ -95,20 +95,24 @@ def collect_publications_and_coauthors(
             known_titles_lower = {title.lower() for title in known_paper_titles}
 
         for paper in papers:
-            title = paper.get('title', '')
-            if exclude_known and known_paper_titles and title.lower() in known_titles_lower:
+            title = paper.get("title", "")
+            if (
+                exclude_known
+                and known_paper_titles
+                and title.lower() in known_titles_lower
+            ):
                 continue
 
-            abstract = paper.get('abstract')
+            abstract = paper.get("abstract")
             if abstract:
-                paper_abstracts.append(abstract.replace('\n', ' '))
+                paper_abstracts.append(abstract.replace("\n", " "))
                 paper_titles.append(title)
 
-            paper_authors = paper.get('authors', [])
+            paper_authors = paper.get("authors", [])
             co_authors = coauthor_frequency(author_id, paper_authors, co_authors)
 
         if not paper_abstracts or not paper_titles:
-            raise ValueError('Not enough papers found with abstracts.')
+            raise ValueError("Not enough papers found with abstracts.")
 
         co_author_names = coauthor_filter(co_authors, limit=100)
 
@@ -131,7 +135,7 @@ def write_bio_prompting(
     """
     Write bio based on personal research history
     """
-    template_input = {'pub_info': pub_info}
+    template_input = {"pub_info": pub_info}
     messages = openai_format_prompt_construct(prompt_template, template_input)
     response_str = model_prompting(
         model_name,
@@ -160,7 +164,7 @@ def summarize_domain_prompting(
     """
     Check domain based on personal research history
     """
-    template_input = {'pub_info': pub_info}
+    template_input = {"pub_info": pub_info}
     messages = openai_format_prompt_construct(prompt_template, template_input)
     domain_str = model_prompting(
         model_name,
@@ -172,5 +176,5 @@ def summarize_domain_prompting(
         stream=stream,
     )
     assert isinstance(domain_str[0].content, str)
-    domains = domain_str[0].content.split(';')
+    domains = domain_str[0].content.split(";")
     return [domain.strip() for domain in domains]

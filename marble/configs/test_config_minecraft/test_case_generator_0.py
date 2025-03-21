@@ -12,10 +12,7 @@ with open("data/blueprint_description_all.json", "r") as f:
     source_data = json.load(f)
 
 models = [
-    [
-        "gpt-4o-mini",
-        "gpt-4o-mini"
-    ],
+    ["gpt-4o-mini", "gpt-4o-mini"],
 ]
 
 minecraft_knowledge_card = """
@@ -52,21 +49,9 @@ for model in tqdm(models):
         task_config = dict()
         task_config["coordinate_mode"] = "graph"
         task_config["relationships"] = [
-            [
-                "agent1",
-                "agent2",
-                "collaborate with"
-            ],
-            [
-                "agent1",
-                "agent3",
-                "collaborate with"
-            ],
-            [
-                "agent2",
-                "agent3",
-                "collaborate with"
-            ]
+            ["agent1", "agent2", "collaborate with"],
+            ["agent1", "agent3", "collaborate with"],
+            ["agent2", "agent3", "collaborate with"],
         ]
         task_config["environment"] = {
             "type": "Minecraft",
@@ -75,10 +60,13 @@ for model in tqdm(models):
             "port": 25565 + offset,
             "max_iterations": max_iterations,
             "task_id": task_id,
-            "task_name": "test"
+            "task_name": "test",
         }
         task_config["task"] = {
-            "content": task_template.format(minecraft_knowledge_card=minecraft_knowledge_card, blueprint=json.dumps(task_blueprint, indent=4))
+            "content": task_template.format(
+                minecraft_knowledge_card=minecraft_knowledge_card,
+                blueprint=json.dumps(task_blueprint, indent=4),
+            )
         }
         # task_config["agents"] = [
         #     {
@@ -104,37 +92,33 @@ for model in tqdm(models):
             {
                 "type": "BaseAgent",
                 "agent_id": "agent1",
-                "agent_port": 5000 + 10*offset,
-                "profile": "agent1 is a team member good at finding correct materials in the container and place the block in the correct place. agent1 know that retrieving materials can be done by using 'withdrawItem' and placing blocks can be done by using 'placeBlock'. agent1 is willing to seek help from other team members."
+                "agent_port": 5000 + 10 * offset,
+                "profile": "agent1 is a team member good at finding correct materials in the container and place the block in the correct place. agent1 know that retrieving materials can be done by using 'withdrawItem' and placing blocks can be done by using 'placeBlock'. agent1 is willing to seek help from other team members.",
             },
             {
                 "type": "BaseAgent",
                 "agent_id": "agent2",
-                "agent_port": 5001 + 10*offset,
-                "profile": "agent2 is a team member good at designing the correct order of placing the blocks since a block cannot be directly placed in the air. agent2 knows how to design auxilary blocks when some target blocks have to be in the air. agent2 tends to tell agent1 the correct order of placing target blocks and tell agent3 when to put auxilary blocks and when to remove them."
+                "agent_port": 5001 + 10 * offset,
+                "profile": "agent2 is a team member good at designing the correct order of placing the blocks since a block cannot be directly placed in the air. agent2 knows how to design auxilary blocks when some target blocks have to be in the air. agent2 tends to tell agent1 the correct order of placing target blocks and tell agent3 when to put auxilary blocks and when to remove them.",
             },
             {
                 "type": "BaseAgent",
                 "agent_id": "agent3",
-                "agent_port": 5002 + 10*offset,
-                "profile": "agent3 is a team member good at placing auxilary blocks and removing them according to the discussion with agent2. agent1 know that placing auxilary blocks can be done by using 'placeBlock' or 'erectDirtLadder' and removing them can be done by using 'MineBlock' or 'dismantleDirtLadder'."
-            }
+                "agent_port": 5002 + 10 * offset,
+                "profile": "agent3 is a team member good at placing auxilary blocks and removing them according to the discussion with agent2. agent1 know that placing auxilary blocks can be done by using 'placeBlock' or 'erectDirtLadder' and removing them can be done by using 'MineBlock' or 'dismantleDirtLadder'.",
+            },
         ]
-        task_config["memory"] = {
-            "type": "SharedMemory"
-        }
+        task_config["memory"] = {"type": "SharedMemory"}
         task_config["metrics"] = {
-            "evaluate_llm": {
-                "model": "gpt-3.5-turbo",
-                "provider": "openai"
-            }
+            "evaluate_llm": {"model": "gpt-3.5-turbo", "provider": "openai"}
         }
-        task_config["engine_planner"] = {
-            "initial_progress": "Starting the simulation."
-        }
+        task_config["engine_planner"] = {"initial_progress": "Starting the simulation."}
         task_config["llm"] = long_model_name
         task_config["output"] = {
             "file_path": f"result/minecraft/iteration_ablation/discussion_output_{short_model_name}_{task_id//20}.jsonl"
         }
-        with open(f"marble/configs/test_config_minecraft/iteration_ablation/test_config_{short_model_name}_{task_id}.yaml", "w") as f:
+        with open(
+            f"marble/configs/test_config_minecraft/iteration_ablation/test_config_{short_model_name}_{task_id}.yaml",
+            "w",
+        ) as f:
             yaml.safe_dump(task_config, f)

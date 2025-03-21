@@ -51,10 +51,10 @@ def json_parse(input_str: str) -> Dict[str, Any]:
         json_str = match.group(1)
     else:
         # If no code block is found, try to extract a JSON substring by looking for the first '{' and the last '}'
-        start = input_str.find('{')
-        end = input_str.rfind('}')
+        start = input_str.find("{")
+        end = input_str.rfind("}")
         if start != -1 and end != -1 and end > start:
-            json_str = input_str[start:end+1]
+            json_str = input_str[start : end + 1]
         else:
             # Fallback: use the entire string as JSON
             json_str = input_str
@@ -72,7 +72,14 @@ class EnginePlanner:
     The EnginePlanner class handles task assignment and scheduling for agents.
     """
 
-    def __init__(self, agent_graph: AgentGraph, memory: Any, config: Dict[str, Any], task: str, model: str = "gpt-3.5-turbo"):
+    def __init__(
+        self,
+        agent_graph: AgentGraph,
+        memory: Any,
+        config: Dict[str, Any],
+        task: str,
+        model: str = "gpt-3.5-turbo",
+    ):
         """
         Initialize the EnginePlanner.
 
@@ -87,7 +94,7 @@ class EnginePlanner:
         self.memory = memory  # Expected to be an instance of SharedMemory.
         self.logger = get_logger(self.__class__.__name__)
         self.config = config
-        self.current_progress = config.get('initial_progress', '')
+        self.current_progress = config.get("initial_progress", "")
         self.task = task
         self.model = model
         self.token_usage = 0
@@ -146,10 +153,12 @@ class EnginePlanner:
                     "Based on the above, please propose your next subtask. "
                     "Keep your answer concise and in plain text."
                 )
-                system_message_agent = f"You are agent {agent_id} providing your subtask proposal."
+                system_message_agent = (
+                    f"You are agent {agent_id} providing your subtask proposal."
+                )
                 messages_agent = [
                     {"role": "system", "content": system_message_agent},
-                    {"role": "user", "content": agent_prompt}
+                    {"role": "user", "content": agent_prompt},
                 ]
                 response_agent = model_prompting(
                     llm_model=self.model,
@@ -157,12 +166,20 @@ class EnginePlanner:
                     return_num=1,
                     max_token_num=512,
                     temperature=0.7,
-                    top_p=1.0
+                    top_p=1.0,
                 )
-                proposal = response_agent[0].content.strip() if response_agent[0].content else ""
+                proposal = (
+                    response_agent[0].content.strip()
+                    if response_agent[0].content
+                    else ""
+                )
                 agent_proposals[agent_id] = proposal
-                messages_for_token = messages_agent + [{"role": "assistant", "content": proposal}]
-                self.token_usage += token_counter(model=self.model, messages=messages_for_token)
+                messages_for_token = messages_agent + [
+                    {"role": "assistant", "content": proposal}
+                ]
+                self.token_usage += token_counter(
+                    model=self.model, messages=messages_for_token
+                )
 
             # Synthesize proposals into a final plan.
             proposals_text = ""
@@ -170,11 +187,11 @@ class EnginePlanner:
                 proposals_text += f"- Agent {agent_id}: {proposal}\n"
 
             final_prompt = (
-                self.create_prompt() +
-                "\nGroup Discussion Synthesis:\n" +
-                "The following are the proposals from each agent:\n" +
-                proposals_text +
-                "\nBased on the above proposals, please synthesize a final task assignment plan for all agents. "
+                self.create_prompt()
+                + "\nGroup Discussion Synthesis:\n"
+                + "The following are the proposals from each agent:\n"
+                + proposals_text
+                + "\nBased on the above proposals, please synthesize a final task assignment plan for all agents. "
                 "Ensure that your final output is a valid JSON object with the following format:\n\n"
                 "{\n"
                 '  "tasks": {\n'
@@ -184,12 +201,10 @@ class EnginePlanner:
                 '  "continue": true\n'
                 "}\n"
             )
-            system_message_final = (
-                "You are an agent planner synthesizing group discussion proposals into a final task assignment plan."
-            )
+            system_message_final = "You are an agent planner synthesizing group discussion proposals into a final task assignment plan."
             messages_final = [
                 {"role": "system", "content": system_message_final},
-                {"role": "user", "content": final_prompt}
+                {"role": "user", "content": final_prompt},
             ]
             response_final = model_prompting(
                 llm_model=self.model,
@@ -197,16 +212,24 @@ class EnginePlanner:
                 return_num=1,
                 max_token_num=1024,
                 temperature=0.7,
-                top_p=1.0
+                top_p=1.0,
             )
-            messages_for_token = messages_final + [{"role": "assistant", "content": response_final[0].content}]
-            self.token_usage += token_counter(model=self.model, messages=messages_for_token)
+            messages_for_token = messages_final + [
+                {"role": "assistant", "content": response_final[0].content}
+            ]
+            self.token_usage += token_counter(
+                model=self.model, messages=messages_for_token
+            )
             try:
                 assignment: Dict[str, Any] = json_parse(response_final[0].content)
-                self.logger.debug(f"Received task assignment using group discussion: {assignment}")
+                self.logger.debug(
+                    f"Received task assignment using group discussion: {assignment}"
+                )
                 return assignment
             except json.JSONDecodeError as e:
-                self.logger.error(f"Failed to parse JSON response in group discussion: {e}")
+                self.logger.error(
+                    f"Failed to parse JSON response in group discussion: {e}"
+                )
                 return {"tasks": {}, "continue": False}
 
         # ----- COGNITIVE EVOLVE MODE -----
@@ -214,18 +237,22 @@ class EnginePlanner:
             # Retrieve memory information using SharedMemory methods.
             memory_info = ""
             if self.memory:
-                evolving_experiences = self.memory.retrieve("evolving_experiences") or "None"
+                evolving_experiences = (
+                    self.memory.retrieve("evolving_experiences") or "None"
+                )
                 expected_result = self.memory.retrieve("expected_result") or "None"
                 expected_progress = self.memory.retrieve("expected_progress") or "None"
                 memory_info += "Memory Information:\n"
-                memory_info += f"- Previous evolving experiences: {evolving_experiences}\n"
+                memory_info += (
+                    f"- Previous evolving experiences: {evolving_experiences}\n"
+                )
                 memory_info += f"- Previous expected result: {expected_result}\n"
                 memory_info += f"- Previous expected progress: {expected_progress}\n"
 
             cognitive_prompt = (
-                self.create_prompt() +
-                ("\n" + memory_info if memory_info else "\n") +
-                "\nCognitive Evolution Instructions:\n"
+                self.create_prompt()
+                + ("\n" + memory_info if memory_info else "\n")
+                + "\nCognitive Evolution Instructions:\n"
                 "Reflect on the current progress and, if available, compare it with the previous expected result and expected progress. "
                 "Based on this reflection, propose improved task assignments for each agent. Additionally, generate an 'expected_result' "
                 "and 'expected_progress' for this round, and provide any 'evolving_experiences' that may help refine future planning. "
@@ -241,12 +268,10 @@ class EnginePlanner:
                 '  "continue": true\n'
                 "}\n"
             )
-            system_message = (
-                "You are a cognitively evolving task planner. Use previous experiences and current progress to refine your planning strategy."
-            )
+            system_message = "You are a cognitively evolving task planner. Use previous experiences and current progress to refine your planning strategy."
             messages = [
                 {"role": "system", "content": system_message},
-                {"role": "user", "content": cognitive_prompt}
+                {"role": "user", "content": cognitive_prompt},
             ]
             response = model_prompting(
                 llm_model=self.model,
@@ -254,21 +279,36 @@ class EnginePlanner:
                 return_num=1,
                 max_token_num=1024,
                 temperature=0.7,
-                top_p=1.0
+                top_p=1.0,
             )
-            messages_for_token = messages + [{"role": "assistant", "content": response[0].content}]
-            self.token_usage += token_counter(model=self.model, messages=messages_for_token)
+            messages_for_token = messages + [
+                {"role": "assistant", "content": response[0].content}
+            ]
+            self.token_usage += token_counter(
+                model=self.model, messages=messages_for_token
+            )
             try:
                 assignment: Dict[str, Any] = json_parse(response[0].content)
-                self.logger.debug(f"Received task assignment using cognitive evolve: {assignment}")
+                self.logger.debug(
+                    f"Received task assignment using cognitive evolve: {assignment}"
+                )
                 # Update memory with new expected values and evolving experiences using SharedMemory methods.
                 if self.memory:
-                    self.memory.update("expected_result", assignment.get("expected_result", ""))
-                    self.memory.update("expected_progress", assignment.get("expected_progress", ""))
-                    self.memory.update("evolving_experiences", assignment.get("evolving_experiences", ""))
+                    self.memory.update(
+                        "expected_result", assignment.get("expected_result", "")
+                    )
+                    self.memory.update(
+                        "expected_progress", assignment.get("expected_progress", "")
+                    )
+                    self.memory.update(
+                        "evolving_experiences",
+                        assignment.get("evolving_experiences", ""),
+                    )
                 return assignment
             except json.JSONDecodeError as e:
-                self.logger.error(f"Failed to parse JSON response in cognitive evolve: {e}")
+                self.logger.error(
+                    f"Failed to parse JSON response in cognitive evolve: {e}"
+                )
                 return {"tasks": {}, "continue": False}
 
         # ----- CHAIN-OF-THOUGHT (cot) MODE -----
@@ -285,12 +325,10 @@ class EnginePlanner:
                 '  "chain_of_thought": "Your reasoning process here",\n'
                 '  "continue": true\n'
             )
-            system_message = (
-                "You are a chain-of-thought task assignment system. Please detail your reasoning step by step and include your thought process in the final JSON output."
-            )
+            system_message = "You are a chain-of-thought task assignment system. Please detail your reasoning step by step and include your thought process in the final JSON output."
             messages = [
                 {"role": "system", "content": system_message},
-                {"role": "user", "content": prompt}
+                {"role": "user", "content": prompt},
             ]
             response = model_prompting(
                 llm_model=self.model,
@@ -298,12 +336,18 @@ class EnginePlanner:
                 return_num=1,
                 max_token_num=1024,
                 temperature=0.7,
-                top_p=1.0
+                top_p=1.0,
             )
-            messages_for_token = messages + [{"role": "assistant", "content": response[0].content}]
-            self.token_usage += token_counter(model=self.model, messages=messages_for_token)
+            messages_for_token = messages + [
+                {"role": "assistant", "content": response[0].content}
+            ]
+            self.token_usage += token_counter(
+                model=self.model, messages=messages_for_token
+            )
             response_json = json_parse(response[0].content)
-            self.logger.debug(f"Received task assignment using chain-of-thought planning: {response}")
+            self.logger.debug(
+                f"Received task assignment using chain-of-thought planning: {response}"
+            )
             return response_json
 
         # ----- NAIVE MODE (DEFAULT) -----
@@ -321,13 +365,13 @@ class EnginePlanner:
                 "}\n"
             )
             system_message = (
-            "You are a task assignment system for multiple AI agents based on their profiles and current progress.\n"
-            "Your task is to analyze the current state and assign the next task to each agent that requires an action.\n"
-            "Don't ask agents to assign tasks to other agents.\n"
-        )
+                "You are a task assignment system for multiple AI agents based on their profiles and current progress.\n"
+                "Your task is to analyze the current state and assign the next task to each agent that requires an action.\n"
+                "Don't ask agents to assign tasks to other agents.\n"
+            )
             messages = [
                 {"role": "system", "content": system_message},
-                {"role": "user", "content": prompt}
+                {"role": "user", "content": prompt},
             ]
             response = model_prompting(
                 llm_model=self.model,
@@ -335,14 +379,20 @@ class EnginePlanner:
                 return_num=1,
                 max_token_num=1024,
                 temperature=0.7,
-                top_p=1.0
+                top_p=1.0,
             )
-            messages_for_token = messages + [{"role": "assistant", "content": response[0].content}]
-            self.token_usage += token_counter(model=self.model, messages=messages_for_token)
+            messages_for_token = messages + [
+                {"role": "assistant", "content": response[0].content}
+            ]
+            self.token_usage += token_counter(
+                model=self.model, messages=messages_for_token
+            )
             try:
                 assignment: Dict[str, Any] = json_parse(response[0].content)
-                #assignment: Dict[str, Any] = json.loads(response[0].content if response[0].content else "")
-                self.logger.debug(f"Received task assignment using naive planning: {assignment}")
+                # assignment: Dict[str, Any] = json.loads(response[0].content if response[0].content else "")
+                self.logger.debug(
+                    f"Received task assignment using naive planning: {assignment}"
+                )
                 return assignment
             except json.JSONDecodeError as e:
                 self.logger.error(f"Failed to parse JSON response in naive mode: {e}")
@@ -358,7 +408,7 @@ class EnginePlanner:
         self.current_progress += f"\n{summary}"
         self.logger.debug(f"Updated progress: {self.current_progress}")
 
-    def summarize_output(self, summary:str, task:str, output_format:str) -> Message:
+    def summarize_output(self, summary: str, task: str, output_format: str) -> Message:
         """
         Summarize the output of the agents.
 
@@ -370,14 +420,28 @@ class EnginePlanner:
         """
         response = model_prompting(
             llm_model=self.model,
-            messages=[{"role": "user", "content": f"Summarize the output of the agents for the task: {task}\n\nNow here is some result of thr agent: {summary}, please analyze it. Return the final output into a json following the format: {output_format}"}],
+            messages=[
+                {
+                    "role": "user",
+                    "content": f"Summarize the output of the agents for the task: {task}\n\nNow here is some result of thr agent: {summary}, please analyze it. Return the final output into a json following the format: {output_format}",
+                }
+            ],
             return_num=1,
-            max_token_num=1024,
+            max_token_num=2048,
             temperature=0.0,
             top_p=None,
-            stream=None
+            stream=None,
         )[0]
-        self.token_usage += token_counter(model=self.model, messages=[{"role": "user", "content": f"Summarize the output of the agents for the task: {task}\n\nNow here is some result of thr agent: {summary}, please analyze it. Return the final output into a json following the format: {output_format}"}, {"role": "assistant", "content": response.content}])
+        self.token_usage += token_counter(
+            model=self.model,
+            messages=[
+                {
+                    "role": "user",
+                    "content": f"Summarize the output of the agents for the task: {task}\n\nNow here is some result of thr agent: {summary}, please analyze it. Return the final output into a json following the format: {output_format}",
+                },
+                {"role": "assistant", "content": response.content},
+            ],
+        )
         return response
 
     def decide_next_step(self, agents_results: List[Dict[str, Any]]) -> bool:
@@ -417,9 +481,11 @@ class EnginePlanner:
             return_num=1,
             max_token_num=256,
             temperature=0.3,
-            top_p=1.0
+            top_p=1.0,
         )
-        messages_for_token = messages + [{"role": "assistant", "content": response[0].content}]
+        messages_for_token = messages + [
+            {"role": "assistant", "content": response[0].content}
+        ]
         self.token_usage += token_counter(model=self.model, messages=messages_for_token)
         try:
             # decision = json.loads(response[0].content if response[0].content else "")

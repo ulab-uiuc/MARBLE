@@ -100,13 +100,13 @@ Check the github action result to make sure all tests pass. If not, fix the erro
 Please cite the following paper if you find Marble helpful!
 ```bibtex
 @misc{zhu2025multiagentbenchevaluatingcollaborationcompetition,
-      title={MultiAgentBench: Evaluating the Collaboration and Competition of LLM agents}, 
+      title={MultiAgentBench: Evaluating the Collaboration and Competition of LLM agents},
       author={Kunlun Zhu and Hongyi Du and Zhaochen Hong and Xiaocheng Yang and Shuyi Guo and Zhe Wang and Zhenhailong Wang and Cheng Qian and Xiangru Tang and Heng Ji and Jiaxuan You},
       year={2025},
       eprint={2503.01935},
       archivePrefix={arXiv},
       primaryClass={cs.MA},
-      url={https://arxiv.org/abs/2503.01935}, 
+      url={https://arxiv.org/abs/2503.01935},
 }
 ```
 
@@ -119,4 +119,3 @@ Please cite the following paper if you find Marble helpful!
   </picture>
 </a>
 </p>
-

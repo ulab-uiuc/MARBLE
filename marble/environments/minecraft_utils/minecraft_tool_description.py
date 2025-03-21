@@ -17,12 +17,12 @@ scanNearbyEntities_description = {
                 "item_num": {
                     "type": "number",
                     "description": "The number of items you want to find.",
-                }
+                },
             },
             "required": ["item_name"],
-            "additionalProperties": False
-        }
-    }
+            "additionalProperties": False,
+        },
+    },
 }
 
 navigateTo_description = {
@@ -44,12 +44,12 @@ navigateTo_description = {
                 "z": {
                     "type": "number",
                     "description": "The z coordinate.",
-                }
+                },
             },
             "required": ["x", "y", "z"],
-            "additionalProperties": False
-        }
-    }
+            "additionalProperties": False,
+        },
+    },
 }
 
 attackTarget_description = {
@@ -66,9 +66,9 @@ attackTarget_description = {
                 }
             },
             "required": ["target_name"],
-            "additionalProperties": False
-        }
-    }
+            "additionalProperties": False,
+        },
+    },
 }
 
 navigateToBuilding_description = {
@@ -85,9 +85,9 @@ navigateToBuilding_description = {
                 }
             },
             "required": ["building_name"],
-            "additionalProperties": False
-        }
-    }
+            "additionalProperties": False,
+        },
+    },
 }
 
 navigateToAnimal_description = {
@@ -104,9 +104,9 @@ navigateToAnimal_description = {
                 }
             },
             "required": ["animal_name"],
-            "additionalProperties": False
-        }
-    }
+            "additionalProperties": False,
+        },
+    },
 }
 
 navigateToPlayer_description = {
@@ -123,9 +123,9 @@ navigateToPlayer_description = {
                 }
             },
             "required": ["target_name"],
-            "additionalProperties": False
-        }
-    }
+            "additionalProperties": False,
+        },
+    },
 }
 
 UseItemOnEntity_description = {
@@ -143,12 +143,12 @@ UseItemOnEntity_description = {
                 "entity_name": {
                     "type": "string",
                     "description": "The name of the entity to apply the item to.",
-                }
+                },
             },
             "required": ["item_name", "entity_name"],
-            "additionalProperties": False
-        }
-    }
+            "additionalProperties": False,
+        },
+    },
 }
 
 sleep_description = {
@@ -156,7 +156,7 @@ sleep_description = {
     "function": {
         "name": "sleep",
         "description": "Go to sleep.",
-    }
+    },
 }
 
 wake_description = {
@@ -164,7 +164,7 @@ wake_description = {
     "function": {
         "name": "wake",
         "description": "Wake up.",
-    }
+    },
 }
 
 MineBlock_description = {
@@ -186,12 +186,12 @@ MineBlock_description = {
                 "z": {
                     "type": "number",
                     "description": "The z coordinate.",
-                }
+                },
             },
             "required": ["x", "y", "z"],
-            "additionalProperties": False
-        }
-    }
+            "additionalProperties": False,
+        },
+    },
 }
 
 placeBlock_description = {
@@ -221,12 +221,12 @@ placeBlock_description = {
                 "facing": {
                     "type": "string",
                     "description": "The facing direction of the item after it is placed.",
-                }
+                },
             },
             "required": ["item_name", "x", "y", "z", "facing"],
-            "additionalProperties": False
-        }
-    }
+            "additionalProperties": False,
+        },
+    },
 }
 
 equipItem_description = {
@@ -244,12 +244,12 @@ equipItem_description = {
                 "item_name": {
                     "type": "string",
                     "description": "The name of the item to be equipped.",
-                }
+                },
             },
             "required": ["slot", "item_name"],
-            "additionalProperties": False
-        }
-    }
+            "additionalProperties": False,
+        },
+    },
 }
 
 tossItem_description = {
@@ -267,12 +267,12 @@ tossItem_description = {
                 "count": {
                     "type": "number",
                     "description": "The count of the item to be throwed.",
-                }
+                },
             },
             "required": ["item_name"],
-            "additionalProperties": False
-        }
-    }
+            "additionalProperties": False,
+        },
+    },
 }
 
 talkTo_description = {
@@ -290,12 +290,12 @@ talkTo_description = {
                 "message": {
                     "type": "string",
                     "description": "The message to be conveyed.",
-                }
+                },
             },
             "required": ["entity_name", "message"],
-            "additionalProperties": False
-        }
-    }
+            "additionalProperties": False,
+        },
+    },
 }
 
 handoverBlock_description = {
@@ -317,12 +317,12 @@ handoverBlock_description = {
                 "item_count": {
                     "type": "number",
                     "description": "The count of the item to be passed.",
-                }
+                },
             },
             "required": ["target_player_name", "item_name", "item_count"],
-            "additionalProperties": False
-        }
-    }
+            "additionalProperties": False,
+        },
+    },
 }
 
 withdrawItem_description = {
@@ -344,12 +344,12 @@ withdrawItem_description = {
                 "item_count": {
                     "type": "number",
                     "description": "The count of the item to be taken out.",
-                }
+                },
             },
             "required": ["item_name", "from_name", "item_count"],
-            "additionalProperties": False
-        }
-    }
+            "additionalProperties": False,
+        },
+    },
 }
 
 storeItem_description = {
@@ -371,12 +371,12 @@ storeItem_description = {
                 "item_count": {
                     "type": "number",
                     "description": "The count of the item to be stored.",
-                }
+                },
             },
             "required": ["item_name", "to_name", "item_count"],
-            "additionalProperties": False
-        }
-    }
+            "additionalProperties": False,
+        },
+    },
 }
 
 craftBlock_description = {
@@ -394,12 +394,12 @@ craftBlock_description = {
                 "count": {
                     "type": "number",
                     "description": "The count of the item to craft.",
-                }
+                },
             },
             "required": ["item_name", "count"],
-            "additionalProperties": False
-        }
-    }
+            "additionalProperties": False,
+        },
+    },
 }
 
 SmeltingCooking_description = {
@@ -421,12 +421,12 @@ SmeltingCooking_description = {
                 "fuel_item_name": {
                     "type": "string",
                     "description": "The name of the item to use as fuel.",
-                }
+                },
             },
             "required": ["item_name", "item_count", "fuel_item_name"],
-            "additionalProperties": False
-        }
-    }
+            "additionalProperties": False,
+        },
+    },
 }
 
 erectDirtLadder_description = {
@@ -448,12 +448,12 @@ erectDirtLadder_description = {
                 "top_z": {
                     "type": "number",
                     "description": "The z coordinate of the top of the ladder.",
-                }
+                },
             },
             "required": ["top_x", "top_y", "top_z"],
-            "additionalProperties": False
-        }
-    }
+            "additionalProperties": False,
+        },
+    },
 }
 
 dismantleDirtLadder_description = {
@@ -475,12 +475,12 @@ dismantleDirtLadder_description = {
                 "top_z": {
                     "type": "number",
                     "description": "The z coordinate of the top of the ladder.",
-                }
+                },
             },
             "required": ["top_x", "top_y", "top_z"],
-            "additionalProperties": False
-        }
-    }
+            "additionalProperties": False,
+        },
+    },
 }
 
 enchantItem_description = {
@@ -498,12 +498,12 @@ enchantItem_description = {
                 "count": {
                     "type": "number",
                     "description": "The count of the item to be enchanted.",
-                }
+                },
             },
             "required": ["item_name", "count"],
-            "additionalProperties": False
-        }
-    }
+            "additionalProperties": False,
+        },
+    },
 }
 
 trade_description = {
@@ -525,12 +525,12 @@ trade_description = {
                 "count": {
                     "type": "number",
                     "description": "The count of the item to be traded.",
-                }
+                },
             },
             "required": ["item_name", "with_name", "count"],
-            "additionalProperties": False
-        }
-    }
+            "additionalProperties": False,
+        },
+    },
 }
 
 repairItem_description = {
@@ -548,12 +548,12 @@ repairItem_description = {
                 "material": {
                     "type": "string",
                     "description": "The material to be used for reparation.",
-                }
+                },
             },
             "required": ["item_name", "material"],
-            "additionalProperties": False
-        }
-    }
+            "additionalProperties": False,
+        },
+    },
 }
 
 eat_description = {
@@ -570,9 +570,9 @@ eat_description = {
                 }
             },
             "required": ["item_name"],
-            "additionalProperties": False
-        }
-    }
+            "additionalProperties": False,
+        },
+    },
 }
 
 drink_description = {
@@ -589,9 +589,9 @@ drink_description = {
                 }
             },
             "required": ["item_name"],
-            "additionalProperties": False
-        }
-    }
+            "additionalProperties": False,
+        },
+    },
 }
 
 wear_description = {
@@ -609,12 +609,12 @@ wear_description = {
                 "item_name": {
                     "type": "string",
                     "description": "The name of the item to wear.",
-                }
+                },
             },
             "required": ["slot", "item_name"],
-            "additionalProperties": False
-        }
-    }
+            "additionalProperties": False,
+        },
+    },
 }
 
 layDirtBeam_description = {
@@ -648,12 +648,12 @@ layDirtBeam_description = {
                 "z_2": {
                     "type": "number",
                     "description": "The ending z coordinate of the dirt beam to lay.",
-                }
+                },
             },
             "required": ["x_1", "y_1", "z_1", "x_2", "y_2", "z_2"],
-            "additionalProperties": False
-        }
-    }
+            "additionalProperties": False,
+        },
+    },
 }
 
 removeDirtBeam_description = {
@@ -687,12 +687,12 @@ removeDirtBeam_description = {
                 "z_2": {
                     "type": "number",
                     "description": "The ending z coordinate of the dirt beam to remove.",
-                }
+                },
             },
             "required": ["x_1", "y_1", "z_1", "x_2", "y_2", "z_2"],
-            "additionalProperties": False
-        }
-    }
+            "additionalProperties": False,
+        },
+    },
 }
 
 openContainer_description = {
@@ -710,15 +710,13 @@ openContainer_description = {
                 "position": {
                     "type": "array",
                     "description": "The position of the container to open.",
-                    "items": {
-                        "type": "number"
-                    }
-                }
+                    "items": {"type": "number"},
+                },
             },
             "required": ["container_name"],
-            "additionalProperties": False
-        }
-    }
+            "additionalProperties": False,
+        },
+    },
 }
 
 closeContainer_description = {
@@ -736,15 +734,13 @@ closeContainer_description = {
                 "position": {
                     "type": "array",
                     "description": "The position of the container to close.",
-                    "items": {
-                        "type": "number"
-                    }
-                }
+                    "items": {"type": "number"},
+                },
             },
             "required": ["item_name"],
-            "additionalProperties": False
-        }
-    }
+            "additionalProperties": False,
+        },
+    },
 }
 
 fetchContainerContents_description = {
@@ -762,15 +758,13 @@ fetchContainerContents_description = {
                 "position": {
                     "type": "array",
                     "description": "The position of the container to fetch content of.",
-                    "items": {
-                        "type": "number"
-                    }
-                }
+                    "items": {"type": "number"},
+                },
             },
             "required": ["item_name"],
-            "additionalProperties": False
-        }
-    }
+            "additionalProperties": False,
+        },
+    },
 }
 
 toggleAction_description = {
@@ -796,12 +790,12 @@ toggleAction_description = {
                 "z": {
                     "type": "number",
                     "description": "The z coordinate of the item to toggle.",
-                }
+                },
             },
             "required": ["item_name", "x", "y", "z"],
-            "additionalProperties": False
-        }
-    }
+            "additionalProperties": False,
+        },
+    },
 }
 
 get_entity_info_description = {
@@ -818,9 +812,9 @@ get_entity_info_description = {
                 }
             },
             "required": ["target_name"],
-            "additionalProperties": False
-        }
-    }
+            "additionalProperties": False,
+        },
+    },
 }
 
 get_environment_info_description = {
@@ -828,7 +822,7 @@ get_environment_info_description = {
     "function": {
         "name": "get_environment_info",
         "description": "Get the environment information.",
-    }
+    },
 }
 
 performMovement_description = {
@@ -846,12 +840,12 @@ performMovement_description = {
                 "seconds": {
                     "type": "number",
                     "description": "How many seconds the action lasts for.",
-                }
+                },
             },
             "required": ["action_name", "seconds"],
-            "additionalProperties": False
-        }
-    }
+            "additionalProperties": False,
+        },
+    },
 }
 
 lookAt_description = {
@@ -868,9 +862,9 @@ lookAt_description = {
                 }
             },
             "required": ["name"],
-            "additionalProperties": False
-        }
-    }
+            "additionalProperties": False,
+        },
+    },
 }
 
 startFishing_description = {
@@ -878,7 +872,7 @@ startFishing_description = {
     "function": {
         "name": "startFishing",
         "description": "Start fishing.",
-    }
+    },
 }
 
 stopFishing_description = {
@@ -886,7 +880,7 @@ stopFishing_description = {
     "function": {
         "name": "stopFishing",
         "description": "Stop fishing.",
-    }
+    },
 }
 
 read_description = {
@@ -903,9 +897,9 @@ read_description = {
                 }
             },
             "required": ["item_name"],
-            "additionalProperties": False
-        }
-    }
+            "additionalProperties": False,
+        },
+    },
 }
 
 readPage_description = {
@@ -923,12 +917,12 @@ readPage_description = {
                 "page": {
                     "type": "number",
                     "description": "The page number of the book to read.",
-                }
+                },
             },
             "required": ["item_name", "page"],
-            "additionalProperties": False
-        }
-    }
+            "additionalProperties": False,
+        },
+    },
 }
 
 write_description = {
@@ -946,10 +940,10 @@ write_description = {
                 "content": {
                     "type": "string",
                     "description": "The content to write on the book or sign.",
-                }
+                },
             },
             "required": ["item_name", "content"],
-            "additionalProperties": False
-        }
-    }
+            "additionalProperties": False,
+        },
+    },
 }

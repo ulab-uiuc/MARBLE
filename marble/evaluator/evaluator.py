@@ -3,8 +3,11 @@ Evaluator module for tracking metrics and evaluating agent performance.
 """
 
 import json
+import os
 import re
 from typing import Any, Dict, List
+
+from ruamel.yaml import YAML
 
 from marble.agent import BaseAgent
 from marble.environments import BaseEnvironment
@@ -32,7 +35,8 @@ class Evaluator:
             "communication_score": [],
             "task_evaluation": {},
             "total_milestones": 0,
-            "agent_kpis": {}
+            "agent_kpis": {},
+            "code_quality": {}
         }
         with open('evaluator/evaluator_prompts.json', 'r', encoding='utf-8') as f:
             self.evaluation_prompts = json.load(f)
@@ -132,6 +136,10 @@ class Evaluator:
             agent_results (str): The results from the agents.
         """
         # Get the KPI prompt
+        MAX_LENGTH = 7200
+
+        if len(agent_results) > MAX_LENGTH:
+            agent_results = agent_results[:MAX_LENGTH] + "..."
         kpi_prompt_template = self.evaluation_prompts["Graph"]["KPI"]["prompt"]
         # Fill in the placeholders {task} and {agent_results}
         prompt = kpi_prompt_template.format(task=task, agent_results=agent_results)
@@ -157,6 +165,7 @@ class Evaluator:
                     self.metrics["agent_kpis"][agent_id] += 1
                 else:
                     self.metrics["agent_kpis"][agent_id] = 1
+        self.logger.debug(f"LLM Response: {result.content}")
 
     def evaluate_task_research(self, task: str, result: str) -> None:
         """
@@ -229,7 +238,6 @@ class Evaluator:
         Returns:
             Dict[str, Any]: A dictionary containing parsed ratings for buyer and seller.
         """
-        # 设置默认评分
         default_ratings = {
             "buyer": {
                 "effectiveness_of_strategies": -1,
@@ -244,21 +252,17 @@ class Evaluator:
         }
 
         try:
-            # 提取 JSON 块
             match = re.search(r'\{[\s\S]*\}', llm_response)
             if not match:
-                return default_ratings  # 返回默认评分
+                return default_ratings
 
             json_str = match.group(0)
 
-            # 解析 JSON
             ratings = json.loads(json_str)
 
-            # 确保 `buyer` 和 `seller` 至少存在一个
             if "buyer" not in ratings and "seller" not in ratings:
                 return default_ratings
 
-            # 确保评分为整数，缺失的字段填充 -1
             parsed_ratings = {
                 "buyer": {
                     "effectiveness_of_strategies": int(ratings["buyer"].get("effectiveness_of_strategies", -1)),
@@ -288,7 +292,7 @@ class Evaluator:
             pred_num (int): The number of predicted root causes.
             root_causes (List[str]): The root cause labels.
         """
-        # Evaluation will take place separately as it might not follow the 
+        # Evaluation will take place separately as it might not follow the
         # requested format
         self.metrics["task_evaluation"] = {
             'root_cause': root_causes,
@@ -297,19 +301,22 @@ class Evaluator:
 
     def parse_research_ratings(self, assistant_answer: str) -> Dict[str, int]:
         """
-        Parse the JSON ratings from the assistant's answer.
+        Parse the research ratings from the assistant's answer.
 
         Args:
             assistant_answer (str): The assistant's answer containing the ratings.
 
         Returns:
-            Dict[str, int]: The parsed ratings for innovation, safety, and feasibility.
+            Dict[str, int]: The parsed ratings.
         """
-        # Extract the JSON block from the assistant's answer
-        match = re.search(r'\{[\s\S]*\}', assistant_answer)
-        if match:
-            json_str = match.group(0)
-            try:
+        try:
+            content = assistant_answer.strip()
+
+            json_start = content.find('{')
+            json_end = content.rfind('}') + 1
+
+            if json_start >= 0 and json_end > json_start:
+                json_str = content[json_start:json_end]
                 ratings = json.loads(json_str)
                 # Ensure ratings are integers
                 ratings_dict: Dict[str, int] = {k: int(v) for k, v in ratings.items()}
@@ -323,20 +330,63 @@ class Evaluator:
 
     def parse_score(self, assistant_answer: str) -> int:
         """
-        Parse the score from the assistant's answer.
+        Parse the score from the assistant's answer based on the strict JSON format requirement.
 
         Args:
             assistant_answer (str): The assistant's answer containing the score.
 
         Returns:
-            int: The parsed score.
+            int: The parsed score. Returns 3 (default score) if parsing fails.
         """
-        # Look for "Rating: [[rating]]" in the assistant's answer
-        match = re.search(r'Rating:\s*\[\[\[(\d+)\]\]\]', assistant_answer)
-        if match:
-            return int(match.group(1))
-        else:
-            return int(assistant_answer[-1])
+        try:
+            # Clean the response content
+            content = assistant_answer.strip()
+
+            # Remove any markdown code block markers if present
+            if content.startswith("```json"):
+                content = content[7:]
+            if content.startswith("```"):
+                content = content[3:]
+            if content.endswith("```"):
+                content = content[:-3]
+            content = content.strip()
+
+            # Find the JSON object
+            json_start = content.find('{')
+            json_end = content.rfind('}') + 1
+
+            if json_start >= 0 and json_end > json_start:
+                json_str = content[json_start:json_end]
+                try:
+                    rating_data = json.loads(json_str)
+                    if isinstance(rating_data, dict) and "rating" in rating_data:
+                        score = int(rating_data["rating"])
+                        if 1 <= score <= 5:
+                            self.logger.debug(f"Successfully parsed score: {score}")
+                            return score
+                        else:
+                            self.logger.warning(f"Score {score} out of valid range (1-5)")
+                except json.JSONDecodeError:
+                    self.logger.warning("Failed to parse JSON from response")
+                except (ValueError, TypeError):
+                    self.logger.warning("Invalid score format in JSON")
+                except KeyError:
+                    self.logger.warning("Missing 'rating' key in JSON response")
+
+            # If JSON parsing fails, try to find a single digit between 1-5
+            numbers = re.findall(r'\b[1-5]\b', content)
+            if numbers:
+                score = int(numbers[0])
+                self.logger.debug(f"Found score using regex: {score}")
+                return score
+
+            # If all parsing attempts fail, return default score
+            self.logger.warning("No valid score found, using default score (3)")
+            return 3
+
+        except Exception as e:
+            self.logger.error(f"Unexpected error parsing score: {e}")
+            return 3
 
     def finalize(self) -> None:
         """
@@ -373,7 +423,7 @@ class Evaluator:
         Parse the milestones from the assistant's answer.
 
         Args:
-            assistant_answer (str): The assistant's answer containing the milestones in JSON format.
+            assistant_answer (str): The assistant's answer containing the milestones.
 
         Returns:
             List[Dict[str, Any]]: The list of milestones.
@@ -394,3 +444,175 @@ class Evaluator:
         except json.JSONDecodeError:
             self.logger.error("Failed to parse JSON from assistant's answer.")
             return []
+
+        except Exception as e:
+            self.logger.error(f"Error processing milestones: {e}")
+            return []
+
+    def parse_code_quality_scores(self, assistant_answer: str) -> Dict[str, int]:
+        """
+        Parse the code quality scores from the assistant's answer.
+
+        Args:
+            assistant_answer (str): The assistant's answer containing the code quality scores.
+
+        Returns:
+            Dict[str, int]: The parsed code quality scores.
+        """
+        try:
+            content = assistant_answer.strip()
+
+            json_start = content.find('{')
+            json_end = content.rfind('}') + 1
+
+            if json_start >= 0 and json_end > json_start:
+                json_str = content[json_start:json_end]
+                scores = json.loads(json_str)
+
+                required_keys = {
+                    "instruction_following",
+                    "executability",
+                    "consistency",
+                    "quality"
+                }
+
+                if all(key in scores for key in required_keys):
+                    validated_scores = {}
+                    for key in required_keys:
+                        try:
+                            score = int(scores[key])
+                            if 1 <= score <= 5:
+                                validated_scores[key] = score
+                            else:
+                                validated_scores[key] = 1  # 默认最低分
+                        except (ValueError, TypeError):
+                            validated_scores[key] = 1  # 默认最低分
+                    return validated_scores
+
+            self.logger.error("Invalid code quality scores format in response")
+            return {
+                "instruction_following": 1,
+                "executability": 1,
+                "consistency": 1,
+                "quality": 1
+            }
+
+        except Exception as e:
+            self.logger.error(f"Error parsing code quality scores: {e}")
+            return {
+                "instruction_following": 1,
+                "executability": 1,
+                "consistency": 1,
+                "quality": 1
+            }
+
+    def evaluate_code_quality(self, task: str, code_result: str) -> None:
+        """
+        Evaluate the code quality based on stricter criteria.
+        """
+        try:
+            config_path = "marble/configs/coding_config/coding_config.yaml"
+            if not os.path.exists(config_path):
+                self.logger.error("Config file not found")
+                return
+
+            yaml = YAML()
+            with open(config_path, 'r', encoding='utf-8') as f:
+                config = yaml.load(f)
+
+            full_task_description = config['task']['content']
+
+            requirements_start = "1. Implementation requirements:\n"
+            requirements_end = "\n\n2. Project structure:"
+            requirements = full_task_description[
+                full_task_description.find(requirements_start) + len(requirements_start):
+                full_task_description.find(requirements_end)
+            ].strip()
+
+            solution_path = "marble/workspace/solution.py"
+            solution_content = ""
+            if os.path.exists(solution_path):
+                with open(solution_path, 'r', encoding='utf-8') as f:
+                    solution_content = f.read()
+
+            code_quality_prompt_template = """
+                    [Context]
+                    **Task Description:**
+                    {task_description}
+
+                    **Implementation Requirements:**
+                    {requirements}
+
+                    **Current Solution:**
+                    {solution}
+
+                    [System]
+                    This evaluation requires strict scoring and deduction. The scores should not be generous, and deductions should be applied for every issue found.
+
+                    ### **Evaluation Criteria**
+                    1. **Instruction-Following:** Does the code fulfill all the requirements of the task? Deduct points for unmet or partially met requirement from the task instructions.
+                    2. **Executability:** Is the code syntactically correct and executable? Deduct points for any syntax errors, missing imports, or runtime errors.
+                    3. **Consistency:** Is the code consistent in variable naming, formatting, and logic? Deduct points for inconsistent variable naming, formatting issues, or contradictory logic.
+                    4. **Quality:** Is the code well-documented, clear, and modular? Deduct points for poor documentation, unclear logic, or lack of modular design.
+
+                    ### **Scoring**
+                    - **1 point:** Below Average - Significant issues that need addressing.
+                    - **2 points:** Average - Noticeable areas for improvement.
+                    - **3 points:** Good - Minor issues or improvements needed.
+                    - **4 points:** Excellent - Almost or fully satisfies the criterion.
+                    - **5 points:** Legendary - Flawless, perfectly satisfies the criterion, and exceeds expectations.
+
+                    **Do not give the same scores for different criteria, such as 3 for instruction-following, 3 for executability, 3 for consistency, and 3 for quality.**
+                    If you give the same scores for the 4 criteria, you have to add or deduct 1 point randomly for one or two criteria.
+
+                    ### **Question**
+                    Based on the criteria, evaluate the code and output the scores for each criterion in the following JSON format:
+                    {{
+                        "instruction_following": score,
+                        "executability": score,
+                        "consistency": score,
+                        "quality": score
+                    }}
+            """
+
+            # Fill in the template
+            prompt = code_quality_prompt_template.format(
+                task_description=full_task_description,
+                requirements=requirements,
+                solution=solution_content
+            )
+
+            # Call the LLM
+            response = model_prompting(
+                llm_model=self.llm,
+                messages=[{"role": "user", "content": prompt}],
+                return_num=1,
+                max_token_num=4096,
+                temperature=0.0,
+                top_p=None,
+                stream=None,
+            )[0]
+
+            scores = self.parse_code_quality_scores(response.content)
+
+            if scores:
+                self.metrics["code_quality"] = scores
+                self.logger.info(f"Code quality evaluated strictly: {scores}")
+            else:
+                self.logger.error("Failed to parse code quality scores.")
+                self.metrics["code_quality"] = {
+                    "instruction_following": 1,
+                    "executability": 1,
+                    "consistency": 1,
+                    "quality": 1
+                }
+            self.logger.debug(f"LLM Response: {response.content}")
+
+        except Exception as e:
+            self.logger.error(f"Error in code quality evaluation: {e}")
+            self.metrics["code_quality"] = {
+                "instruction_following": 1,
+                "executability": 1,
+                "consistency": 1,
+                "quality": 1
+            }

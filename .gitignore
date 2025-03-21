@@ -200,3 +200,12 @@ output_old.csv
 **/*.7z
 **/*.zip
 
+#Coding Environment
+marble/workspace
+// ... existing code ...
+
+#Coding Environment
+marble/workspace
+marble/logs
+marble/results
+backup/

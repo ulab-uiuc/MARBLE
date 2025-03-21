@@ -14,5 +14,6 @@ class TestTextEmbedding(unittest.TestCase):
         for entry in emebedding:
             self.assertIsInstance(entry, float)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     unittest.main()

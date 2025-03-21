@@ -28,7 +28,9 @@ class WerewolfEngine:
             raise FileNotFoundError(f"Configuration file '{config_path}' not found.")
 
         # Initialize Environment
-        self.environment = WerewolfEnv(name="Werewolf Environment", config_path=config_path)
+        self.environment = WerewolfEnv(
+            name="Werewolf Environment", config_path=config_path
+        )
         self.logger.debug("Werewolf environment initialized.")
 
         # Set up shared memory path in a dedicated game log directory
@@ -38,11 +40,15 @@ class WerewolfEngine:
         self.shared_memory_path = os.path.join(game_log_dir, "shared_memory.json")
 
         # Initialize Evaluator with shared memory path and configuration path
-        self.evaluator = WerewolfEvaluator(shared_memory_path=self.shared_memory_path, config_path=config_path)
+        self.evaluator = WerewolfEvaluator(
+            shared_memory_path=self.shared_memory_path, config_path=config_path
+        )
         self.logger.debug("Werewolf evaluator initialized.")
 
         # Log the successful initialization of the WerewolfEngine
-        self.logger.info(f"WerewolfEngine initialized with config path '{config_path}' and game log directory '{game_log_dir}'.")
+        self.logger.info(
+            f"WerewolfEngine initialized with config path '{config_path}' and game log directory '{game_log_dir}'."
+        )
 
     def start(self) -> None:
         """
