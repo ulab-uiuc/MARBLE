@@ -4,7 +4,7 @@ import fire
 
 
 def read_categories(
-    benchmark_path="marble/environments/coding_utils/assets/benchmark.jsonl",
+    benchmark_path="/opt/dlami/nvme/zhe/MARBLE/marble/environments/coding_utils/assets/benchmark.jsonl",
 ):
     topic_categories = set()
     coordination_categories = set()
