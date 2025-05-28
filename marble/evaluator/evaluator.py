@@ -510,7 +510,7 @@ class Evaluator:
         Evaluate the code quality based on stricter criteria.
         """
         try:
-            config_path = "marble/configs/coding_config/coding_config.yaml"
+            config_path = "configs/coding_config/coding_config.yaml"
             if not os.path.exists(config_path):
                 self.logger.error("Config file not found")
                 return
@@ -528,7 +528,7 @@ class Evaluator:
                 full_task_description.find(requirements_end)
             ].strip()
 
-            solution_path = "marble/workspace/solution.py"
+            solution_path = "workspace/solution.py"
             solution_content = ""
             if os.path.exists(solution_path):
                 with open(solution_path, 'r', encoding='utf-8') as f:

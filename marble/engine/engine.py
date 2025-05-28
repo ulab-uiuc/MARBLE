@@ -462,6 +462,20 @@ class Engine:
                     "task_evaluation"
                 ]
                 self.logger.info("Engine graph-based coordination loop completed.")
+            elif self.environment.name == "Coding Environment":
+                code = self._read_code_from_file("workspace/solution.py")
+                self.logger.info(f"Successfully read code from workspace/solution.py")
+                if code:
+                    self.evaluator.evaluate_code_quality(
+                        task=self.task, code_result=code
+                    )
+                    summary_data["code_quality"] = self.evaluator.metrics[
+                        "code_quality"
+                    ]
+                    self.logger.info(
+                        f"Code quality evaluation results: {self.evaluator.metrics['code_quality']}"
+                    )
+                self.logger.info("Engine star-based coordination loop completed.")
             elif isinstance(self.environment, MinecraftEnvironment):
                 try:
                     with open("../data/score.json", "r") as f:
@@ -612,7 +626,8 @@ class Engine:
                 ]
                 self.logger.info("Engine graph-based coordination loop completed.")
             if self.environment.name == "Coding Environment":
-                code = self._read_code_from_file("MARBLE/marble/workspace/solution.py")
+                code = self._read_code_from_file("workspace/solution.py")
+                self.logger.info(f"Successfully read code from workspace/solution.py")
                 if code:
                     self.evaluator.evaluate_code_quality(
                         task=self.task, code_result=code
@@ -908,7 +923,8 @@ class Engine:
                 ]
                 self.logger.info("Engine graph-based coordination loop completed.")
             if self.environment.name == "Coding Environment":
-                code = self._read_code_from_file("MARBLE/marble/workspace/solution.py")
+                code = self._read_code_from_file("workspace/solution.py")
+                self.logger.info(f"Successfully read code from workspace/solution.py")
                 if code:
                     self.evaluator.evaluate_code_quality(
                         task=self.task, code_result=code

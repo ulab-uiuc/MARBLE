@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Define the path to the configuration file
-CONFIG_FILE="/opt/dlami/nvme/zhe/MARBLE/marble/configs/coding_config/coding_config.yaml"
+CONFIG_FILE="./configs/coding_config"
 
 # Execute the simulation engine with the specified configuration
-python main.py --config_path "$CONFIG_FILE"
+python main.py --config "$CONFIG_FILE"

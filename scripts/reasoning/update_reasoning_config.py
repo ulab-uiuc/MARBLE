@@ -74,7 +74,7 @@ def main():
     args = parser.parse_args()
 
     config_path = args.config
-    benchmark_path = "marble/environments/coding_utils/assets/benchmark.jsonl"
+    benchmark_path = "environments/coding_utils/assets/benchmark.jsonl"
 
     if not os.path.exists(config_path):
         print(f"Config file not found: {config_path}")

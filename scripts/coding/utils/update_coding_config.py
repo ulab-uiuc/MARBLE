@@ -7,8 +7,8 @@ from ruamel.yaml import YAML
 
 def update_coding_config(
     benchmark_id,
-    config_path="/opt/dlami/nvme/zhe/MARBLE/marble/configs/coding_config/coding_config.yaml",
-    benchmark_path="/opt/dlami/nvme/zhe/MARBLE/marble/environments/coding_utils/assets/benchmark.jsonl",
+    config_path="configs/coding_config/coding_config.yaml",
+    benchmark_path="environments/coding_utils/assets/benchmark.jsonl",
 ):
     if not os.path.exists(config_path):
         print(f"Config file not found: {config_path}")

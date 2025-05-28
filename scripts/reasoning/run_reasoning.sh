@@ -1,7 +1,7 @@
-WORKSPACE_DIR="marble/workspace"
-UPDATE_SCRIPT="marble/environments/coding_utils/tools/update_reasoning_config.py"
-RUN_DEMO_SCRIPT="marble/run_demo.sh"
-BASE_CONFIG_DIR="marble/configs"
+WORKSPACE_DIR="workspace"
+UPDATE_SCRIPT="environments/coding_utils/tools/update_reasoning_config.py"
+RUN_DEMO_SCRIPT="run_demo.sh"
+BASE_CONFIG_DIR="configs"
 
 CONFIG_PATHS=(
     "${BASE_CONFIG_DIR}/reflexion_config/coding_config.yaml"
@@ -11,7 +11,7 @@ CONFIG_PATHS=(
 
 model_name="gpt-3.5-turbo"
 safe_model_name=$(echo ${model_name} | tr '/' '_')
-BASE_LOG_DIR="marble/logs/${safe_model_name}"
+BASE_LOG_DIR="logs/${safe_model_name}"
 
 for config_path in "${CONFIG_PATHS[@]}"; do
     method_name=$(echo ${config_path} | grep -o '[^/]*/coding_config.yaml' | cut -d'/' -f1)
@@ -34,11 +34,9 @@ for config_path in "${CONFIG_PATHS[@]}"; do
         echo "==============================="
     done
 
-    # 复制并重命名result文件
     echo "Copying result file for ${method_name}..."
-    cp marble/result/development_output.jsonl marble/result/${method_name}_output.jsonl
-    # 删除原始result文件
-    rm marble/result/development_output.jsonl
+    cp result/development_output.jsonl result/${method_name}_output.jsonl
+    rm result/development_output.jsonl
 
     echo "${method_name} experiments completed!"
     echo "==============================="

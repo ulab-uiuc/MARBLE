@@ -9,7 +9,7 @@ from ruamel.yaml import YAML
 from marble.llms.model_prompting import model_prompting
 
 
-def log_debug_info(message: str, log_file: str = "/opt/dlami/nvme/zhe/MARBLE/marble/logs/advice_log"):
+def log_debug_info(message: str, log_file: str = "logs/advice_log"):
     """
     Log debug information to a specified file.
     """
@@ -56,7 +56,7 @@ def give_advice_and_revise_handler(
                 "error-msg": "Solution file is empty or contains invalid code. Please use create_solution first to generate valid code",
             }
 
-        config_path = "/opt/dlami/nvme/zhe/MARBLE/marble/configs/coding_config/coding_config.yaml"
+        config_path = "configs/coding_config/coding_config.yaml"
         if not os.path.exists(config_path):
             return {
                 "success": False,

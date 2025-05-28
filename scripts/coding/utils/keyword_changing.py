@@ -7,14 +7,14 @@ def replace_model_name(
     old_model="gpt-4o-mini",
     new_model="gpt-3.5-turbo",
     file_paths=[
-        "/opt/dlami/nvme/zhe/MARBLE/marble/engine/engine_planner.py",
-        "/opt/dlami/nvme/zhe/MARBLE/marble/agent/coding_agent.py",
-        "/opt/dlami/nvme/zhe/MARBLE/marble/agent/base_agent.py",
-        "/opt/dlami/nvme/zhe/MARBLE/marble/memory/long_term_memory.py",
-        "/opt/dlami/nvme/zhe/MARBLE/marble/memory/short_term_memory.py",
-        "/opt/dlami/nvme/zhe/MARBLE/marble/environments/coding_utils/coder.py",
-        "/opt/dlami/nvme/zhe/MARBLE/marble/environments/coding_utils/reviewer.py",
-        "/opt/dlami/nvme/zhe/MARBLE/scripts/coding/run_demo.sh",
+        "engine/engine_planner.py",
+        "agent/coding_agent.py",
+        "agent/base_agent.py",
+        "memory/long_term_memory.py",
+        "memory/short_term_memory.py",
+        "environments/coding_utils/coder.py",
+        "environments/coding_utils/reviewer.py",
+        "../scripts/coding/run_demo.sh",
     ],
 ):
     print("Starting model name replacement...")
