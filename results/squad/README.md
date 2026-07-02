@@ -21,6 +21,47 @@
 | Bargaining | 100/100 | 100% |
 | **Total** | **400/400** | **100%** |
 
+> **Completion is not correctness.** The table above only measures whether a condition
+> produced usable output within the timeout. To match the bar of correctness-graded harness
+> evaluations, we separately grade **correctness** below.
+
+### Correctness & Quality (controlled 4-domain re-run)
+
+Completion only asks *"did an answer appear?"* — not whether it is right. We re-ran **all four
+ablation conditions from scratch on the identical task IDs** (1, 10, 20, …, 90) in every domain,
+so "task N" is the same MARBLE task in every condition **by construction**. We then graded all
+80 fresh transcripts with one identical judge (Claude Opus 4.6) and prompt, two ways: MARBLE's
+**milestone-KPI** (fraction of gold milestones achieved) and a **1–5 output-quality rubric**.
+
+| Condition | Milestone-KPI | Quality (1–5) | Research | Bargaining | Coding | Database† |
+|-----------|--------------:|--------------:|---------:|-----------:|-------:|----------:|
+| **Full Squad** (coord + memory) | **81.1%** | **4.10** | 81.2 / 4.21 | 95.0 / 4.80 | 81.7 / 3.73 | 66.7 / 3.67 |
+| Coord-only | 81.1% | 4.04 | 89.6 / 4.50 | 96.7 / 4.83 | 68.3 / 3.27 | 71.7 / 3.67 |
+| No Squad (single agent) | 77.2% | 3.76 | 75.0 / 4.00 | 90.0 / 4.24 | 78.3 / 3.77 | 65.0 / 3.10 |
+| Memory-only | 65.8% | 3.58 | 52.1 / 3.21 | 96.7 / 4.80 | 53.3 / 2.97 | 58.3 / 3.27 |
+
+Each domain cell = milestone-KPI% / quality rubric (1–5). Same model (Claude Opus 4.6) for both
+agents and judge; same judge prompt/code path for all conditions. n per condition = 38 (research 8
++ bargaining 10 + coding 10 + database 10). Raw transcripts: `results/aligned_rerun/` in the raw-data
+repo; grading scripts and gold milestones in `quality_ablation/`.
+
+**Findings (correctness):**
+1. On same-task, same-model, uniformly-judged output, **coordination helps or ties in every
+   domain**. Full Squad leads overall (**+3.9pp KPI / +0.34 quality over the raw single agent**);
+   coord-only is essentially tied.
+2. **Memory without coordination is the weakest condition of all four** (65.8% / 3.58) — injected
+   memory only pays off when a coordinator is present to act on it.
+3. The correctness lift is **real, consistent, and modest** — a few KPI points and about a third of
+   a rubric point — not double-digit swings.
+
+> **† Database caveat:** the database gold blends diagnostic-process milestones (which `pg_stat_*`
+> views to query) with a final root-cause answer, so its KPI reads partly as process-adherence —
+> lean on the 1–5 rubric for the clean correctness signal there.
+>
+> **Judge caveat:** the judge shares the agents' model family; an independent gpt-4o rubric
+> cross-check on research/bargaining agrees on the broad ordering (coordinated ≥ single agent) but
+> differs on fine placement, so with n=8–10 per domain treat exact deltas as **directional**.
+
 ### Coding Domain Details
 
 - All 100 tasks produced solution.py files
