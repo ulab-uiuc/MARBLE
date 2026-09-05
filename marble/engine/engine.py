@@ -1162,7 +1162,7 @@ class Engine:
                     results_str.append(f"Agent {agent_id}: Result: {res_content}")
         return "\n".join(results_str)
 
-    def _get_totoal_token_usage(self) -> int:
+    def _get_total_token_usage(self) -> int:
         """
         Get the total token usage by all agents.
         """
