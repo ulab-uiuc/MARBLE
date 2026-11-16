@@ -7,6 +7,11 @@ from random import choice, randint
 import names
 from flask import Flask, jsonify, request
 
+# Imported explicitly: this module used to get them through the star import
+# below, until an "unused import" clean-up removed them from env_api and left
+# the bot server crashing with ``NameError: name 'require' is not defined``.
+from javascript import On, require
+
 from marble.environments.minecraft_utils.env_api import *
 from marble.utils.paths import DATA_DIR
 
