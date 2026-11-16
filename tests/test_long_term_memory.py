@@ -4,8 +4,10 @@ from litellm.types.utils import Message
 from numpy import ndarray
 
 from marble.memory.long_term_memory import LongTermMemory
+from tests.conftest import requires_openai
 
 
+@requires_openai
 class TestLongTermMemory(unittest.TestCase):
     def setUp(self) -> None:
         self.memory = LongTermMemory()

@@ -4,8 +4,10 @@ from collections import deque
 from litellm.types.utils import Message
 
 from marble.memory.short_term_memory import ShortTermMemory
+from tests.conftest import requires_openai
 
 
+@requires_openai
 class TestLongTermMemory(unittest.TestCase):
     def setUp(self) -> None:
         self.memory = ShortTermMemory(memory_limit=2)

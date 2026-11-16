@@ -1,6 +1,8 @@
 import os
 import re
+import shutil
 import subprocess
+import sys
 import time
 from typing import Any, Dict, List
 
@@ -80,22 +82,49 @@ class DBEnvironment(BaseEnvironment):
         print(self.get_rag_handler("WorkloadExpert", "cpu"))
         print(self.get_slow_query_handler())
 
+    def _docker_compose(self, *args: str) -> None:
+        """
+        Run ``docker compose <args>`` in the DB environment folder.
+
+        ``sudo`` is only used when the current user cannot reach the Docker
+        daemon directly (it used to be hard-coded, which broke rootless setups,
+        Docker Desktop and users in the ``docker`` group without sudo rights).
+        """
+        compose_dir = os.path.join(self.current_dir, "db_env_docker")
+        if shutil.which("docker") is None:
+            raise RuntimeError(
+                "The database scenario needs Docker (with the compose plugin). "
+                "Install it from https://docs.docker.com/compose/install/."
+            )
+        base_cmd = ["docker", "compose"]
+        daemon_reachable = (
+            subprocess.run(
+                ["docker", "info"],
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+            ).returncode
+            == 0
+        )
+        if not daemon_reachable and shutil.which("sudo") is not None:
+            base_cmd = ["sudo"] + base_cmd
+        subprocess.run(base_cmd + list(args), cwd=compose_dir, shell=False, check=True)
+
     def start_docker_containers(self):
         print("Starting Docker containers...")
-        subprocess.run(
-            ["sudo", "docker", "compose", "down", "-v"],
-            cwd=os.path.join(self.current_dir, "db_env_docker"),
-            shell=False,
-            check=True,
-        )
-        subprocess.run(
-            ["sudo", "docker", "compose", "up", "-d", "--remove-orphans"],
-            cwd=os.path.join(self.current_dir, "db_env_docker"),
-            check=True,
-        )
+        self._docker_compose("down", "-v")
+        self._docker_compose("up", "-d", "--remove-orphans")
 
     def initialize_database(self, config: Dict[str, Any]):
+        # Wait for PostgreSQL, but not forever: if the container failed to
+        # start, looping here would hang the whole benchmark run.
+        deadline = time.time() + 180
         while not self.check_db_connection():
+            if time.time() > deadline:
+                raise RuntimeError(
+                    "PostgreSQL did not become available within 180 seconds. "
+                    "Check the container with `docker compose logs postgres_db` in "
+                    f"{os.path.join(self.current_dir, 'db_env_docker')}."
+                )
             time.sleep(1)
 
         init_sql = config.get("init_sql", None)
@@ -149,7 +178,9 @@ class DBEnvironment(BaseEnvironment):
                 colsize = anomaly["colsize"]
                 subprocess.run(
                     [
-                        "python",
+                        # Same interpreter as the engine, so the anomaly
+                        # scripts see the installed dependencies.
+                        sys.executable,
                         "main.py",
                         "--anomaly",
                         anomaly_type,
@@ -647,11 +678,7 @@ class DBEnvironment(BaseEnvironment):
             return False
 
     def terminate(self) -> None:
-        subprocess.run(
-            ["sudo", "docker", "compose", "down"],
-            cwd=os.path.join(self.current_dir, "db_env_docker"),
-            check=True,
-        )
+        self._docker_compose("down", "-v")
 
 
 if __name__ == "__main__":

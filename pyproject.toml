@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "marble"
 version = "0.0.1"
-description = "A template for python-based research project"
+description = "MARBLE: Multi-Agent Coordination Backbone with LLM Engine (MultiAgentBench)"
 authors = ["Kunlun Zhu <kunlunz2@illinois.edu>"]
 license = "Apache 2.0 License"
 readme = "README.md"
@@ -32,6 +32,13 @@ requests = "^2.32.3"
 psycopg2-binary = "^2.9.10"
 pymysql = "^1.1.1"
 colorlog = "^6.9.0"
+pyyaml = "^6.0"
+numpy = ">=1.26"
+openai = ">=1.0"
+colorama = "^0.4.6"
+python-dotenv = "^1.0"
+"ruamel.yaml" = "^0.18"
+fire = ">=0.6"
 
 
 [tool.poetry.group.dev.dependencies]

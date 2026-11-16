@@ -11,6 +11,7 @@ import yaml
 from openai import OpenAI
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../../")))
+from marble.agent.werewolf_agent import PROMPTS_DIR, resolve_api_key
 from marble.environments.werewolf_env import WerewolfEnv
 
 
@@ -51,7 +52,7 @@ class WerewolfEvaluator:
         eval_config = config.get("eval_config", {})
 
         self.base_url = eval_config.get("base_url", "https://api.openai.com/v1")
-        self.api_key = eval_config.get("api_key", "")
+        self.api_key = resolve_api_key(eval_config, config)
         self.model_name = eval_config.get("model_name", "gpt-4o")
 
         openai.api_base = self.base_url
@@ -288,7 +289,7 @@ class WerewolfEvaluator:
         # 2) Load the YAML with the seven dimensions prompts/tools
         #    You need to prepare 'villager_combined_evaluation.yaml' (or other file names)
         #    containing "system", "user", "tools", and function: "villager_combined_evaluation"
-        combined_yaml_file = "prompts/villager_combined_evaluation.yaml"
+        combined_yaml_file = os.path.join(PROMPTS_DIR, "eval_competiveness.yaml")
         if not os.path.exists(combined_yaml_file):
             print(
                 f"[evaluate_villager_merged_performance] YAML not found: {combined_yaml_file}"
@@ -551,7 +552,9 @@ if __name__ == "__main__":
     parser.add_argument(
         "--config_path",
         type=str,
-        default=r"marble\configs\test_config\werewolf_config.yaml",
+        default=os.path.join(
+            "marble", "configs", "test_config", "werewolf_config", "werewolf_config.yaml"
+        ),
         help="Path to the configuration file",
     )
     parser.add_argument(

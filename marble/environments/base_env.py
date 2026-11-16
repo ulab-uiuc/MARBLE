@@ -25,7 +25,8 @@ class BaseEnvironment:
         self.description: str = config.get("description", "")
         self.task_description: str = config.get("task_description", "")
         self.ground_truth: str = config.get("ground_truth", "")
-        self.max_iterations: int = config.get("max_iterations", 10)
+        # Some benchmark configs store the value as a string ("5").
+        self.max_iterations: int = int(config.get("max_iterations") or 10)
         self.current_iteration: int = 0
         # Initialize the state with the task description
         self.state["task_description"] = self.task_description

@@ -23,8 +23,12 @@ class CodingEnvironment(BaseEnvironment):
         super().__init__(name, config)
         self.config = config
 
-        self.workspace_dir = config.get("workspace_dir", "workspace")
+        self.workspace_dir = config.get("workspace_dir") or "workspace"
         os.makedirs(self.workspace_dir, exist_ok=True)
+        # Filled in by the engine: the task being solved and the model the
+        # coding tools should call.
+        self.task_content: str = config.get("task_content", "")
+        self.llm: str = config.get("llm", "")
 
         self.register_standard_actions()
 

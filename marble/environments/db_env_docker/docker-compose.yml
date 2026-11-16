@@ -11,7 +11,10 @@ services:
       - 9090:9090
 
   postgres_db:
-    image: postgres
+    # Pinned on purpose: the unpinned `postgres` image moved to PostgreSQL 18,
+    # whose data directory layout is incompatible with the volume below, so the
+    # container exited at start-up and the benchmark waited for it forever.
+    image: postgres:17
     ports:
       - 5432:5432
     volumes:

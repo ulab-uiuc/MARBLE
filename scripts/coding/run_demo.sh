@@ -1,23 +1,14 @@
-WORKSPACE_DIR="marble/workspace"
-UPDATE_SCRIPT="scripts/coding/utils/update_coding_config.py"
-RUN_DEMO_SCRIPT="marble/run_demo.sh"
+#!/bin/bash
+# Run the coding scenario of MultiAgentBench.
+#
+#   bash scripts/coding/run_demo.sh                         # all 100 tasks, gpt-4o-mini
+#   MODEL=openrouter/google/gemini-2.5-flash bash scripts/coding/run_demo.sh --limit 5
+#
+# Every task gets its own workspace; the generated programs are kept in
+#   results/coding/<model>/workspace/task_<id>/solution.py
+# Extra arguments are forwarded to scripts/run_benchmark.py (see --help).
+set -euo pipefail
+REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+MODEL="${MODEL:-gpt-4o-mini}"
 
-model_name="gpt-3.5-turbo"
-safe_model_name=$(echo ${model_name} | tr '/' '_')
-LOG_DIR="marble/logs/${safe_model_name}"
-
-mkdir -p ${LOG_DIR}
-
-for id in {1..100}; do
-    echo "Processing task with ID=$id..."
-    rm -rf ${WORKSPACE_DIR}/*
-    python ${UPDATE_SCRIPT} --id ${id}
-    echo "Running the demo script..."
-    bash ${RUN_DEMO_SCRIPT}
-    echo "Saving solution file..."
-    cp ${WORKSPACE_DIR}/solution.py ${LOG_DIR}/solution_${id}.py
-    echo "Task with ID=$id completed."
-    echo "==============================="
-done
-
-echo "All tasks have been processed!"
+python "$REPO_ROOT/scripts/run_benchmark.py" --scenario coding --model "$MODEL" "$@"

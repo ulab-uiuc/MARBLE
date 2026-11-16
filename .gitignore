@@ -209,3 +209,11 @@ marble/workspace
 marble/logs
 marble/results
 backup/
+
+# benchmark outputs (scripts/run_benchmark.py, werewolf, coding workspace)
+results/
+result/
+workspace/
+werewolf_log/
+werewolf_eval/
+logs/advice_log
