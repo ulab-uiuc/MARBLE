@@ -14,8 +14,29 @@ import yaml
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../../")))
 from colorama import Fore, Style, init
 
-from marble.agent.werewolf_agent import WerewolfAgent
+from marble.agent.werewolf_agent import PROMPTS_DIR, WerewolfAgent
 from marble.utils.eventbus import EventBus
+from marble.utils.paths import REPO_ROOT
+
+
+def resolve_system_prompt_path(configured_path: Any) -> str:
+    """
+    Locate the werewolf system prompt file.
+
+    Accepts Windows-style separators (the sample config used
+    ``marble\\agent\\...``), paths relative to the working directory or to the
+    repository root, and falls back to the prompt shipped with the package.
+    """
+    default_path = os.path.join(PROMPTS_DIR, "system_prompt.yaml")
+    if not configured_path:
+        return default_path
+    normalized = str(configured_path).replace("\\", "/")
+    while "//" in normalized:
+        normalized = normalized.replace("//", "/")
+    for candidate in (normalized, os.path.join(REPO_ROOT, normalized)):
+        if os.path.exists(candidate):
+            return candidate
+    return default_path
 
 
 class WerewolfEnv:
@@ -38,7 +59,9 @@ class WerewolfEnv:
         self.config = config
 
         # Load the system_prompt.yaml file
-        system_prompt_path = self.config.get("system_prompt_path")
+        system_prompt_path = resolve_system_prompt_path(
+            self.config.get("system_prompt_path")
+        )
         if not system_prompt_path or not os.path.exists(system_prompt_path):
             raise FileNotFoundError(
                 f"System prompt file '{system_prompt_path}' not found."
@@ -511,7 +534,10 @@ class WerewolfEnv:
             ]  # Which night (game round + 1)
             self.reset_guard_protection()
             # Add a new dictionary to night_cache to record the current night
-            night_event = {}
+            # ``player_dead_tonight`` must exist from the start of the night: the
+            # witch/hunter handlers append to it even when the werewolves fail
+            # to agree on a target (see issue #244).
+            night_event = {"player_dead_tonight": []}
             self.shared_memory["private_state"]["night_cache"].append(night_event)
 
             # Guard action
@@ -2220,7 +2246,9 @@ class WerewolfEnv:
             ] = 0
             witch_status["poison_count"] = 0
 
-            current_night_log["player_dead_tonight"].append(poison_target)
+            current_night_log.setdefault("player_dead_tonight", []).append(
+                poison_target
+            )
 
             self.log_event(
                 is_private=True,
@@ -3358,6 +3386,11 @@ def start_game(name, config_path):
         env.start()
 
     except Exception as e:
+        # Print the full traceback: the one-line message alone (e.g. just
+        # "'player_dead_tonight'") made failures very hard to diagnose.
+        import traceback
+
+        traceback.print_exc()
         print(f"An error occurred while starting the game: {e}")
 
 
@@ -3371,7 +3404,12 @@ if __name__ == "__main__":
         "--config_path",
         type=str,
         default=os.path.join(
-            "marble", "configs", "test_config", "werewolf_config_4o.yaml"
+            REPO_ROOT,
+            "marble",
+            "configs",
+            "test_config",
+            "werewolf_config",
+            "werewolf_config.yaml",
         ),
         help="Config path",
     )

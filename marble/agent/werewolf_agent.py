@@ -9,6 +9,29 @@ from openai import OpenAI
 
 from marble.utils.eventbus import EventBus  # 假设 BaseAgent 在 base_agent_module 中
 
+# Prompt templates live next to this module. They used to be referenced through
+# Windows-style relative paths ("marble\\agent\\..."), which only resolved on
+# Windows and only from the repository root.
+PROMPTS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "werewolf_prompts")
+
+API_KEY_PLACEHOLDERS = {"", "your api key", "your_api_key", "sk-xxxxx", "xxxxx"}
+
+
+def resolve_api_key(model_config: Dict[str, Any], config: Dict[str, Any]) -> str:
+    """
+    Pick the API key for a werewolf model configuration.
+
+    Order: an explicit ``api_key`` in the model block, the top-level
+    ``openai_api_key``, then the environment variable named by ``api_key_env``
+    (default ``OPENAI_API_KEY``). Placeholder values from the sample config are
+    ignored so keys can stay out of the YAML file.
+    """
+    for candidate in (model_config.get("api_key"), config.get("openai_api_key")):
+        if isinstance(candidate, str) and candidate.strip().lower() not in API_KEY_PLACEHOLDERS:
+            return candidate
+    env_name = model_config.get("api_key_env") or config.get("api_key_env") or "OPENAI_API_KEY"
+    return os.environ.get(env_name, "")
+
 
 class WerewolfAgent:
     """
@@ -48,9 +71,7 @@ class WerewolfAgent:
         self.base_url = model_config.get(
             "base_url", "https://api.openai.com/v1"
         )  # Default to OpenAI API
-        self.api_key = model_config.get(
-            "api_key", config.get("openai_api_key")
-        )  # Default to using general OpenAI API key
+        self.api_key = resolve_api_key(model_config, config)
         self.model_name = model_config.get("model_name", "gpt-4o")  # Default to GPT-4
         self.strategy = strategy
         # Initialize the API client
@@ -380,8 +401,8 @@ class WerewolfAgent:
 
         # Step 2: Define YAML template path
         yaml_paths = {
-            "werewolf_action": r"marble\agent\werewolf_prompts\werewolf_action.yaml",
-            "werewolf_discussion": r"marble\agent\werewolf_prompts\werewolf_discussion.yaml",
+            "werewolf_action": os.path.join(PROMPTS_DIR, "werewolf_action.yaml"),
+            "werewolf_discussion": os.path.join(PROMPTS_DIR, "werewolf_discussion.yaml"),
         }
         yaml_path = yaml_paths.get(event_type, None)
         if not yaml_path:
@@ -503,17 +524,17 @@ class WerewolfAgent:
 
         # Step 2: Define YAML path based on the action type
         yaml_paths = {
-            "witch_action": r"marble\agent\werewolf_prompts\witch_prompt.yaml",
-            "guard_action": r"marble\agent\werewolf_prompts\guard_prompt.yaml",
-            "run_for_sheriff": r"marble\agent\werewolf_prompts\run_for_sheriff.yaml",
-            "sheriff_speech": r"marble\agent\werewolf_prompts\sheriff_speech.yaml",
-            "vote_for_sheriff": r"marble\agent\werewolf_prompts\vote_for_sheriff.yaml",
-            "decide_speech_sequence": r"marble\agent\werewolf_prompts\decide_speech_sequence.yaml",
-            "seer_action": r"marble\agent\werewolf_prompts\seer_prompt.yaml",
-            "player_speech": r"marble\agent\werewolf_prompts\speech_prompt.yaml",
-            "vote_action": r"marble\agent\werewolf_prompts\vote_prompt.yaml",
-            "last_words": r"marble\agent\werewolf_prompts\last_word_prompt.yaml",
-            "badge_flow": r"marble\agent\werewolf_prompts\badge_flow.yaml",
+            "witch_action": os.path.join(PROMPTS_DIR, "witch_prompt.yaml"),
+            "guard_action": os.path.join(PROMPTS_DIR, "guard_prompt.yaml"),
+            "run_for_sheriff": os.path.join(PROMPTS_DIR, "run_for_sheriff.yaml"),
+            "sheriff_speech": os.path.join(PROMPTS_DIR, "sheriff_speech.yaml"),
+            "vote_for_sheriff": os.path.join(PROMPTS_DIR, "vote_for_sheriff.yaml"),
+            "decide_speech_sequence": os.path.join(PROMPTS_DIR, "decide_speech_sequence.yaml"),
+            "seer_action": os.path.join(PROMPTS_DIR, "seer_prompt.yaml"),
+            "player_speech": os.path.join(PROMPTS_DIR, "speech_prompt.yaml"),
+            "vote_action": os.path.join(PROMPTS_DIR, "vote_prompt.yaml"),
+            "last_words": os.path.join(PROMPTS_DIR, "last_word_prompt.yaml"),
+            "badge_flow": os.path.join(PROMPTS_DIR, "badge_flow.yaml"),
         }
         yaml_path = yaml_paths.get(event_type, None)
 

@@ -1,5 +1,14 @@
-openai_api_key: "your api key"
-system_prompt_path: marble\\agent\\werewolf_prompts\\system_prompt.yaml
+# Werewolf game configuration.
+#
+# API keys: leave `api_key` out (or keep the placeholder) and the key is read
+# from the environment variable named by `api_key_env` (default: OPENAI_API_KEY).
+# Any OpenAI-compatible endpoint works, e.g. for Gemini through OpenRouter:
+#   base_url: "https://openrouter.ai/api/v1"
+#   api_key_env: "OPENROUTER_API_KEY"
+#   model_name: "google/gemini-2.5-flash"
+
+# Optional: defaults to marble/agent/werewolf_prompts/system_prompt.yaml
+system_prompt_path: marble/agent/werewolf_prompts/system_prompt.yaml
 roles:
   - wolf
   - wolf
@@ -14,11 +23,16 @@ randomize_roles: True
 use_random_names: True
 villager_config:
   base_url: "https://api.openai.com/v1"
-  api_key: "your api key"
+  api_key_env: "OPENAI_API_KEY"
   model_name: "gpt-4o"
 werewolf_config:
   base_url: "https://api.openai.com/v1"
-  api_key: "your api key"
+  api_key_env: "OPENAI_API_KEY"
+  model_name: "gpt-4o"
+# Judge model used by marble/evaluator/werewolf_evaluator.py
+eval_config:
+  base_url: "https://api.openai.com/v1"
+  api_key_env: "OPENAI_API_KEY"
   model_name: "gpt-4o"
 cooperation_mode: "cooperative"
 use_daily_tasks: True

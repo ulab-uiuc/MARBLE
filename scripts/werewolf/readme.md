@@ -4,65 +4,87 @@ This repository provides a configurable environment for simulating Werewolf (Maf
 
 ## Installation
 
-```bash
-pip install -r requirements.txt
+Install MARBLE as described in the main README (`poetry install`); no extra packages are needed.
 
 ## Configuration
 
-Modify game settings in marble/configs/test_config/werewolf_config/werewolf_config.yaml:
+Modify game settings in `marble/configs/test_config/werewolf_config/werewolf_config.yaml`:
 
+```yaml
 roles: # List of roles in the game
-  - werewolf
+  - wolf
   - villager
   - seer
   - witch
-  - guardian
+  - guard
   ...
 randomize_roles: True  # Shuffle role order
 use_random_names: True  # Assign random names to agents
 cooperation_mode: "cooperative"  # Villager cooperation strategy
 use_daily_tasks: True  # Enable daily guidance for villagers
 
-### API configurations
+# Model of the villager team, the werewolf team and the judge.
+# Any OpenAI-compatible endpoint works.
 villager_config:
-  base_model: "gpt-3.5-turbo"
-  api_key: "your_villager_api_key"
+  base_url: "https://api.openai.com/v1"
+  api_key_env: "OPENAI_API_KEY"     # the key is read from this environment variable
+  model_name: "gpt-4o"
 
 werewolf_config:
-  base_model: "gpt-4"
-  api_key: "your_werewolf_api_key"
-Important Notes:
+  base_url: "https://openrouter.ai/api/v1"
+  api_key_env: "OPENROUTER_API_KEY"
+  model_name: "google/gemini-2.5-flash"
 
-Currently supports 9-player games (3 wolves, 3 villagers, 3 unique special roles). You can change roles in config.yaml.
+eval_config:
+  base_url: "https://api.openai.com/v1"
+  api_key_env: "OPENAI_API_KEY"
+  model_name: "gpt-4o"
+```
 
-Do not duplicate special roles (seer/witch/guardian)
+Important notes:
+
+- API keys are read from the environment variable named by `api_key_env`
+  (default `OPENAI_API_KEY`). You can still put a key directly in the file with `api_key: "..."`.
+- Currently supports 9-player games (3 wolves, 3 villagers, 3 unique special roles). You can change
+  roles in the config.
+- Do not duplicate special roles (seer/witch/guard).
 
 ## Running Simulations
-Start new simulations using:
 
-./marble/werewolf/run_simulation.sh \
-  --rounds 10 \
-  --name "werewolf_engine_demo" \
-  --config_path "marble/configs/test_config/werewolf_config/werewolf_config.yaml"
-Output:
+Start new simulations from any directory:
 
-Game checkpoints stored in base_log_dir/simulation
+```bash
+bash scripts/werewolf/run_simulation.sh
 
-Includes complete game states after each day/night phase
+# several games with a custom config
+ROUNDS=10 NAME=my_run CONFIG=path/to/werewolf_config.yaml bash scripts/werewolf/run_simulation.sh
+```
+
+or call the entry point directly:
+
+```bash
+python marble/environments/werewolf_env.py --rounds 1 --name demo \
+    --config_path marble/configs/test_config/werewolf_config/werewolf_config.yaml
+```
+
+Output: game logs, per-player thoughts and checkpoints after each day/night phase are stored in
+`./werewolf_log/game_<timestamp>/`.
 
 ## Running Evaluations
+
 Evaluate existing checkpoints with:
 
-./marble/werewolf/run_evaluation.sh \
-  --top_level_dir "path/to/checkpoints" \
-  --config_path "marble/configs/test_config/werewolf_config/werewolf_config.yaml" \
-  --snapshot_folder "any_name_here" \
-  --base_log_dir "path/to/evaluation/results"
-Evaluation Modes:
+```bash
+bash scripts/werewolf/run_evaluation.sh
 
-Single-day Simulation: Loads nightly checkpoints and simulates one full day-night cycle
+# custom locations
+TOP_LEVEL_DIR=werewolf_log BASE_LOG_DIR=werewolf_eval bash scripts/werewolf/run_evaluation.sh
+```
 
-Full-game Simulation: Loads first night checkpoint and simulates through game conclusion
+Evaluation modes:
+
+- Single-day simulation: loads nightly checkpoints and simulates one full day-night cycle
+- Full-game simulation: loads the first night checkpoint and simulates through game conclusion
 
 ## Key Parameters
 
