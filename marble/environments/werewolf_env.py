@@ -857,6 +857,12 @@ class WerewolfEnv:
             new_log_dir = f"{current_log_dir}_{result['result'].replace(' ', '_')}"
             try:
                 os.rename(current_log_dir, new_log_dir)
+                # Keep writing into the renamed folder: the final save used to
+                # fail with "No such file or directory" because the path still
+                # pointed at the old folder name.
+                self.shared_memory_path = os.path.join(
+                    new_log_dir, os.path.basename(self.shared_memory_path)
+                )
                 self._log_system(f"Log folder renamed to '{new_log_dir}'.")
             except Exception as e:
                 self._log_system(f"Error renaming log folder: {e}")

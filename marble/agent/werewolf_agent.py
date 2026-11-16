@@ -382,6 +382,10 @@ class WerewolfAgent:
                     n=1,
                 )
                 tool_calls = response.choices[0].message.tool_calls
+                if not tool_calls:
+                    # Some models occasionally answer without the required
+                    # tool call; retry instead of failing on ``None[0]``.
+                    raise ValueError("model returned no tool call")
                 return tool_calls
             except Exception as e:
                 print(f"Chat Generation Error: {e}")
