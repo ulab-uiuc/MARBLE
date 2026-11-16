@@ -8,6 +8,7 @@ import names
 from flask import Flask, jsonify, request
 
 from marble.environments.minecraft_utils.env_api import *
+from marble.utils.paths import DATA_DIR
 
 # sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf8')
 os.environ["REQ_TIMEOUT"] = "1800000"
@@ -94,7 +95,7 @@ def render_structure():
     id = data.get("id")
     center_pos = data.get("center_pos")
     try:
-        with open("../minecraft/building_blue_print.json", "r") as f:
+        with open(os.path.join(DATA_DIR, "building_blue_print.json"), "r") as f:
             structure_list = json.load(f)
         structure = structure_list[id]
         for b in structure["blocks"]:

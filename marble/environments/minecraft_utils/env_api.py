@@ -7,6 +7,8 @@ import sys
 import time
 from collections import deque
 
+from marble.utils.paths import DATA_DIR
+
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf8")
 
 env_infos = None
@@ -879,7 +881,7 @@ def find_nearest_(bot, Vec3, envs_info, mcData, name):  # X
 
 def is_entity_or_item(name):
     # 已经确定是合法的名字但是不知道是实体还是方块
-    with open("../data/mcData.json", "r", encoding="utf-8") as f:
+    with open(os.path.join(DATA_DIR, "mcData.json"), "r", encoding="utf-8") as f:
         mc_data_json = json.load(f)
     for item in mc_data_json["entities"]:
         if name == item[0]:
@@ -1680,7 +1682,7 @@ async def place_axis(bot, mcData, pathfinder, Vec3, item_name, pos, axis=None):
         )
 
 
-dig_file = "../data/dig_item.json"
+dig_file = os.path.join(DATA_DIR, "dig_item.json")
 dig_data = json.load(open(dig_file, "r"))
 
 
@@ -2804,7 +2806,7 @@ def findSimilarName(name):
     name_parts = name.split("_")
 
     # 加载数据
-    with open("../data/mcData.json", "r", encoding="utf-8") as f:
+    with open(os.path.join(DATA_DIR, "mcData.json"), "r", encoding="utf-8") as f:
         mc_data_json = json.load(f)
 
     # 如果本身就是一个合法的名字，直接返回
@@ -2851,16 +2853,24 @@ def findSimilarName(name):
 
 
 def read_mcData():
+    """
+    Regenerate ``data/mcData.json`` from the raw Minecraft entity/item dumps.
+
+    This is a maintenance helper and is not needed to run the benchmark:
+    ``data/mcData.json`` ships with the repository. The raw
+    ``data/minecraft/mc_entities.txt`` and ``mc_items.txt`` dumps are only
+    required if you want to rebuild that file.
+    """
     import json
 
-    entity_path = "minecraft/mc_entities.txt"
+    entity_path = os.path.join(DATA_DIR, "minecraft", "mc_entities.txt")
     mc_entities = []
     with open(entity_path, "r", encoding="utf-8") as f:
         mc_entities_raw = f.readlines()
     for item in mc_entities_raw:
         triple = item.strip().split()
         mc_entities.append([triple[1], triple[0]])
-    item_path = "minecraft/mc_items.txt"
+    item_path = os.path.join(DATA_DIR, "minecraft", "mc_items.txt")
     mc_items = []
     with open(item_path, "r", encoding="utf-8") as f:
         mc_items_raw = f.readlines()
@@ -2870,7 +2880,7 @@ def read_mcData():
 
     # save as json
     _mcData = {"entities": mc_entities, "items": mc_items}
-    with open("../minecraft/mcData.json", "w", encoding="utf-8") as f:
+    with open(os.path.join(DATA_DIR, "mcData.json"), "w", encoding="utf-8") as f:
         json.dump(_mcData, f, ensure_ascii=False, indent=4)
 
 

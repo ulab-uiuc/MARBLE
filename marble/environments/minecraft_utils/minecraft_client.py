@@ -1,11 +1,19 @@
 import json
 import os
 import subprocess
+import sys
 import threading
 import time
 from typing import List
 
 import requests
+
+from marble.utils.paths import DATA_DIR
+
+# Launched by absolute path so the engine can be started from any directory.
+MINECRAFT_SERVER_SCRIPT = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)), "minecraft_server.py"
+)
 
 
 class MinecraftClient:
@@ -24,8 +32,8 @@ class MinecraftClient:
 
     @staticmethod
     def get_url_prefix() -> dict:
-        if os.path.exists("../data/url_prefix.json"):
-            with open("../data/url_prefix.json", "r") as f:
+        if os.path.exists(os.path.join(DATA_DIR, "url_prefix.json")):
+            with open(os.path.join(DATA_DIR, "url_prefix.json"), "r") as f:
                 url_prefix = json.load(f)
         else:
             url_prefix = {}
@@ -109,7 +117,7 @@ class MinecraftClient:
             return
         url_prefix = MinecraftClient.get_url_prefix()
         url_prefix[name] = f"http://localhost:{local_port}"
-        with open("../data/url_prefix.json", "w") as f:
+        with open(os.path.join(DATA_DIR, "url_prefix.json"), "w") as f:
             json.dump(url_prefix, f)
 
         MinecraftClient.name2port[name] = local_port
@@ -148,8 +156,8 @@ class MinecraftClient:
                 continue
             MinecraftClient.agent_process[key] = subprocess.Popen(
                 [
-                    "python",
-                    "environments/minecraft_utils/minecraft_server.py",
+                    sys.executable,
+                    MINECRAFT_SERVER_SCRIPT,
                     "-H",
                     host,
                     "-P",
@@ -166,7 +174,7 @@ class MinecraftClient:
                 shell=False,
             )
             print(
-                f'python environments/minecraft_utils/minecraft_server.py -H "{host}" -P {port} -LP {value} -U "{key}" -W "{world}" -D {debug}'
+                f'{sys.executable} {MINECRAFT_SERVER_SCRIPT} -H "{host}" -P {port} -LP {value} -U "{key}" -W "{world}" -D {debug}'
             )
             time.sleep(3)
         if verbose:

@@ -4,6 +4,7 @@ MineCraft environment module.
 
 import os
 import subprocess
+import sys
 import time
 from typing import Any, Dict, List, Union
 
@@ -11,6 +12,19 @@ from marble.environments.base_env import BaseEnvironment
 from marble.environments.minecraft_utils.minecraft_client import MinecraftClient
 from marble.environments.minecraft_utils.minecraft_tool_description import *
 from marble.utils.logger import get_logger
+from marble.utils.paths import CACHE_DIR, DATA_DIR
+
+# Launched by absolute path so the engine can be started from any directory.
+BUILD_JUDGER_SCRIPT = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)), "minecraft_utils", "build_judger.py"
+)
+# Files the Minecraft scenario cannot run without (see issues #222 and #243).
+REQUIRED_MINECRAFT_ASSETS = [
+    "building_blue_print.json",
+    "blueprint_description_all.json",
+    "mcData.json",
+    "dig_item.json",
+]
 
 
 class MinecraftEnvironment(BaseEnvironment):
@@ -125,13 +139,35 @@ class MinecraftEnvironment(BaseEnvironment):
         self.clients[name] = MinecraftClient(name=name, local_port=local_port)
         self.logger.info(f"Agent {name} registered.")
 
+    @staticmethod
+    def check_assets() -> None:
+        """Fail early, with an actionable message, if a data file is missing."""
+        missing = [
+            name
+            for name in REQUIRED_MINECRAFT_ASSETS
+            if not os.path.isfile(os.path.join(DATA_DIR, name))
+        ]
+        if missing:
+            raise FileNotFoundError(
+                f"Missing Minecraft asset file(s) in {DATA_DIR}: {', '.join(missing)}. "
+                "They are part of the repository (data/); make sure your checkout "
+                "is complete, e.g. `git checkout -- data`."
+            )
+
     def launch(self):
+        self.check_assets()
+        os.makedirs(CACHE_DIR, exist_ok=True)
         MinecraftClient.launch(host=self.host, port=self.port)
         self.logger.info("Minecraft environment launched.")
+        # The judge's output used to be discarded, which hid every start-up
+        # failure (missing assets, unreachable server, ...). Keep it in a log.
+        judge_log_path = os.path.join(CACHE_DIR, "build_judger.log")
+        self.judge_log = open(judge_log_path, "w")
+        self.logger.info(f"Build judge output is written to {judge_log_path}")
         self.judge = subprocess.Popen(
             [
-                "python",
-                "environments/minecraft_utils/build_judger.py",
+                sys.executable,
+                BUILD_JUDGER_SCRIPT,
                 "--idx",
                 str(self.task_id),
                 "--host",
@@ -145,8 +181,8 @@ class MinecraftEnvironment(BaseEnvironment):
                 "--task_name",
                 self.task_name,
             ],
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL,
+            stdout=self.judge_log,
+            stderr=subprocess.STDOUT,
         )
         # print(f"""python environments/minecraft_utils/build_judger.py --idx {self.task_id} --host \"{self.host}\" --port {self.port} --agent_num {len(self.agents)} --agent_names \"{",".join(self.agents)}\" --task_name \"{self.task_name}\"""")
         self.logger.debug(f"Current working directory: {os.getcwd()}")
@@ -157,7 +193,11 @@ class MinecraftEnvironment(BaseEnvironment):
 
     def finish(self):
         MinecraftClient.kill()
-        self.judge.terminate()
+        if self.judge is not None:
+            self.judge.terminate()
+        judge_log = getattr(self, "judge_log", None)
+        if judge_log is not None:
+            judge_log.close()
 
     def _scanNearbyEntities_handler(
         self, player_name: str, item_name: str, radius: int = 10, item_num: int = -1
