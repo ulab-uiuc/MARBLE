@@ -52,11 +52,10 @@ class AgentGraph:
                     f"Invalid relationship format: {rel}. Expected 3 elements."
                 )
             node1, node2, relationship = rel  # Correctly unpacking the list
+            # ``add_relationship`` already wires up parent/children links for
+            # "parent" edges. Doing it again here registered every child twice,
+            # so tree coordination ran each subtree two times per iteration.
             self.add_relationship(node1, node2, relationship)
-            if structure_config.coordination_mode == "tree":
-                if relationship == "parent":
-                    self.agents[node2].parent = self.agents[node1]
-                    self.agents[node1].children.append(self.agents[node2])
 
     # def _build_graph(self, structure: Dict[str, List[str]]) -> None:
     #     """
@@ -192,7 +191,8 @@ class AgentGraph:
         if rel_type == "parent":
             parent_agent = self.agents[source]
             child_agent = self.agents[target]
-            parent_agent.children.append(child_agent)
+            if child_agent not in parent_agent.children:
+                parent_agent.children.append(child_agent)
             child_agent.parent = parent_agent
         self.logger.info(f"Relationship added: {source} --[{rel_type}]--> {target}")
 
@@ -293,6 +293,37 @@ class AgentGraph:
                 # Add other relevant profile information if needed
             }
         return profiles
+
+    def get_agent_profiles_linked(self, agent_id: str) -> Dict[str, Dict[str, Any]]:
+        """
+        Get profiles of the agents directly connected to ``agent_id``.
+
+        Relationships are treated as undirected: an agent is linked to another
+        one when either of them is the source of a relationship between the two.
+        If the agent has no relationship at all, every other agent is returned
+        so that chain coordination always has a candidate to hand the task to.
+
+        Args:
+            agent_id (str): The ID of the agent whose neighbours are requested.
+
+        Returns:
+            Dict[str, Dict[str, Any]]: A dictionary mapping agent IDs to profiles.
+        """
+        linked_ids: List[str] = []
+        for source, target, _ in self.relationships:
+            if source == agent_id and target != agent_id:
+                other = target
+            elif target == agent_id and source != agent_id:
+                other = source
+            else:
+                continue
+            if other not in linked_ids:
+                linked_ids.append(other)
+
+        all_profiles = self.get_agent_profiles()
+        if not linked_ids:
+            linked_ids = [other for other in all_profiles if other != agent_id]
+        return {other: all_profiles[other] for other in linked_ids}
 
     def get_roots(self) -> List[BaseAgent]:
         """

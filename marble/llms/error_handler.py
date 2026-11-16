@@ -2,10 +2,38 @@ import math
 import time
 from functools import wraps
 
-from beartype.typing import Any, Callable, List, Optional, Set, TypeVar, Union, cast
+from beartype.typing import (
+    Any,
+    Callable,
+    List,
+    Optional,
+    Set,
+    Tuple,
+    Type,
+    TypeVar,
+    Union,
+    cast,
+)
 from pydantic import BaseModel
 
 INF = float(math.inf)
+
+try:  # pragma: no cover - depends on the installed litellm version
+    from litellm.exceptions import (
+        AuthenticationError,
+        BadRequestError,
+        NotFoundError,
+        PermissionDeniedError,
+    )
+
+    NON_RETRYABLE_ERRORS: Tuple[Type[BaseException], ...] = (
+        AuthenticationError,
+        BadRequestError,
+        NotFoundError,
+        PermissionDeniedError,
+    )
+except Exception:  # pragma: no cover
+    NON_RETRYABLE_ERRORS = ()
 
 T = TypeVar("T", bound=Callable[..., Union[Optional[List[Any]], Set[str]]])
 
@@ -32,19 +60,29 @@ def api_calling_error_exponential_backoff(
                 modified_base_wait_time = base_wait_time
 
             attempts = 0
+            last_error: Optional[Exception] = None
             while attempts < modified_retries:
                 try:
                     return func(*args, **kwargs)
+                except NON_RETRYABLE_ERRORS:
+                    # Bad credentials / malformed requests never succeed on retry.
+                    raise
                 except Exception as e:
-                    wait_time = modified_base_wait_time * (2**attempts)
-                    print(f"Attempt {attempts + 1} failed: {e}")
-                    print(f"Waiting {wait_time} seconds before retrying...")
-                    time.sleep(wait_time)
+                    last_error = e
                     attempts += 1
+                    print(f"Attempt {attempts} failed: {e}")
+                    if attempts < modified_retries:
+                        wait_time = modified_base_wait_time * (2 ** (attempts - 1))
+                        print(f"Waiting {wait_time} seconds before retrying...")
+                        time.sleep(wait_time)
             print(
                 f"Failed to execute '{func.__name__}' after {modified_retries} retries."
             )
-            return None
+            # Surface the real failure instead of returning ``None``: callers
+            # index into the result, which used to hide the API error behind a
+            # confusing "'NoneType' object is not subscriptable".
+            assert last_error is not None
+            raise last_error
 
         return cast(T, wrapper)
 

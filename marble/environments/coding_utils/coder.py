@@ -2,13 +2,14 @@ import os
 import re
 from typing import Any, Dict
 
-from ruamel.yaml import YAML
-
 from marble.llms.model_prompting import model_prompting
 
 
 def create_solution_handler(
-    env, task_description: str, model_name: str, file_path: str = "solution.py"
+    env,
+    task_description: str = "",
+    model_name: str = "",
+    file_path: str = "solution.py",
 ) -> Dict[str, Any]:
     """
     Creates solution.py file and generates content based on task description.
@@ -37,25 +38,29 @@ def create_solution_handler(
                 "error-msg": f"Solution file already exists at {full_path}. Operation aborted.",
             }
 
-        config_path = "marble/configs/coding_config/coding_config.yaml"
-        if not os.path.exists(config_path):
-            return {
-                "success": False,
-                "error-msg": f"Config file not found at {config_path}",
-            }
-
-        yaml = YAML()
-        with open(config_path, "r", encoding="utf-8") as f:
-            config = yaml.load(f)
-
-        full_task_description = config["task"]["content"]
+        # Work on the task the engine is actually running. The task used to be
+        # re-read from a hard-coded ``coding_config.yaml`` relative to the
+        # current directory, which only worked from the repository root and
+        # forced that file to be rewritten before every benchmark task.
+        full_task_description = getattr(env, "task_content", "") or task_description
+        # Always use the configured model rather than the name the agent
+        # passes as a tool argument (it tends to answer "gpt-3.5-turbo").
+        model_name = getattr(env, "llm", "") or model_name or "gpt-3.5-turbo"
 
         requirements_start = "1. Implementation requirements:\n"
         requirements_end = "\n\n2. Project structure:"
-        requirements = full_task_description[
-            full_task_description.find(requirements_start)
-            + len(requirements_start) : full_task_description.find(requirements_end)
-        ].strip()
+        if (
+            requirements_start in full_task_description
+            and requirements_end in full_task_description
+        ):
+            requirements = full_task_description[
+                full_task_description.find(requirements_start)
+                + len(requirements_start) : full_task_description.find(
+                    requirements_end
+                )
+            ].strip()
+        else:
+            requirements = "See the task description above."
 
         os.makedirs(env.workspace_dir, exist_ok=True)
 
@@ -82,7 +87,7 @@ def create_solution_handler(
             temperature=0.0,
         )[0]
 
-        code_content = response.content
+        code_content = response.content or ""
 
         code_block_match = re.search(r"```python(.*?)```", code_content, re.DOTALL)
         if code_block_match:
@@ -228,7 +233,7 @@ def register_coder_actions(env):
                             "default": "gpt-3.5-turbo",
                         },
                     },
-                    "required": ["task_description", "model_name"],
+                    "required": ["task_description"],
                     "additionalProperties": False,
                 },
             },

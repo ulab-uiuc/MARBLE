@@ -5,29 +5,39 @@ Evaluator module for tracking metrics and evaluating agent performance.
 import json
 import os
 import re
-from typing import Any, Dict, List
-
-from ruamel.yaml import YAML
+from typing import Any, Dict, List, Optional
 
 from marble.agent import BaseAgent
 from marble.environments import BaseEnvironment
 from marble.llms.model_prompting import model_prompting
+from marble.utils.json_utils import extract_json
 from marble.utils.logger import get_logger
+
+# Resolved next to this module so the engine can be started from any directory.
+EVALUATOR_PROMPTS_PATH = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)), "evaluator_prompts.json"
+)
 
 
 class Evaluator:
     """
     Evaluator class for tracking metrics like task completion success rate and token consumption.
     """
-    def __init__(self, metrics_config: Dict[str, Any]):
+    def __init__(
+        self,
+        metrics_config: Optional[Dict[str, Any]],
+        default_llm: Optional[str] = None,
+    ):
         """
         Initialize the Evaluator with the specified metrics.
 
         Args:
             metrics_config (Dict[str, Any]): Configuration for the metrics to track.
+            default_llm (str, optional): Judge model to use when the config does
+                not set ``metrics.evaluate_llm`` (normally the agents' model).
         """
         self.logger = get_logger(self.__class__.__name__)
-        self.metrics_config = metrics_config
+        self.metrics_config = metrics_config or {}
         self.metrics:Dict[str, Any] = {
             "task_completion": [],
             "token_consumption": [],
@@ -38,11 +48,15 @@ class Evaluator:
             "agent_kpis": {},
             "code_quality": {}
         }
-        with open('evaluator/evaluator_prompts.json', 'r', encoding='utf-8') as f:
+        with open(EVALUATOR_PROMPTS_PATH, 'r', encoding='utf-8') as f:
             self.evaluation_prompts = json.load(f)
 
-        evaluate_llm_config = self.metrics_config.get('evaluate_llm', {})
-        self.llm = evaluate_llm_config.get('model', 'gpt-3.5-turbo') if isinstance(evaluate_llm_config, dict) else evaluate_llm_config
+        fallback_llm = default_llm or 'gpt-3.5-turbo'
+        evaluate_llm_config = self.metrics_config.get('evaluate_llm') or {}
+        if isinstance(evaluate_llm_config, dict):
+            self.llm = evaluate_llm_config.get('model') or fallback_llm
+        else:
+            self.llm = evaluate_llm_config or fallback_llm
 
 
 
@@ -87,8 +101,7 @@ class Evaluator:
             stream=None,
         )[0]
         # Parse the score from result.content
-        assert isinstance(result.content, str)
-        score = self.parse_score(result.content)
+        score = self.parse_score(result.content or "")
         # Update the metric
         self.metrics["communication_score"].append(score)
 
@@ -122,8 +135,7 @@ class Evaluator:
             stream=None,
         )[0]
         # Parse the score from result.content
-        assert isinstance(result.content, str)
-        score = self.parse_score(result.content)
+        score = self.parse_score(result.content or "")
         # Update the metric
         self.metrics["planning_score"].append(score)
 
@@ -154,12 +166,18 @@ class Evaluator:
             stream=None,
         )[0]
         # Parse the milestones from result.content
-        assert isinstance(result.content, str)
-        milestones = self.parse_milestones(result.content)
+        milestones = self.parse_milestones(result.content or "")
         # Update the metrics
         self.metrics["total_milestones"] += len(milestones)
         for milestone in milestones:
-            agents = milestone.get("contributing_agents", [])
+            if not isinstance(milestone, dict):
+                continue
+            # The KPI prompt asks the judge for an "agents" list; keep reading
+            # the legacy "contributing_agents" key as well. Looking up only the
+            # latter left ``agent_kpis`` empty for every run.
+            agents = milestone.get("agents") or milestone.get("contributing_agents") or []
+            if isinstance(agents, str):
+                agents = [agents]
             for agent_id in agents:
                 if agent_id in self.metrics["agent_kpis"]:
                     self.metrics["agent_kpis"][agent_id] += 1
@@ -190,8 +208,7 @@ class Evaluator:
             stream=None,
         )[0]
         # Parse the ratings from llm_response.content
-        assert isinstance(llm_response.content, str)
-        ratings = self.parse_research_ratings(llm_response.content)
+        ratings = self.parse_research_ratings(llm_response.content or "")
         # Update the metrics
         if ratings:
             self.metrics["task_evaluation"] = ratings
@@ -206,26 +223,26 @@ class Evaluator:
             task (str): The task description.
             result (str): The final world idea.
         """
-        # change the prompt to evaluate buyer and seller
-        # world_prompt_template = self.evaluation_prompts["world"]["task_evaluation"]["buyer_prompt"]
-        world_prompt_template = self.evaluation_prompts["world"]["task_evaluation"]["seller_prompt"]
-        prompt = world_prompt_template.format(task=task, result=result)
+        # The seller and the buyer are judged with dedicated prompts; each one
+        # only returns ratings for its own side, so both must be queried.
+        # (Only the seller prompt used to run, leaving every buyer score at -1.)
+        prompts = self.evaluation_prompts["world"]["task_evaluation"]
+        task_evaluation: Dict[str, Any] = {}
+        for role in ("buyer", "seller"):
+            prompt = prompts[f"{role}_prompt"].format(task=task, result=result)
+            llm_response = model_prompting(
+                llm_model=self.llm,
+                messages=[{"role": "user", "content": prompt}],
+                return_num=1,
+                max_token_num=1024,
+                temperature=0.0,
+                top_p=None,
+                stream=None,
+            )[0]
+            ratings = self.parse_task_world_evaluation(llm_response.content or "")
+            task_evaluation[role] = ratings[role]
 
-        llm_response = model_prompting(
-            llm_model=self.llm,
-            messages=[{"role": "user", "content": prompt}],
-            return_num=1,
-            max_token_num=512,
-            temperature=0.0,
-            top_p=None,
-            stream=None,
-        )[0]
-
-        ratings = self.parse_task_world_evaluation(llm_response.content)
-
-        self.metrics["task_evaluation"]["buyer"] = ratings["buyer"]
-        self.metrics["task_evaluation"]["seller"] = ratings["seller"]
-
+        self.metrics["task_evaluation"] = task_evaluation
 
     def parse_task_world_evaluation(self, llm_response: str) -> Dict[str, Any]:
         """
@@ -292,12 +309,40 @@ class Evaluator:
             pred_num (int): The number of predicted root causes.
             root_causes (List[str]): The root cause labels.
         """
-        # Evaluation will take place separately as it might not follow the
-        # requested format
-        self.metrics["task_evaluation"] = {
+        # The final answer is free text and might not follow the requested
+        # format, so the raw prediction is always kept for offline re-scoring.
+        task_evaluation: Dict[str, Any] = {
             'root_cause': root_causes,
             'predicted': result,
         }
+        # Score it right away as well (same procedure as
+        # ``scripts/database/batch_eval.py``): ask the judge which root causes
+        # were predicted and compare them with the gold labels.
+        try:
+            prompt = (
+                f"{result}\n\n"
+                f"From the text above, please identify the {pred_num} predicted root causes of the issue.\n"
+                f"Only answer with labels from this list: {', '.join(labels)}.\n\n"
+                "Please print each of them in the form they appear in the list, on separate lines, "
+                "without any other text."
+            )
+            response = model_prompting(
+                llm_model=self.llm,
+                messages=[{"role": "user", "content": prompt}],
+                return_num=1,
+                max_token_num=512,
+                temperature=0.0,
+                top_p=None,
+                stream=None,
+            )[0]
+            answer = response.content or ""
+            predicted_labels = [label for label in labels if label in answer]
+            matches = sum(1 for cause in root_causes if cause in predicted_labels)
+            task_evaluation['predicted_labels'] = predicted_labels
+            task_evaluation['accuracy'] = matches / len(root_causes) if root_causes else 0.0
+        except Exception as e:
+            self.logger.error(f"Failed to score the predicted root causes: {e}")
+        self.metrics["task_evaluation"] = task_evaluation
 
     def parse_research_ratings(self, assistant_answer: str) -> Dict[str, int]:
         """
@@ -310,23 +355,19 @@ class Evaluator:
             Dict[str, int]: The parsed ratings.
         """
         try:
-            content = assistant_answer.strip()
-
-            json_start = content.find('{')
-            json_end = content.rfind('}') + 1
-
-            if json_start >= 0 and json_end > json_start:
-                json_str = content[json_start:json_end]
-                ratings = json.loads(json_str)
-                # Ensure ratings are integers
-                ratings_dict: Dict[str, int] = {k: int(v) for k, v in ratings.items()}
-                return ratings_dict
-            except json.JSONDecodeError:
-                self.logger.error("Failed to parse JSON from assistant's answer.")
-                return {}
-        else:
-            self.logger.error("No JSON found in assistant's answer.")
+            ratings = extract_json(assistant_answer)
+        except ValueError:
+            self.logger.error("No valid JSON found in assistant's answer.")
             return {}
+
+        ratings_dict: Dict[str, int] = {}
+        for key, value in ratings.items():
+            try:
+                # Ensure ratings are integers
+                ratings_dict[key] = int(value)
+            except (TypeError, ValueError):
+                self.logger.warning(f"Ignoring non-numeric rating {key!r}: {value!r}")
+        return ratings_dict
 
     def parse_score(self, assistant_answer: str) -> int:
         """
@@ -428,26 +469,12 @@ class Evaluator:
         Returns:
             List[Dict[str, Any]]: The list of milestones.
         """
-        # Preprocess to handle escaped newlines and unnecessary symbols
         try:
-            # Remove escaped newlines
-            cleaned_answer = assistant_answer.replace("\\n", "").strip()
-
-            # Remove any leading and trailing backticks and whitespace
-            if cleaned_answer.startswith("```json") and cleaned_answer.endswith("```"):
-                cleaned_answer = cleaned_answer[7:-3].strip()
-
-            # Parse the JSON block
-            milestones = json.loads(cleaned_answer)
-            assert isinstance(milestones, list)
-            return milestones
-        except json.JSONDecodeError:
+            milestones = extract_json(assistant_answer, expect=list)
+        except ValueError:
             self.logger.error("Failed to parse JSON from assistant's answer.")
             return []
-
-        except Exception as e:
-            self.logger.error(f"Error processing milestones: {e}")
-            return []
+        return [m for m in milestones if isinstance(m, dict)]
 
     def parse_code_quality_scores(self, assistant_answer: str) -> Dict[str, int]:
         """
@@ -511,29 +538,26 @@ class Evaluator:
         Evaluate the code quality based on stricter criteria.
         """
         try:
-            config_path = "marble/configs/coding_config/coding_config.yaml"
-            if not os.path.exists(config_path):
-                self.logger.error("Config file not found")
-                return
-
-            yaml = YAML()
-            with open(config_path, 'r', encoding='utf-8') as f:
-                config = yaml.load(f)
-
-            full_task_description = config['task']['content']
+            # Score against the task that was actually run. This used to
+            # re-read a hard-coded ``coding_config.yaml`` (and a hard-coded
+            # workspace path), so every task was judged against the same
+            # unrelated description unless that file was rewritten first.
+            full_task_description = task
 
             requirements_start = "1. Implementation requirements:\n"
             requirements_end = "\n\n2. Project structure:"
-            requirements = full_task_description[
-                full_task_description.find(requirements_start) + len(requirements_start):
-                full_task_description.find(requirements_end)
-            ].strip()
+            if (
+                requirements_start in full_task_description
+                and requirements_end in full_task_description
+            ):
+                requirements = full_task_description[
+                    full_task_description.find(requirements_start) + len(requirements_start):
+                    full_task_description.find(requirements_end)
+                ].strip()
+            else:
+                requirements = "See the task description above."
 
-            solution_path = "marble/workspace/solution.py"
-            solution_content = ""
-            if os.path.exists(solution_path):
-                with open(solution_path, 'r', encoding='utf-8') as f:
-                    solution_content = f.read()
+            solution_content = code_result
 
             code_quality_prompt_template = """
                     [Context]
@@ -593,7 +617,7 @@ class Evaluator:
                 stream=None,
             )[0]
 
-            scores = self.parse_code_quality_scores(response.content)
+            scores = self.parse_code_quality_scores(response.content or "")
 
             if scores:
                 self.metrics["code_quality"] = scores

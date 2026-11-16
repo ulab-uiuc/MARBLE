@@ -4,12 +4,10 @@ import os
 import re
 from typing import Any, Dict
 
-from ruamel.yaml import YAML
-
 from marble.llms.model_prompting import model_prompting
 
 
-def log_debug_info(message: str, log_file: str = "marble/logs/advice_log"):
+def log_debug_info(message: str, log_file: str = os.path.join("logs", "advice_log")):
     """
     Log debug information to a specified file.
     """
@@ -22,7 +20,7 @@ def log_debug_info(message: str, log_file: str = "marble/logs/advice_log"):
 
 
 def give_advice_and_revise_handler(
-    env, task_description: str, model_name: str
+    env, task_description: str = "", model_name: str = ""
 ) -> Dict[str, Any]:
     """
     Reads solution.py content, provides improvement suggestions based on task description, and revises the code accordingly.
@@ -56,25 +54,29 @@ def give_advice_and_revise_handler(
                 "error-msg": "Solution file is empty or contains invalid code. Please use create_solution first to generate valid code",
             }
 
-        config_path = "marble/configs/coding_config/coding_config.yaml"
-        if not os.path.exists(config_path):
-            return {
-                "success": False,
-                "error-msg": f"Config file not found at {config_path}",
-            }
-
-        yaml = YAML()
-        with open(config_path, "r", encoding="utf-8") as f:
-            config = yaml.load(f)
-
-        full_task_description = config["task"]["content"]
+        # Work on the task the engine is actually running. The task used to be
+        # re-read from a hard-coded ``coding_config.yaml`` relative to the
+        # current directory, which only worked from the repository root and
+        # forced that file to be rewritten before every benchmark task.
+        full_task_description = getattr(env, "task_content", "") or task_description
+        # Always use the configured model rather than the name the agent
+        # passes as a tool argument (it tends to answer "gpt-3.5-turbo").
+        model_name = getattr(env, "llm", "") or model_name or "gpt-3.5-turbo"
 
         requirements_start = "1. Implementation requirements:\n"
         requirements_end = "\n\n2. Project structure:"
-        requirements = full_task_description[
-            full_task_description.find(requirements_start)
-            + len(requirements_start) : full_task_description.find(requirements_end)
-        ].strip()
+        if (
+            requirements_start in full_task_description
+            and requirements_end in full_task_description
+        ):
+            requirements = full_task_description[
+                full_task_description.find(requirements_start)
+                + len(requirements_start) : full_task_description.find(
+                    requirements_end
+                )
+            ].strip()
+        else:
+            requirements = "See the task description above."
 
         # Step 1: Generate single most important suggestion
         system_prompt_advice = (
@@ -272,7 +274,7 @@ def register_reviewer_actions(env):
                             "default": "gpt-3.5-turbo",
                         },
                     },
-                    "required": ["task_description", "model_name"],
+                    "required": ["task_description"],
                     "additionalProperties": False,
                 },
             },

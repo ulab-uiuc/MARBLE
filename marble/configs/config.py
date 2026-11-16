@@ -19,21 +19,32 @@ class Config:
         Args:
             data (Dict[str, Any]): Configuration data.
         """
-        self.environment = data.get("environment", {})
-        self.relationships = data.get("relationships", [])
-        self.agents = data.get("agents", [])
-        self.metrics = data.get("metrics", {})
-        self.llm = data.get("llm", "")
-        self.tools = data.get("tools", {})
-        self.logger = data.get("logger", {})
-        self.parallel = data.get("parallel", {})
-        self.graph = data.get("graph", {})
-        self.memory = data.get("memory", {})
-        self.engine_planner = data.get("engine_planner", {})
-        self.task: Dict[str, Any] = data.get("task", {})
-        self.coordination_mode = data.get("coordinate_mode", "centralized")
-        self.relationships = data.get("relationships", [])
-        self.output = data.get("output", {})
+        data = data or {}
+
+        def section(key: str, default: Any) -> Any:
+            # A key that is present but empty in the YAML (``metrics:``) is
+            # loaded as ``None``; treat it like a missing key.
+            value = data.get(key)
+            return default if value is None else value
+
+        self.environment = section("environment", {})
+        self.relationships = section("relationships", [])
+        self.agents = section("agents", [])
+        self.metrics = section("metrics", {})
+        self.llm = section("llm", "")
+        self.tools = section("tools", {})
+        self.logger = section("logger", {})
+        self.parallel = section("parallel", {})
+        self.graph = section("graph", {})
+        self.memory = section("memory", {})
+        self.engine_planner = section("engine_planner", {})
+        self.task: Dict[str, Any] = section("task", {})
+        self.coordination_mode = section("coordinate_mode", "centralized")
+        self.output = section("output", {})
+        # Optional bookkeeping fields from the MultiAgentBench JSONL files;
+        # they are copied into the result record when present.
+        self.task_id = data.get("task_id")
+        self.scenario = data.get("scenario")
 
     @staticmethod
     def load(file_path: str) -> "Config":

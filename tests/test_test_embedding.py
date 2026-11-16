@@ -1,8 +1,10 @@
 import unittest
 
 from marble.llms.text_embedding import text_embedding
+from tests.conftest import requires_openai
 
 
+@requires_openai
 class TestTextEmbedding(unittest.TestCase):
     def test_text_embedding(self) -> None:
         content = "This is a test sentence."

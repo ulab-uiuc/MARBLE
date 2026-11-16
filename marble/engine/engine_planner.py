@@ -4,8 +4,6 @@
 Engine Planner module responsible for task assignment and scheduling.
 """
 
-import json
-import re
 from typing import Any, Dict, List
 
 from litellm import token_counter
@@ -13,6 +11,7 @@ from litellm.types.utils import Message
 
 from marble.graph.agent_graph import AgentGraph
 from marble.llms.model_prompting import model_prompting
+from marble.utils.json_utils import extract_json
 from marble.utils.logger import get_logger
 
 
@@ -43,28 +42,20 @@ def json_parse(input_str: str) -> Dict[str, Any]:
     Raises:
         ValueError: If JSON parsing fails due to invalid format.
     """
-    # Regular expression to match the content between ```json and ```
-    pattern = r"```json\s*(\{.*?\})\s*```"
-    match = re.search(pattern, input_str, re.DOTALL)
-
-    if match:
-        json_str = match.group(1)
-    else:
-        # If no code block is found, try to extract a JSON substring by looking for the first '{' and the last '}'
-        start = input_str.find("{")
-        end = input_str.rfind("}")
-        if start != -1 and end != -1 and end > start:
-            json_str = input_str[start : end + 1]
-        else:
-            # Fallback: use the entire string as JSON
-            json_str = input_str
-
-    try:
-        data = json.loads(json_str)
-    except json.JSONDecodeError as e:
-        raise ValueError("JSON parsing failed. Please check the input format.") from e
-
+    data: Dict[str, Any] = extract_json(input_str)
     return data
+
+
+def count_tokens(model: str, messages: List[Dict[str, Any]]) -> int:
+    """Count tokens without ever failing the simulation."""
+    cleaned = [
+        {"role": m.get("role", "user"), "content": m.get("content") or ""}
+        for m in messages
+    ]
+    try:
+        return int(token_counter(model=model, messages=cleaned))
+    except Exception:
+        return sum(len(m["content"]) for m in cleaned) // 4
 
 
 class EnginePlanner:
@@ -177,9 +168,7 @@ class EnginePlanner:
                 messages_for_token = messages_agent + [
                     {"role": "assistant", "content": proposal}
                 ]
-                self.token_usage += token_counter(
-                    model=self.model, messages=messages_for_token
-                )
+                self.token_usage += count_tokens(self.model, messages_for_token)
 
             # Synthesize proposals into a final plan.
             proposals_text = ""
@@ -217,16 +206,14 @@ class EnginePlanner:
             messages_for_token = messages_final + [
                 {"role": "assistant", "content": response_final[0].content}
             ]
-            self.token_usage += token_counter(
-                model=self.model, messages=messages_for_token
-            )
+            self.token_usage += count_tokens(self.model, messages_for_token)
             try:
                 assignment: Dict[str, Any] = json_parse(response_final[0].content)
                 self.logger.debug(
                     f"Received task assignment using group discussion: {assignment}"
                 )
                 return assignment
-            except json.JSONDecodeError as e:
+            except ValueError as e:
                 self.logger.error(
                     f"Failed to parse JSON response in group discussion: {e}"
                 )
@@ -284,9 +271,7 @@ class EnginePlanner:
             messages_for_token = messages + [
                 {"role": "assistant", "content": response[0].content}
             ]
-            self.token_usage += token_counter(
-                model=self.model, messages=messages_for_token
-            )
+            self.token_usage += count_tokens(self.model, messages_for_token)
             try:
                 assignment: Dict[str, Any] = json_parse(response[0].content)
                 self.logger.debug(
@@ -305,7 +290,7 @@ class EnginePlanner:
                         assignment.get("evolving_experiences", ""),
                     )
                 return assignment
-            except json.JSONDecodeError as e:
+            except ValueError as e:
                 self.logger.error(
                     f"Failed to parse JSON response in cognitive evolve: {e}"
                 )
@@ -341,10 +326,12 @@ class EnginePlanner:
             messages_for_token = messages + [
                 {"role": "assistant", "content": response[0].content}
             ]
-            self.token_usage += token_counter(
-                model=self.model, messages=messages_for_token
-            )
-            response_json = json_parse(response[0].content)
+            self.token_usage += count_tokens(self.model, messages_for_token)
+            try:
+                response_json = json_parse(response[0].content)
+            except ValueError as e:
+                self.logger.error(f"Failed to parse JSON response in cot mode: {e}")
+                return {"tasks": {}, "continue": False}
             self.logger.debug(
                 f"Received task assignment using chain-of-thought planning: {response}"
             )
@@ -384,9 +371,7 @@ class EnginePlanner:
             messages_for_token = messages + [
                 {"role": "assistant", "content": response[0].content}
             ]
-            self.token_usage += token_counter(
-                model=self.model, messages=messages_for_token
-            )
+            self.token_usage += count_tokens(self.model, messages_for_token)
             try:
                 assignment: Dict[str, Any] = json_parse(response[0].content)
                 # assignment: Dict[str, Any] = json.loads(response[0].content if response[0].content else "")
@@ -394,18 +379,21 @@ class EnginePlanner:
                     f"Received task assignment using naive planning: {assignment}"
                 )
                 return assignment
-            except json.JSONDecodeError as e:
+            except ValueError as e:
                 self.logger.error(f"Failed to parse JSON response in naive mode: {e}")
                 return {"tasks": {}, "continue": False}
 
-    def update_progress(self, summary: str) -> None:
+    def update_progress(self, summary: Any) -> None:
         """
         Update the current progress based on the agents' outputs.
 
         Args:
             summary (str): Summary of the latest iteration.
         """
-        self.current_progress += f"\n{summary}"
+        # Callers pass either a plain string or the LLM ``Message`` returned by
+        # ``summarize_output``; only the text belongs in the progress log.
+        summary_text = getattr(summary, "content", summary)
+        self.current_progress += f"\n{summary_text or ''}"
         self.logger.debug(f"Updated progress: {self.current_progress}")
 
     def summarize_output(self, summary: str, task: str, output_format: str) -> Message:
@@ -432,9 +420,9 @@ class EnginePlanner:
             top_p=None,
             stream=None,
         )[0]
-        self.token_usage += token_counter(
-            model=self.model,
-            messages=[
+        self.token_usage += count_tokens(
+            self.model,
+            [
                 {
                     "role": "user",
                     "content": f"Summarize the output of the agents for the task: {task}\n\nNow here is some result of thr agent: {summary}, please analyze it. Return the final output into a json following the format: {output_format}",
@@ -474,7 +462,9 @@ class EnginePlanner:
             "}"
         )
 
-        messages = [{"role": "system", "content": prompt}]
+        # Sent as a user turn: a request holding only a system message is
+        # rejected (or silently ignored) by several providers.
+        messages = [{"role": "user", "content": prompt}]
         response = model_prompting(
             llm_model=self.model,
             messages=messages,
@@ -486,12 +476,12 @@ class EnginePlanner:
         messages_for_token = messages + [
             {"role": "assistant", "content": response[0].content}
         ]
-        self.token_usage += token_counter(model=self.model, messages=messages_for_token)
+        self.token_usage += count_tokens(self.model, messages_for_token)
         try:
             # decision = json.loads(response[0].content if response[0].content else "")
             decision = json_parse(response[0].content)
             self.logger.debug(f"Received continuation decision: {decision}")
-            return decision.get("continue", False)
-        except json.JSONDecodeError as e:
+            return bool(decision.get("continue", False))
+        except ValueError as e:
             self.logger.error(f"Failed to parse JSON decision response: {e}")
             return False
