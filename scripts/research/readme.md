@@ -14,43 +14,38 @@ This repository provides a configurable environment for simulating multiagent re
 
 
 ## Execution Steps
-1. Navigate to the multiagentbench folder:
-```bash
-cd multiagentbench
-```
 
-2. Generate the Configuration Folder: Run the conversion script to generate YAML configuration files:
+Set the API key of your provider (see the main README), then run from any directory:
 
 ```bash
-bash runjsonl2yaml.sh
+# all 100 research tasks
+python scripts/run_benchmark.py --scenario research --model gpt-4o-mini
+
+# first 5 tasks with another model and judge
+python scripts/run_benchmark.py --scenario research \
+    --model openrouter/google/gemini-2.5-flash --eval_model gpt-4o --limit 5
 ```
 
-3. Update the Configuration Path: Edit the run_simulation.sh script to update the CONFIG_FILE variable to point to the newly generated configuration folder:
-```bash
+`bash scripts/research/run_simulation.sh` is a thin wrapper around the same command
+(`MODEL=... bash scripts/research/run_simulation.sh --limit 5`).
 
-CONFIG_FILE="./configs/test_config"  # config path for the research scenario
-```
+The runner fills in the blanks of each benchmark record with these defaults, all of which can be
+overridden on the command line:
 
-4. Run the Simulation: Execute the simulation:
-```bash
-bash run_simulation.sh
-```
+| Setting | Default | Option |
+|---------|---------|--------|
+| Coordination mode | `graph` | `--coordinate_mode {graph,star,tree,chain}` |
+| Maximum iterations | `5` | `--max_iterations` |
+| Agents' model | (required) | `--model` |
+| Judge model | same as `--model` | `--eval_model` |
+| Output folder | `results/` | `--output_dir` |
 
-Parameter Explanation for runjsonl2yaml.sh
-The runjsonl2yaml.sh script accepts parameters to customize the research simulation environment. Example parameters include:
+Results are written to `results/research/<model>/`: `results.jsonl` holds one record per task
+(including the 5q research idea of every iteration and the `task_evaluation` scores for innovation,
+safety and feasibility) and `summary.json` the averages.
 
-```bash
+### Generating YAML configs manually
 
-DEFAULT_COORDINATE_MODE="graph"
-DEFAULT_ENVIRONMENT='{"max_iterations": 5, "name": "Research Collaboration Environment", "type": "Research"}'
-DEFAULT_LLM="gpt-3.5-turbo"
-DEFAULT_MEMORY='{"type": "BaseMemory"}'
-DEFAULT_METRICS_EVALUATE_LLM="gpt-4o"
-DEFAULT_OUTPUT='{"file_path": "result/discussion_output.jsonl"}'
-DEFAULT_COORDINATE_MODE: Sets the collaboration mode for agents (graph-based coordination).
-DEFAULT_ENVIRONMENT: Configures environment settings such as maximum iterations, environment name, and type.
-DEFAULT_LLM: Specifies the language model for agent interactions.
-DEFAULT_MEMORY: Defines the memory system used during the simulation.
-DEFAULT_METRICS_EVALUATE_LLM: Determines the LLM for performance evaluation.
-DEFAULT_OUTPUT: Sets the file path where the simulation output will be saved.
-```
+If you prefer one YAML file per task, `multiagentbench/jsonl2yaml.py` converts the benchmark file
+(see `multiagentbench/runjsonl2yaml.sh` for the available defaults). Each generated file can then be
+run with `python marble/main.py --config_path <file>`.
